@@ -8,6 +8,14 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+STEP 4 DONE — GEN 1 NO FITNESS IMPROVEMENT (2026-11-02):
+5 Gen 1 designs from survivors only (P1 portfolio G+H+
+A-standard, A1 kill-test, Ga, H1, F1m). Re-score: every
+child ties its parent cell-for-cell (PASS 0; matrix
+reproduced diff-clean by parent). Skeptic: H1 mutation
+bundle-or-restatement; A1 specifiable-only. §7 stop (b)
+counter 1/2, not met. Next: Step 5 decision.
+
 STEP 3 DONE — GEN 0 SCORED, NO PASS, NO PROMOTION
 (2026-11-02): gate matrix reproduced deterministically by
 parent (gate_table diff-clean). 199 extraction rows; PASS 0,

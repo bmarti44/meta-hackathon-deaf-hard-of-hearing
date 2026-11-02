@@ -1,0 +1,43 @@
+# MANUAL adaptation of extract-gen1.csv (adapt_extraction.py maps candidates A-H only -> 0 rows for GEN1-* IDs; gate_table.py NOT edited). Rules identical to adapt_extraction.py except documented TRACK map GEN1-P1/A1/Ga/H1/F1m -> P (adapt-gen1-note.md). Schema: extraction-csv-v1
+candidate,track,gate,window,stratum,tier,grade,delta_g2_db,delta_g3a_sd,g1_channels,burden_rank,verdict
+GEN1-P1,P,G1,NA,species=human,RECORD,UNASSESSED,,,,,NA
+GEN1-P1,P,G2,W3,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-P1,P,G2,W3,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-P1,P,G3a,W3,species=human; modality=unreported,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-P1,P,G3b,W3,species=human; modality=unreported,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-P1,P,G4,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-P1,P,G5,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-P1,P,G6,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-A1,P,G1,W3,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-A1,P,G1,W3,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-A1,P,G2,W3,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-A1,P,G2,W3,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-A1,P,G3a,W3,species=human; modality=unreported,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-A1,P,G3b,W3,species=human; modality=unreported,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-A1,P,G4,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-A1,P,G5,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-A1,P,G6,ALL,species=human,RECORD,UNASSESSED,,,,,FAIL
+GEN1-Ga,P,G1,NA,species=human,RECORD,UNASSESSED,,,,,NA
+GEN1-Ga,P,G2,W3,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-Ga,P,G2,W3,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-Ga,P,G3a,W3,species=human; modality=unreported,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-Ga,P,G3b,W3,species=human; modality=unreported,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-Ga,P,G4,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-Ga,P,G5,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-Ga,P,G6,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-H1,P,G1,NA,species=human,RECORD,UNASSESSED,,,,,NA
+GEN1-H1,P,G2,W3,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-H1,P,G2,W3,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-H1,P,G3a,W3,species=human; modality=unreported,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-H1,P,G3b,W3,species=human; modality=unreported,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-H1,P,G4,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-H1,P,G5,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-H1,P,G6,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-F1m,P,G1,NA,species=human,RECORD,UNASSESSED,,,,,NA
+GEN1-F1m,P,G2,W3,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-F1m,P,G2,W3,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-F1m,P,G3a,W2,species=human; modality=unreported,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-F1m,P,G3b,W2,species=human; modality=unreported,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-F1m,P,G4,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-F1m,P,G5,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN1-F1m,P,G6,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
