@@ -235,6 +235,9 @@ publishes the table; no fabricated 4×6×6 precision):
   assumed sign-free). Family G must therefore beat *this* workup on
   turnaround/triage consequences, and H must beat *this* EI mix on
   dose/timing — or C0 correctly vanishes into evolving standard.
+  **Claim cap (Step 1):** a candidate beating frozen but not the
+  evolving-standard sensitivity comparator may claim only an
+  *implementation gap* (frozen lagging current care), never a C0 win.
   Evolving-standard elements (rapid sequencing where already
   routine, preservation arrays) are a **sensitivity comparator**;
   the deciding promotion comparator is `frozen_bilateral_eCI_v1`.
@@ -265,8 +268,9 @@ inherently alter biology. v2 splits promotion:
 
 - **Track P — Preserve-first (primary; C0 lives here).** Pathway /
   incremental-device / bridge candidates. Must pass G2–G6 with
-  **G4 as a hard veto** and G1 as *functional-resolution gain*
-  (may be modest). Families A (evolving-standard-aware), B, F, G, H.
+  **G4 as a hard veto**; G1 applies to device candidates (A/B),
+  pathway candidates (F/G/H) are G1 = NA per §4.2 portfolio rule.
+  Families A (evolving-standard-aware), B, F, G, H.
 - **Track R — Replace-first (watch-list until adult data).**
   High-channel mechanisms accepting permanent alteration. Scored
   on G1/G2/G5 with G4 *disclosed as knowingly traded*, never
@@ -293,7 +297,8 @@ citations; changes after freeze = new protocol version):
   benefit), never raw hair-cell counts. **Anchor task & point
   baseline (pre-Step 1):** spectral-ripple discrimination in adult
   CI users / vocoder listeners; frozen point = **8 effective
-  channels** (midpoint of 4–10 range; sensitivity at 4 and 10
+  channels** (conservative in-range anchor within 4–10; sensitivity
+  at 4 and 10; ripple-to-channels conversion model published Step 1)
   mandatory). **PASS (device candidates A/B, Track P): ≥12
   effective channels (1.5× point) on anchor task; PASS (Track R):
   ≥16 (2× point) — which is also the STRETCH.** "Equivalent
@@ -651,7 +656,9 @@ dates frozen in protocol; **human-led dual extraction on all
 load-bearing claims** (agents may pre-extract; a human extractor
 independently verifies + sampled error audit with error rate
 reported — agent-only Step 0 verification is circular and banned
-for gate-deciding claims); inclusion/exclusion flow
+for gate-deciding claims; the human extractor must be independent
+of the holder, or holder-extracted load-bearing claims get external
+audit — named in Step 0/2 protocol); inclusion/exclusion flow
 published; bias tools per §5.2. Simulations: named model +
 version + parameters + seeds (e.g., finite-element cochlea model
 or vocoder config — pinned Step 1). Datasets: manifest with DOI,
@@ -743,7 +750,8 @@ evidence, unresolved gaps by name, epidemiology/coverage tables
 
 ## 12. Governance & versions
 
-**Holder** (repo owner): sets budget, freezes baseline versions,
+**Holder** (repo owner): sets budget; freezes baseline versions
+only with independent co-approval (§3.4, incl. initial Step 1 pin);
 approves handoffs. Holder does **not** sole-score candidates
 (personal-stake COI, §1.1); scoring requires independent judges
 + human experts (§9). **Analysis owner** per generation named in

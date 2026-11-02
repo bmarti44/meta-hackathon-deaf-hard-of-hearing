@@ -8,6 +8,13 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+ROUND 3 BOTH PASS >=90 (2026-11-02): Gaps 92/100 PASS,
+Skeptical 91/100 PASS on GOAL.md v2.1. Review loop complete
+(R1 68/57 -> R2 90/85 -> R3 92/91). Residual MEDIUM/LOW errata
+applied (S4.1 NA wording, anchor label, claim cap, extractor
+independence, README/S12 sync). See reviews/round-3-scores.md.
+Next: GOAL S11 Step 0 full-text source verification.
+
 ROUND 2 + GOAL v2.1 (2026-11-02): Round 2 scores on v2 — Gaps
 90/100 PASS, Skeptical 85/100 FAIL (2 HIGH). GOAL.md patched to
 v2.1 fixing both HIGHs and all Round 2 MEDIUM/LOW items (G1 NA/
