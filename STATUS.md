@@ -8,6 +8,18 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+STEP 3 DONE — GEN 0 SCORED, NO PASS, NO PROMOTION
+(2026-11-02): gate matrix reproduced deterministically by
+parent (gate_table diff-clean). 199 extraction rows; PASS 0,
+FAIL 7 (completeness/staging/presumptive only), rest
+INSUFFICIENT/NA. Q0 = UNDECIDABLE-no-data (thresholds
+unmoved). B KILLED as specified (lifetime/refill arm;
+lenient reversal D11 preserved for human panel). A/F/G/H
+kills unevaluable. C/D Track-R watch, E parked. Lex ranking
+P: F>G>H>A>B (paperwork order — no numeric effects exist).
+3 LLM judges triaged (dissents preserved); human experts
+still decide. Next: Step 4 Gen 1 from A/F/G/H survivors.
+
 STEP 2 DONE — PRE-REGISTERED, NOT HUMAN-FROZEN (2026-11-02):
 8 candidates A–H (Appendix B complete, 18/18 FMEA rows each),
 protocol, Q0 thresholds (patency ≥80% HIGH; AAV retention

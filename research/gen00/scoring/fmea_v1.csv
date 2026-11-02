@@ -1,0 +1,13 @@
+# FMEA v1 for gate_table.py --fmea, built 2026-11-02 (Step 3 synthesis).
+# Requested xhigh scorer; actual muse-wonder-full-1.0.
+# Source: Appendix C FMEA tables in candidate-A..H (8 files x 18 rows = 144 harm rows inspected).
+# Rule (task): include only rows where a numeric probability band exists
+# (<0.1%, 0.1-1%, 1-5%, >5%); skip UNPINNABLE/INSUFFICIENT/NA, document.
+# RESULT: 0 of 144 candidate rows carry a numeric band. Every applicable row
+# reads UNPINNABLE (A-D) or INSUFFICIENT/no P0 rate pinned, U13 (E-H);
+# the rest read NA (no causal path). No band was invented or imputed.
+# Consequence: gate_table Track R G5 aggregate = NA (missing, ranked last
+# on that key) for C, D, E. Including or omitting this file cannot change
+# any cell (verified by diff in Step3-scoring-summary.md).
+# G3b BLOCKED => INSUFFICIENT; no promotion possible at v1.
+candidate,harm,severity,probability_band
