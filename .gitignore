@@ -1,0 +1,9 @@
+# Evidence and secrets stay out of the repo (see GOAL.md)
+.env
+*.pem
+*.key
+data/*
+!data/.gitkeep
+__pycache__/
+.venv/
+.DS_Store
