@@ -1,0 +1,42 @@
+# SYNTHETIC DEMO FIXTURE - invented verdicts/numbers for code demonstration only; not literature, not Gen 0 candidates.
+# Model routing: requested Sol 6.1 (high; code deterministic); actual muse-wonder-full-1.0 fallback. Date: 2026-11-02.
+# Pre-registration BEFORE Step 3 scoring. Exploratory-after-seen: GOAL S4/S5/S7/S8/S10+AppA-C, Step1 pin, Step0 S2/S4 seen; no extraction CSV/Step3 seen.
+# G3b BLOCKED => all G3b cells INSUFFICIENT; no promotion possible at v1 (applies to every candidate below).
+# schema: extraction-csv-v1
+candidate,track,gate,window,stratum,tier,grade,delta_g2_db,delta_g3a_sd,g1_channels,burden_rank,verdict
+DEMO-P-DEVICE,P,G1,W3,all,T3,Moderate,,,14,,PASS
+DEMO-P-DEVICE,P,G2,W3,all,T4,Moderate,4.5,,,,PASS
+DEMO-P-DEVICE,P,G3a,W3,spoken,T4,Moderate,,0.5,,,PASS
+DEMO-P-DEVICE,P,G3b,W3,all,T4,Moderate,,,,,PASS
+DEMO-P-DEVICE,P,G4,W3,all,T2,Moderate,,,,,PASS
+DEMO-P-DEVICE,P,G5,W3,all,T4,Moderate,,,,,PASS
+DEMO-P-DEVICE,P,G6,W3,all,T4,Moderate,,,,2,PASS
+DEMO-P-PATHWAY,P,G1,W3,all,NA,NA,,,,,NA
+DEMO-P-PATHWAY,P,G2,W3,all,T4,Moderate,4.5,,,,PASS
+DEMO-P-PATHWAY,P,G3a,W3,signed,T4,Moderate,,0.5,,,PASS
+DEMO-P-PATHWAY,P,G3b,W3,all,T4,Moderate,,,,,PASS
+DEMO-P-PATHWAY,P,G4,W3,all,T2,Moderate,,,,,PASS
+DEMO-P-PATHWAY,P,G5,W3,all,T4,Moderate,,,,,PASS
+DEMO-P-PATHWAY,P,G6,W3,all,T4,Moderate,,,,1,PASS
+DEMO-P-VETO,P,G1,W3,all,T3,Moderate,,,20,,PASS
+DEMO-P-VETO,P,G2,W3,all,T4,Moderate,9.0,,,,PASS
+DEMO-P-VETO,P,G3a,W3,spoken,T4,Moderate,,0.9,,,PASS
+DEMO-P-VETO,P,G3b,W3,all,T4,Moderate,,,,,PASS
+DEMO-P-VETO,P,G4,W3,all,T2,Moderate,,,,,FAIL
+DEMO-P-VETO,P,G5,W3,all,T4,Moderate,,,,,PASS
+DEMO-P-VETO,P,G6,W3,all,T4,Moderate,,,,1,PASS
+DEMO-R-A,R,G1,W3,all,T2,Low,,,24,,PASS
+DEMO-R-A,R,G2,W3,all,T3,Low,5.0,,,,PASS
+DEMO-R-A,R,G2,W2,all,T3,Very low,1.0,,,,FAIL
+DEMO-R-A,R,G3a,W3,spoken,T3,Low,,0.3,,,INSUFFICIENT
+DEMO-R-A,R,G3b,W3,all,T4,Moderate,,,,,PASS
+DEMO-R-A,R,G4,W3,all,T2,Low,,,,,FAIL
+DEMO-R-A,R,G5,W3,all,T2,Low,,,,,INSUFFICIENT
+DEMO-R-A,R,G6,W3,all,T2,Low,,,,5,FAIL
+DEMO-R-B,R,G1,W3,all,T2,Low,,,24,,PASS
+DEMO-R-B,R,G2,W3,all,T3,Low,4.0,,,,PASS
+DEMO-R-B,R,G3a,W3,spoken,T3,Low,,0.3,,,INSUFFICIENT
+DEMO-R-B,R,G3b,W3,all,T4,Moderate,,,,,PASS
+DEMO-R-B,R,G4,W3,all,T2,Low,,,,,FAIL
+DEMO-R-B,R,G5,W3,all,T2,Low,,,,,INSUFFICIENT
+DEMO-R-B,R,G6,W3,all,T2,Low,,,,4,FAIL

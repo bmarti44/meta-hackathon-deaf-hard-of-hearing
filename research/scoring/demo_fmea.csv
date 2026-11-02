@@ -1,0 +1,9 @@
+# SYNTHETIC DEMO FIXTURE - invented FMEA rows for code demonstration only; not literature.
+# Model routing: requested Sol 6.1 (high; code deterministic); actual muse-wonder-full-1.0 fallback. Date: 2026-11-02.
+# Pre-registration BEFORE Step 3 scoring. Exploratory-after-seen: GOAL S4/S5/S7/S8/S10+AppA-C, Step1 pin, Step0 S2/S4 seen; no extraction CSV/Step3 seen.
+# G3b BLOCKED => all G3b cells INSUFFICIENT; no promotion possible at v1 (applies to every candidate below).
+candidate,harm,severity,probability_band
+DEMO-R-A,demo-harm-1,3,1-5%
+DEMO-R-A,demo-harm-2,4,<0.1%
+DEMO-R-A,demo-harm-3,2,>5%
+DEMO-R-B,demo-harm-1,3,<0.1%

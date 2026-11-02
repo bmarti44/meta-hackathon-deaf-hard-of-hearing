@@ -8,6 +8,19 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+STEP 2 DONE — PRE-REGISTERED, NOT HUMAN-FROZEN (2026-11-02):
+8 candidates A–H (Appendix B complete, 18/18 FMEA rows each),
+protocol, Q0 thresholds (patency ≥80% HIGH; AAV retention
+≥0.80+≤10 dB; conventions, unratified), held-out manifest
+(validation = 0), extraction schema, freeze checklist
+(signatures PENDING), gate_table.py + epi arithmetic.
+Skeptic F1 (schema incompatibility) FIXED by parent:
+research/scoring/adapt_extraction.py + tests; end-to-end
+template→adapter→gate_table verified, 31 tests OK.
+Step 3 proceeds as screening/falsification only; no
+promotion possible at v1 (G3b BLOCKED, pins unfrozen,
+human extraction pending). Next: Step 3 scoring.
+
 STEP 1 DONE — PROPOSED PIN, NOT FROZEN (2026-11-02):
 research/frozen_baseline/ (frozen def, AppendixA-v1, cost
 dictionary, skeptic, summary). 44 synthesis rows: 12 PINNED
