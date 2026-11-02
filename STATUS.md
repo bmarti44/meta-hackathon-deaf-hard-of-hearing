@@ -8,6 +8,20 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+STEP 1 DONE — PROPOSED PIN, NOT FROZEN (2026-11-02):
+research/frozen_baseline/ (frozen def, AppendixA-v1, cost
+dictionary, skeptic, summary). 44 synthesis rows: 12 PINNED
+(definitional only), 13 PROVISIONAL, 18 UNPINNABLE, 1 BLOCKED
+(G3b, stakeholder co-design pending — all G3b cells
+INSUFFICIENT, so no Track-P promotion is possible at v1).
+G1 anchor 8 kept as convention + 4/10/16 sensitivities +
+head-to-head bar; timing +20% DELETED; fibrosis scale 0–3.
+Skeptic: 12/12 spot-checks exact; amendments A1–A6 owed
+(cross-file reconciliation) before any freeze. Holder +
+co-approver freeze and human dual extraction still PENDING.
+Next: Step 2 pre-registration as screening/falsification
+generation under these pins.
+
 STEP 0 DONE — AGENT PRE-EXTRACTION ONLY (2026-11-02): 52-row
 verified bibliography in research/step0/ (4 workers + skeptic +
 synthesis). Sol 6.1 unavailable in this runtime; all agents ran
