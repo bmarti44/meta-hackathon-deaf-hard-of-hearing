@@ -1,6 +1,6 @@
 # GOAL: Preserve-first, higher-resolution hearing for congenital bilateral severe-to-profound SNHL
 
-> **GOAL.md v2.1** (2026-11-02). Supersedes v1 (`e9d4050`) after
+> **GOAL.md v2.2** (2026-11-02). Supersedes v1 (`e9d4050`) after
 > Round 1 dual review (Gaps 68/100, Skeptical 57/100; see
 > `reviews/round-1-scores.md`). Version history: §12.
 > **Status:** Research goal and operating loop. Not medical advice.
@@ -649,6 +649,26 @@ ID + page/table (the v1 undefined `result.ref` is replaced by this
 schema). Scale fan-out to the question; batch counts never prove
 completeness.
 
+**Model routing — Sol 6.1 (holder direction, v2.2).** All agent
+work in this project uses the **Sol 6.1** model family, with effort
+matched to judgment-load rather than uniform maximum:
+
+| Work type | Route | Rationale |
+|---|---|---|
+| New-generation ideation: candidate design, recombination interfaces, mutations, kill criteria (§7–§8) | **Sol 6.1, xhigh** | Highest-leverage, hardest-to-reverse choices; errors here waste a whole generation |
+| Adversarial skeptics, judge panel, gate adjudication, synthesis, GOAL/protocol amendments, dual reviews | **Sol 6.1, xhigh** | Falsification and promotion decisions; must not be the weakest link |
+| Generation execution: per-family literature sweeps, evidence pre-extraction, gap follow-ups, scoring-table population (§11 Steps 0–3 workers) | **Sol 6.1, high** | Bulk parallel work under a frozen protocol; xhigh synthesis/judges sit above it |
+| Mechanical work: `gate_table.py` runs, log/STATUS appends, formatting | Deterministic code / lowest sufficient effort | No model judgment to buy; keep it reproducible |
+
+Rules: (1) every workflow run records model + effort per agent in
+its review/log artifacts — unrecorded routing does not count;
+(2) human-led dual extraction (§9) and human-expert freeze decisions
+are unchanged — Sol 6.1 *xhigh* never substitutes for them;
+(3) if Sol 6.1 is unavailable in the executing runtime, fall back to
+the strongest available model at the same effort split and disclose
+the substitution in `STATUS.md` — never silently downgrade the
+xhigh design/judging tier to bulk effort.
+
 **Evidence-synthesis methods (PRISMA-like, pre-registered).**
 Databases: PubMed, Embase (if accessible — access gap disclosed if
 not), ClinicalTrials.gov, FDA labels/decisions; search strings +
@@ -768,10 +788,12 @@ outcome of the loop, as in the business project ("keep SPY/frozen").
 two-track gates, operationalized Appendix A, de-cargo-culted
 inference, Families G/H, Q0, per-harm stresses, adult-first path,
 recomputed-epidemiology requirement — per Round 1 reviews.
-v2.1 (this file): Round 2 fixes — G1 NA/portfolio rule + point
+v2.1: Round 2 fixes — G1 NA/portfolio rule + point
 anchor, frozen diagnostics/EI contents, modality co-primaries,
 GRADE→score map, FAIL-first fitness, G/H design+kills, unilateral
 variant dropped, human dual extraction, open-synthesis deliverable.
+v2.2 (this file): Sol 6.1 model routing (§9) — xhigh for ideation/
+judging/synthesis, high for generation execution workers.
 
 ## Appendix A. Gate operationalization (normative skeleton)
 

@@ -8,6 +8,15 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+SOL 6.1 ROUTING ADDED — GOAL v2.2 (2026-11-02): Per holder
+direction, GOAL S9 now routes all agent work to Sol 6.1:
+xhigh for new-generation ideation/recombination design,
+adversarial/judge/synthesis and amendments; high for generation
+execution workers (sweeps, pre-extraction, scoring population);
+deterministic code for mechanical work. Runs must record
+model+effort; fallback disclosed, never silent. Human extraction/
+freeze rules unchanged.
+
 ROUND 3 BOTH PASS >=90 (2026-11-02): Gaps 92/100 PASS,
 Skeptical 91/100 PASS on GOAL.md v2.1. Review loop complete
 (R1 68/57 -> R2 90/85 -> R3 92/91). Residual MEDIUM/LOW errata

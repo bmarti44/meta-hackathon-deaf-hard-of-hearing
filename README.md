@@ -3,7 +3,7 @@
 **PRESERVE** — preserve-first, higher-resolution hearing research
 for congenital bilateral severe-to-profound SNHL.
 
-**Start here: [GOAL.md](GOAL.md)** (v2.1) — triage claim C0, frozen
+**Start here: [GOAL.md](GOAL.md)** (v2.2) — triage claim C0, frozen
 baseline `frozen_bilateral_eCI_v1`, two-track gates G1–G6
 (Appendix A), and the generations → selection → recombination loop
 adapted from the `~/bufferright/business` S&P 500 strategy search.
