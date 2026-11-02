@@ -8,6 +8,16 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+STEP 5 DONE — NO WINNER, FROZEN RETAINED (2026-11-02):
+research/Step5-decision-no-winner.md. No Track-P survivor
+frozen; promotion impossible at v1 (G3b BLOCKED, human
+extraction pending, pins unfrozen) and 0 PASS in Gen0+Gen1.
+C0 untested (all cells INSUFFICIENT), Q0 UNDECIDABLE.
+Deliverable = §5.1 open synthesis + prioritized designs
+(Ga first). Not §12 abandonment (§7 stop not met; budget
+not stated). Full loop Steps 0–5 complete; continuation =
+human gates + gap attacks (§6 of decision), holder's call.
+
 STEP 4 DONE — GEN 1 NO FITNESS IMPROVEMENT (2026-11-02):
 5 Gen 1 designs from survivors only (P1 portfolio G+H+
 A-standard, A1 kill-test, Ga, H1, F1m). Re-score: every
