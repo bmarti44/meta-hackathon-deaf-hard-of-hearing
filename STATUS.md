@@ -8,6 +8,21 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+GAP ATTACKS ROUND 1 DONE — 0 CELLS CHANGED (2026-11-02,
+holder-directed continuation; Sol 6.1 retry: route rejected,
+not in catalog — fallback continues): CDC EHDI 2022 PDF
+extracted via pypdf (D1 documented ear-avg 810 = 0.228/1000
+screened; P0 better-ear count still UNPINNABLE from
+marginals, Fréchet [0,804]); 5 papers upgraded to full text
+(Srinivasan N=6; Kamakura; Pfingst sequence; Dieter;
+Keppeler); Q0 UNDECIDABLE stands (new find NCT07752888
+post-CI AAV n=1, no results); A1 in-silico model run
+(deterministic, parent-verified md5) but UNEVALUABLE +
+skeptic Shannon-unit hit. Gen 2 NOT justified (no verdict
+changed). Next: round 2 (PDF unlock → USPI/SSED, A1
+convergence+units, unrowed cells). Win still requires
+human gates (G3b, dual extraction, freeze).
+
 STEP 5 DONE — NO WINNER, FROZEN RETAINED (2026-11-02):
 research/Step5-decision-no-winner.md. No Track-P survivor
 frozen; promotion impossible at v1 (G3b BLOCKED, human
