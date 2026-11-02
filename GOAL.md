@@ -1,6 +1,6 @@
 # GOAL: Preserve-first, higher-resolution hearing for congenital bilateral severe-to-profound SNHL
 
-> **GOAL.md v2** (2026-11-02). Supersedes v1 (`e9d4050`) after
+> **GOAL.md v2.1** (2026-11-02). Supersedes v1 (`e9d4050`) after
 > Round 1 dual review (Gaps 68/100, Skeptical 57/100; see
 > `reviews/round-1-scores.md`). Version history: §12.
 > **Status:** Research goal and operating loop. Not medical advice.
@@ -224,12 +224,28 @@ publishes the table; no fabricated 4×6×6 precision):
   (label minimums verified per device in Step 0; v1's "9–12 mo"
   treated as cohort descriptor, not universal label).
 - Hearing-aid trial, mapping schedule, EI dose: defined ranges.
+- **Frozen diagnostics/language contents (stated now, so C0 cannot
+  win by definition):** standard etiologic workup as routinely
+  ordered (targeted genetics incl. *GJB2* where ordered, CMV
+  testing, imaging — *without* guaranteed rapid turnaround, without
+  a pre-committed gene-therapy-first triage rule, and without a
+  preserved-ear protocol); EI referral with family-chosen modality
+  (spoken / signed / bimodal as actually received — dose and
+  modality mix pinned Step 1, *not* assumed spoken-only and *not*
+  assumed sign-free). Family G must therefore beat *this* workup on
+  turnaround/triage consequences, and H must beat *this* EI mix on
+  dose/timing — or C0 correctly vanishes into evolving standard.
+  Evolving-standard elements (rapid sequencing where already
+  routine, preservation arrays) are a **sensitivity comparator**;
+  the deciding promotion comparator is `frozen_bilateral_eCI_v1`.
 - Outcomes: published meta-analytic/registry estimates with ranges
-  for G2/G3/G5; G1 effective channels 4–10 (task-dependent, §4).
+  for G2/G3/G5; G1 effective channels 4–10 (task-dependent; point
+  anchor in §4.2 G1).
 
 **Comparator-drift rule:** if standard care materially changes
 (new label age, dexamethasone-eluting array approval, etc.), the
-holder (§12) may freeze `v2` — with changelog, re-baselined scores,
+holder + one independent co-approver (§12; holder never sole-approves
+a re-freeze) may freeze `v2` — with changelog, re-baselined scores,
 and v1 results preserved. Silent drift is forbidden; dated
 assumptions are required because challenger timelines are long.
 
@@ -274,10 +290,20 @@ citations; changes after freeze = new protocol version):
   Electrical/optical/penetrating: spread-of-excitation width
   (mm/octaves) + spectral-ripple thresholds. Regenerative/bridge:
   pre-specified functional anchor (frequency discrimination / SRT
-  benefit), never raw hair-cell counts. **PASS (Track P): ≥1.5×
-  frozen effective channels *or* equivalent functional gain;
-  PASS (Track R): ≥2× frozen; STRETCH (either): ≥16 independent
-  channels sustained.** v1 ">30" is demoted to an *aspirational
+  benefit), never raw hair-cell counts. **Anchor task & point
+  baseline (pre-Step 1):** spectral-ripple discrimination in adult
+  CI users / vocoder listeners; frozen point = **8 effective
+  channels** (midpoint of 4–10 range; sensitivity at 4 and 10
+  mandatory). **PASS (device candidates A/B, Track P): ≥12
+  effective channels (1.5× point) on anchor task; PASS (Track R):
+  ≥16 (2× point) — which is also the STRETCH.** "Equivalent
+  functional gain" is deleted as an escape hatch: non-device
+  pathway candidates (F/G/H) are **G1 = NA (pre-declared)** and
+  promote only as *portfolio components* combined with a G1-passing
+  or G1-NA-disclosed device/pathway at Gen 1 portfolio level;
+  a portfolio may not claim a G1 win its components did not earn.
+  Timing sub-gate NI (+20% ITD error) is a Step 1 placeholder to
+  derive from binaural literature or delete — flagged underived. v1 ">30" is demoted to an *aspirational
   reference* (≈ count of auditory critical bands; normal cochlea
   ≈3,500 inner hair cells — 30 prosthetic channels remain coarse).
   Sub-gates: temporal coding (rate/envelope/TFS proxy) and
@@ -293,14 +319,24 @@ citations; changes after freeze = new protocol version):
   *in the child's accessible modalities* (signed, spoken, or both;
   instruments per modality in Appendix A: e.g., CDI/ASL-CDI,
   PLS-5-class, IT-MAIS/LittlEARS for early auditory function).
-  **PASS: ≥0.4 SD (≈6 standard-score points) vs frozen in ≥1 of
-  W2/W3, NI (−0.2 SD) in all measured windows**, stratified/adjusted
+  **PASS (modality-specific co-primaries; NO pooled SD across
+  incommensurable norms): ≥0.4 SD vs frozen *within* the signed
+  stratum (ASL-normed instruments) and/or *within* the spoken
+  stratum (spoken-normed instruments) in ≥1 of W2/W3, NI (−0.2 SD)
+  in every measured stratum/window.** Bimodal children: pre-declared
+  primary = highest-modality language score + total conceptual
+  vocabulary (hierarchy fixed Step 1). Family H causality is
+  *not* claimed from adjustment alone (modality is family-chosen):
+  H requires encouragement/observational design with stated
+  identification strategy (§8). Stratified/adjusted
   for modality, home language, SES proxy, EI dose, additional
   disabilities. P1 CAEP / fNIRS are *mechanism* measures (surrogate
   criteria §5.3), never sole G3 passes.
 - **G3b Communication autonomy & family outcomes (co-primary).**
   Family-reported communication autonomy / QoL instrument
   (named in Appendix A with Deaf/parent stakeholders, §9).
+  **G3b scoring is BLOCKED (all cells INSUFFICIENT) until the
+  instrument + MCID are co-designed and committed in Step 1.**
   **PASS: NI vs frozen; superiority claimed only with stakeholder-
   defined MCID.** A spoken-language gain with autonomy loss fails.
 - **G4 Biology preservation (Track P veto).** Components (all must
@@ -330,8 +366,10 @@ citations; changes after freeze = new protocol version):
 
 **Scoring states per gate-cell:** PASS / FAIL / INSUFFICIENT
 (missing or below-tier evidence). **INSUFFICIENT never counts as
-pass and is never judge-imputed.** Promotion (Track P) = PASS on
-G2, G3a, G3b, G4, G5, G6 (+ G1 P-rule), at primary *and* stress
+pass and is never judge-imputed.** Promotion (device, Track P) =
+PASS on G1, G2, G3a, G3b, G4, G5, G6; promotion (pathway component
+F/G/H) = PASS on G2–G6 with G1 NA disclosed, effective only inside
+a Gen 1 portfolio stating its device G1 verdict — at primary *and* stress
 scenarios (§6), in decision-time analysis. Anything else keeps frozen.
 
 ### 4.3 Estimand
@@ -350,11 +388,15 @@ trading (333 paired monthly returns, block bootstrap, same panel).
 Heterogeneous animal/literature evidence has no common return unit;
 judge opinion is not a bootstrap. v2 is explicit:
 
-- **Gen 0/Gen 1 do not produce ≥90% promotion claims.** They produce
-  *prioritized, falsifiable study designs for adoption by a
-  qualified lab/clinical group* (§9), ranked by gate scores with
-  evidence grades. The deliverable claim is downgraded accordingly
-  (v1 §"persuade an otologist to run FIH" is retired).
+- **Gen 0/Gen 1 do not produce ≥90% promotion claims.** Primary
+  deliverable reframed honestly: an **open evidence synthesis +
+  prioritized study designs** (public, citable, usable without any
+  partnership). *Adoption* by a qualified lab is a stretch outcome
+  with a stated criterion (a named external group commits to run/
+  fund a handoff design); absence of adoption does not falsify the
+  synthesis, and engagement by incumbent program owners (§2.2) is
+  never assumed. Ranked by gate scores with evidence grades.
+  (v1 §"persuade an otologist to run FIH" is retired.)
 - **≥90% is reserved** for a future frozen candidate evaluated on
   *prospective, paired human (or validated large-animal) data*
   under a pre-registered analysis: joint estimand = P(all Track-P
@@ -370,8 +412,14 @@ judge opinion is not a bootstrap. v2 is explicit:
 
 - **Grading:** adapted GRADE per gate-cell (High/Moderate/Low/Very
   low) + risk-of-bias tool by design (RoB 2 / ROBINS-I / SYRCLE for
-  animal; named in protocol). Publication bias: trial-registry +
-  grey-literature search (§9); funnel/Egger only where ≥10 studies.
+  animal; named in protocol). **GRADE→score map (binding):** PASS
+  requires ≥Moderate GRADE *and* Appendix A minimum tier; Low =
+  provisional signal (reported, never PASS); Very low / high RoB =
+  INSUFFICIENT. **Allegiance rule:** inventor-lab single-source
+  claims (e.g., device-originating groups) start one GRADE level
+  lower and G1 signals require non-inventor replication to PASS.
+  Publication bias: trial-registry + grey-literature search (§9);
+  funnel/Egger only where ≥10 studies.
 - **Multiplicity:** the searched-family log (every candidate × gate
   × window × stratum scored) is published. Formal family-wise
   control applies *only* to quantitative meta-analytic sub-claims
@@ -403,7 +451,9 @@ IT-MAIS) → W2/W3 language. Surrogates (P1 latency, fNIRS
 cross-modal index, modeled channel count) must meet pre-stated
 validation criteria (association + mediation evidence) before
 counting toward G3; otherwise mechanism-only. Minimum tier per
-gate is in Appendix A (e.g., G3a PASS needs T4 or T3+validated chain).
+gate is in Appendix A. **Reconciled tier rule (Appendix A governs):**
+G3a PASS requires **T4**; T3+validated-chain yields at most a
+provisional signal (§5.2 Low rule), never PASS.
 
 **Developmental causal-chain requirement** (replaces v1
 segment-majority walk-forward): each candidate must show its early
@@ -417,11 +467,13 @@ are checked against later/independent evidence (§5.2 held-out).
 Cost dictionary (pinned Step 1): component, base rate/range +
 source (CI registries/cohorts), perspective (family / payer /
 societal — all three reported), horizon (to 7 y primary; to
-adolescence sensitivity), dollar year. No invented dollar costs
+adolescence sensitivity), dollar year, **discount rate 3%/y
+(0%/5% sensitivity)**. No invented dollar costs
 for preclinical combos — report burden units instead.
 
 **Primary scenario:** base rates. **Stress scenarios (per harm,**
-from upper end of published ranges): S-revision (device failure/
+at the **90th percentile / upper 95% CI bound** of published ranges,
+pinned per harm in Step 1): S-revision (device failure/
 reimplantation high), S-nonuse (device non-use / low wear-time
 high), S-access (EHDI loss-to-follow-up + travel/insurance failure
 high), S-surgical (major complication high, incl. malformation
@@ -439,10 +491,17 @@ follow-up in denominators.
 Gen N candidates (Appendix B template, pre-registered, track declared)
   → score vs frozen on G1–G6 (PASS/FAIL/INSUFFICIENT, App. A)
   → adversarial review (distinct falsification target per claim)
-  → LEXICOGRAPHIC FITNESS (Track P): 1) no G4/G5 veto fail,
-    2) fewest INSUFFICIENT among G2/G3a/G3b/G6, 3) largest G2 gain,
-    4) largest G3a gain, 5) lowest burden (G6). Track R ranked
-    separately (G1, then G5 burden). Pareto sets reported for
+  → LEXICOGRAPHIC FITNESS (Track P; order stakeholder-elicited
+    Step 1, rank-sensitivity to order reported): 1) fewest FAILs
+    (G4/G5 veto FAIL = demote last), 2) fewest INSUFFICIENT among
+    applicable gates, 3) largest G2 gain, 4) largest G3a gain,
+    5) G3b verdict, 6) device G1 (NA last among ties), 7) lowest
+    burden (G6). Note: fewest-INSUFFICIENT favors studied incumbents
+    by design — disclosed, with an evidence-completeness sensitivity
+    ranking published alongside. Track R ranked separately (G1,
+    then G5 aggregate = count of Appendix C harms rated ≥major
+    severity × probability band, defined Step 2 in gate_table spec).
+    Pareto sets reported for
     transparency but ranking/promotion uses this rule — fixing
     v1's incomparable-everything problem.
   → RECOMBINE only at evidenced interfaces (§7 rule 3);
@@ -502,13 +561,16 @@ earliest-plausible *infant* use assuming adult-first staging (§10).
   (place-pitch order, spread pre/post regrowth), elution duration
   vs lifetime, stimulation–outgrowth interaction, and an explicit
   account of 2014–2026 human-translation silence. *Kill:* neurite
-  growth without tonotopic order at T2, or reservoir <5 y without
-  refill/revision plan.
+  growth without tonotopic order at T2, or no credible lifetime
+  burden plan (refill/revision count to adolescence scored in G5/G6;
+  a <5 y reservoir without refill is an automatic kill).
 - **C. Optical CI [R watch-list].** Scored for learning; G6 FAIL
   for infants until adult FIH + opsin immunogenicity/durability +
   power/heat data exist. Correct citations required (distinguish
   2020 multichannel μLED *EMBO Mol Med* paper from any 2026 work;
-  Step 0). *Kill/park criterion:* no adult FIH start by Gen 2 review.
+  Step 0). *Kill/park criterion:* no adult FIH start by Gen 2
+  review or 24 months after Gen 0 freeze, whichever is earlier
+  (calendar date written into the Gen 0 freeze checklist).
 - **D. Reprogramming / beyond-*OTOF* AAV [R long-horizon].**
   Removed from infant Gen 0 *promotion* scoring. Single kill/
   advance criterion: replicated threshold restoration with
@@ -527,29 +589,47 @@ earliest-plausible *infant* use assuming adult-first staging (§10).
   (early HA fitting, wear-time, ECochG/CAEP-guided timing) with
   dose + falsifying W2 endpoint; vibrotactile contingency only as
   exploratory sub-candidate with named harm monitoring (false
-  reassurance / delayed CI = G5 event).
+  reassurance / delayed CI = G5 event). **F1 precondition stated:**
+  at ≥70 dB SNHL, aided audibility will often remain insufficient
+  for spoken-language access — F1 claims are limited to audibility/
+  timing optimization and earlier CI decision, never HA-as-substitute.
+  *Kill:* no audibility or time-to-CI gain vs frozen workup.
 - **G. Diagnosis & sequencing pathway [P; C0 core — NEW].** Rapid
   genomic + CMV + imaging triage at decision time: gene-therapy-
   first where label-eligible, immediate hearing-preservation CI
-  otherwise, unilateral-CI + preserved contralateral ear where
-  genuinely uncertain (with binaural-development cost scored).
-  Gen 0 directly tests Q0 (§1.3) and G-vs-frozen on time-to-access,
-  language, and preserved options. *This is the expected near-term
-  winner if any* — the loop must let data confirm or refute that.
+  otherwise. Includes genomic-counselling, VUS/incidental-finding
+  consent & return-of-results, and mis-triage harms (App. C rows).
+  The v2 unilateral-CI + preserved-ear variant is **dropped from
+  Gen 0**: it is delayed second-ear implantation, conflicts with
+  §10 never-delay and bilateral gates, and lacks stated equipoise;
+  it may return only as a bounded Gen ≥1 candidate with rescue-
+  timing rule + equipoise justification + binaural-cost accounting.
+  Gen 0 directly tests Q0 (§1.3; decision rule gated in Step 2
+  protocol: patency % + post-CI AAV-efficacy thresholds defined
+  *before* Q0 evidence is scored) and G-vs-frozen (§3.4 contents)
+  on time-to-access, language, and preserved options. *Kill:* no
+  time-to-access or option-preservation gain over frozen workup.
+  *This is the expected near-term winner if any* — data must confirm.
 - **H. Visual-language-first W0 bridge [P; NEW].** Early signed/
   visual communication exposure (dose-specified, family-chosen)
   scored on G3a (language any modality), G3b, *and* later auditory
   outcomes post-CI. Hypothesis (Kral-consistent): visual language
   supports language development without harming auditory outcomes.
+  Design: encouragement / prospective observational with pre-stated
+  identification strategy (modality remains family-chosen; no
+  randomization of language modality). *Kill:* G3a NI fails in
+  signed stratum or post-CI auditory harm signal at ≥Moderate GRADE.
   Never framed as competitor to CI; sequenced with G/A.
 
 *Worked satisfiability example (Track P, paper-level):* G (triage
 preserves the *OTOF* ear pre-CI, immediate preservation-CI for
 others) + H (W0 signed input) + A-standard (atraumatic array)
-plausibly passes G4 (no AAV pre-exposure, patent scala, preserved
-contralateral option where used), G5 (standard surgical risks),
-G3a/b (earlier language access), G6 (available now) with modest
-G1 (no channel claim beyond standard + fitting). Gen 0 must test
+plausibly passes G4 (no AAV pre-exposure, patent scala), G5
+(standard surgical risks), G3a/b (earlier language access), G6
+(available now) as a *pathway portfolio* with **G1 = NA disclosed**
+(§4.2: no channel claim; device G1 verdict inherited from the
+standard array and stated as frozen-equivalent, not a G1 win).
+Gen 0 must test
 — not assume — each cell; the example proves the gate set is
 non-empty, answering the Round 1 satisfiability objection.
 
@@ -567,8 +647,11 @@ completeness.
 **Evidence-synthesis methods (PRISMA-like, pre-registered).**
 Databases: PubMed, Embase (if accessible — access gap disclosed if
 not), ClinicalTrials.gov, FDA labels/decisions; search strings +
-dates frozen in protocol; dual screening/extraction (human + agent
-or two agents + human adjudication); inclusion/exclusion flow
+dates frozen in protocol; **human-led dual extraction on all
+load-bearing claims** (agents may pre-extract; a human extractor
+independently verifies + sampled error audit with error rate
+reported — agent-only Step 0 verification is circular and banned
+for gate-deciding claims); inclusion/exclusion flow
 published; bias tools per §5.2. Simulations: named model +
 version + parameters + seeds (e.g., finite-element cochlea model
 or vocoder config — pinned Step 1). Datasets: manifest with DOI,
@@ -582,8 +665,8 @@ Deaf-community + parent stakeholders. Judge eligibility, blinding
 to candidate authorship where feasible, and disagreement
 adjudication (majority + written dissent preserved) stated in
 protocol. LLM judges *triage*; human experts *decide* freezes.
-Until partners are secured, deliverables are labeled
-"for adoption by a qualified lab" (§5.1).
+Until partners are secured, deliverables are labeled open
+synthesis (§5.1); adoption is a stretch criterion, never assumed.
 
 **Resources & budget (define before Gen 0).** Holder sets: compute/
 literature-access budget, calendar bound per generation, and
@@ -639,7 +722,10 @@ MCIDs; animal→infant discount per §5.3 in every claim.
 - **Step 1 — Pin baseline + Appendix A numbers + cost dictionary**
   (§§3–6) with citations and ranges. Commit before challenger scoring.
 - **Step 2 — Pre-register Gen 0** (8 Appendix-B candidates + Q0
-  plan + held-out manifest + freeze checklist). Label exploratory-
+  decision thresholds (§8G) + held-out manifest + freeze checklist
+  + extraction-CSV schema + `gate_table.py` with passing tests +
+  pinned software environment — all committed *before* Step 3).
+  Label exploratory-
   after-seen honestly (cf. `durable_strategy.py` header).
 - **Step 3 — Sweep → skeptics → judges → gate_table scoring.**
   Publish searched-family log + all INSUFFICIENT cells.
@@ -670,10 +756,14 @@ survivor after Gen 1, or (c) human-expert review judges handoff
 designs non-viable. Abandonment with full logs is a successful
 outcome of the loop, as in the business project ("keep SPY/frozen").
 
-*Version history:* v1 (e9d4050) initial PRESERVE-30. v2 (this file):
+*Version history:* v1 (e9d4050) initial PRESERVE-30. v2:
 two-track gates, operationalized Appendix A, de-cargo-culted
 inference, Families G/H, Q0, per-harm stresses, adult-first path,
 recomputed-epidemiology requirement — per Round 1 reviews.
+v2.1 (this file): Round 2 fixes — G1 NA/portfolio rule + point
+anchor, frozen diagnostics/EI contents, modality co-primaries,
+GRADE→score map, FAIL-first fitness, G/H design+kills, unilateral
+variant dropped, human dual extraction, open-synthesis deliverable.
 
 ## Appendix A. Gate operationalization (normative skeleton)
 
@@ -683,11 +773,12 @@ Gen 0 protocol. NA = not measurable that window (pre-declared).
 
 | Gate–window | Measure / instrument | PASS vs frozen | NI margin | Min tier |
 |---|---|---|---|---|
-| G1 W1–W3 | Spread (mm/oct) + ripple (rip/oct); TFS/rate proxy; ITD error (µs) | §4.2 ×-rules + timing NI | Timing +20% | T2/T3 + chain |
+| G1 W1–W3 | Spread (mm/oct) + ripple (rip/oct); TFS/rate proxy; ITD error (µs); **F/G/H: NA** | Devices: ≥12 (P) / ≥16 (R) vs point 8 (§4.2) | Timing +20%* | T2/T3 + chain |
 | G2 W3 (primary) | SRT-in-noise dB (age-valid, e.g. closed/open-set per age); quiet % | ≥3 dB better | Quiet −5 pp | T4 (T3 provisional) |
+| G2-music W2–W3 | Melody/pitch battery (named Step 1), % correct | ≥10 pp better | −5 pp | T4 |
 | G2 W2 | Word recognition %; localization RMS° (when testable) | ≥10 pp; ≥10° better | −5 pp; +5° | T4 |
 | G2 W0–W1 | CAEP detection, VRA thresholds (mechanism only) | No PASS; chain input | — | T4 |
-| G3a W2/W3 | PLS-5-class / CDI / ASL-CDI (modality-matched SS) | ≥+0.4 SD one window | −0.2 SD all | T4 |
+| G3a W2/W3 | Modality-matched SS (signed / spoken separately; bimodal hierarchy §4.2) | ≥+0.4 SD *within stratum* | −0.2 SD every stratum | T4 |
 | G3a W1 | IT-MAIS/LittlEARS + CDI | NI + trajectory | −0.2 SD equiv | T4 |
 | G3b W1–W3 | Stakeholder-named family QoL/autonomy scale | Superiority per MCID | NI per MCID | T4 |
 | G4 all | Residual-hearing %; fibrosis grade (0–4 histopath scale named Step 1); SGN density; G4-AAV re-dose demo | All components ≥ frozen | Per-component in Step 1 | T2 (+T4 RH) |
@@ -698,6 +789,7 @@ Missing-data: INSUFFICIENT (§4.2). Competing interventions
 (modality switch, rescue CI) handled per estimand (§4.3). Floor/
 ceiling: instruments with >20% at bound trigger pre-stated
 alternative. Music battery + exact SRT test named in Step 1.
+*Timing NI flagged underived (§4.2) — derive or delete in Step 1.
 
 ## Appendix B. Candidate specification template (all fields required)
 
@@ -718,9 +810,12 @@ MRI incompatibility · charge/thermal/phototoxic injury · AAV
 immunity/shedding · opsin immunogenicity · neurotrophin misrouting/
 tumor signal · reprogramming off-fate/tumor · nerve injury/migration ·
 elution depletion · false reassurance/delayed standard care (F/H) ·
-binaural deprivation from delayed second ear (G unilateral variant).
-Each row: severity, probability + source tier, mitigation, G5 input,
-persistent-harm stopping rule.
+genomic mis-triage / VUS distress / incidental findings (G) ·
+binaural deprivation from delayed second ear (any sequential design).
+Scales: severity 1 minor / 2 moderate / 3 major / 4 catastrophic;
+probability bands <0.1% / 0.1–1% / 1–5% / >5% per child (horizon
+stated). Each row: severity, probability + source tier, mitigation,
+G5 input, persistent-harm stopping rule.
 
 ## Appendix D. Epidemiology & coverage arithmetic (Step 1 deliverable)
 

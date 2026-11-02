@@ -8,6 +8,14 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+ROUND 2 + GOAL v2.1 (2026-11-02): Round 2 scores on v2 — Gaps
+90/100 PASS, Skeptical 85/100 FAIL (2 HIGH). GOAL.md patched to
+v2.1 fixing both HIGHs and all Round 2 MEDIUM/LOW items (G1 NA/
+portfolio + point anchor, frozen contents, modality co-primaries,
+GRADE map, FAIL-first fitness, unilateral variant dropped, human
+dual extraction). See reviews/round-2-*. Awaiting Round 3
+re-review (target both >=90).
+
 GOAL v2 AFTER ROUND 1 DUAL REVIEW (2026-11-02): Gaps reviewer
 68/100 FAIL, skeptical reviewer 57/100 FAIL on v1 (e9d4050).
 All verified issues addressed in GOAL.md v2: two-track (P/R)
