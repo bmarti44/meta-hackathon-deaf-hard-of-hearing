@@ -8,6 +8,25 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+STEP 0 DONE — AGENT PRE-EXTRACTION ONLY (2026-11-02): 52-row
+verified bibliography in research/step0/ (4 workers + skeptic +
+synthesis). Sol 6.1 unavailable in this runtime; all agents ran
+muse-wonder-full-1.0 fallback at the §9 effort split (high
+workers, xhigh skeptic/synthesis) — disclosed per §9 rule 3.
+Human dual extraction PENDING: no Step 0 row is gate-deciding
+until an independent human extractor verifies it (§9). Key
+corrections: Friesen 2001 authors Baskent/Wang (not Cruz) and
+4–10 channels is a gloss (Berg 2019: 16>8 gains — G1 point-8
+anchor contested); Kral 2023 is crossmodal review, sensitive-
+period cite is Kral & Sharma 2012; Otarmeni label 16/20=80%
+(single-source, human PDF re-read owed), no numeric age limits;
+MED-EL min age 7 mo (provisional, re-pull owed); Liu 2025/Qiao
+2024 UNVERIFIABLE as cited; ANI chronic-cat denominators
+REFUTED as stated; P0 ≥70 dB denominator still missing (CDC
+EHDI table not extracted); Q0 undecidable (no patency % / no
+post-CI AAV data). Next: Step 1 pin (provisional where Step 0
+is abstract-level; pins needing human extraction flagged).
+
 SOL 6.1 ROUTING ADDED — GOAL v2.2 (2026-11-02): Per holder
 direction, GOAL S9 now routes all agent work to Sol 6.1:
 xhigh for new-generation ideation/recombination design,
