@@ -8,6 +8,17 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+GOAL v2 AFTER ROUND 1 DUAL REVIEW (2026-11-02): Gaps reviewer
+68/100 FAIL, skeptical reviewer 57/100 FAIL on v1 (e9d4050).
+All verified issues addressed in GOAL.md v2: two-track (P/R)
+operationalized gates + Appendix A, C0 triage claim replacing
+single-device PRESERVE-30 (channel target relativized), P0/strata,
+de-cargo-culted inference (no Gen-0 >=90% claim), per-harm stresses,
+lexicographic fitness, Families G/H + Q0, adult-first regulatory
+path, Step 0 source verification. Disposition:
+reviews/round-1-disposition.md. Awaiting Round 2 re-review
+(target both >=90). No challenger scored; baseline unpinned.
+
 GOAL ESTABLISHED (2026-11-02): Created `GOAL.md` defining the
 PRESERVE-30 thesis — genotype-agnostic, biology-preserving,
 developmentally-timed hearing targeting >30 independent channels
