@@ -1,0 +1,478 @@
+{
+  "audit": {
+    "candidate_gates": {
+      "A": {
+        "G1": "INSUFFICIENT",
+        "G2": "INSUFFICIENT",
+        "G3a": "INSUFFICIENT",
+        "G3b": "INSUFFICIENT",
+        "G4": "INSUFFICIENT",
+        "G5": "INSUFFICIENT",
+        "G6": "FAIL"
+      },
+      "B": {
+        "G1": "INSUFFICIENT",
+        "G2": "INSUFFICIENT",
+        "G3a": "INSUFFICIENT",
+        "G3b": "INSUFFICIENT",
+        "G4": "INSUFFICIENT",
+        "G5": "INSUFFICIENT",
+        "G6": "FAIL"
+      },
+      "C": {
+        "G1": "INSUFFICIENT",
+        "G2": "INSUFFICIENT",
+        "G3a": "INSUFFICIENT",
+        "G3b": "INSUFFICIENT",
+        "G4": "FAIL",
+        "G5": "INSUFFICIENT",
+        "G6": "FAIL"
+      },
+      "D": {
+        "G1": "INSUFFICIENT",
+        "G2": "INSUFFICIENT",
+        "G3a": "INSUFFICIENT",
+        "G3b": "INSUFFICIENT",
+        "G4": "FAIL",
+        "G5": "INSUFFICIENT",
+        "G6": "INSUFFICIENT"
+      },
+      "E": {
+        "G1": "INSUFFICIENT",
+        "G2": "INSUFFICIENT",
+        "G3a": "INSUFFICIENT",
+        "G3b": "INSUFFICIENT",
+        "G4": "INSUFFICIENT",
+        "G5": "FAIL",
+        "G6": "FAIL"
+      },
+      "F": {
+        "G1": "NA",
+        "G2": "INSUFFICIENT",
+        "G3a": "INSUFFICIENT",
+        "G3b": "INSUFFICIENT",
+        "G4": "INSUFFICIENT",
+        "G5": "INSUFFICIENT",
+        "G6": "INSUFFICIENT"
+      },
+      "G": {
+        "G1": "NA",
+        "G2": "INSUFFICIENT",
+        "G3a": "INSUFFICIENT",
+        "G3b": "INSUFFICIENT",
+        "G4": "INSUFFICIENT",
+        "G5": "INSUFFICIENT",
+        "G6": "INSUFFICIENT"
+      },
+      "GEN1-A1": {
+        "G1": "INSUFFICIENT",
+        "G2": "INSUFFICIENT",
+        "G3a": "INSUFFICIENT",
+        "G3b": "INSUFFICIENT",
+        "G4": "INSUFFICIENT",
+        "G5": "INSUFFICIENT",
+        "G6": "FAIL"
+      },
+      "GEN1-F1m": {
+        "G1": "NA",
+        "G2": "INSUFFICIENT",
+        "G3a": "INSUFFICIENT",
+        "G3b": "INSUFFICIENT",
+        "G4": "INSUFFICIENT",
+        "G5": "INSUFFICIENT",
+        "G6": "INSUFFICIENT"
+      },
+      "GEN1-Ga": {
+        "G1": "NA",
+        "G2": "INSUFFICIENT",
+        "G3a": "INSUFFICIENT",
+        "G3b": "INSUFFICIENT",
+        "G4": "INSUFFICIENT",
+        "G5": "INSUFFICIENT",
+        "G6": "INSUFFICIENT"
+      },
+      "GEN1-H1": {
+        "G1": "NA",
+        "G2": "INSUFFICIENT",
+        "G3a": "INSUFFICIENT",
+        "G3b": "INSUFFICIENT",
+        "G4": "INSUFFICIENT",
+        "G5": "INSUFFICIENT",
+        "G6": "INSUFFICIENT"
+      },
+      "GEN1-P1": {
+        "G1": "NA",
+        "G2": "INSUFFICIENT",
+        "G3a": "INSUFFICIENT",
+        "G3b": "INSUFFICIENT",
+        "G4": "INSUFFICIENT",
+        "G5": "INSUFFICIENT",
+        "G6": "INSUFFICIENT"
+      },
+      "GEN2-H2": {
+        "G1": "NA",
+        "G2": "INSUFFICIENT",
+        "G3a": "INSUFFICIENT",
+        "G3b": "INSUFFICIENT",
+        "G4": "INSUFFICIENT",
+        "G5": "INSUFFICIENT",
+        "G6": "INSUFFICIENT"
+      },
+      "GEN2-P2": {
+        "G1": "NA",
+        "G2": "INSUFFICIENT",
+        "G3a": "INSUFFICIENT",
+        "G3b": "INSUFFICIENT",
+        "G4": "INSUFFICIENT",
+        "G5": "INSUFFICIENT",
+        "G6": "INSUFFICIENT"
+      },
+      "GEN3-P3": {
+        "G1": "NA",
+        "G2": "INSUFFICIENT",
+        "G3a": "INSUFFICIENT",
+        "G3b": "INSUFFICIENT",
+        "G4": "INSUFFICIENT",
+        "G5": "INSUFFICIENT",
+        "G6": "INSUFFICIENT"
+      },
+      "GEN3-W3": {
+        "G1": "NA",
+        "G2": "INSUFFICIENT",
+        "G3a": "INSUFFICIENT",
+        "G3b": "INSUFFICIENT",
+        "G4": "INSUFFICIENT",
+        "G5": "INSUFFICIENT",
+        "G6": "INSUFFICIENT"
+      },
+      "GEN4-P4": {
+        "G1": "NA",
+        "G2": "INSUFFICIENT",
+        "G3a": "INSUFFICIENT",
+        "G3b": "INSUFFICIENT",
+        "G4": "INSUFFICIENT",
+        "G5": "INSUFFICIENT",
+        "G6": "INSUFFICIENT"
+      },
+      "GEN4-W4": {
+        "G1": "NA",
+        "G2": "INSUFFICIENT",
+        "G3a": "INSUFFICIENT",
+        "G3b": "INSUFFICIENT",
+        "G4": "INSUFFICIENT",
+        "G5": "INSUFFICIENT",
+        "G6": "INSUFFICIENT"
+      },
+      "GEN5-I1": {
+        "G1": "INSUFFICIENT",
+        "G2": "INSUFFICIENT",
+        "G3a": "INSUFFICIENT",
+        "G3b": "INSUFFICIENT",
+        "G4": "FAIL",
+        "G5": "INSUFFICIENT",
+        "G6": "INSUFFICIENT"
+      },
+      "GEN5-I2": {
+        "G1": "INSUFFICIENT",
+        "G2": "INSUFFICIENT",
+        "G3a": "INSUFFICIENT",
+        "G3b": "INSUFFICIENT",
+        "G4": "FAIL",
+        "G5": "INSUFFICIENT",
+        "G6": "INSUFFICIENT"
+      },
+      "GEN5-K1": {
+        "G1": "INSUFFICIENT",
+        "G2": "INSUFFICIENT",
+        "G3a": "INSUFFICIENT",
+        "G3b": "INSUFFICIENT",
+        "G4": "FAIL",
+        "G5": "INSUFFICIENT",
+        "G6": "INSUFFICIENT"
+      },
+      "GEN5-P5": {
+        "G1": "NA",
+        "G2": "INSUFFICIENT",
+        "G3a": "INSUFFICIENT",
+        "G3b": "INSUFFICIENT",
+        "G4": "INSUFFICIENT",
+        "G5": "INSUFFICIENT",
+        "G6": "INSUFFICIENT"
+      },
+      "GEN6-P6": {
+        "G1": "NA",
+        "G2": "INSUFFICIENT",
+        "G3a": "INSUFFICIENT",
+        "G3b": "INSUFFICIENT",
+        "G4": "INSUFFICIENT",
+        "G5": "INSUFFICIENT",
+        "G6": "INSUFFICIENT"
+      },
+      "GEN7-P7": {
+        "G1": "NA",
+        "G2": "INSUFFICIENT",
+        "G3a": "INSUFFICIENT",
+        "G3b": "INSUFFICIENT",
+        "G4": "INSUFFICIENT",
+        "G5": "INSUFFICIENT",
+        "G6": "INSUFFICIENT"
+      },
+      "H": {
+        "G1": "NA",
+        "G2": "INSUFFICIENT",
+        "G3a": "INSUFFICIENT",
+        "G3b": "INSUFFICIENT",
+        "G4": "INSUFFICIENT",
+        "G5": "INSUFFICIENT",
+        "G6": "INSUFFICIENT"
+      }
+    },
+    "candidates": 25,
+    "grades": {
+      "UNASSESSED": 370
+    },
+    "historical_reproduction": [
+      {
+        "input": "research/gen00/scoring/adapted_v2.csv",
+        "matrix_equal": true,
+        "rows": 233
+      },
+      {
+        "input": "research/gen01/scoring/adapted-gen1.csv",
+        "matrix_equal": true,
+        "rows": 41
+      },
+      {
+        "input": "research/gen02/scoring/adapted-gen2.csv",
+        "matrix_equal": true,
+        "rows": 16
+      },
+      {
+        "input": "research/gen03design/scoring/adapted-gen3.csv",
+        "matrix_equal": true,
+        "rows": 16
+      },
+      {
+        "input": "research/gen04/scoring/adapted-gen4.csv",
+        "matrix_equal": true,
+        "rows": 16
+      },
+      {
+        "input": "research/gen05/scoring/adapted-gen5.csv",
+        "matrix_equal": true,
+        "rows": 32
+      },
+      {
+        "input": "research/gen06/scoring/adapted-gen6.csv",
+        "matrix_equal": true,
+        "rows": 8
+      },
+      {
+        "input": "research/gen07/scoring/adapted-gen7.csv",
+        "matrix_equal": true,
+        "rows": 8
+      }
+    ],
+    "note": "J conditional tables excluded; J3 is not a scored candidate",
+    "promoted": 0,
+    "row_verdicts": {
+      "FAIL": 11,
+      "INSUFFICIENT": 339,
+      "NA": 20
+    },
+    "rows": 370
+  },
+  "authority": "Agent exploratory analysis; no adoption or promotion",
+  "causality": {
+    "conditional_convolution_future_ms": 382.5,
+    "configuration_unverified": [
+      "Actual study checkpoint",
+      "Study software version",
+      "causal",
+      "norm_type"
+    ],
+    "encoder_kernel_ms": 1.0,
+    "global_norm_dependency": "Whole supplied segment if gLN is active; no fixed 1 ms bound",
+    "latent_dependency_max_frame": 765,
+    "latent_dependency_min_frame": -765,
+    "latent_receptive_field_frames": 1531,
+    "seed": 20261103,
+    "status": "T0 synthetic falsification and conditional dependency analysis; no weights executed",
+    "toy_prefix_experiments": {
+      "causal_cumulative_control": {
+        "impulse_first_nonzero_sample": 512,
+        "impulse_pre_echo_max": 0.0,
+        "prefix_difference_max_beyond_16_sample_budget": 0.0,
+        "prefix_difference_rms": 0.0
+      },
+      "noncausal_global": {
+        "impulse_first_nonzero_sample": 512,
+        "impulse_pre_echo_max": 0.0,
+        "prefix_difference_max_beyond_16_sample_budget": 0.5633195736199421,
+        "prefix_difference_rms": 0.2165530756945774
+      }
+    }
+  },
+  "code_sha256": "dbcfb886deed10ff30a15399aff557708f6ae9434f403dbce1aa47db97175a1b",
+  "coherence": {
+    "conclusion": "A denser horizontal ring does not become a spherical field; use geometry-matched squared coherence",
+    "example": {
+      "assumed_spacing_m": 0.02,
+      "frequency_hz": 4000,
+      "ring32_msc": 0.28197088248244817,
+      "ring4096_msc": 0.28197088248244834,
+      "ring8_msc": 0.28197500557704686,
+      "sphere4096_msc": 0.46049120298269386,
+      "spherical_amplitude": 0.6785950068590928,
+      "spherical_msc": 0.4604911833340922
+    },
+    "formula": "MSC = abs(mean(exp(i*k*d*direction_cosine)))**2",
+    "ring4096_max_msc_error_vs_sphere": 0.18287208305129762,
+    "speed_of_sound_assumed_m_s": 343.0,
+    "status": "T0 ideal-field calculation; no actual bench run or acceptance threshold"
+  },
+  "date": "2026-11-03",
+  "goal_sha256": "76190455b8645e4ddefc095189e77179c913adcc422bf4a742f072260a5994c1",
+  "head": "e3f463f7115b947ebac46be22ee8e71ba711f339",
+  "input_sha256": "58e93a27db2ad1c1fdfbbfb8516c520ed0ebc759c814c96013c0cb18f6ad4686",
+  "numeric_self_checks": "passed",
+  "ohc": {
+    "child_level_tables": [
+      {
+        "early_children": 5,
+        "fisher_two_sided": 0.015151515151515152,
+        "other_children": 6,
+        "positive_children_early": 4,
+        "positive_children_other": 0
+      },
+      {
+        "early_children": 5,
+        "fisher_two_sided": 0.0021645021645021645,
+        "other_children": 6,
+        "positive_children_early": 5,
+        "positive_children_other": 0
+      }
+    ],
+    "interpretation": "No independent-ear inference; no causal effect of implant age; no AAV efficacy, patency or eligibility result",
+    "possible_children_with_at_least_one_positive_ear": [
+      4,
+      5
+    ],
+    "status": "Conditional arithmetic from search-extracted counts; full-text verification pending"
+  },
+  "python": "3.14.8 (main, Oct  3 2026, 00:54:40) [Clang 22.1.3 ]",
+  "srt": {
+    "approx_mean_ci95": [
+      3.1816437573114773,
+      8.618356242688524
+    ],
+    "assumptions": [
+      "Independent paired listener differences",
+      "Approximate normal mean inference at small n",
+      "Rounded summary statistics",
+      "Missing values are scenarios, not observations",
+      "No multiplicity correction; no pediatric or commercial-comparator transport"
+    ],
+    "ci95_lower_rounding_range": [
+      3.0958759120129447,
+      3.2674116026100104
+    ],
+    "max_penalty_for_ci95_lower_at_least_3": 0.1816437573114773,
+    "max_penalty_for_point_mean_at_least_3": 2.9000000000000004,
+    "missing_outcome_sensitivity": [
+      {
+        "approx_ci95": [
+          -1.2480894100222457,
+          7.748089410022246
+        ],
+        "assumed_benefit_each_missing_db": -10,
+        "mean_db": 3.25,
+        "n": 12,
+        "sd_db": 7.079483802445692
+      },
+      {
+        "approx_ci95": [
+          0.6139553141462688,
+          7.552711352520397
+        ],
+        "assumed_benefit_each_missing_db": -5,
+        "mean_db": 4.083333333333333,
+        "n": 12,
+        "sd_db": 5.460408465129747
+      },
+      {
+        "approx_ci95": [
+          2.290138147201666,
+          7.543195186131667
+        ],
+        "assumed_benefit_each_missing_db": 0,
+        "mean_db": 4.916666666666667,
+        "n": 12,
+        "sd_db": 4.133858715387825
+      },
+      {
+        "approx_ci95": [
+          3.117998899187323,
+          7.715334434146011
+        ],
+        "assumed_benefit_each_missing_db": 3,
+        "mean_db": 5.416666666666667,
+        "n": 12,
+        "sd_db": 3.617842987028027
+      },
+      {
+        "approx_ci95": [
+          3.716088676466435,
+          8.083911323533563
+        ],
+        "assumed_benefit_each_missing_db": 5.9,
+        "mean_db": 5.8999999999999995,
+        "n": 12,
+        "sd_db": 3.4372293281865067
+      }
+    ],
+    "moment_bound_min_count_above_3": 4,
+    "moment_bound_warning": "Necessary lower bound only, not observed responder count; ignores other published rank/median constraints",
+    "one_sided_p_mean_le_3": 0.019518052019077414,
+    "penalty_sensitivity": [
+      {
+        "hypothetical_penalty_db": 0,
+        "remaining_ci95_lower_db": 3.1816437573114773,
+        "remaining_mean_db": 5.9
+      },
+      {
+        "hypothetical_penalty_db": 0.25,
+        "remaining_ci95_lower_db": 2.9316437573114773,
+        "remaining_mean_db": 5.65
+      },
+      {
+        "hypothetical_penalty_db": 0.5,
+        "remaining_ci95_lower_db": 2.6816437573114773,
+        "remaining_mean_db": 5.4
+      },
+      {
+        "hypothetical_penalty_db": 1,
+        "remaining_ci95_lower_db": 2.1816437573114773,
+        "remaining_mean_db": 4.9
+      },
+      {
+        "hypothetical_penalty_db": 2,
+        "remaining_ci95_lower_db": 1.1816437573114773,
+        "remaining_mean_db": 3.9000000000000004
+      },
+      {
+        "hypothetical_penalty_db": 3,
+        "remaining_ci95_lower_db": 0.1816437573114773,
+        "remaining_mean_db": 2.9000000000000004
+      },
+      {
+        "hypothetical_penalty_db": 4,
+        "remaining_ci95_lower_db": -0.8183562426885227,
+        "remaining_mean_db": 1.9000000000000004
+      }
+    ],
+    "status": "Exploratory aggregate reanalysis; t-model assumption, not author analysis",
+    "t_above_3": 2.413317161707448,
+    "two_sided_p_mean_eq_3": 0.03903610403815483
+  }
+}

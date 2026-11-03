@@ -1,0 +1,47 @@
+{
+  "status": "Agent extraction; DESIGN; UNASSESSED; no candidate scoring input",
+  "date": "2026-11-03",
+  "srt": {
+    "source": "https://www.frontiersin.org/journals/audiology-and-otology/articles/10.3389/fauot.2025.1746635/full",
+    "location": "Table 2, CI row; Methods 2.1, 2.3-2.4",
+    "n_complete": 10,
+    "n_enrolled": 12,
+    "mean_benefit_db": 5.9,
+    "sd_paired_benefit_db": 3.8,
+    "median_benefit_db": 5.7,
+    "reported_ci95_benefit_db": [3.7, 7.4],
+    "note": "Signs reversed from DNN minus unprocessed; CI95 estimator not assumed to be mean CI. Rounded paired mean takes precedence over subtracting rounded marginal means."
+  },
+  "model_card": {
+    "source": "https://huggingface.co/cankeles/ConvTasNet_WHAMR_enhsingle_16k",
+    "displayed_revision_short": "f47048a",
+    "sample_rate": 16000,
+    "kernel_size": 16,
+    "stride": 8,
+    "n_blocks": 8,
+    "n_repeats": 3,
+    "causal": null,
+    "norm_type": null,
+    "note": "Missing card values are unknown, NOT extracted as false/gLN. Checkpoint unavailable locally."
+  },
+  "architecture_scenario": {
+    "source": "https://github.com/asteroid-team/asteroid/blob/master/asteroid/models/conv_tasnet.py",
+    "convolution_source": "https://github.com/asteroid-team/asteroid/blob/master/asteroid/masknn/convolutional.py",
+    "normalization_source": "https://github.com/asteroid-team/asteroid/blob/master/asteroid/masknn/norms.py",
+    "conv_kernel_size": 3,
+    "causal_default": false,
+    "norm_type_default": "gLN",
+    "note": "Inspected upstream defaults; NOT proof of study checkpoint configuration. Dependency calculation is conditional on these defaults."
+  },
+  "ohc_pointer": {
+    "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13555795/",
+    "doi": "10.1002/mco2.71006",
+    "access": "Extended primary-source search extract only; direct PMC and publisher opens failed. Provisional inputs, not formal extraction.",
+    "early_short_followup_children": 5,
+    "early_short_followup_ears": 10,
+    "early_short_followup_positive_ears": 7,
+    "other_children": 6,
+    "other_ears": 12,
+    "other_positive_ears": 0
+  }
+}
