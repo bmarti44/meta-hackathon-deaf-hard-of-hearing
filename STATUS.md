@@ -8,6 +8,16 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+GEN 15 DONE + BENCH RUN 2 (2026-11-03): causal waveform
+Conv-TasNet-style model (602k params, exact causality, 5.88 ms
+architectural latency) trained 2000 steps. First non-null
+babble readout in the line: +1.14 dB SI-SDR (own eval, re-run
+bit-identical) / +1.07 on bench-n6 — but babble STOI −.01,
+post-selection ACE +0.011 CI crosses 0, quiet PESQ 3.11
+regression. Bench verdict NO-GO; promoted FALSE. Waveform
+objective plateaued after step 1000. Next: Gen 16 adds
+ACE-envelope + quiet-identity loss terms, same bench/gates.
+
 BENCH-N6 BUILT — NO-IMPLANT PROVING GROUND (2026-11-03,
 holder direction: prove it without implants first; implantee
 is holder's son, bilateral N6, holder not implanted):

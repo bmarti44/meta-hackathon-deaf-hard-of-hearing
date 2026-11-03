@@ -78,3 +78,32 @@ It is explicitly **not evidence** about any system.
   loss term), screened here before any listening.
 - Implants remain untouched. Stage D is not authorized by anything
   in this bench.
+
+---
+
+## Run 2 — Gen 15 final checkpoint (2000 steps), same day
+
+Rows: [bench_results_run2.json](./bench_results_run2.json).
+Gen 15's own full eval (32 crops/condition) is filed at
+[gen15/results.md](../gen15/results.md); the two agree (babble
+ΔSI-SDR +1.14 dB there, +1.07 here on 16 crops).
+
+| Checkpoint | Babble ΔSI-SDR | Babble ΔSTOI | Babble ΔACE electro-corr | Verdict |
+|---|---|---|---|---|
+| Step 500 | +0.41 [+0.26, +0.57] | −0.005 | +0.003 [−0.004, +0.012] | NO-GO |
+| Step 1000 | +1.01 [+0.59, +1.47] | −0.012 | +0.010 [−0.002, +0.025] | NO-GO |
+| Step 2000 (final) | +1.07 [+0.57, +1.59] | −0.016 | +0.011 [−0.004, +0.027] | **NO-GO** |
+
+Final checkpoint elsewhere: SSN +4.30 dB with post-selection ACE
++0.086 [+0.052, +0.122] (implant patterns do improve for steady
+noise); held-out white +0.84 dB; quiet absolute SI-SDR 26.1 dB.
+Per-SNR (Gen 15 summary): the babble gain lives at favourable SNRs
+(+5/+10 dB) and is absent at −5 dB.
+
+**Reading:** training more on a waveform-only objective plateaued
+in babble after step 1000. The objective is the bottleneck, not
+the budget. Gen 16 therefore changes the objective: SI-SDR plus
+an ACE-envelope loss term (post-selection patterns vs clean),
+plus a quiet-identity term (quiet PESQ regressed to 3.11 in
+Gen 15's own readout). Same bench, same gates. Implants still
+untouched.
