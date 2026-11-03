@@ -1,0 +1,36 @@
+sha256=a96014fc1ddf9bf45bb43f2143799d9941907b8bbbbd833f69b27406d3b9026a
+sha_match=True
+model_args={'fb_name': 'FreeFB', 'n_filters': 512, 'kernel_size': 32, 'stride': 16, 'sample_rate': 16000.0, 'in_chan': 512, 'out_chan': 512, 'bn_chan': 128, 'hid_chan': 512, 'skip_chan': 128, 'conv_kernel_size': 3, 'n_blocks': 8, 'n_repeats': 3, 'n_src': 1, 'norm_type': 'gLN', 'mask_act': 'relu', 'causal': False, 'encoder_activation': None}
+load_state_dict_strict=<All keys matched successfully>
+params=5000881
+torch=2.15.0 threads=6
+forward_times_s=[0.719, 0.587, 0.536, 0.455, 0.446] len_out=32000
+input_prefix_identical=True
+out_rms zero=2419.23 loud=5427.52 tone=2665.66 cont=3304.4
+CONTROL identical-input      win=[0.00,1.00)s maxabs=0 rms_diff=0 rms_ref=3421.29 rel=0 snr_prefix=infdB nonzero=0/16000
+CONTROL identical-input      win=[0.00,0.20)s maxabs=0 rms_diff=0 rms_ref=3180.13 rel=0 snr_prefix=infdB nonzero=0/3200
+CONTROL identical-input      win=[0.00,0.50)s maxabs=0 rms_diff=0 rms_ref=3321.98 rel=0 snr_prefix=infdB nonzero=0/8000
+CONTROL identical-input      win=[0.50,1.00)s maxabs=0 rms_diff=0 rms_ref=3517.8 rel=0 snr_prefix=infdB nonzero=0/8000
+CONTROL identical-input      win=[0.90,1.00)s maxabs=0 rms_diff=0 rms_ref=2823.35 rel=0 snr_prefix=infdB nonzero=0/1600
+CONTROL identical-input      win=[0.00,0.23)s maxabs=0 rms_diff=0 rms_ref=3119.17 rel=0 snr_prefix=infdB nonzero=0/3760
+zero-vs-LOUD suffix          win=[0.00,1.00)s maxabs=6109.65 rms_diff=2030.11 rms_ref=3421.29 rel=0.593374 snr_prefix=4.53dB nonzero=16000/16000
+zero-vs-LOUD suffix          win=[0.00,0.20)s maxabs=5263.85 rms_diff=2528.51 rms_ref=3180.13 rel=0.795099 snr_prefix=1.99dB nonzero=3200/3200
+zero-vs-LOUD suffix          win=[0.00,0.50)s maxabs=6109.65 rms_diff=2460.04 rms_ref=3321.98 rel=0.740533 snr_prefix=2.61dB nonzero=8000/8000
+zero-vs-LOUD suffix          win=[0.50,1.00)s maxabs=4960.55 rms_diff=1480.16 rms_ref=3517.8 rel=0.420764 snr_prefix=7.52dB nonzero=8000/8000
+zero-vs-LOUD suffix          win=[0.90,1.00)s maxabs=3046.24 rms_diff=972.153 rms_ref=2823.35 rel=0.344325 snr_prefix=9.26dB nonzero=1600/1600
+zero-vs-LOUD suffix          win=[0.00,0.23)s maxabs=5263.85 rms_diff=2441.64 rms_ref=3119.17 rel=0.782786 snr_prefix=2.13dB nonzero=3760/3760
+zero-vs-TONE suffix          win=[0.00,1.00)s maxabs=1412.47 rms_diff=408.487 rms_ref=3421.29 rel=0.119396 snr_prefix=18.46dB nonzero=16000/16000
+zero-vs-TONE suffix          win=[0.00,0.20)s maxabs=1137.39 rms_diff=361.619 rms_ref=3180.13 rel=0.113712 snr_prefix=18.88dB nonzero=3200/3200
+zero-vs-TONE suffix          win=[0.00,0.50)s maxabs=1317.09 rms_diff=389.769 rms_ref=3321.98 rel=0.117331 snr_prefix=18.61dB nonzero=8000/8000
+zero-vs-TONE suffix          win=[0.50,1.00)s maxabs=1412.47 rms_diff=426.384 rms_ref=3517.8 rel=0.121208 snr_prefix=18.33dB nonzero=8000/8000
+zero-vs-TONE suffix          win=[0.90,1.00)s maxabs=1412.47 rms_diff=428.805 rms_ref=2823.35 rel=0.151878 snr_prefix=16.37dB nonzero=1600/1600
+zero-vs-TONE suffix          win=[0.00,0.23)s maxabs=1137.39 rms_diff=353.277 rms_ref=3119.17 rel=0.11326 snr_prefix=18.92dB nonzero=3760/3760
+cont-vs-LOUD suffix          win=[0.00,1.00)s maxabs=5349.01 rms_diff=1842.66 rms_ref=3254.62 rel=0.566169 snr_prefix=4.94dB nonzero=16000/16000
+cont-vs-LOUD suffix          win=[0.00,0.20)s maxabs=4856.46 rms_diff=2372.83 rms_ref=3040.81 rel=0.780327 snr_prefix=2.15dB nonzero=3200/3200
+cont-vs-LOUD suffix          win=[0.00,0.50)s maxabs=5349.01 rms_diff=2277.51 rms_ref=3154.29 rel=0.722035 snr_prefix=2.83dB nonzero=8000/8000
+cont-vs-LOUD suffix          win=[0.50,1.00)s maxabs=4442.92 rms_diff=1266.39 rms_ref=3351.94 rel=0.377809 snr_prefix=8.45dB nonzero=8000/8000
+cont-vs-LOUD suffix          win=[0.90,1.00)s maxabs=2335.62 rms_diff=653.26 rms_ref=2765.9 rel=0.236183 snr_prefix=12.54dB nonzero=1600/1600
+cont-vs-LOUD suffix          win=[0.00,0.23)s maxabs=4856.46 rms_diff=2291.36 rms_ref=2986.57 rel=0.767222 snr_prefix=2.30dB nonzero=3760/3760
+first_nonzero_diff_sample=0 (0.0000s)
+first_diff_gt_1e-4_sample=0 (0.0000s)
+DONE
