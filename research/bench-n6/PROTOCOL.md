@@ -116,9 +116,11 @@ Pre-hookup homework (do all of this before Stage D is discussed):
   acceptable and how loudness should be verified first.
 - Verify laptop → Phone Clip / Mini Mic → both processors pairing
   and latency with ordinary music/speech (delivery path only).
-- Optional: Cochlear Monitor Earphones (N6 accessory) so the
-  father can check the processors' microphone input — this is
-  the pre-processing audio, NOT what his son perceives.
+- Cochlear Monitor Earphones: ON HAND (holder confirmed
+  2026-11-03). Father can check the processors' microphone /
+  streamed input — pre-processing audio, NOT what his son
+  perceives. (Compatibility implies CP910; still confirm the
+  model printed on each processor.)
 - Baseline measures with his everyday program (e.g. sentence
   scores in quiet/noise from clinic records) to compare against.
 - Written session plan: materials, randomization, stop rule,
