@@ -20,6 +20,7 @@ from common import FS, limit_signal, rms, si_sdr  # noqa: E402
 from vocoder import extract_envelopes, vocode  # noqa: E402
 from bench import TEST_BABBLE_SPK, TEST_SPK, TRAIN_SPK, evaluate_go_nogo  # noqa: E402
 from kpi_scorecard import score_kpis  # noqa: E402
+from bench_v2 import TEST_INTERFERERS, TEST_SPK_V2, TRAIN_SPK_V2, VAL_SPK, ncm_simple, vocoded_estoi  # noqa: E402
 
 
 def _speech_like(seed=0, n=FS):
@@ -118,6 +119,18 @@ def test_kpi_scorecard_pass_and_fail():
     assert weak["all_required_pass"] is False
     failed = {r["kpi"] for r in weak["rows"] if not r["pass"]}
     assert {"babble dSI-SDR", "babble dSTOI", "babble dACE-electro"} <= failed
+
+
+def test_v2_splits_disjoint_and_complete():
+    allv2 = TRAIN_SPK_V2 + VAL_SPK + TEST_SPK_V2 + TEST_INTERFERERS
+    assert len(allv2) == len(set(allv2)) == 40
+    assert "1988" in TEST_SPK_V2 and "8842" in TEST_INTERFERERS  # legacy continuity
+
+
+def test_vocoded_estoi_and_ncm_identity():
+    x = _speech_like()
+    assert vocoded_estoi(x, x) > 0.95
+    assert ncm_simple(x, x) > 0.99
 
 
 def test_holdout_speakers_disjoint_from_train():
