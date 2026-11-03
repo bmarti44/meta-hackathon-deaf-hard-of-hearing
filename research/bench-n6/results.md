@@ -132,3 +132,21 @@ gains. Nothing here shows a system *restoring* direction — that
 would require linked bilateral processing beyond this screen —
 and nothing yet earns a spatial claim. Gate added to PROTOCOL:
 candidate ILD distortion must not exceed the linked gate's.
+
+---
+
+## Bench v2 first scoring — Gen 15 final (2026-11-03, n=8/kind)
+
+Pre-registered in [bench-v2-prereg.md](./bench-v2-prereg.md)
+(committed before scoring). Rows: bench_v2_results.json.
+
+| Gen 15 Δ vs unproc | Crowd (≥8 talkers) | Competing (2 talkers) |
+|---|---|---|
+| ΔSI-SDR | +1.97 dB | +1.10 dB |
+| ΔSTOI / Δvocoded-ESTOI | 0.000 / +0.019 | −0.013 / +0.002 |
+| ΔACE electro-corr / ΔNCM-simple | +0.043 / +0.030 | +0.014 / +0.006 |
+
+As REVIEW §1.1 predicted, the same model looks materially
+better on crowd babble than on competing talkers — crowd is the
+solvable single-mic problem; competing needs a cue (binaural or
+enrollment). Small n; treat as v2 baseline, not a new claim.
