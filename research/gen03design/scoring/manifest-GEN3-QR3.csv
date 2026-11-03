@@ -1,0 +1,8 @@
+candidate,gate,window,required
+GEN3-QR3,G1,*,false
+GEN3-QR3,G2,*,false
+GEN3-QR3,G3a,*,false
+GEN3-QR3,G3b,*,false
+GEN3-QR3,G4,*,true
+GEN3-QR3,G5,*,true
+GEN3-QR3,G6,*,false

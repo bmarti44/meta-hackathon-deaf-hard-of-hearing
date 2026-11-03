@@ -1,0 +1,9 @@
+# SINGLE-CANDIDATE manifest run input ONLY. AD3 = Track P device-lineage documentary, NOT promotable. Never merge into pathway ranking; footprint smaller than GEN1-A1 by class, not fitness (adapt-gen3-note.md). Schema: extraction-csv-v1
+candidate,track,gate,window,stratum,tier,grade,delta_g2_db,delta_g3a_sd,g1_channels,burden_rank,verdict
+GEN3-AD3,P,G1,NA,species=model-T0-documentary,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN3-AD3,P,G2,NA,species=model-T0-documentary,RECORD,UNASSESSED,,,,,NA
+GEN3-AD3,P,G3a,NA,species=model-T0-documentary,RECORD,UNASSESSED,,,,,NA
+GEN3-AD3,P,G3b,NA,species=model-T0-documentary,RECORD,UNASSESSED,,,,,NA
+GEN3-AD3,P,G4,NA,species=model-T0-documentary,RECORD,UNASSESSED,,,,,NA
+GEN3-AD3,P,G5,ALL,species=model-T0-documentary,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN3-AD3,P,G6,NA,species=model-T0-documentary,RECORD,UNASSESSED,,,,,NA

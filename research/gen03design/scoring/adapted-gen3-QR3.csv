@@ -1,0 +1,13 @@
+# SINGLE-CANDIDATE manifest run input ONLY. QR3 track is NONE by design; 'P' is a scorer-required placeholder (_norm_track accepts P/R only), NOT a class claim. Never merge into pathway ranking (adapt-gen3-note.md). Schema: extraction-csv-v1
+candidate,track,gate,window,stratum,tier,grade,delta_g2_db,delta_g3a_sd,g1_channels,burden_rank,verdict
+GEN3-QR3,P,G1,NA,program=T2+documentary,RECORD,UNASSESSED,,,,,NA
+GEN3-QR3,P,G2,NA,program=T2+documentary,RECORD,UNASSESSED,,,,,NA
+GEN3-QR3,P,G3a,NA,program=T2+documentary,RECORD,UNASSESSED,,,,,NA
+GEN3-QR3,P,G3b,NA,program=T2+documentary,RECORD,UNASSESSED,,,,,NA
+GEN3-QR3,P,G4,ALL,component=Q0-P-patency; species=animal-T2-design,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN3-QR3,P,G4,ALL,component=Q0-A-retention; species=animal-T2-design,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN3-QR3,P,G4,ALL,leg=a-NAb-contralateral; species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN3-QR3,P,G4,ALL,leg=b-established-implant-delivery,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN3-QR3,P,G4,ALL,leg=c-same-ear-redose; species=animal-T2-design,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN3-QR3,P,G5,ALL,program=T2+documentary,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN3-QR3,P,G6,NA,program=T2+documentary,RECORD,UNASSESSED,,,,,NA
