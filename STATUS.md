@@ -8,6 +8,16 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+REVIEW HANDOFF + GEN 16 NULL + PHASE 0 STARTED (2026-11-03):
+Independent REVIEW.md (holder-commissioned) diagnoses babble
+as target-ambiguity (k=3 from 2 voices) + 10x too little data;
+KPI split crowd vs competing-talker recorded in KPI.md.
+Gen 16 multi-term loss filed NULL vs Gen 15 (babble +0.93,
+STOI -0.033). Phase 0 verified: 40 dev-clean speakers
+extracted; MPS ~32x CPU step time (synchronised). Next:
+bench v2 (crowd/competing split, vocoded ESTOI/NCM, wider
+holdout), then Gen 17 data-scale on MPS, 3 seeds.
+
 GEN 15 DONE + BENCH RUN 2 (2026-11-03): causal waveform
 Conv-TasNet-style model (602k params, exact causality, 5.88 ms
 architectural latency) trained 2000 steps. First non-null

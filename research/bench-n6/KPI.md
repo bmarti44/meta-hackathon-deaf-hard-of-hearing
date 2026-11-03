@@ -12,6 +12,19 @@
 > (full size: 32/condition), not listener claims.
 > Baselines: Gen 15 final (bench run 2 / its own full eval).
 
+**KPI split (2026-11-03, per REVIEW.md §7 holder delegation):**
+the legacy eval babble (k=3 from 2 interferer voices) is a
+*competing-talker* test — at −5 dB each interferer is ≈ as loud
+as the target, so single-mic models have no target cue. The
+babble KPIs below apply to **crowd babble** (≥8 talkers, many
+held-out voices; bench v2, Phase 0) for single-mic models, and
+to competing talkers only for binaural/personalized models.
+Legacy rows keep being reported side by side; nothing is
+silently redefined. Verified Phase 0 facts: 40 dev-clean
+speakers now extracted (was 14); MPS training verified
+0.117 s/step synchronised vs 3.73 CPU in the same harness
+(~32×; data generation becomes the bottleneck).
+
 ## Primary — crowd babble, held-out talkers (the hard problem)
 
 | KPI | Required | Stretch | Gen 15 | Oracle ceiling |
