@@ -1,0 +1,68 @@
+{
+  "combined_grades": {
+    "UNASSESSED": 322
+  },
+  "combined_row_verdicts": {
+    "FAIL": 8,
+    "INSUFFICIENT": 297,
+    "NA": 17
+  },
+  "combined_rows": 322,
+  "goal_sha256": "424279b0a75fc697250a324c138c37dbdb44236dc801360299829a4521583fa4",
+  "head": "59a8798ede27cedf3da701ea009cc61da6f4a873",
+  "historical_reproduction": [
+    {
+      "input": "gen00/scoring/adapted_v2.csv",
+      "matrix_equal": true,
+      "matrix_sha256": "f256e1f212c92d61a0576f92bdf5dc8bf23d2b81f8eb33d09aa50702e2d91f74",
+      "rows": 233
+    },
+    {
+      "input": "gen01/scoring/adapted-gen1.csv",
+      "matrix_equal": true,
+      "matrix_sha256": "87a1093c0aa9d63b977b84d3848f161a5e7b35fb99b867a0fb9b20cb4243a990",
+      "rows": 41
+    },
+    {
+      "input": "gen02/scoring/adapted-gen2.csv",
+      "matrix_equal": true,
+      "matrix_sha256": "a9e45c1ff39e99f36f5a715970722be08e6cf00e6965ba3832e974d2ae9c3980",
+      "rows": 16
+    },
+    {
+      "input": "gen03design/scoring/adapted-gen3.csv",
+      "matrix_equal": true,
+      "matrix_sha256": "3312ea871f9f7b42b1a1e9a10ccfbdba5e79b354884e7acc449e559f4d5053a8",
+      "rows": 16
+    },
+    {
+      "input": "gen04/scoring/adapted-gen4.csv",
+      "matrix_equal": true,
+      "matrix_sha256": "e2689f5850052807120dcaae63ca7534063cacf07b7d1147679ecc2e3bc812ed",
+      "rows": 16
+    }
+  ],
+  "measurement_study_precision": {
+    "approx_95pct_missing_rate_halfwidth": 0.058800000000000005,
+    "assumed_missing_rate": 0.1,
+    "caution": "Planning assumptions only; no power claim for MCID, invariance, or joint promotion.",
+    "n_complete_per_modality": 100,
+    "recruitment_target_per_modality_at_20pct_attrition": 125,
+    "zero_events_one_sided_95pct_upper_n100": 0.029513049607039932
+  },
+  "scope": "Exploratory audit; all probes synthetic; no evidence re-scored or generation created",
+  "synthetic_probes": {
+    "G2_label_pass_zero_effect_not_checked": "PASS",
+    "G3a_W1_no_superiority_encoded_INS_blocks_W3": "INSUFFICIENT",
+    "G4_T2_residual_hearing_wrongly_accepted_at_gate_level": "PASS",
+    "blocked_G3b_FAIL_also_overwritten": "INSUFFICIENT",
+    "blocked_G3b_PASS_stays_INS_intentional": "INSUFFICIENT",
+    "fixed_G2_mechanism_does_not_veto_W3": "PASS",
+    "fixed_T0_G1_PASS_downgraded": "INSUFFICIENT",
+    "manifest_accepts_one_G4_component_for_whole_gate": {
+      "G4": "PASS",
+      "missing": 0
+    },
+    "old_insufficient_and_new_pass_same_cell": "INSUFFICIENT"
+  }
+}
