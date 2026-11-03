@@ -8,6 +8,15 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+GEN 2 DONE — TIE AGAIN, CLOCK 2/4 (2026-11-02, holder
+Sisyphus directive): sweep = 0 validation admissions
+(PMID 42362868 AAV re-dose = late-found DESIGN hook).
+4 candidates (P2 fused, H2 norming-only, Q1 Q0-decider,
+R1 G4-AAV falsification); P2/H2 tie parents cell-for-cell
+(matrix parent-reproduced); no-improvement counter 2/2,
+STOP still not met (gaps conjunct). Next: Astra judge,
+then Gen 3 as attack execution (not new designs).
+
 WIN-PATH PACKET FILED — BALL WITH HUMANS (2026-11-02):
 research/win-path/ (W1–W8 action list, W2 G3b brief,
 W3 extraction checklist). Agent-doable loop work is
