@@ -1,0 +1,9 @@
+# SINGLE-CANDIDATE manifest run input ONLY. AD4 = Track P device-lineage documentary, NOT promotable. AD4's executed absence is NOT a gate cell (extract-gen4.csv header); rows unchanged from AD3 modulo ID. Never merge into pathway ranking; footprint smaller than GEN1-A1 by class, not fitness (adapt-gen4-note.md). Schema: extraction-csv-v1
+candidate,track,gate,window,stratum,tier,grade,delta_g2_db,delta_g3a_sd,g1_channels,burden_rank,verdict
+GEN4-AD4,P,G1,NA,species=model-T0-documentary,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN4-AD4,P,G2,NA,species=model-T0-documentary,RECORD,UNASSESSED,,,,,NA
+GEN4-AD4,P,G3a,NA,species=model-T0-documentary,RECORD,UNASSESSED,,,,,NA
+GEN4-AD4,P,G3b,NA,species=model-T0-documentary,RECORD,UNASSESSED,,,,,NA
+GEN4-AD4,P,G4,NA,species=model-T0-documentary,RECORD,UNASSESSED,,,,,NA
+GEN4-AD4,P,G5,ALL,species=model-T0-documentary,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN4-AD4,P,G6,NA,species=model-T0-documentary,RECORD,UNASSESSED,,,,,NA

@@ -8,6 +8,16 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+LOOP EXHAUSTED AT CLOCK 4/4 — GEN 3 + GEN 4 DONE
+(2026-11-03): Gen 3 (P3/W3/QR3/AD3) and Gen 4 final
+generation (P4/W4/QR4/AD4) each tied cell-for-cell
+(matrices parent-reproduced). 13 Track-P pathways at
+0/6, PASS still 0 across 322 rows. research/gen04/
+LOOP-EXHAUSTED.md: no Gen 5 without (i) new external
+evidence AND (ii) signed human clock amendment.
+Reopening is human-owned (W1–W8). Sisyphus directive
+executed to GOAL §7's own limit.
+
 GEN 2 DONE — TIE AGAIN, CLOCK 2/4 (2026-11-02, holder
 Sisyphus directive): sweep = 0 validation admissions
 (PMID 42362868 AAV re-dose = late-found DESIGN hook).
