@@ -55,14 +55,19 @@ Seed variance is small (crowd ΔSI-SDR spread ≤0.18 dB).
 | Δvocoded ESTOI | +0.036 | +0.023 | (supporting) |
 | White ΔSI-SDR | +0.25 | **−0.74** | ≥0 |
 
-Speaker diversity 10→26 is worth +0.26 dB crowd and +0.99 dB on
-held-out white noise (control *fails* white no-harm) — small on
-the headline, real on generalization. The bigger Gen15→Gen17
-gain came from steps/recipe (changed together, shares not
-identified). Competing talkers: 26spk +0.85 vs control +0.59,
-proxies flat in both — still a cue problem, not a data problem
-at this scale. Overall KPI verdict remains **FAIL** (crowd
-magnitude, STOI, −5 dB row), closest any generation has come.
+Pool expansion 10→26 speakers (1.35→3.50 h; target and
+interferer diversity change together — not speaker count alone)
+is worth +0.26 dB crowd and +0.98 dB on held-out white SI-SDR.
+White "no-harm" is narrow: white ACE corr −0.030 and vocESTOI
+−0.083 still fall. The bigger Gen15→Gen17 gain came from
+steps/recipe (changed together, shares not identified).
+Competing talkers: 26spk +0.85 vs control +0.59 SI-SDR with
+intelligibility proxies unhelpful in both — no demonstrated
+competing-talker solution at this scale (data effects generally
+not excluded). Seed-mean crowd @ −5 dB is +0.80 dB with STOI
+still negative there. Overall KPI verdict remains **FAIL**
+(crowd magnitude, STOI, −5 dB row). Astra xhigh review:
+[astra-review-disposition.md](./astra-review-disposition.md).
 
 ## Next
 

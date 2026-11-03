@@ -121,8 +121,11 @@ def main():
                 e[k] = float(np.nanmean([r[k] for r in sel]))
                 e[f"d_{k}"] = bootstrap_ci([r[k] - base[r["crop"]][k] for r in sel])
             summary[name][kind] = e
+    import hashlib
+    ck_sha = hashlib.sha256(Path(a.gen15).read_bytes()).hexdigest() if a.gen15 else None
     Path(a.out).write_text(json.dumps({"meta": {"bench": "v2", "n_per_cell": a.n_per_cell,
-                                                 "gen15": a.gen15, "candidate": a.candidate_name},
+                                                 "gen15": a.gen15, "candidate": a.candidate_name,
+                                                 "checkpoint_sha256": ck_sha},
                                         "summary": summary, "rows": rows}, indent=1))
     for name, byk in summary.items():
         for kind in ["crowd", "competing"]:

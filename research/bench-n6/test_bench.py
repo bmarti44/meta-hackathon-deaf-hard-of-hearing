@@ -127,6 +127,15 @@ def test_kpi_missing_spatial_is_incomplete_never_pass():
     assert card["incomplete"] is True and card["all_required_pass"] is False
 
 
+def test_kpi_incomplete_evidence_never_pass():
+    per_snr = {-5.0: 2.0, 0.0: 2.5}
+    spatial = {"cand": {"ild_distortion_db": 0.1, "ild_target_err_db": 1.0, "itd_err_samples": 1.0},
+               "unproc": {"ild_target_err_db": 6.0, "itd_err_samples": 5.0}}
+    card = score_kpis(_kpi_summary(3.5, 0.04, 0.06), per_snr, spatial, "cand",
+                      spatial_candidate="cand", evidence_complete=False)
+    assert card["incomplete"] is True and card["all_required_pass"] is False
+
+
 def test_kpi_perfect_target_not_rejected_by_spatial_gate():
     # Regression (Astra review): outputting the exact clean target has
     # huge ILD deviation vs the noisy mixture but must PASS spatial.

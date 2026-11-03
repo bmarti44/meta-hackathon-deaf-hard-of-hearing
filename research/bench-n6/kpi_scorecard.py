@@ -19,7 +19,7 @@ def _row(name, actual, required, ok, stretch=None, stretch_ok=None, required_row
 
 def score_kpis(summary, per_snr_babble_d, spatial_summary, candidate,
                gate_name="causal_gate", linked_name="gate_linked", spatial_candidate=None,
-               babble_kind="babble-heldout-spk"):
+               babble_kind="babble-heldout-spk", evidence_complete=True):
     c = summary[candidate]
     b = c[babble_kind]
     rows = [
@@ -50,8 +50,9 @@ def score_kpis(summary, per_snr_babble_d, spatial_summary, candidate,
     ]
     # Spatial is a co-equal required goal: absent/mismatched spatial
     # evidence makes the verdict INCOMPLETE, never PASS (Astra review).
-    incomplete = not (spatial_summary and spatial_candidate in spatial_summary)
-    if not incomplete:
+    spatial_present = bool(spatial_summary and spatial_candidate in spatial_summary)
+    incomplete = not evidence_complete or not spatial_present
+    if spatial_present:
         s = spatial_summary[spatial_candidate]
         unp = spatial_summary["unproc"]
         rows += [
@@ -69,33 +70,73 @@ def score_kpis(summary, per_snr_babble_d, spatial_summary, candidate,
             "all_required_pass": (not incomplete) and all(r["pass"] for r in rows if r["required_row"])}
 
 
+def _merge_seed_summaries(summaries, candidate, gate_name="causal_gate"):
+    """Seed-mean of per-seed summaries; CI lo/hi widened to min/max
+    across seeds (conservative; not a population CI)."""
+    merged = {gate_name: summaries[0][gate_name]}
+    kinds = summaries[0][candidate].keys()
+    merged[candidate] = {}
+    for kind in kinds:
+        e0 = summaries[0][candidate][kind]
+        e = {"n": e0.get("n")}
+        for k, v in e0.items():
+            if isinstance(v, dict) and "mean" in v:
+                e[k] = {"mean": float(np.mean([s[candidate][kind][k]["mean"] for s in summaries])),
+                        "ci_lo": float(np.min([s[candidate][kind][k]["ci_lo"] for s in summaries])),
+                        "ci_hi": float(np.max([s[candidate][kind][k]["ci_hi"] for s in summaries]))}
+            elif isinstance(v, (int, float)) and k != "n":
+                e[k] = float(np.mean([s[candidate][kind][k] for s in summaries]))
+        merged[candidate][kind] = e
+    return merged
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--bench", required=True)
+    ap.add_argument("--bench", required=True, action="append",
+                    help="one per seed; >=3 required for a complete verdict")
     ap.add_argument("--spatial", default=None)
     ap.add_argument("--candidate", required=True)
     ap.add_argument("--spatial-candidate", default=None)
     ap.add_argument("--babble-kind", default="babble-heldout-spk",
                     help="legacy: babble-heldout-spk | v2: crowd or competing")
     a = ap.parse_args()
-    bench = json.loads(Path(a.bench).read_text())
-    base = {r["crop"]: r for r in bench["rows"] if r["system"] == "unproc"}
+    benches = [json.loads(Path(p).read_text()) for p in a.bench]
+    summaries = []
+    for b in benches:
+        s = dict(b["summary"])
+        src = b.get("meta", {}).get("candidate")
+        if src and src != a.candidate and src in s:
+            s[a.candidate] = s.pop(src)
+            for r in b["rows"]:
+                if r["system"] == src:
+                    r["system"] = a.candidate
+        summaries.append(s)
     per_snr = {}
     for snr in [-5.0, 0.0, 5.0, 10.0]:
-        vals = [r["sisdr"] - base[r["crop"]]["sisdr"] for r in bench["rows"]
-                if r["system"] == a.candidate and r["kind"] == a.babble_kind and r["snr_db"] == snr]
-        per_snr[snr] = float(np.mean(vals)) if vals else float("nan")
-    spatial = json.loads(Path(a.spatial).read_text())["summary"] if a.spatial else None
-    card = score_kpis(bench["summary"], per_snr, spatial, a.candidate,
+        seed_vals = []
+        for bench in benches:
+            base = {r["crop"]: r for r in bench["rows"] if r["system"] == "unproc"}
+            vals = [r["sisdr"] - base[r["crop"]]["sisdr"] for r in bench["rows"]
+                    if r["system"] == a.candidate and r["kind"] == a.babble_kind and r["snr_db"] == snr]
+            seed_vals.append(float(np.mean(vals)) if vals else float("nan"))
+        per_snr[snr] = float(np.nanmean(seed_vals))
+    summary = _merge_seed_summaries(summaries, a.candidate)
+    bench_hashes = {b.get("meta", {}).get("checkpoint_sha256") for b in benches}
+    spatial_doc = json.loads(Path(a.spatial).read_text()) if a.spatial else None
+    spatial = spatial_doc["summary"] if spatial_doc else None
+    spatial_hash = (spatial_doc or {}).get("meta", {}).get("checkpoint_sha256")
+    evidence_complete = (len(benches) >= 3 and spatial_hash is not None
+                         and spatial_hash in bench_hashes)
+    card = score_kpis(summary, per_snr, spatial, a.candidate,
                       spatial_candidate=a.spatial_candidate or a.candidate,
-                      babble_kind=a.babble_kind)
+                      babble_kind=a.babble_kind, evidence_complete=evidence_complete)
     for r in card["rows"]:
         st = "PASS" if r["pass"] else "FAIL"
         if not r["required_row"]:
             st = "INFO"
         sx = "" if r["stretch"] is None else f" | stretch {r['stretch']}: {'PASS' if r['stretch_pass'] else 'no'}"
         print(f"[{st}] {r['kpi']:38s} actual={r['actual']} required {r['required']}{sx}")
-    verdict = ("INCOMPLETE - spatial evidence missing/mismatched" if card["incomplete"]
+    verdict = ("INCOMPLETE - seed/spatial/hash evidence missing or mismatched" if card["incomplete"]
                else "PASS - earns Stage C listening" if card["all_required_pass"]
                else "FAIL - keep optimizing")
     print(f"ALL REQUIRED: {verdict}")

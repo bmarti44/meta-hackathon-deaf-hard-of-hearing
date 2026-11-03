@@ -33,6 +33,7 @@ TARGET_AZ = [-60.0, -30.0, 30.0, 60.0]
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--gen15", default=str(HERE.parent / "gen15" / "weights" / "causal_seed20261115.pt"))
+    ap.add_argument("--candidate-name", default="candidate")
     ap.add_argument("--out", default=str(HERE / "spatial_results.json"))
     a = ap.parse_args()
     crops = [c for c in build_crops(1) if c["kind"].startswith("babble")]
@@ -41,7 +42,7 @@ def main():
         "unproc": lambda L, R: (L, R),
         "gate_independent": lambda L, R: (CausalSpectralGate().process(L), CausalSpectralGate().process(R)),
         "gate_linked": lambda L, R: LinkedSpectralGate().process_stereo(L, R),
-        "gen15_independent": lambda L, R: (gen15(L), gen15(R)),
+        a.candidate_name: lambda L, R: (gen15(L), gen15(R)),
     }
     rows = []
     for i, c in enumerate(crops):
@@ -66,7 +67,11 @@ def main():
         sel = [r for r in rows if r["system"] == name]
         summary[name] = {k: float(np.mean([r[k] for r in sel]))
                          for k in ["ild_target_err_db", "ild_distortion_db", "itd_err_samples"]}
-    Path(a.out).write_text(json.dumps({"summary": summary, "rows": rows,
+    import hashlib
+    ck_sha = hashlib.sha256(Path(a.gen15).read_bytes()).hexdigest() if a.gen15 else None
+    Path(a.out).write_text(json.dumps({"meta": {"candidate": a.candidate_name,
+                                                 "checkpoint_sha256": ck_sha, "gen15": a.gen15},
+                                        "summary": summary, "rows": rows,
                                         "note": "ASSUMED head model; distortion comparisons only"}, indent=1))
     print(json.dumps(summary, indent=1))
 
