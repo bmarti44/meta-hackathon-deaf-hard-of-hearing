@@ -33,11 +33,14 @@ def _num(s):
         return ""
 
 
-def adapt(rows):
+def adapt(rows, track_map=None):
+    tracks = dict(TRACK)
+    if track_map:
+        tracks.update(track_map)
     out = []
     for r in rows:
         cand = (r.get("candidate") or "").strip()
-        if cand not in TRACK:
+        if cand not in tracks:
             continue
         gate = GATE.get((r.get("gate") or "").strip(), (r.get("gate") or "").strip())
         verdict = VERDICT.get((r.get("verdict_proposed") or "").strip())
@@ -45,7 +48,7 @@ def adapt(rows):
             raise ValueError(f"unknown verdict_proposed: {r.get('verdict_proposed')!r}")
         eff = _num((r.get("effect") or "").strip())
         out.append({
-            "candidate": cand, "track": TRACK[cand], "gate": gate,
+            "candidate": cand, "track": tracks[cand], "gate": gate,
             "window": (r.get("window") or "").strip(),
             "stratum": (r.get("stratum") or "").strip(),
             "tier": (r.get("tier") or "").strip(),
@@ -58,20 +61,35 @@ def adapt(rows):
     return out
 
 
+def load_track_map(path):
+    with open(path, newline="") as f:
+        lines = [ln for ln in f if not ln.startswith("#")]
+    out = {}
+    for r in csv.DictReader(lines):
+        cand, track = (r.get("candidate") or "").strip(), (r.get("track") or "").strip().upper()
+        if track not in ("P", "R"):
+            raise ValueError(f"track-map: bad track {track!r} for {cand!r}")
+        out[cand] = track
+    return out
+
+
 def main(argv):
-    if len(argv) != 3:
+    args = [a for a in argv[1:] if not a.startswith("--track-map=")]
+    maps = [a.split("=", 1)[1] for a in argv[1:] if a.startswith("--track-map=")]
+    if len(args) != 2:
         print(__doc__)
         return 2
-    with open(argv[1], newline="") as f:
+    track_map = load_track_map(maps[0]) if maps else None
+    with open(args[0], newline="") as f:
         lines = [ln for ln in f if not ln.startswith("#")]
     rows = list(csv.DictReader(lines))
-    adapted = adapt(rows)
-    with open(argv[2], "w", newline="") as f:
+    adapted = adapt(rows, track_map)
+    with open(args[1], "w", newline="") as f:
         f.write("# adapted by adapt_extraction.py from Gen0 14-col schema; schema: extraction-csv-v1\n")
         w = csv.DictWriter(f, fieldnames=OUT)
         w.writeheader()
         w.writerows(adapted)
-    print(f"adapted {len(adapted)} rows -> {argv[2]}")
+    print(f"adapted {len(adapted)} rows -> {args[1]}")
     return 0
 
 
