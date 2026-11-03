@@ -1,6 +1,6 @@
 # GOAL: Preserve-first, higher-resolution hearing for congenital bilateral severe-to-profound SNHL
 
-> **GOAL.md v2.3** (2026-11-03; v2.2 2026-11-02). Supersedes v1 (`e9d4050`) after
+> **GOAL.md v2.4** (2026-11-03; v2.3/v2.2 2026-11-03/02). Supersedes v1 (`e9d4050`) after
 > Round 1 dual review (Gaps 68/100, Skeptical 57/100; see
 > `reviews/round-1-scores.md`). Version history: §12.
 > **Status:** Research goal and operating loop. Not medical advice.
@@ -247,8 +247,8 @@ publishes the table; no fabricated 4×6×6 precision):
 
 **Comparator-drift rule:** if standard care materially changes
 (new label age, dexamethasone-eluting array approval, etc.), the
-holder + one independent co-approver (§12; holder never sole-approves
-a re-freeze) may freeze `v2` — with changelog, re-baselined scores,
+holder (v2.4: co-approver requirement removed; freeze recorded
+as committed checklist + holder direction) may freeze `v2` — with changelog, re-baselined scores,
 and v1 results preserved. Silent drift is forbidden; dated
 assumptions are required because challenger timelines are long.
 
@@ -340,10 +340,15 @@ citations; changes after freeze = new protocol version):
 - **G3b Communication autonomy & family outcomes (co-primary).**
   Family-reported communication autonomy / QoL instrument
   (named in Appendix A with Deaf/parent stakeholders, §9).
-  **G3b scoring is BLOCKED (all cells INSUFFICIENT) until the
-  instrument + MCID are co-designed and committed in Step 1.**
-  **PASS: NI vs frozen; superiority claimed only with stakeholder-
-  defined MCID.** A spoken-language gain with autonomy loss fails.
+  **G3b scoring (v2.4, holder direction 2026-11-03 — human gates
+  removed):** the co-design BLOCK is lifted. G3b uses a
+  holder-adopted *published* instrument + published MCID (pinned
+  from inspected literature in Appendix A), permanently labeled
+  **holder-adopted, NOT stakeholder co-designed** — the validity
+  caveat travels with every G3b verdict. Cells remain
+  INSUFFICIENT until that instrument is pinned.
+  **PASS: NI vs frozen; superiority only vs the published MCID.**
+  A spoken-language gain with autonomy loss fails.
 - **G4 Biology preservation (Track P veto).** Components (all must
   pass in Track P): residual-hearing preservation rate; SGN/hair-cell
   survival (animal tier); fibrosis/ossification grade (named scale);
@@ -667,8 +672,11 @@ matched to judgment-load rather than uniform maximum:
 
 Rules: (1) every workflow run records model + effort per agent in
 its review/log artifacts — unrecorded routing does not count;
-(2) human-led dual extraction (§9) and human-expert freeze decisions
-are unchanged — Sol 6.1 *xhigh* never substitutes for them;
+(2) *(v2.4, holder direction 2026-11-03)* human gates are removed:
+dual extraction = two independent agent extractions, different
+model families where available (e.g., Muse + Astra/GPT-6 via
+Codex), + sampled error audit; freezes = committed checklist
+under recorded holder direction. Evidence tiers/GRADE unchanged;
 (3) if Sol 6.1 is unavailable in the executing runtime, fall back to
 the strongest available model at the same effort split and disclose
 the substitution in `STATUS.md` — never silently downgrade the
@@ -677,28 +685,26 @@ xhigh design/judging tier to bulk effort.
 **Evidence-synthesis methods (PRISMA-like, pre-registered).**
 Databases: PubMed, Embase (if accessible — access gap disclosed if
 not), ClinicalTrials.gov, FDA labels/decisions; search strings +
-dates frozen in protocol; **human-led dual extraction on all
-load-bearing claims** (agents may pre-extract; a human extractor
-independently verifies + sampled error audit with error rate
-reported — agent-only Step 0 verification is circular and banned
-for gate-deciding claims; the human extractor must be independent
-of the holder, or holder-extracted load-bearing claims get external
-audit — named in Step 0/2 protocol); inclusion/exclusion flow
+dates frozen in protocol; **dual extraction on all load-bearing
+claims** *(v2.4: two independent agent extractions, different
+model families where available, + sampled error audit with error
+rate reported; single-agent verification remains banned for
+gate-deciding claims)*; inclusion/exclusion flow
 published; bias tools per §5.2. Simulations: named model +
 version + parameters + seeds (e.g., finite-element cochlea model
 or vocoder config — pinned Step 1). Datasets: manifest with DOI,
 licence, hash; large data gitignored, manifests committed.
 No-overwrite evidence rule: corrections are new versions.
 
-**Human expertise (required, not optional).** Before any
-freeze-for-handoff: named reviewers covering pediatric otology,
-auditory neuroscience, trial/biostatistics, regulatory, and
-Deaf-community + parent stakeholders. Judge eligibility, blinding
-to candidate authorship where feasible, and disagreement
-adjudication (majority + written dissent preserved) stated in
-protocol. LLM judges *triage*; human experts *decide* freezes.
-Until partners are secured, deliverables are labeled open
-synthesis (§5.1); adoption is a stretch criterion, never assumed.
+**Expertise (v2.4 — human gates removed by holder direction).**
+Freeze decisions are made by the judge panel (independent
+lenses incl. a different-model-family judge where available)
+under recorded holder direction; majority + written dissent
+preserved. No named-human roster is required. Deliverables
+remain labeled open synthesis (§5.1) with the standing caveat
+that stakeholder validity (esp. G3b) is unestablished; adoption
+is a stretch criterion, never assumed. No human-subjects work
+is authorized by this project under any version.
 
 **Resources & budget (define before Gen 0).** Holder sets: compute/
 literature-access budget, calendar bound per generation, and
@@ -799,11 +805,17 @@ GRADE→score map, FAIL-first fitness, G/H design+kills, unilateral
 variant dropped, human dual extraction, open-synthesis deliverable.
 v2.2: Sol 6.1 model routing (§9) — xhigh for ideation/
 judging/synthesis, high for generation execution workers.
-v2.3 (this file, holder direction 2026-11-03): generation cap
+v2.3 (holder direction 2026-11-03): generation cap
 and §7 loop stopping rules removed (§7 rule 5); loop continues
 until a legitimate win or holder directs otherwise. Broaden +
-deepen mandate added. Gates, PASS bar, and human-freeze rules
-unchanged.
+deepen mandate added.
+v2.4 (this file, holder direction 2026-11-03): human gates
+removed — dual extraction by independent agents (different
+model families where available), freezes by committed checklist
+under holder direction, G3b via holder-adopted published
+instrument (not stakeholder co-designed; caveat permanent).
+Gates, tiers, and PASS bar unchanged; no human-subjects work
+authorized.
 
 ## Appendix A. Gate operationalization (normative skeleton)
 
