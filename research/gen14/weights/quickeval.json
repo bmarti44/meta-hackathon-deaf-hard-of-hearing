@@ -1,0 +1,70 @@
+{
+ "C0_seed20261113": {
+  "babble-heldout-spk": {
+   "n": 32,
+   "d_sisdr_mean": 0.036239855716992606,
+   "imp_logMAE_mean": 0.15935189835727215
+  },
+  "ssn": {
+   "n": 32,
+   "d_sisdr_mean": 3.540027092075939,
+   "imp_logMAE_mean": 1.0059622414410114
+  },
+  "quiet": {
+   "n": 8,
+   "d_sisdr_mean": -116.36858266048677,
+   "imp_logMAE_mean": -0.22364520095288754
+  }
+ },
+ "C1_seed20261113": {
+  "babble-heldout-spk": {
+   "n": 32,
+   "d_sisdr_mean": -0.005387704991058666,
+   "imp_logMAE_mean": 0.15733037143945694
+  },
+  "ssn": {
+   "n": 32,
+   "d_sisdr_mean": 2.4186277249321604,
+   "imp_logMAE_mean": 0.8861972484737635
+  },
+  "quiet": {
+   "n": 8,
+   "d_sisdr_mean": -75.87715678647407,
+   "imp_logMAE_mean": -0.6084256917238235
+  }
+ },
+ "C2_seed20261113": {
+  "babble-heldout-spk": {
+   "n": 32,
+   "d_sisdr_mean": 0.0678512791230188,
+   "imp_logMAE_mean": 0.16534441150724888
+  },
+  "ssn": {
+   "n": 32,
+   "d_sisdr_mean": 3.3221699683303765,
+   "imp_logMAE_mean": 1.080531919375062
+  },
+  "quiet": {
+   "n": 8,
+   "d_sisdr_mean": -88.08022736562003,
+   "imp_logMAE_mean": -0.5376173853874207
+  }
+ },
+ "C3_seed20261113": {
+  "babble-heldout-spk": {
+   "n": 32,
+   "d_sisdr_mean": -0.09709802044015556,
+   "imp_logMAE_mean": 0.1673217937350273
+  },
+  "ssn": {
+   "n": 32,
+   "d_sisdr_mean": 3.5974022975693614,
+   "imp_logMAE_mean": 1.0256627574563026
+  },
+  "quiet": {
+   "n": 8,
+   "d_sisdr_mean": -113.24412240958908,
+   "imp_logMAE_mean": -0.15498797316104174
+  }
+ }
+}
