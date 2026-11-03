@@ -107,3 +107,28 @@ an ACE-envelope loss term (post-selection patterns vs clean),
 plus a quiet-identity term (quiet PESQ regressed to 3.11 in
 Gen 15's own readout). Same bench, same gates. Implants still
 untouched.
+
+---
+
+## Spatial (direction-cue) screen — 2026-11-03
+
+Holder interest: sound localization. [spatial_bench.py](./spatial_bench.py)
+renders target/babble at opposing azimuths (±30°, ±60°) with an
+ASSUMED head model (Woodworth ITD + smooth head shadow; cue
+*distortion* comparisons only) and measures per-ACE-band ILD
+error. Rows: [spatial_results.json](./spatial_results.json).
+
+| System | ILD error vs target (dB) | ILD distortion vs mixture (dB) | ITD err (samples) |
+|---|---|---|---|
+| Unprocessed | 5.96 | 0 (by construction) | 5.8 |
+| Classical gate, per-ear | 5.79 | 0.26 | 4.3 |
+| Classical gate, linked gains | 5.78 | 0.19 | 4.3 |
+| Gen 15, per-ear | 5.42 | 0.95 | 4.3 |
+
+Reading: on these 4 scenes the noise itself dominates target-ILD
+error (~6 dB); processing-induced distortion is smaller but real
+for the per-ear neural model (0.95 dB mean) and lowest with linked
+gains. Nothing here shows a system *restoring* direction — that
+would require linked bilateral processing beyond this screen —
+and nothing yet earns a spatial claim. Gate added to PROTOCOL:
+candidate ILD distortion must not exceed the linked gate's.

@@ -91,6 +91,14 @@ father's blinded vocoder transcription score in babble vs
 unprocessed-vocoded, with no quiet-condition degradation — plus
 Stage B still passing on a fresh seed set.
 
+### Stage B2 — Direction-cue screen (`spatial_bench.py`)
+Target and babble rendered at opposing azimuths under an ASSUMED
+head model. Gate: candidate's mean ILD distortion vs the mixture
+must not exceed the linked-gain classical gate's on the same
+scenes. Preserving cues is a floor, not a localization claim;
+restoring direction would need linked bilateral processing the
+current processors do not expose.
+
 ### Stage D — Implant consideration (NOT authorized by this protocol)
 Out of scope until A–C pass. Would additionally require, at minimum:
 the son's own assent/consent as appropriate, his audiologist/clinician
@@ -99,6 +107,22 @@ safety limit of his clinical map, loudness checked against his
 program before any speech material, an immediate-stop rule, and a
 pre-registered A/B design (candidate vs his everyday program).
 Nothing in Stages A–C, however good, substitutes for any of that.
+
+Pre-hookup homework (do all of this before Stage D is discussed):
+- Confirm exact processor model per ear (CP910 vs CP920 — monitor
+  earphones are supported on CP910, not CP920 per the N6 manual).
+- From his audiologist: current programs/maps summary, any
+  streaming level limits, and whether a streamed A/B session is
+  acceptable and how loudness should be verified first.
+- Verify laptop → Phone Clip / Mini Mic → both processors pairing
+  and latency with ordinary music/speech (delivery path only).
+- Optional: Cochlear Monitor Earphones (N6 accessory) so the
+  father can check the processors' microphone input — this is
+  the pre-processing audio, NOT what his son perceives.
+- Baseline measures with his everyday program (e.g. sentence
+  scores in quiet/noise from clinic records) to compare against.
+- Written session plan: materials, randomization, stop rule,
+  assent process. None of this is started by the bench.
 
 ## Current standing entering this bench
 
