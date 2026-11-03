@@ -1,0 +1,8 @@
+candidate,gate,window,required
+GEN6-P6,G1,*,false
+GEN6-P6,G2,*,true
+GEN6-P6,G3a,*,true
+GEN6-P6,G3b,*,true
+GEN6-P6,G4,*,true
+GEN6-P6,G5,*,true
+GEN6-P6,G6,*,true
