@@ -19,6 +19,7 @@ from baselines import CausalSpectralGate, oracle_irm_waveform  # noqa: E402
 from common import FS, limit_signal, rms, si_sdr  # noqa: E402
 from vocoder import extract_envelopes, vocode  # noqa: E402
 from bench import TEST_BABBLE_SPK, TEST_SPK, TRAIN_SPK, evaluate_go_nogo  # noqa: E402
+from kpi_scorecard import score_kpis  # noqa: E402
 
 
 def _speech_like(seed=0, n=FS):
@@ -94,6 +95,29 @@ def test_go_nogo_quiet_is_absolute_not_delta():
         "white-heldout": {"d_sisdr": {"mean": 0.5}}}}
     assert evaluate_go_nogo(bad)["cand"]["earns_vocoder_listening"] is False
     assert evaluate_go_nogo(good)["cand"]["earns_implant_consideration"] is False
+
+
+def _kpi_summary(babble_d, stoi_d, ace_d):
+    e = lambda d, lo: {"mean": d, "ci_lo": lo, "ci_hi": d + 0.1}  # noqa: E731
+    cand = {"babble-heldout-spk": {"sisdr": 6.0, "d_sisdr": e(babble_d, babble_d - 0.5),
+                                   "d_stoi": e(stoi_d, stoi_d - 0.01),
+                                   "d_ace_electro_corr": e(ace_d, ace_d - 0.02)},
+            "ssn": {"d_sisdr": e(4.0, 3.5)}, "white-heldout": {"d_sisdr": e(1.0, 0.5)},
+            "quiet": {"sisdr": 27.0, "d_stoi": e(-0.005, -0.01)}}
+    return {"cand": cand, "causal_gate": {"babble-heldout-spk": {"sisdr": 2.6}}}
+
+
+def test_kpi_scorecard_pass_and_fail():
+    per_snr = {-5.0: 2.0, 0.0: 2.5, 5.0: 4.0, 10.0: 5.0}
+    spatial = {"cand": {"ild_distortion_db": 0.15, "ild_target_err_db": 3.0, "itd_err_samples": 3.0},
+               "gate_linked": {"ild_distortion_db": 0.19},
+               "unproc": {"ild_target_err_db": 6.0, "itd_err_samples": 5.0}}
+    card = score_kpis(_kpi_summary(3.5, 0.04, 0.06), per_snr, spatial, "cand", spatial_candidate="cand")
+    assert card["all_required_pass"] is True
+    weak = score_kpis(_kpi_summary(1.07, -0.016, 0.011), per_snr, spatial, "cand", spatial_candidate="cand")
+    assert weak["all_required_pass"] is False
+    failed = {r["kpi"] for r in weak["rows"] if not r["pass"]}
+    assert {"babble dSI-SDR", "babble dSTOI", "babble dACE-electro"} <= failed
 
 
 def test_holdout_speakers_disjoint_from_train():

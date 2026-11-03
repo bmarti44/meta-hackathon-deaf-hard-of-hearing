@@ -1,0 +1,91 @@
+"""KPI scorecard: bench JSON in, PASS/FAIL table out. Targets in KPI.md.
+
+Run: /tmp/gen9env/bin/python research/bench-n6/kpi_scorecard.py \
+  --bench research/bench-n6/bench_results_run2.json \
+  --spatial research/bench-n6/spatial_results.json --candidate gen15_causal
+"""
+from __future__ import annotations
+import argparse, json
+from pathlib import Path
+
+import numpy as np
+
+
+def _row(name, actual, required, ok, stretch=None, stretch_ok=None):
+    return {"kpi": name, "actual": actual, "required": required, "pass": bool(ok),
+            "stretch": stretch, "stretch_pass": None if stretch_ok is None else bool(stretch_ok)}
+
+
+def score_kpis(summary, per_snr_babble_d, spatial_summary, candidate,
+               gate_name="causal_gate", linked_name="gate_linked", spatial_candidate=None):
+    c = summary[candidate]
+    b = c["babble-heldout-spk"]
+    rows = [
+        _row("babble dSI-SDR", round(b["d_sisdr"]["mean"], 2), ">=+3.0 & CIlo>0",
+             b["d_sisdr"]["mean"] >= 3.0 and b["d_sisdr"]["ci_lo"] > 0,
+             ">=+5.0", b["d_sisdr"]["mean"] >= 5.0),
+        _row("babble dSTOI", round(b["d_stoi"]["mean"], 3), ">=+0.03 & CIlo>0",
+             b["d_stoi"]["mean"] >= 0.03 and b["d_stoi"]["ci_lo"] > 0,
+             ">=+0.06", b["d_stoi"]["mean"] >= 0.06),
+        _row("babble dACE-electro", round(b["d_ace_electro_corr"]["mean"], 3), ">=+0.05 & CIlo>0",
+             b["d_ace_electro_corr"]["mean"] >= 0.05 and b["d_ace_electro_corr"]["ci_lo"] > 0,
+             ">=+0.10", b["d_ace_electro_corr"]["mean"] >= 0.10),
+        _row("babble dSI-SDR @-5dB", round(per_snr_babble_d.get(-5.0, float("nan")), 2), ">=+1.5",
+             per_snr_babble_d.get(-5.0, -9) >= 1.5, ">=+3.0", per_snr_babble_d.get(-5.0, -9) >= 3.0),
+        _row("babble dSI-SDR @0dB", round(per_snr_babble_d.get(0.0, float("nan")), 2), ">=+1.5",
+             per_snr_babble_d.get(0.0, -9) >= 1.5, ">=+3.0", per_snr_babble_d.get(0.0, -9) >= 3.0),
+        _row("babble SI-SDR > classical gate", round(b["sisdr"], 2),
+             f"> {round(summary[gate_name]['babble-heldout-spk']['sisdr'], 2)}",
+             b["sisdr"] > summary[gate_name]["babble-heldout-spk"]["sisdr"]),
+        _row("SSN dSI-SDR", round(c["ssn"]["d_sisdr"]["mean"], 2), ">=+3.0",
+             c["ssn"]["d_sisdr"]["mean"] >= 3.0, ">=+5.0", c["ssn"]["d_sisdr"]["mean"] >= 5.0),
+        _row("white dSI-SDR", round(c["white-heldout"]["d_sisdr"]["mean"], 2), ">=0",
+             c["white-heldout"]["d_sisdr"]["mean"] >= 0, ">=+1.5", c["white-heldout"]["d_sisdr"]["mean"] >= 1.5),
+        _row("quiet abs SI-SDR", round(c["quiet"]["sisdr"], 1), ">=25",
+             c["quiet"]["sisdr"] >= 25, ">=30", c["quiet"]["sisdr"] >= 30),
+        _row("quiet dSTOI", round(c["quiet"]["d_stoi"]["mean"], 3), ">=-0.02",
+             c["quiet"]["d_stoi"]["mean"] >= -0.02, ">=-0.01", c["quiet"]["d_stoi"]["mean"] >= -0.01),
+    ]
+    if spatial_summary and spatial_candidate in spatial_summary:
+        s = spatial_summary[spatial_candidate]
+        linked = spatial_summary[linked_name]["ild_distortion_db"]
+        unp = spatial_summary["unproc"]
+        rows += [
+            _row("ILD distortion (dB)", round(s["ild_distortion_db"], 2), f"<={round(linked, 2)} (linked gate)",
+                 s["ild_distortion_db"] <= linked, "<=0.10", s["ild_distortion_db"] <= 0.10),
+            _row("target-ILD error (dB)", round(s["ild_target_err_db"], 2), f"<{round(unp['ild_target_err_db'], 2)} (unproc)",
+                 s["ild_target_err_db"] < unp["ild_target_err_db"],
+                 ">=30% below unproc", s["ild_target_err_db"] <= 0.7 * unp["ild_target_err_db"]),
+            _row("ITD error (samples)", round(s["itd_err_samples"], 1), f"<={round(unp['itd_err_samples'], 1)} (unproc)",
+                 s["itd_err_samples"] <= unp["itd_err_samples"]),
+        ]
+    return {"candidate": candidate, "rows": rows,
+            "all_required_pass": all(r["pass"] for r in rows)}
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--bench", required=True)
+    ap.add_argument("--spatial", default=None)
+    ap.add_argument("--candidate", required=True)
+    ap.add_argument("--spatial-candidate", default=None)
+    a = ap.parse_args()
+    bench = json.loads(Path(a.bench).read_text())
+    base = {r["crop"]: r for r in bench["rows"] if r["system"] == "unproc"}
+    per_snr = {}
+    for snr in [-5.0, 0.0, 5.0, 10.0]:
+        vals = [r["sisdr"] - base[r["crop"]]["sisdr"] for r in bench["rows"]
+                if r["system"] == a.candidate and r["kind"].startswith("babble") and r["snr_db"] == snr]
+        per_snr[snr] = float(np.mean(vals)) if vals else float("nan")
+    spatial = json.loads(Path(a.spatial).read_text())["summary"] if a.spatial else None
+    card = score_kpis(bench["summary"], per_snr, spatial, a.candidate,
+                      spatial_candidate=a.spatial_candidate or a.candidate)
+    for r in card["rows"]:
+        st = "PASS" if r["pass"] else "FAIL"
+        sx = "" if r["stretch"] is None else f" | stretch {r['stretch']}: {'PASS' if r['stretch_pass'] else 'no'}"
+        print(f"[{st}] {r['kpi']:38s} actual={r['actual']} required {r['required']}{sx}")
+    print(f"ALL REQUIRED: {'PASS - earns Stage C listening' if card['all_required_pass'] else 'FAIL - keep optimizing'}")
+
+
+if __name__ == "__main__":
+    main()
