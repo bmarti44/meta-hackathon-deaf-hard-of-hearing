@@ -1,0 +1,8 @@
+candidate,gate,window,required
+GEN10-J4,G1,*,false
+GEN10-J4,G2,*,true
+GEN10-J4,G3a,*,true
+GEN10-J4,G3b,*,true
+GEN10-J4,G4,*,true
+GEN10-J4,G5,*,true
+GEN10-J4,G6,*,true

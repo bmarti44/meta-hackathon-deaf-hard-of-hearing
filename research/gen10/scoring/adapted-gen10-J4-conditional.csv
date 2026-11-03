@@ -1,0 +1,10 @@
+# adapted by adapt_extraction.py from Gen0 14-col schema; schema: extraction-csv-v1
+candidate,track,gate,window,stratum,tier,grade,delta_g2_db,delta_g3a_sd,g1_channels,burden_rank,verdict
+GEN10-J4,P,G1,NA,species=human,RECORD,UNASSESSED,,,,,NA
+GEN10-J4,P,G2,W3,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN10-J4,P,G2,W3,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN10-J4,P,G3a,W3,species=human; modality=stratified,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN10-J4,P,G3b,W3,species=human; modality=unreported,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN10-J4,P,G4,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN10-J4,P,G5,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN10-J4,P,G6,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
