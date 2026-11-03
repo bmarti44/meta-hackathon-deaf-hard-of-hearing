@@ -100,13 +100,13 @@ noise); held-out white +0.84 dB; quiet absolute SI-SDR 26.1 dB.
 Per-SNR (Gen 15 summary): the babble gain lives at favourable SNRs
 (+5/+10 dB) and is absent at −5 dB.
 
-**Reading:** training more on a waveform-only objective plateaued
-in babble after step 1000. The objective is the bottleneck, not
-the budget. Gen 16 therefore changes the objective: SI-SDR plus
-an ACE-envelope loss term (post-selection patterns vs clean),
-plus a quiet-identity term (quiet PESQ regressed to 3.11 in
-Gen 15's own readout). Same bench, same gates. Implants still
-untouched.
+**Reading:** on this one seed's learning curve, babble ΔSI-SDR
+plateaued after step 1000 — consistent with (not proof of) an
+objective limit; budget and seed are confounded. Gen 16 tried
+changing the objective: SI-SDR plus an ACE-envelope loss term
+(pre-selection envelope MAE vs clean; the gated metric is
+post-selection), plus waveform L1. That recipe showed no
+demonstrated improvement (gen16/results.md). Implants untouched.
 
 ---
 
@@ -135,18 +135,21 @@ candidate ILD distortion must not exceed the linked gate's.
 
 ---
 
-## Bench v2 first scoring — Gen 15 final (2026-11-03, n=8/kind)
+## Bench v2 baseline — Gen 15 final (balanced re-run, 24 crops/kind)
 
-Pre-registered in [bench-v2-prereg.md](./bench-v2-prereg.md)
-(committed before scoring). Rows: bench_v2_results.json.
+Pre-registered in [bench-v2-prereg.md](./bench-v2-prereg.md).
+The first v2 run (n=2/cell) accidentally tested only 2 of 6
+target speakers (Astra review); this balanced re-run (n=6/cell,
+global speaker cycling) supersedes it. Rows: bench_v2_results.json.
 
 | Gen 15 Δ vs unproc | Crowd (≥8 talkers) | Competing (2 talkers) |
 |---|---|---|
-| ΔSI-SDR | +1.97 dB | +1.10 dB |
-| ΔSTOI / Δvocoded-ESTOI | 0.000 / +0.019 | −0.013 / +0.002 |
-| ΔACE electro-corr / ΔNCM-simple | +0.043 / +0.030 | +0.014 / +0.006 |
+| ΔSI-SDR | +1.75 dB | +0.57 dB |
+| ΔSTOI / Δvocoded-ESTOI | +0.002 / +0.020 | −0.012 / +0.002 |
+| ΔACE electro-corr / Δband-env Pearson | +0.037 / +0.018 | +0.004 / −0.004 |
 
 As REVIEW §1.1 predicted, the same model looks materially
 better on crowd babble than on competing talkers — crowd is the
 solvable single-mic problem; competing needs a cue (binaural or
-enrollment). Small n; treat as v2 baseline, not a new claim.
+enrollment). Widening speakers lowered competing (+1.10 → +0.57):
+speaker generalization is part of the gap.

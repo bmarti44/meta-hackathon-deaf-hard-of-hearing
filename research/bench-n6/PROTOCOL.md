@@ -93,11 +93,13 @@ Stage B still passing on a fresh seed set.
 
 ### Stage B2 — Direction-cue screen (`spatial_bench.py`)
 Target and babble rendered at opposing azimuths under an ASSUMED
-head model. Gate: candidate's mean ILD distortion vs the mixture
-must not exceed the linked-gain classical gate's on the same
-scenes. Preserving cues is a floor, not a localization claim;
-restoring direction would need linked bilateral processing the
-current processors do not expose.
+head model. Gate (corrected 2026-11-03, Astra review): candidate
+**target-ILD error vs the clean target** must beat unprocessed
+on the same scenes, ITD error no worse. ILD deviation vs the
+*mixture* is diagnostic only — removing a lateral interferer
+should change mixture ILD, and perfect target recovery would
+"maximally distort" it. Preserving cues is a floor, not a
+localization claim.
 
 ### Stage D — Implant consideration (NOT authorized by this protocol)
 Out of scope until A–C pass. Would additionally require, at minimum:

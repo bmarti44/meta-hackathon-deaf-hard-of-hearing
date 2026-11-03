@@ -20,7 +20,7 @@ from common import FS, limit_signal, rms, si_sdr  # noqa: E402
 from vocoder import extract_envelopes, vocode  # noqa: E402
 from bench import TEST_BABBLE_SPK, TEST_SPK, TRAIN_SPK, evaluate_go_nogo  # noqa: E402
 from kpi_scorecard import score_kpis  # noqa: E402
-from bench_v2 import TEST_INTERFERERS, TEST_SPK_V2, TRAIN_SPK_V2, VAL_SPK, ncm_simple, vocoded_estoi  # noqa: E402
+from bench_v2 import TEST_INTERFERERS, TEST_SPK_V2, TRAIN_SPK_V2, VAL_SPK, band_env_pearson, vocoded_estoi  # noqa: E402
 
 
 def _speech_like(seed=0, n=FS):
@@ -121,6 +121,22 @@ def test_kpi_scorecard_pass_and_fail():
     assert {"babble dSI-SDR", "babble dSTOI", "babble dACE-electro"} <= failed
 
 
+def test_kpi_missing_spatial_is_incomplete_never_pass():
+    per_snr = {-5.0: 2.0, 0.0: 2.5, 5.0: 4.0, 10.0: 5.0}
+    card = score_kpis(_kpi_summary(3.5, 0.04, 0.06), per_snr, None, "cand", spatial_candidate="cand")
+    assert card["incomplete"] is True and card["all_required_pass"] is False
+
+
+def test_kpi_perfect_target_not_rejected_by_spatial_gate():
+    # Regression (Astra review): outputting the exact clean target has
+    # huge ILD deviation vs the noisy mixture but must PASS spatial.
+    per_snr = {-5.0: 2.0, 0.0: 2.5, 5.0: 4.0, 10.0: 5.0}
+    spatial = {"cand": {"ild_distortion_db": 5.96, "ild_target_err_db": 0.0, "itd_err_samples": 0.0},
+               "unproc": {"ild_target_err_db": 5.96, "itd_err_samples": 5.75}}
+    card = score_kpis(_kpi_summary(3.5, 0.04, 0.06), per_snr, spatial, "cand", spatial_candidate="cand")
+    assert card["all_required_pass"] is True
+
+
 def test_v2_splits_disjoint_and_complete():
     allv2 = TRAIN_SPK_V2 + VAL_SPK + TEST_SPK_V2 + TEST_INTERFERERS
     assert len(allv2) == len(set(allv2)) == 40
@@ -130,7 +146,7 @@ def test_v2_splits_disjoint_and_complete():
 def test_vocoded_estoi_and_ncm_identity():
     x = _speech_like()
     assert vocoded_estoi(x, x) > 0.95
-    assert ncm_simple(x, x) > 0.99
+    assert band_env_pearson(x, x) > 0.99
 
 
 def test_holdout_speakers_disjoint_from_train():

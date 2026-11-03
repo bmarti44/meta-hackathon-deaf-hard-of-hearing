@@ -29,6 +29,20 @@ on 8-of-22 vocoded output (same vocoder seed clean vs estimate):
 labeled simplified, not the full Chen & Loizou weighting).
 Proxies are supporting evidence only (REVIEW §2.3).
 
+## Amendments (2026-11-03, Astra xhigh review — recorded, not silent)
+
+1. "Simplified NCM" renamed **band-env Pearson**: it is mean
+   per-band envelope correlation on raw waveforms, not NCM and
+   not on vocoded output; it inherits no published validation.
+   Vocoded ESTOI remains as registered.
+2. Speaker cycling fixed to a global counter (per-cell restart
+   meant the first filed v2 run at n=2 tested only speakers
+   1988/1993). Balanced runs use n-per-cell a multiple of 6.
+   The first v2 baseline is superseded by the balanced re-run.
+3. Spatial gate corrected (PROTOCOL Stage B2): ILD *distortion
+   vs the mixture* is diagnostic only — perfect target recovery
+   would "fail" it. The gate is target-ILD error vs clean.
+
 ## Rules
 
 - No model is selected or tuned on TEST; VAL targets exist for

@@ -11,15 +11,17 @@ from pathlib import Path
 import numpy as np
 
 
-def _row(name, actual, required, ok, stretch=None, stretch_ok=None):
+def _row(name, actual, required, ok, stretch=None, stretch_ok=None, required_row=True):
     return {"kpi": name, "actual": actual, "required": required, "pass": bool(ok),
-            "stretch": stretch, "stretch_pass": None if stretch_ok is None else bool(stretch_ok)}
+            "stretch": stretch, "stretch_pass": None if stretch_ok is None else bool(stretch_ok),
+            "required_row": required_row}
 
 
 def score_kpis(summary, per_snr_babble_d, spatial_summary, candidate,
-               gate_name="causal_gate", linked_name="gate_linked", spatial_candidate=None):
+               gate_name="causal_gate", linked_name="gate_linked", spatial_candidate=None,
+               babble_kind="babble-heldout-spk"):
     c = summary[candidate]
-    b = c["babble-heldout-spk"]
+    b = c[babble_kind]
     rows = [
         _row("babble dSI-SDR", round(b["d_sisdr"]["mean"], 2), ">=+3.0 & CIlo>0",
              b["d_sisdr"]["mean"] >= 3.0 and b["d_sisdr"]["ci_lo"] > 0,
@@ -35,8 +37,8 @@ def score_kpis(summary, per_snr_babble_d, spatial_summary, candidate,
         _row("babble dSI-SDR @0dB", round(per_snr_babble_d.get(0.0, float("nan")), 2), ">=+1.5",
              per_snr_babble_d.get(0.0, -9) >= 1.5, ">=+3.0", per_snr_babble_d.get(0.0, -9) >= 3.0),
         _row("babble SI-SDR > classical gate", round(b["sisdr"], 2),
-             f"> {round(summary[gate_name]['babble-heldout-spk']['sisdr'], 2)}",
-             b["sisdr"] > summary[gate_name]["babble-heldout-spk"]["sisdr"]),
+             f"> {round(summary[gate_name][babble_kind]['sisdr'], 2)}",
+             b["sisdr"] > summary[gate_name][babble_kind]["sisdr"]),
         _row("SSN dSI-SDR", round(c["ssn"]["d_sisdr"]["mean"], 2), ">=+3.0",
              c["ssn"]["d_sisdr"]["mean"] >= 3.0, ">=+5.0", c["ssn"]["d_sisdr"]["mean"] >= 5.0),
         _row("white dSI-SDR", round(c["white-heldout"]["d_sisdr"]["mean"], 2), ">=0",
@@ -46,21 +48,25 @@ def score_kpis(summary, per_snr_babble_d, spatial_summary, candidate,
         _row("quiet dSTOI", round(c["quiet"]["d_stoi"]["mean"], 3), ">=-0.02",
              c["quiet"]["d_stoi"]["mean"] >= -0.02, ">=-0.01", c["quiet"]["d_stoi"]["mean"] >= -0.01),
     ]
-    if spatial_summary and spatial_candidate in spatial_summary:
+    # Spatial is a co-equal required goal: absent/mismatched spatial
+    # evidence makes the verdict INCOMPLETE, never PASS (Astra review).
+    incomplete = not (spatial_summary and spatial_candidate in spatial_summary)
+    if not incomplete:
         s = spatial_summary[spatial_candidate]
-        linked = spatial_summary[linked_name]["ild_distortion_db"]
         unp = spatial_summary["unproc"]
         rows += [
-            _row("ILD distortion (dB)", round(s["ild_distortion_db"], 2), f"<={round(linked, 2)} (linked gate)",
-                 s["ild_distortion_db"] <= linked, "<=0.10", s["ild_distortion_db"] <= 0.10),
             _row("target-ILD error (dB)", round(s["ild_target_err_db"], 2), f"<{round(unp['ild_target_err_db'], 2)} (unproc)",
                  s["ild_target_err_db"] < unp["ild_target_err_db"],
                  ">=30% below unproc", s["ild_target_err_db"] <= 0.7 * unp["ild_target_err_db"]),
             _row("ITD error (samples)", round(s["itd_err_samples"], 1), f"<={round(unp['itd_err_samples'], 1)} (unproc)",
                  s["itd_err_samples"] <= unp["itd_err_samples"]),
+            # Diagnostic only: perfect target recovery "fails" mixture-ILD
+            # deviation by design, so it must never gate (Astra review).
+            _row("ILD distortion vs mixture (diagnostic)", round(s["ild_distortion_db"], 2),
+                 "diagnostic only", True, required_row=False),
         ]
-    return {"candidate": candidate, "rows": rows,
-            "all_required_pass": all(r["pass"] for r in rows)}
+    return {"candidate": candidate, "rows": rows, "incomplete": incomplete,
+            "all_required_pass": (not incomplete) and all(r["pass"] for r in rows if r["required_row"])}
 
 
 def main():
@@ -69,22 +75,30 @@ def main():
     ap.add_argument("--spatial", default=None)
     ap.add_argument("--candidate", required=True)
     ap.add_argument("--spatial-candidate", default=None)
+    ap.add_argument("--babble-kind", default="babble-heldout-spk",
+                    help="legacy: babble-heldout-spk | v2: crowd or competing")
     a = ap.parse_args()
     bench = json.loads(Path(a.bench).read_text())
     base = {r["crop"]: r for r in bench["rows"] if r["system"] == "unproc"}
     per_snr = {}
     for snr in [-5.0, 0.0, 5.0, 10.0]:
         vals = [r["sisdr"] - base[r["crop"]]["sisdr"] for r in bench["rows"]
-                if r["system"] == a.candidate and r["kind"].startswith("babble") and r["snr_db"] == snr]
+                if r["system"] == a.candidate and r["kind"] == a.babble_kind and r["snr_db"] == snr]
         per_snr[snr] = float(np.mean(vals)) if vals else float("nan")
     spatial = json.loads(Path(a.spatial).read_text())["summary"] if a.spatial else None
     card = score_kpis(bench["summary"], per_snr, spatial, a.candidate,
-                      spatial_candidate=a.spatial_candidate or a.candidate)
+                      spatial_candidate=a.spatial_candidate or a.candidate,
+                      babble_kind=a.babble_kind)
     for r in card["rows"]:
         st = "PASS" if r["pass"] else "FAIL"
+        if not r["required_row"]:
+            st = "INFO"
         sx = "" if r["stretch"] is None else f" | stretch {r['stretch']}: {'PASS' if r['stretch_pass'] else 'no'}"
         print(f"[{st}] {r['kpi']:38s} actual={r['actual']} required {r['required']}{sx}")
-    print(f"ALL REQUIRED: {'PASS - earns Stage C listening' if card['all_required_pass'] else 'FAIL - keep optimizing'}")
+    verdict = ("INCOMPLETE - spatial evidence missing/mismatched" if card["incomplete"]
+               else "PASS - earns Stage C listening" if card["all_required_pass"]
+               else "FAIL - keep optimizing")
+    print(f"ALL REQUIRED: {verdict}")
 
 
 if __name__ == "__main__":

@@ -38,11 +38,13 @@ def build_crops_v2(n_per_cell):
     rng = np.random.default_rng(20261117)
     SEG = 4 * FS
     crops = []
+    spk_counter = 0  # global cycle: per-cell restart made n<6 test only 2 speakers
     for kind in ["crowd", "competing", "ssn", "white-heldout", "quiet"]:
         snrs = [999.0] if kind == "quiet" else [-5.0, 0.0, 5.0, 10.0]
         for snr in snrs:
             for i in range(n_per_cell):
-                spk = TEST_SPK_V2[i % len(TEST_SPK_V2)]
+                spk = TEST_SPK_V2[spk_counter % len(TEST_SPK_V2)]
+                spk_counter += 1
                 clean = crop(rng, pool[spk][rng.integers(0, len(pool[spk]))], SEG)
                 clean = (clean / (_rms(clean) + 1e-9) * 0.1).astype(np.float32)
                 if kind == "quiet":
@@ -73,10 +75,10 @@ def vocoded_estoi(clean, est, seed=7):
         return float("nan")
 
 
-def ncm_simple(clean, est):
-    """Simplified NCM: mean per-ACE-band normalized envelope covariance
-    on vocoded signals is expensive; here on raw-waveform ACE envelopes
-    (labeled simplified — not full Chen & Loizou)."""
+def band_env_pearson(clean, est):
+    """Band-env Pearson: mean per-ACE-band envelope correlation (NOT NCM)
+    on raw-waveform ACE envelopes
+    (does not inherit published NCM validation)."""
     a = extract_envelopes(est); b = extract_envelopes(clean)
     T = min(len(a), len(b)); a, b = a[:T], b[:T]
     a = a - a.mean(axis=0, keepdims=True); b = b - b.mean(axis=0, keepdims=True)
@@ -106,7 +108,7 @@ def main():
             rows.append({"crop": ci, "kind": c["kind"], "snr_db": c["snr_db"], "spk": c["spk"],
                          "system": name, **metrics_for(c["clean"], est),
                          "voc_estoi": vocoded_estoi(c["clean"], est),
-                         "ncm_simple": ncm_simple(c["clean"], est)})
+                         "band_env_pearson": band_env_pearson(c["clean"], est)})
         print(f"crop {ci+1}/{len(crops)} {c['kind']} elapsed={time.time()-t0:.0f}s", flush=True)
     base = {r["crop"]: r for r in rows if r["system"] == "unproc"}
     summary = {}
@@ -115,7 +117,7 @@ def main():
         for kind in sorted({r["kind"] for r in rows}):
             sel = [r for r in rows if r["system"] == name and r["kind"] == kind]
             e = {"n": len(sel)}
-            for k in ["sisdr", "stoi", "ace_electro_corr", "voc_estoi", "ncm_simple"]:
+            for k in ["sisdr", "stoi", "ace_electro_corr", "voc_estoi", "band_env_pearson"]:
                 e[k] = float(np.nanmean([r[k] for r in sel]))
                 e[f"d_{k}"] = bootstrap_ci([r[k] - base[r["crop"]][k] for r in sel])
             summary[name][kind] = e
@@ -128,7 +130,7 @@ def main():
                 e = byk[kind]
                 print(f"{name:18s} {kind:10s} dSI-SDR {e['d_sisdr']['mean']:+.2f} "
                       f"dSTOI {e['d_stoi']['mean']:+.3f} dACEel {e['d_ace_electro_corr']['mean']:+.3f} "
-                      f"dVocESTOI {e['d_voc_estoi']['mean']:+.3f} dNCM {e['d_ncm_simple']['mean']:+.3f}")
+                      f"dVocESTOI {e['d_voc_estoi']['mean']:+.3f} dBandEnv {e['d_band_env_pearson']['mean']:+.3f}")
     print(f"BENCH V2 DONE {time.time()-t0:.0f}s -> {a.out}")
 
 

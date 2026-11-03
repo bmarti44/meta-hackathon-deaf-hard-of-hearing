@@ -55,10 +55,10 @@ easy SNRs; help is needed most at −5/0 dB.
 
 | KPI | Required | Stretch | Gen 15 |
 |---|---|---|---|
-| Mean ILD distortion vs mixture | ≤ linked gate on same scenes (0.19 dB now) | ≤ 0.10 dB | 0.95 ✗ |
 | Target-ILD error vs clean target | < unprocessed on same scenes | ≥ 30% below unprocessed | 5.42 vs 5.96 |
 | ITD error vs target | ≤ unprocessed on same scenes | < unprocessed | pass |
-| Architecture | linked bilateral gains (common mask/gain both ears) | — | per-ear ✗ |
+| ILD distortion vs mixture | diagnostic only (perfect recovery scores 5.96 — must not gate) | — | 0.95 |
+| Architecture (binaural phase) | linked bilateral gains (common mask/gain both ears) | — | per-ear ✗ |
 
 ## Robustness and engineering
 
