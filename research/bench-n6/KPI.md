@@ -82,7 +82,11 @@ easy SNRs; help is needed most at −5/0 dB.
 4. Eval is one command (`bench.py --n-per-cell 8`) + spatial bench;
    KPI verdict printed by `kpi_scorecard.py`, never eyeballed.
 5. Speaker/noise holdouts asserted in code (existing tests).
-6. Data optimization (holder direction, within laptop scale):
+6. **Astra review between generations** (holder standing rule,
+   2026-11-03): Codex `gpt-6-astra` at xhigh reviews each
+   generation's filed results + bench contract before the next
+   generation trains; disposition filed beside this file.
+7. Data optimization (holder direction, within laptop scale):
    expand training speakers beyond the current 10 from the same
    corpus (holdouts unchanged), weight training SNRs toward the
    hard −5/0 dB region where Gen 15 had no gain, vary babble
