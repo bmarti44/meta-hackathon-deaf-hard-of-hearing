@@ -8,6 +8,14 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+WIN-PATH PACKET FILED — BALL WITH HUMANS (2026-11-02):
+research/win-path/ (W1–W8 action list, W2 G3b brief,
+W3 extraction checklist). Agent-doable loop work is
+exhausted: every remaining step to a legitimate win is
+human-owned (fund/name roster, G3b co-design, dual
+extraction, re-freeze, primary data). Loop will re-score
+immediately when human-verified evidence lands.
+
 CODEX ASTRA REVIEW DONE + SCORER FIXED (2026-11-02):
 reviews/codex-astra-external-review.md (gpt-6-astra)
 UPHOLDS no-winner (independent re-run + cell adjudication);
