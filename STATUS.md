@@ -8,6 +8,20 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+BENCH-N6 BUILT — NO-IMPLANT PROVING GROUND (2026-11-03,
+holder direction: prove it without implants first; implantee
+is holder's son, bilateral N6, holder not implanted):
+research/bench-n6/ stages causal candidates through objective
+bench (vs unprocessed + classical causal gate + oracle ceiling),
+post-selection ACE readout, go/no-go gates, then NH vocoder
+screening for the father; implant stage not authorized.
+Run 1: classical gate babble-null (+0.04 dB); Gen15 waveform
+interim step-500 first causal babble gain (+0.41 dB, CI>0) but
+post-selection ACE null -> NO-GO for evidence listening;
+labeled shakedown pack only. Codex Astra reviewed the plan
+(sound; fixes applied same day). 8 durable tests green.
+Next: re-bench Gen15 final checkpoint when training lands.
+
 GOAL v2.3 — STOP RULES REMOVED, BROADEN + DEEPEN
 (2026-11-03, holder direction): generation cap and §7
 loop stopping rules deleted from GOAL.md; loop runs until
