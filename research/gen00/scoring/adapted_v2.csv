@@ -1,0 +1,235 @@
+# adapted by adapt_extraction.py from Gen0 14-col schema; schema: extraction-csv-v1
+candidate,track,gate,window,stratum,tier,grade,delta_g2_db,delta_g3a_sd,g1_channels,burden_rank,verdict
+A,P,G3b,W1,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+A,P,G3b,W2,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+A,P,G3b,W3,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+B,P,G3b,W1,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+B,P,G3b,W2,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+B,P,G3b,W3,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+C,R,G3b,W1,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+C,R,G3b,W2,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+C,R,G3b,W3,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+D,R,G3b,W1,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+D,R,G3b,W2,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+D,R,G3b,W3,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+E,R,G3b,W1,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+E,R,G3b,W2,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+E,R,G3b,W3,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+F,P,G3b,W1,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+F,P,G3b,W2,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+F,P,G3b,W3,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+G,P,G3b,W1,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+G,P,G3b,W2,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+G,P,G3b,W3,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+H,P,G3b,W1,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+H,P,G3b,W2,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+H,P,G3b,W3,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+F,P,G1,NA,species=human,RECORD,UNASSESSED,,,,,NA
+G,P,G1,NA,species=human,RECORD,UNASSESSED,,,,,NA
+H,P,G1,NA,species=human,RECORD,UNASSESSED,,,,,NA
+A,P,G1,W1,species=human; lab=Friesen/Shannon (2001-era arrays),T3,UNASSESSED,,,,,INSUFFICIENT
+A,P,G1,W1,species=human; lab=Berg et al (perimodiolar cohort),T3,UNASSESSED,,,,,INSUFFICIENT
+A,P,G1,W1,species=human; lab=van den Honert/Kelsall (focusing originators; allegiance -1 GRADE if graded),T3,UNASSESSED,,,,,INSUFFICIENT
+A,P,G1,W2,species=human; lab=Friesen/Shannon (2001-era arrays),T3,UNASSESSED,,,,,INSUFFICIENT
+A,P,G1,W2,species=human; lab=Berg et al (perimodiolar cohort),T3,UNASSESSED,,,,,INSUFFICIENT
+A,P,G1,W2,species=human; lab=van den Honert/Kelsall (focusing originators; allegiance -1 GRADE if graded),T3,UNASSESSED,,,,,INSUFFICIENT
+A,P,G1,W3,species=human; lab=Friesen/Shannon (2001-era arrays),T3,UNASSESSED,,,,,INSUFFICIENT
+A,P,G1,W3,species=human; lab=Berg et al (perimodiolar cohort),T3,UNASSESSED,,,,,INSUFFICIENT
+A,P,G1,W3,species=human; lab=van den Honert/Kelsall (focusing originators; allegiance -1 GRADE if graded),T3,UNASSESSED,,,,,INSUFFICIENT
+A,P,G1,W3,species=human; lab=Henry/Turner/Behrens (task definition),T3,UNASSESSED,,,,,INSUFFICIENT
+A,P,G1,W1,species=human; lab=Ehlers et al (BiCI children research processors),T3,UNASSESSED,,,,,INSUFFICIENT
+A,P,G1,W2,species=human; lab=Ehlers et al (BiCI children research processors),T3,UNASSESSED,,,,,INSUFFICIENT
+A,P,G1,W3,species=human; lab=Ehlers et al (BiCI children research processors),T3,UNASSESSED,,,,,INSUFFICIENT
+A,P,G2,W3,species=human; lab=Srinivasan/House (focusing),T3,UNASSESSED,,,,,INSUFFICIENT
+A,P,G2,W3,species=human; lab=van Groesen et al (dynamic focusing take-home),T3,UNASSESSED,,,,,INSUFFICIENT
+A,P,G2,W3,species=human; lab=Bierer/Litvak,T3,UNASSESSED,,,,,INSUFFICIENT
+A,P,G2,W3,species=human; lab=Caswell-Midwinter/Arenberg,T3,UNASSESSED,,,,,INSUFFICIENT
+A,P,G2,W2,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+A,P,G2,W1,"species=human; lab=Sharma/Dorman/Spahr (P1 mechanism, not Candidate A)",T4,UNASSESSED,,,,,INSUFFICIENT
+A,P,G2,W3,species=human,T3,UNASSESSED,,,,,INSUFFICIENT
+A,P,G3a,W1,species=human; modality=spoken,RECORD,UNASSESSED,,,,,INSUFFICIENT
+A,P,G3a,W1,species=human; modality=signed,RECORD,UNASSESSED,,,,,INSUFFICIENT
+A,P,G3a,W1,species=human; modality=bimodal,RECORD,UNASSESSED,,,,,INSUFFICIENT
+A,P,G3b,W1,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+A,P,G3a,W2,species=human; modality=spoken,RECORD,UNASSESSED,,,,,INSUFFICIENT
+A,P,G3a,W2,species=human; modality=signed,RECORD,UNASSESSED,,,,,INSUFFICIENT
+A,P,G3a,W2,species=human; modality=bimodal,RECORD,UNASSESSED,,,,,INSUFFICIENT
+A,P,G3b,W2,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+A,P,G3a,W3,species=human; modality=spoken,RECORD,UNASSESSED,,,,,INSUFFICIENT
+A,P,G3a,W3,species=human; modality=signed,RECORD,UNASSESSED,,,,,INSUFFICIENT
+A,P,G3a,W3,species=human; modality=bimodal,RECORD,UNASSESSED,,,,,INSUFFICIENT
+A,P,G3b,W3,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+A,P,G4,ALL,species=human; lab=Seyyedi/Nadol (adult archival),T3,UNASSESSED,,,,,INSUFFICIENT
+A,P,G4,ALL,species=human; lab=Kamakura/Nadol (adult archival),T3,UNASSESSED,,,,,INSUFFICIENT
+A,P,G4,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+A,P,G4,ALL,species=human; lab=Madgar et al meta-analysis,T4,UNASSESSED,,,,,INSUFFICIENT
+A,P,G5,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+A,P,G5,ADOL,species=human; lab=Liu et al meta-analysis (mixed adult+child),T4,UNASSESSED,,,,,INSUFFICIENT
+A,P,G5,ADOL,species=human; lab=Contrera et al (pediatric series),T4,UNASSESSED,,,,,INSUFFICIENT
+A,P,G5,ALL,species=human; lab=Gowrishankar et al meta-analyses (mixed ages/eras),T4,UNASSESSED,,,,,INSUFFICIENT
+A,P,G6,ALL,species=human,RECORD,UNASSESSED,,,,,FAIL
+A,P,G6,ALL,species=human,T0,UNASSESSED,,,,,INSUFFICIENT
+B,P,G1,W1,species=guinea-pig; lab=UNSW Pinyon/Housley (INVENTOR lab; allegiance -1 GRADE; non-inventor replication required to PASS),T2,UNASSESSED,,,,,INSUFFICIENT
+B,P,G1,W1,species=guinea-pig; lab=UNSW (inventor),T2,UNASSESSED,,,,,INSUFFICIENT
+B,P,G1,W2,species=guinea-pig; lab=UNSW Pinyon/Housley (INVENTOR lab; allegiance -1 GRADE; non-inventor replication required to PASS),T2,UNASSESSED,,,,,INSUFFICIENT
+B,P,G1,W2,species=guinea-pig; lab=UNSW (inventor),T2,UNASSESSED,,,,,INSUFFICIENT
+B,P,G1,W3,species=guinea-pig; lab=UNSW Pinyon/Housley (INVENTOR lab; allegiance -1 GRADE; non-inventor replication required to PASS),T2,UNASSESSED,,,,,INSUFFICIENT
+B,P,G1,W3,species=guinea-pig; lab=UNSW (inventor),T2,UNASSESSED,,,,,INSUFFICIENT
+B,P,G2,W3,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+B,P,G2,W2,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+B,P,G2,W1,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+B,P,G2,W3,species=human,T3,UNASSESSED,,,,,INSUFFICIENT
+B,P,G3a,W1,species=human; modality=spoken,RECORD,UNASSESSED,,,,,INSUFFICIENT
+B,P,G3a,W1,species=human; modality=signed,RECORD,UNASSESSED,,,,,INSUFFICIENT
+B,P,G3a,W1,species=human; modality=bimodal,RECORD,UNASSESSED,,,,,INSUFFICIENT
+B,P,G3b,W1,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+B,P,G3a,W2,species=human; modality=spoken,RECORD,UNASSESSED,,,,,INSUFFICIENT
+B,P,G3a,W2,species=human; modality=signed,RECORD,UNASSESSED,,,,,INSUFFICIENT
+B,P,G3a,W2,species=human; modality=bimodal,RECORD,UNASSESSED,,,,,INSUFFICIENT
+B,P,G3b,W2,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+B,P,G3a,W3,species=human; modality=spoken,RECORD,UNASSESSED,,,,,INSUFFICIENT
+B,P,G3a,W3,species=human; modality=signed,RECORD,UNASSESSED,,,,,INSUFFICIENT
+B,P,G3a,W3,species=human; modality=bimodal,RECORD,UNASSESSED,,,,,INSUFFICIENT
+B,P,G3b,W3,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+B,P,G4,ALL,species=guinea-pig; lab=UNSW (inventor; allegiance applies),T2,UNASSESSED,,,,,INSUFFICIENT
+B,P,G4,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+B,P,G4,ALL,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+B,P,G4,ALL,species=unreported; lab=UNSW (branch-dependent),RECORD,UNASSESSED,,,,,INSUFFICIENT
+B,P,G5,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+B,P,G5,ADOL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+B,P,G6,ALL,species=human,RECORD,UNASSESSED,,,,,FAIL
+C,R,G1,W3,species=gerbil; lab=Moser-Gottingen,T2,UNASSESSED,,,,,INSUFFICIENT
+C,R,G1,W3,species=rodent-NHP; lab=Moser-Gottingen,T2,UNASSESSED,,,,,INSUFFICIENT
+C,R,G1,W3,species=gerbil; lab=Moser-Gottingen,T2,UNASSESSED,,,,,INSUFFICIENT
+C,R,G1,W3,species=gerbil; lab=Moser-Gottingen,T2,UNASSESSED,,,,,INSUFFICIENT
+C,R,G2,W3,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+C,R,G2,W3,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+C,R,G3a,W3,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+C,R,G3b,W1,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+C,R,G3b,W2,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+C,R,G3b,W3,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+C,R,G4,ALL,species=gerbil; lab=Moser-Gottingen,T2,UNASSESSED,,,,,INSUFFICIENT
+C,R,G4,ALL,species=gerbil; lab=Moser-Gottingen,T2,UNASSESSED,,,,,FAIL
+C,R,G5,ALL,species=human,T2,UNASSESSED,,,,,INSUFFICIENT
+C,R,G6,ALL,species=human,RECORD,UNASSESSED,,,,,FAIL
+D,R,G1,W3,species=guinea-pig; lab=Groves-lineage,T2,UNASSESSED,,,,,INSUFFICIENT
+D,R,G1,W3,species=mouse; lab=Groves-lineage,T2,UNASSESSED,,,,,INSUFFICIENT
+D,R,G1,W3,species=mouse; lab=Groves-lineage,T2,UNASSESSED,,,,,INSUFFICIENT
+D,R,G2,W3,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+D,R,G2,W3,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+D,R,G3a,W3,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+D,R,G3b,W1,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+D,R,G3b,W2,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+D,R,G3b,W3,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+D,R,G4,ALL,species=mouse-guinea-pig; lab=Groves-lineage,T2,UNASSESSED,,,,,INSUFFICIENT
+D,R,G4,ALL,species=human,RECORD,UNASSESSED,,,,,FAIL
+D,R,G5,ALL,species=human,T2,UNASSESSED,,,,,INSUFFICIENT
+D,R,G6,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+D,R,G1,NA,species=guinea-pig; lab=Groves-lineage,T2,UNASSESSED,,,,,INSUFFICIENT
+E,R,G1,W3,species=cat; lab=ANI-consortium,REVIEW,UNASSESSED,,,,,INSUFFICIENT
+E,R,G1,W3,species=cat; lab=ANI-consortium,T2,UNASSESSED,,,,,INSUFFICIENT
+E,R,G1,W3,species=cat; lab=ANI-consortium,T2,UNASSESSED,,,,,INSUFFICIENT
+E,R,G2,W3,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+E,R,G2,W3,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+E,R,G3a,W3,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+E,R,G3b,W1,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+E,R,G3b,W2,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+E,R,G3b,W3,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+E,R,G4,ALL,species=cat; lab=ANI-consortium,T2,UNASSESSED,,,,,INSUFFICIENT
+E,R,G4,ALL,species=human,RECORD,UNASSESSED,,,,,NA
+E,R,G5,ALL,species=human,RECORD,UNASSESSED,,,,,FAIL
+E,R,G6,ALL,species=human,RECORD,UNASSESSED,,,,,FAIL
+F,P,G3b,W1,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+F,P,G3b,W2,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+F,P,G3b,W3,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+F,P,G1,NA,species=human,RECORD,UNASSESSED,,,,,NA
+G,P,G3b,W1,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+G,P,G3b,W2,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+G,P,G3b,W3,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+G,P,G1,NA,species=human,RECORD,UNASSESSED,,,,,NA
+H,P,G3b,W1,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+H,P,G3b,W2,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+H,P,G3b,W3,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+H,P,G1,NA,species=human,RECORD,UNASSESSED,,,,,NA
+F,P,G2,W1,species=human; lab=Sharma-group,T4,UNASSESSED,,,,,INSUFFICIENT
+F,P,G2,W2,species=human; lab=Tumuklu-Gunsoy (Gaziantep),T4,UNASSESSED,,,,,INSUFFICIENT
+F,P,G2,W3,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+F,P,G2,W3,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+F,P,G3a,W1,species=human; modality=unreported,T4,UNASSESSED,,,,,INSUFFICIENT
+F,P,G3a,W2,species=human; modality=pooled-as-reported,T4,UNASSESSED,,,,,INSUFFICIENT
+F,P,G3a,W3,species=human; modality=pooled-as-reported,T4,UNASSESSED,,,,,INSUFFICIENT
+F,P,G4,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+F,P,G5,W0,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+F,P,G5,W0,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+F,P,G6,W0,species=human; decision_origin=birth-9mo,T4,UNASSESSED,,,,,INSUFFICIENT
+F,P,G6,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+G,P,G6,W0,species=human; etiology=pooled-as-reported; decision_origin=unreported; lab=Melbourne-Genomics,T4,UNASSESSED,,,,,INSUFFICIENT
+G,P,G6,W0,species=human; lab=Shearer-BostonChildrens,REVIEW,UNASSESSED,,,,,INSUFFICIENT
+G,P,G6,W0,species=human; decision_origin=birth-3-6-9-12mo; genotype_state=pending-VUS-negative,T4,UNASSESSED,,,,,INSUFFICIENT
+G,P,G2,W3,species=human; etiology=OTOF,T4,UNASSESSED,,,,,INSUFFICIENT
+G,P,G2,W2,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+G,P,G3a,W2,species=human; modality=pooled-as-reported; decision_origin=unreported,T4,UNASSESSED,,,,,INSUFFICIENT
+G,P,G3a,W3,species=human; modality=pooled-as-reported; decision_origin=unreported,T4,UNASSESSED,,,,,INSUFFICIENT
+G,P,G4,ALL,species=human; etiology=OTOF,T4,UNASSESSED,,,,,INSUFFICIENT
+G,P,G5,W0,species=human; genotype_state=VUS-pending,T4,UNASSESSED,,,,,INSUFFICIENT
+G,P,G5,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+G,P,G6,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+H,P,G3a,W3,species=human; modality=pooled-as-reported; lab=Fitzpatrick-Ottawa,T4,UNASSESSED,,,,,INSUFFICIENT
+H,P,G2,W3,species=human; modality=signed-spoken-pooled,T4,UNASSESSED,,,,,INSUFFICIENT
+H,P,G3a,W2,species=human; modality=signed; lab=Caselli-BostonUniv,T4,UNASSESSED,,,,,INSUFFICIENT
+H,P,G3a,W3,species=human; modality=signed,T4,UNASSESSED,,,,,INSUFFICIENT
+H,P,G3a,W2,species=human; modality=signed,T4,UNASSESSED,,,,,INSUFFICIENT
+H,P,G3a,W3,species=human; modality=spoken,T4,UNASSESSED,,,,,INSUFFICIENT
+H,P,G3a,W2,species=human; modality=bimodal,T4,UNASSESSED,,,,,INSUFFICIENT
+H,P,G3a,W1,species=human; modality=unreported,REVIEW,UNASSESSED,,,,,INSUFFICIENT
+H,P,G4,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+H,P,G5,W0,species=human,T4,UNASSESSED,,,,,INSUFFICIENT
+H,P,G6,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+A,P,G2,W0,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+A,P,G2,W2,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+A,P,G4,ADOL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+B,P,G2,W0,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+B,P,G2,W2,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+B,P,G4,ADOL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+C,R,G1,W1,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+C,R,G1,W2,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+C,R,G1,W1,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+C,R,G1,W2,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+C,R,G2,W0,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+C,R,G2,W1,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+C,R,G2,W2,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+C,R,G2,W2,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+C,R,G3a,W1,species=human; modality=unreported,RECORD,UNASSESSED,,,,,INSUFFICIENT
+C,R,G3a,W2,species=human; modality=unreported,RECORD,UNASSESSED,,,,,INSUFFICIENT
+C,R,G4,ADOL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+C,R,G5,ADOL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+D,R,G1,W1,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+D,R,G1,W2,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+D,R,G1,W1,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+D,R,G1,W2,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+D,R,G2,W0,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+D,R,G2,W1,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+D,R,G2,W2,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+D,R,G2,W2,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+D,R,G3a,W1,species=human; modality=unreported,RECORD,UNASSESSED,,,,,INSUFFICIENT
+D,R,G3a,W2,species=human; modality=unreported,RECORD,UNASSESSED,,,,,INSUFFICIENT
+D,R,G4,ADOL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+D,R,G5,ADOL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+E,R,G1,W1,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+E,R,G1,W2,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+E,R,G1,W1,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+E,R,G1,W2,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+E,R,G2,W0,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+E,R,G2,W1,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+E,R,G2,W2,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+E,R,G2,W2,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+E,R,G3a,W1,species=human; modality=unreported,RECORD,UNASSESSED,,,,,INSUFFICIENT
+E,R,G3a,W2,species=human; modality=unreported,RECORD,UNASSESSED,,,,,INSUFFICIENT
+E,R,G5,ADOL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+F,P,G2,W0,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+F,P,G5,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+G,P,G3a,W1,species=human; modality=unreported,RECORD,UNASSESSED,,,,,INSUFFICIENT
+H,P,G2,W2,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+H,P,G3a,W2,species=human; modality=spoken,RECORD,UNASSESSED,,,,,INSUFFICIENT
+H,P,G3a,W3,species=human; modality=bimodal,RECORD,UNASSESSED,,,,,INSUFFICIENT
+H,P,G5,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT

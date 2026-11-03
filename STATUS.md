@@ -8,6 +8,21 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+CODEX ASTRA REVIEW DONE + SCORER FIXED (2026-11-02):
+reviews/codex-astra-external-review.md (gpt-6-astra)
+UPHOLDS no-winner (independent re-run + cell adjudication);
+found (a) 5 adult-archival rows miscoded T4, (b) gate_table
+aggregation could permanently block a legit G2 PASS and
+didn't enforce tier/GRADE. Fixes applied by parent:
+gate_table v2 (mechanism-only G2 W0/W1 excluded; PASS
+requires ≥Moderate + Appendix A min tier; Astra probes in
+test_astra_probes.py pass; Gen 0 matrix unchanged);
+extraction_v2 (T4→T3 ×5, 48 unrowed joined, verdicts
+identical). Astra's top win lever: funded G3b co-design
+project (human-owned). Remaining path to any win is
+W1–W8 human actions — agent loop has no further
+gate-moving work until humans act or new data appears.
+
 GAP ROUND 2 DONE + CODEX ROUTE APPROVED (2026-11-02):
 Round 2: FDA PDFs verified MD5-exact (Otarmeni USPI 16pp,
 MED-EL 7mo, AB 12mo resolved, WHO grades; Seyyedi rubric

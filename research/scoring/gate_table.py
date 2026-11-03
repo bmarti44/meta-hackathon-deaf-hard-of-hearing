@@ -172,6 +172,42 @@ def load_fmea(path: str | Path) -> dict[str, list[FmeaHarm]]:
     return out
 
 
+# --- v2 contract fixes (Codex Astra external review, 2026-11-02) ---
+# Min evidence tier for a PASS per Appendix A v1 (GOAL S5.2/S5.3).
+MIN_TIER_FOR_PASS = {"G1": 2, "G2": 4, "G3a": 4, "G3b": 4, "G4": 2, "G5": 2, "G6": 0}
+PASS_GRADES = {"high", "moderate"}
+
+
+def _tier_num(tier: str) -> int | None:
+    t = (tier or "").strip().upper()
+    if t.startswith("T") and t[1:].isdigit():
+        return int(t[1:])
+    return None
+
+
+def effective_verdict(row: "Row") -> tuple[str, str | None]:
+    """A PASS row counts only at >=Moderate GRADE and >= Appendix A
+    minimum tier (GOAL S5.2 binding map); otherwise it is downgraded
+    to INSUFFICIENT with a warning reason. Non-PASS passes through."""
+    if row.verdict != "PASS":
+        return row.verdict, None
+    if (row.grade or "").strip().lower() not in PASS_GRADES:
+        return "INSUFFICIENT", f"PASS downgraded: grade {row.grade!r} < Moderate"
+    tn = _tier_num(row.tier)
+    need = MIN_TIER_FOR_PASS.get(row.gate, 0)
+    if tn is None or tn < need:
+        return "INSUFFICIENT", f"PASS downgraded: tier {row.tier!r} < T{need} for {row.gate}"
+    return "PASS", None
+
+
+def is_mechanism_only(row: "Row") -> bool:
+    """Appendix A: G2 W0-W1 rows are mechanism/chain inputs ('No PASS;
+    chain input'), never outcome verdicts. Excluded from gate
+    aggregation so early-window rows cannot permanently block a
+    legitimate W3 G2 PASS (Astra review S5)."""
+    return row.gate == "G2" and (row.window or "").strip().upper() in ("W0", "W1")
+
+
 def worst_verdict(verdicts: list[str]) -> str:
     """Worst applicable verdict: FAIL < INSUFFICIENT < PASS. NA rows are
     non-applicable and ignored; all-NA is NA; no rows is INSUFFICIENT
@@ -190,7 +226,10 @@ def build_gate_matrix(rows: list[Row]) -> dict[str, dict[str, str]]:
     for every candidate regardless of input (BLOCKED, S4.2)."""
     by: dict[str, dict[str, list[str]]] = {}
     for row in rows:
-        by.setdefault(row.candidate, {}).setdefault(row.gate, []).append(row.verdict)
+        if is_mechanism_only(row):
+            continue
+        verdict, _warn = effective_verdict(row)
+        by.setdefault(row.candidate, {}).setdefault(row.gate, []).append(verdict)
     matrix: dict[str, dict[str, str]] = {}
     for candidate in sorted(by):
         matrix[candidate] = {g: worst_verdict(by[candidate].get(g, [])) for g in GATES}
