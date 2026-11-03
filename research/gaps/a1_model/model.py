@@ -16,6 +16,21 @@ Environment checked 2026-11-02: Python 3.14.8, numpy NOT
 installed (ModuleNotFoundError) -> stdlib only, by design.
 Deterministic: no RNG anywhere; SEED pinned for provenance only.
 
+VERSION 2 (round 2, 2026-11-02; see ../round2-A1-fix.md):
+  v2.1 Shannon Q units: inspected sources conflict in print
+       (Li 2024 nC vs Liu 2024 uC; Shannon 1992 primary
+       abstract-only) -> both conventions computed, k bracketed.
+  v2.2 excitation_width = contiguous run about the peak
+       (v1 documented contiguous but coded global span);
+       global span kept separately as excitation_span_global.
+  v2.3 Physical geometry held fixed under dx/dy refinement:
+       electrode y and modiolar-wall thickness are in mm,
+       not fixed row counts (v1: elec_j=3, wall=2 rows).
+  v2.4 CG solver reports relative residual + converged flag
+       (v1 returned silently at max_iter).
+  Unchanged from v1: physics, grade proxy, sheath as a
+  full-length layer, arms, loudness balancing.
+
 LABEL (GOAL S5.1): T0 modelled sub-claim, conditional on the
 assumptions table in attack-A1-killtest.md. Never a G1 PASS,
 never a promotion probability.
@@ -29,11 +44,26 @@ CITED parameters (full text inspected 2026-11-02):
   proportion of basilar-membrane length from the apex
   -- Dhanasingh 2021, PMID 33474539, PMC7801236, eq. (6);
   original: Greenwood 1990, PMID 2373794.
-  Shannon: k = log10(Q[uC/ph]) + log10(D[uC/cm2/ph]);
-  proposed damage boundary k = 1.5-2.0; 1.85 used as example
-  threshold; best-fit 1.79-1.86 (accuracy only 63.9%)
-  -- Shannon 1992, PMID 1592409 (abstract: no numeric k);
-  Li et al. 2024, PMID 38885676, PMC11641559, eq. (1) + S2.2.
+  Shannon UNITS (round 2 pin attempt; full quotes in
+  ../round2-A1-fix.md S2):
+  * Li et al. 2024, PMID 38885676, PMC11641559, eq. (1) +
+    S2.2: Q unit nC ph-1, D unit uC cm-2 ph-1 "were used to
+    calculate the k-values"; proposed limit k = 1.5-2.0;
+    best 63.9% at k = 1.79.
+  * Liu et al. 2024, J Neural Eng 21:036034, PMID 38776894
+    (publisher PDF inspected): "D is the charge density per
+    phase in uC cm-2 phase-1 and Q is the total charge in
+    uC phase-1"; k < 1.5 treated as non-damaging.
+  * Cogan et al. 2016, PMID 26792176, PMC5386002: eq. (1)
+    log(D) = k - log(Q), k typically 1.5-2.0, 1.85 chosen
+    -- no explicit Q unit in that sentence.
+  * Shannon 1992, PMID 1592409: abstract inspected, no
+    numeric k and no units; IEEE primary not accessible
+    by this route. The nC and uC conventions differ by
+    exactly +3.00 in k. NO single convention is pinned;
+    this code brackets k under both (shannon_k_bracket).
+    Either way Shannon is a proxy sensitivity only, never
+    the filed A1 safe-charge limit.
   Seyyedi & Nadol 0-3 severity at 3x 1-mm segments; granuloma
   27/28, basal > distal -- PMID 25122600 (MEDLINE inspected;
   AppendixA-v1 N4). Per-grade rubric NOT extracted -> the
@@ -55,6 +85,8 @@ PARAMS = {
     "domain_length_mm": 20.0,              # modelled strip, sens: convergence test
     "domain_height_mm": 2.0,               # scala + modiolar wall strip
     "dx_mm": 0.125, "dy_mm": 0.125,
+    "electrode_y_mm": 0.375,               # v2: = v1 elec_j=3 rows x 0.125 mm
+    "modiolar_wall_mm": 0.25,              # v2: = v1 2 rows x 0.125 mm
     "contact_spacing_mm": 1.0,             # sens 0.7 / 1.0 / 1.5
     "contact_area_cm2": 0.003,             # 0.3 mm2; sens 0.0015-0.006
     "pulse_width_us": 25.0,                # sens 18-50
@@ -80,24 +112,47 @@ def octave_width(center_mm_from_apex, width_mm, p=PARAMS):
     return math.log2(f2 / f1)
 
 
-def shannon_k(charge_uc, charge_density_uc_cm2):
-    return math.log10(charge_uc) + math.log10(charge_density_uc_cm2)
+def shannon_k(charge_uc_per_phase, charge_density_uc_cm2_per_phase):
+    """Classic (Liu 2024) convention: Q in uC/ph, D in uC/cm2/ph.
+    k = log10(Q) + log10(D). For the Li 2024 S2.2 printed
+    convention (Q in nC/ph) use shannon_k_li_nc; the two
+    differ by exactly +3.00. Neither is pinned against the
+    Shannon 1992 primary (abstract-only access, round 2)."""
+    return (math.log10(charge_uc_per_phase)
+            + math.log10(charge_density_uc_cm2_per_phase))
 
 
-def build_sigma(nx, ny, elec_j, sheath_rows, sigma_sheath, p=PARAMS):
-    """sigma[j][i]; j=0 modiolar wall (bone/modiolus blend), top perilymph."""
+def shannon_k_li_nc(charge_nc_per_phase, charge_density_uc_cm2_per_phase):
+    """Li 2024 PMC11641559 S2.2 printed convention: Q in nC/ph."""
+    return (math.log10(charge_nc_per_phase)
+            + math.log10(charge_density_uc_cm2_per_phase))
+
+
+def shannon_k_bracket(charge_uc_per_phase, charge_density_uc_cm2_per_phase):
+    """(k_classic_uC, k_Li_nC) for the same physical charge.
+    k_Li_nC - k_classic_uC == 3.00 exactly (1 uC = 1000 nC)."""
+    kc = shannon_k(charge_uc_per_phase, charge_density_uc_cm2_per_phase)
+    return kc, kc + 3.0
+
+
+def build_sigma(nx, ny, elec_j, sheath_rows, sigma_sheath, p=PARAMS,
+                wall_rows=2):
+    """sigma[j][i]; j=0 modiolar wall (bone/modiolus blend), top perilymph.
+    NOTE (v1, unchanged v2): sheath is a full-length layer at
+    every column, not a capsule localised to the array."""
     s = [[p["sigma_perilymph_S_per_m"]] * nx for _ in range(ny)]
-    for j in range(0, 2):  # modiolar wall strip
+    for j in range(0, min(wall_rows, ny)):  # modiolar wall strip
         s[j] = [p["sigma_modiolus_eff_S_per_m"]] * nx
     for j in range(elec_j, min(ny, elec_j + sheath_rows)):
         s[j] = [sigma_sheath] * nx
     return s
 
 
-def solve(nx, ny, sigma, sources, dx, tol=1e-9, max_iter=8000):
+def solve_with_info(nx, ny, sigma, sources, dx, tol=1e-9, max_iter=8000):
     """Conjugate gradient on 5-pt div(sigma grad V); V=0 on boundary
     (distant monopolar return). sources: dict (j,i)->current [arb. units].
-    Returns flat V list. Deterministic."""
+    Returns (flat V list, info dict with rel_residual, converged,
+    iterations). Deterministic. v1 returned silently at max_iter."""
     n = nx * ny
     b = [0.0] * n
     for (j, i), cur in sources.items():
@@ -132,6 +187,7 @@ def solve(nx, ny, sigma, sources, dx, tol=1e-9, max_iter=8000):
     pvec = r[:]
     rs = sum(v * v for v in r)
     bnorm = math.sqrt(sum(v * v for v in b)) or 1.0
+    iters = 0
     for _ in range(max_iter):
         if math.sqrt(rs) / bnorm < tol:
             break
@@ -142,15 +198,47 @@ def solve(nx, ny, sigma, sources, dx, tol=1e-9, max_iter=8000):
         rs_new = sum(v * v for v in r)
         pvec = [ri + (rs_new / rs) * pv for ri, pv in zip(r, pvec)]
         rs = rs_new
-    return x
+        iters += 1
+    rel = math.sqrt(rs) / bnorm
+    return x, {"rel_residual": rel, "converged": bool(rel < tol),
+               "iterations": iters, "tol": tol, "max_iter": max_iter}
 
 
-def excitation_width(profile, dx, frac):
+def solve(nx, ny, sigma, sources, dx, tol=1e-9, max_iter=8000):
+    """Backward-compatible wrapper: returns flat V only."""
+    return solve_with_info(nx, ny, sigma, sources, dx, tol, max_iter)[0]
+
+
+def excitation_span_global(profile, dx, frac):
+    """v1 behaviour: (max-min+1)*dx over ALL indices >= frac*peak.
+    Counts silent gaps between separated lobes as excited."""
     peak = max(profile)
     if peak <= 0:
         return 0.0, peak
     above = [i for i, v in enumerate(profile) if v >= frac * peak]
     return (max(above) - min(above) + 1) * dx, peak
+
+
+def excitation_width(profile, dx, frac):
+    """PRIMARY (v2, matches round-1 S3 wording): contiguous run
+    about the peak index with values >= frac*peak, times dx.
+    Choice: the endpoint is the central excited lobe width;
+    separated side lobes / silent gaps are not counted as
+    excited width. See excitation_span_global for the v1 span.
+    For the unimodal profiles this model produces the two
+    coincide; they differ on bimodal profiles (tested)."""
+    peak = max(profile)
+    if peak <= 0:
+        return 0.0, peak
+    thr = frac * peak
+    c = max(range(len(profile)), key=lambda i: profile[i])
+    lo = c
+    while lo - 1 >= 0 and profile[lo - 1] >= thr:
+        lo -= 1
+    hi = c
+    while hi + 1 < len(profile) and profile[hi + 1] >= thr:
+        hi += 1
+    return (hi - lo + 1) * dx, peak
 
 
 def run_case(mode, grade, distance_mm, p=PARAMS, sigma_f=0.9,
@@ -161,14 +249,17 @@ def run_case(mode, grade, distance_mm, p=PARAMS, sigma_f=0.9,
     dx, dy = p["dx_mm"], p["dy_mm"]
     nx = int(p["domain_length_mm"] / dx) + 1
     ny = int(p["domain_height_mm"] / dy) + 1
-    elec_j = 3
+    # v2: physical positions in mm so refinement holds geometry fixed
+    elec_j = max(1, int(round(p.get("electrode_y_mm", 0.375) / dy)))
+    wall_rows = max(1, int(round(p.get("modiolar_wall_mm", 0.25) / dy)))
     sgn_j = elec_j + max(1, round(distance_mm / dy))
     sgn_j = min(sgn_j, ny - 2)
     thick, sig_sh = GRADE_PROXY[grade]
     if sigma_sheath_override is not None:
         sig_sh = sigma_sheath_override
     sheath_rows = int(round(thick / dy))
-    sigma = build_sigma(nx, ny, elec_j, sheath_rows, sig_sh, p)
+    sigma = build_sigma(nx, ny, elec_j, sheath_rows, sig_sh, p,
+                        wall_rows=wall_rows)
     ci = nx // 2
     off = int(round(p["contact_spacing_mm"] / dx))
     if mode == "monopolar":
@@ -181,17 +272,23 @@ def run_case(mode, grade, distance_mm, p=PARAMS, sigma_f=0.9,
         sum_abs = 1.0 + sigma_f
     else:
         raise ValueError(mode)
-    V = solve(nx, ny, sigma, src, dx)
+    V, info = solve_with_info(nx, ny, sigma, src, dx)
     profile = [V[sgn_j * nx + i] for i in range(nx)]
     width_mm, peak = excitation_width(profile, dx, p["threshold_frac"])
+    span_mm, _ = excitation_span_global(profile, dx, p["threshold_frac"])
     center_mm = p["electrode_frac_from_apex"] * p["cochlea_length_mm"]
     return {
         "mode": mode, "grade": grade, "distance_mm": distance_mm,
         "sigma_sheath": sig_sh, "sheath_mm": thick, "sigma_f": sigma_f,
-        "width_mm_at_unitI": width_mm, "peak_at_unitI": peak,
+        "width_mm_at_unitI": width_mm, "span_global_mm_at_unitI": span_mm,
+        "peak_at_unitI": peak,
         "current_for_unit_peak": 1.0 / peak,
         "total_abs_current_factor": sum_abs,
         "width_oct": octave_width(center_mm, width_mm, p),
+        "solver_converged": info["converged"],
+        "solver_rel_residual": info["rel_residual"],
+        "solver_iterations": info["iterations"],
+        "dx_mm": dx, "nx": nx, "ny": ny,
     }
 
 
@@ -207,19 +304,30 @@ def compare(grade, distance_mm, p=PARAMS, sigma_f=0.9, **kw):
                   / m["current_for_unit_peak"])
     return {
         "grade": grade, "distance_mm": distance_mm,
+        "dx_mm": p["dx_mm"],
         "mono_width_mm": m["width_mm_at_unitI"],
         "tri_width_mm": t["width_mm_at_unitI"],
+        "mono_span_global_mm": m["span_global_mm_at_unitI"],
+        "tri_span_global_mm": t["span_global_mm_at_unitI"],
         "mono_width_oct": m["width_oct"], "tri_width_oct": t["width_oct"],
         "width_reduction_pct": 100.0 * (1 - t["width_mm_at_unitI"]
                                         / m["width_mm_at_unitI"]),
         "center_charge_ratio_tri_over_mono": q_ratio,
         "battery_proxy_ratio_sumabs": batt_ratio,
+        "mono_converged": m["solver_converged"],
+        "tri_converged": t["solver_converged"],
+        "mono_rel_residual": m["solver_rel_residual"],
+        "tri_rel_residual": t["solver_rel_residual"],
     }
 
 
 def absolute_charge_check(current_ma_assumed, p=PARAMS):
-    """Illustrative ONLY (no named device): Q and Shannon k for an
-    ASSUMED monopolar comfortable current. Not a filed limit."""
+    """Illustrative ONLY (no named device): Q and bracketed Shannon
+    k for an ASSUMED monopolar comfortable current. Not a filed
+    limit. Returns (q_uc, q_nc, D_uc_cm2, k_classic_uC, k_Li_nC).
+    At fixed area D scales with Q, so a charge multiplier r adds
+    2*log10(r) to k under EITHER convention (not log10(r))."""
     q_uc = current_ma_assumed * 1e-3 * p["pulse_width_us"] * 1e-6 * 1e6
     d = q_uc / p["contact_area_cm2"]
-    return q_uc, d, shannon_k(q_uc, d)
+    kc, kni = shannon_k_bracket(q_uc, d)
+    return q_uc, q_uc * 1000.0, d, kc, kni

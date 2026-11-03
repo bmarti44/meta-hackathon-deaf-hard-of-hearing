@@ -1,10 +1,11 @@
-"""A1 kill-test sweep (deterministic, SEED pinned in model.py).
-Writes results.csv next to this file and prints the markdown table
-pasted into ../attack-A1-killtest.md. Run: python3 run_sweep.py"""
+"""A1 kill-test sweep v2 (deterministic, SEED pinned in model.py).
+Writes results_v2.csv (v1 results.csv preserved untouched for
+md5 provenance) and prints the table for ../round2-A1-fix.md.
+Run: python3 run_sweep.py"""
 import csv, os
 import model as M
 
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results.csv")
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results_v2.csv")
 rows = []
 print("| grade(proxy) | dist mm | mono mm | tri mm | mono oct | tri oct "
       "| width red. % | Q ratio | batt proxy |")
@@ -48,11 +49,13 @@ for label, over in [
           f"{c['width_reduction_pct']:.1f}% Q "
           f"{c['center_charge_ratio_tri_over_mono']:.2f}")
 
-print("\nASSUMED-current Shannon illustration (NOT a filed limit):")
+print("\nASSUMED-current Shannon BLOCK -- bracketed, NOT a limit:")
 for ima in (0.2, 0.5, 1.0, 2.0):
-    q, d, k = M.absolute_charge_check(ima)
-    print(f"- I={ima} mA x 25us: Q={q*1000:.1f} nC/ph, "
-          f"D={d:.1f} uC/cm2/ph (area 0.003 cm2 ASSUMED), k={k:.2f}")
+    q, qnc, d, kc, kni = M.absolute_charge_check(ima)
+    print(f"- I={ima} mA x 25us: Q={qnc:.1f} nC/ph ({q:.4f} uC/ph), "
+          f"D={d:.1f} uC/cm2/ph (area 0.003 cm2 ASSUMED), "
+          f"k_classic_uC={kc:.2f} / k_Li_nC={kni:.2f} "
+          f"(boundary 1.5-2.0 cited in both; primary unpinned)")
 
 with open(OUT, "w", newline="") as f:
     w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))

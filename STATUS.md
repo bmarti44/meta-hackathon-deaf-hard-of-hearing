@@ -8,6 +8,18 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+GAP ROUND 2 DONE + CODEX ROUTE APPROVED (2026-11-02):
+Round 2: FDA PDFs verified MD5-exact (Otarmeni USPI 16pp,
+MED-EL 7mo, AB 12mo resolved, WHO grades; Seyyedi rubric
+verbal-only); A1 v2 model (10 tests OK, parent-verified
+MD5s; still UNEVALUABLE, not grid-converged); 48 unrowed
+cells rowed; skeptic proved matrices byte-identical —
+0 cells changed, no-winner stands. Win path W1–W8 (all
+human-owned) in round2-summary §6. Holder approved Astra
+(GPT-6 via Muse, probe ROUTE-OK) as §9 disclosed
+substitution for independent judging. Next: Codex external
+review of full loop.
+
 GAP ATTACKS ROUND 1 DONE — 0 CELLS CHANGED (2026-11-02,
 holder-directed continuation; Sol 6.1 retry: route rejected,
 not in catalog — fallback continues): CDC EHDI 2022 PDF
