@@ -1,0 +1,34 @@
+# MANUAL adaptation of extract-gen5.csv (adapt_extraction.py maps A-H only -> 0 rows for GEN5-*; gate_table.py NOT edited). Stock gate/verdict rules + documented ID map (adapt-gen5-note.md): GEN5-P5->P, GEN5-I1/I2/K1->R. GEN5-J1 in adapted-gen5-J1-conditional.csv for SEPARATE conditional single-candidate --manifest run only (HP-J1-4 unsigned). Schema: extraction-csv-v1
+candidate,track,gate,window,stratum,tier,grade,delta_g2_db,delta_g3a_sd,g1_channels,burden_rank,verdict
+GEN5-P5,P,G1,NA,species=human,RECORD,UNASSESSED,,,,,NA
+GEN5-P5,P,G2,W3,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN5-P5,P,G2,W3,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN5-P5,P,G3a,W3,species=human; modality=signed+spoken,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN5-P5,P,G3b,W3,species=human; modality=unreported,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN5-P5,P,G4,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN5-P5,P,G5,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN5-P5,P,G6,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN5-I1,R,G1,W3,species=human; functional-anchor,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN5-I1,R,G2,W3,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN5-I1,R,G3a,W3,species=human; modality=stratified,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN5-I1,R,G3b,W3,species=human; modality=unreported,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN5-I1,R,G4,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN5-I1,R,G4,ALL,species=human,RECORD,UNASSESSED,,,,,FAIL
+GEN5-I1,R,G5,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN5-I1,R,G6,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN5-I2,R,G1,W3,species=human; functional-anchor,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN5-I2,R,G2,W3,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN5-I2,R,G3a,W3,species=human; modality=stratified,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN5-I2,R,G3b,W3,species=human; modality=unreported,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN5-I2,R,G4,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN5-I2,R,G4,ALL,species=human,RECORD,UNASSESSED,,,,,FAIL
+GEN5-I2,R,G5,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN5-I2,R,G6,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN5-K1,R,G1,W3,species=human; functional-anchor,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN5-K1,R,G2,W3,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN5-K1,R,G3a,W3,species=human; modality=stratified,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN5-K1,R,G3b,W3,species=human; modality=unreported,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN5-K1,R,G4,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN5-K1,R,G4,ALL,species=human,RECORD,UNASSESSED,,,,,FAIL
+GEN5-K1,R,G5,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
+GEN5-K1,R,G6,ALL,species=human,RECORD,UNASSESSED,,,,,INSUFFICIENT
