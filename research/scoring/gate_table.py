@@ -21,6 +21,15 @@ This is stated for every candidate in every emitted table.
 
 Pure stdlib. Deterministic: no randomness, no clock, sorted tie-breaks.
 CLI: python3 gate_table.py input.csv --out matrix.md [--fmea fmea.csv]
+     [--manifest manifest.csv]
+
+Cell manifest (Gen 3 attack, Astra review S5; see
+research/gen03/attack-scorer-manifest.md): optional CSV with columns
+candidate,gate,window,required. Without --manifest, behaviour is
+byte-for-byte unchanged. With it, every candidate x gate must be
+declared, and a required cell with no applicable (non-NA) extraction
+row becomes an explicit INSUFFICIENT instead of silently absent /
+shrinking the applicable-gate count via NA.
 """
 
 from __future__ import annotations
@@ -44,6 +53,12 @@ _WORST_ORDER = {"FAIL": 0, "INSUFFICIENT": 1, "PASS": 2}
 _G3B_RANK = {"PASS": 0, "INSUFFICIENT": 1, "FAIL": 2, "NA": 3}
 PROBABILITY_BAND_WEIGHTS = {"<0.1%": 1, "0.1-1%": 2, "1-5%": 3, ">5%": 4}
 FMEA_COLUMNS = ("candidate", "harm", "severity", "probability_band")
+MANIFEST_COLUMNS = ("candidate", "gate", "window", "required")
+MANIFEST_SCHEMA_VERSION = "cell-manifest-csv-v1"
+_REQUIRED_TRUE = {"true", "1", "yes", "y", "required"}
+_REQUIRED_FALSE = {"false", "0", "no", "n", "optional", "not-required", "na"}
+# Window tokens meaning "any window" in a manifest cell.
+MANIFEST_ANY_WINDOW = {"", "*", "ANY", "ALL"}
 
 
 def _norm_gate(raw: str) -> str:
@@ -172,6 +187,99 @@ def load_fmea(path: str | Path) -> dict[str, list[FmeaHarm]]:
     return out
 
 
+# --- Cell manifest (Astra review S5; Gen 3 bounded attack) ---
+# Without a manifest nothing below runs and output is unchanged.
+# With one: (i) manifest and extraction candidate sets must match
+# exactly, (ii) every candidate x gate must be declared (required
+# true or false -- an undeclared gate is an error, not silent NA
+# shrinkage), (iii) a required cell satisfied by no applicable
+# (non-NA) row contributes an explicit INSUFFICIENT to its gate.
+# An NA verdict row therefore does NOT satisfy a required cell.
+# A G2 W0/W1 mechanism row counts as present for a declared cell
+# but is still excluded from gate aggregation (is_mechanism_only).
+
+@dataclass(frozen=True)
+class ManifestCell:
+    candidate: str
+    gate: str
+    window: str  # "*" = any window
+    required: bool
+
+
+def _parse_required(raw: str, line: int) -> bool:
+    s = (raw or "").strip().lower()
+    if s in _REQUIRED_TRUE:
+        return True
+    if s in _REQUIRED_FALSE:
+        return False
+    raise ValueError(f"line {line}: required={raw!r} not understood; "
+                     f"use true/false (schema {MANIFEST_SCHEMA_VERSION})")
+
+
+def load_manifest(path: str | Path) -> list[ManifestCell]:
+    rows, fields = _read_csv_rows(Path(path))
+    missing = [c for c in MANIFEST_COLUMNS if c not in fields]
+    if missing:
+        raise ValueError(f"manifest CSV missing columns {missing} "
+                         f"(schema {MANIFEST_SCHEMA_VERSION})")
+    out: list[ManifestCell] = []
+    seen: set[tuple[str, str, str]] = set()
+    for i, r in enumerate(rows, start=2):
+        candidate = r["candidate"].strip()
+        if not candidate:
+            raise ValueError(f"line {i}: candidate is empty")
+        window = r["window"].strip()
+        if window.upper() in MANIFEST_ANY_WINDOW:
+            window = "*"
+        cell = ManifestCell(candidate, _norm_gate(r["gate"]), window,
+                            _parse_required(r["required"], i))
+        key = (cell.candidate, cell.gate, cell.window.upper())
+        if key in seen:
+            raise ValueError(f"line {i}: duplicate manifest cell "
+                             f"{cell.candidate}/{cell.gate}/{cell.window}")
+        seen.add(key)
+        out.append(cell)
+    return out
+
+
+def validate_manifest(rows: list[Row], manifest: list[ManifestCell]) -> None:
+    """Fail loudly on candidate-set mismatch or undeclared gates."""
+    in_rows = {r.candidate for r in rows}
+    in_manifest = {c.candidate for c in manifest}
+    if in_rows != in_manifest:
+        raise ValueError(
+            "manifest/extraction candidate sets differ: "
+            f"only in extraction {sorted(in_rows - in_manifest)}; "
+            f"only in manifest {sorted(in_manifest - in_rows)} "
+            "(with --manifest, a candidate enters the matrix only "
+            "with a declared manifest, and vice versa)")
+    declared = {(c.candidate, c.gate) for c in manifest}
+    undeclared = [f"{cand}/{g}" for cand in sorted(in_rows) for g in GATES
+                  if (cand, g) not in declared]
+    if undeclared:
+        raise ValueError("manifest does not declare candidate x gate "
+                         f"cells: {undeclared}; declare each gate "
+                         "required true or false (undeclared is not NA)")
+
+
+def find_missing_required_cells(
+        rows: list[Row], manifest: list[ManifestCell]) -> list[ManifestCell]:
+    """Required cells with no applicable (non-NA) extraction row."""
+    missing: list[ManifestCell] = []
+    for cell in manifest:
+        if not cell.required:
+            continue
+        satisfied = any(
+            r.candidate == cell.candidate and r.gate == cell.gate
+            and r.verdict != "NA"
+            and (cell.window == "*"
+                 or r.window.strip().upper() == cell.window.upper())
+            for r in rows)
+        if not satisfied:
+            missing.append(cell)
+    return sorted(missing, key=lambda c: (c.candidate, c.gate, c.window))
+
+
 # --- v2 contract fixes (Codex Astra external review, 2026-11-02) ---
 # Min evidence tier for a PASS per Appendix A v1 (GOAL S5.2/S5.3).
 MIN_TIER_FOR_PASS = {"G1": 2, "G2": 4, "G3a": 4, "G3b": 4, "G4": 2, "G5": 2, "G6": 0}
@@ -220,16 +328,31 @@ def worst_verdict(verdicts: list[str]) -> str:
     return min(applicable, key=lambda v: _WORST_ORDER[v])
 
 
-def build_gate_matrix(rows: list[Row]) -> dict[str, dict[str, str]]:
+def build_gate_matrix(rows: list[Row],
+                      manifest: list[ManifestCell] | None = None
+                      ) -> dict[str, dict[str, str]]:
     """(a) Candidate x gate matrix. Each cell is the worst applicable
     window/stratum verdict for that gate. G3b is forced INSUFFICIENT
-    for every candidate regardless of input (BLOCKED, S4.2)."""
+    for every candidate regardless of input (BLOCKED, S4.2).
+
+    manifest=None (default) is the pre-manifest behaviour exactly.
+    With a manifest, each missing required cell (see
+    find_missing_required_cells) adds an explicit INSUFFICIENT to
+    its gate, so an all-NA or absent required gate can no longer
+    shrink the applicable-gate count, and a PASS on other windows
+    of that gate is capped at INSUFFICIENT."""
+    if manifest is not None:
+        validate_manifest(rows, manifest)
     by: dict[str, dict[str, list[str]]] = {}
     for row in rows:
         if is_mechanism_only(row):
             continue
         verdict, _warn = effective_verdict(row)
         by.setdefault(row.candidate, {}).setdefault(row.gate, []).append(verdict)
+    if manifest is not None:
+        for cell in find_missing_required_cells(rows, manifest):
+            by.setdefault(cell.candidate, {}).setdefault(
+                cell.gate, []).append("INSUFFICIENT")
     matrix: dict[str, dict[str, str]] = {}
     for candidate in sorted(by):
         matrix[candidate] = {g: worst_verdict(by[candidate].get(g, [])) for g in GATES}
@@ -393,7 +516,11 @@ _HEADER = """# Gate matrix + fitness ranking (deterministic, gate_table.py)
 """
 
 
-def render_markdown(summaries: list[Summary]) -> str:
+def render_markdown(summaries: list[Summary],
+                    manifest_missing: list[ManifestCell] | None = None) -> str:
+    """manifest_missing=None (no --manifest) renders byte-identically
+    to pre-manifest output. A list (possibly empty) appends section
+    (f) listing every missing required cell explicitly."""
     lines = [_HEADER, "## (a) Gate matrix (candidate x gate, worst applicable window)", ""]
     lines.append("| candidate | track | " + " | ".join(GATES) + " | G3b/promotion note |")
     lines.append("|---|---|" + "---|" * len(GATES) + "---|")
@@ -433,6 +560,21 @@ def render_markdown(summaries: list[Summary]) -> str:
     lines += ["", "Ranking/promotion use the lexicographic rule (b)/(d), not "
               "the Pareto set (GOAL S7). Missing numeric inputs rank last "
               "on their key and are shown as NA; they are never imputed.", ""]
+    if manifest_missing is not None:
+        lines += ["## (f) Cell manifest: missing required cells "
+                  "(explicit INSUFFICIENT)", "",
+                  "Declared via --manifest (cell-manifest-csv-v1). "
+                  "Each cell below had no applicable (non-NA) "
+                  "extraction row and contributed INSUFFICIENT "
+                  "to its gate above; it was not silently absent.", "",
+                  "| candidate | gate | window | required | status |",
+                  "|---|---|---|---|---|"]
+        for cell in manifest_missing:
+            lines.append(f"| {cell.candidate} | {cell.gate} | {cell.window} "
+                         "| true | MISSING -> INSUFFICIENT |")
+        if not manifest_missing:
+            lines.append("| (none) | | | | all required cells present |")
+        lines.append("")
     return "\n".join(lines)
 
 
@@ -441,15 +583,22 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("input", help=f"extraction CSV (schema {SCHEMA_VERSION})")
     ap.add_argument("--out", help="output Markdown path (default: stdout)")
     ap.add_argument("--fmea", help="optional FMEA CSV: candidate,harm,severity,probability_band")
+    ap.add_argument("--manifest", help="optional cell-manifest CSV: "
+                    "candidate,gate,window,required (missing required "
+                    "cells become explicit INSUFFICIENT; default: "
+                    "no manifest, pre-manifest behaviour unchanged)")
     args = ap.parse_args(argv)
     try:
         rows = load_extraction(args.input)
         fmea = load_fmea(args.fmea) if args.fmea else {}
-        summaries = summarize(rows, build_gate_matrix(rows), fmea)
+        manifest = load_manifest(args.manifest) if args.manifest else None
+        summaries = summarize(rows, build_gate_matrix(rows, manifest), fmea)
+        missing = (find_missing_required_cells(rows, manifest)
+                   if manifest is not None else None)
     except (ValueError, OSError) as exc:
         print(f"gate_table: error: {exc}", file=sys.stderr)
         return 2
-    text = render_markdown(summaries)
+    text = render_markdown(summaries, manifest_missing=missing)
     if args.out:
         Path(args.out).write_text(text, encoding="utf-8")
     else:

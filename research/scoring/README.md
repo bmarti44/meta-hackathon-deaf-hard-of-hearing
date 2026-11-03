@@ -121,6 +121,38 @@ CLI: `python3 gate_table.py input.csv --out matrix.md [--fmea f.csv]`
   missing = worst. Transparency only; ranking/promotion use
   (b)/(d) (GOAL §7).
 
+### Optional cell manifest (`--manifest`, Gen 3 attack on Astra S5)
+
+Columns: `candidate,gate,window,required` (schema
+`cell-manifest-csv-v1`). `window` empty/`*`/`ANY`/`ALL` = any
+window; `required` accepts `true/false` (also `1/0`, `yes/no`).
+**Without `--manifest`, output is byte-for-byte unchanged**
+(re-verified against the filed Gen 0 v2 / Gen 1 / Gen 2 matrices —
+see `../gen03/attack-scorer-manifest.md`). With it:
+
+- manifest and extraction candidate sets must match exactly, and
+  every candidate × gate must be declared (`true` or `false`) —
+  an undeclared gate, unknown/extra candidate, duplicate cell,
+  or bad `required` value ⇒ exit 2. A Q1/R1-class candidate
+  therefore enters a manifest run only with a declared footprint.
+- a `required=true` cell with no applicable (non-`NA`) row for
+  that candidate/gate/window is a **missing required cell**: it
+  contributes `INSUFFICIENT` to its gate (capping other windows'
+  `PASS`, converting an all-`NA` gate from `NA` to
+  `INSUFFICIENT`, and counting in §7 step 2), and is listed in
+  output section **(f)**. An `NA` row never satisfies a required
+  cell; a `required=false` cell is never penalized.
+- this closes the Gen 2 scope-shrinkage artefact (forced Q1/R1
+  rows ranked 0 FAIL / 2–3 INSUFFICIENT by shrinking the
+  applicable-gate count). It does **not** by itself make
+  measurement/rule-test designs commensurable with pathways
+  (Astra review §1) — declaring `false` is a visible, ratifiable
+  act, not a silent omission.
+
+Tests: `test_manifest.py` (manifest loading, missing-cell
+penalty, window specificity, Q1-like shrinkage now penalized,
+entry-ticket errors, CLI exit codes).
+
 ## verify/epi_arithmetic.py (Appendix D, D1–D4)
 
 Range inputs are `(low, high)` tuples; `None` = UNPINNABLE and
