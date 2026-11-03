@@ -1,6 +1,6 @@
 # GOAL: Preserve-first, higher-resolution hearing for congenital bilateral severe-to-profound SNHL
 
-> **GOAL.md v2.2** (2026-11-02). Supersedes v1 (`e9d4050`) after
+> **GOAL.md v2.3** (2026-11-03; v2.2 2026-11-02). Supersedes v1 (`e9d4050`) after
 > Round 1 dual review (Gaps 68/100, Skeptical 57/100; see
 > `reviews/round-1-scores.md`). Version history: §12.
 > **Status:** Research goal and operating loop. Not medical advice.
@@ -531,12 +531,17 @@ follow-up" is replaced — promotion-blocking gaps (Q0 preservation,
 B tonotopy, AAV re-dosing) get repeated independent attack ranked
 by decision-relevance × tractability; only the anti-rewording
 `seen`-set discipline is kept (same gap, new wording ≠ new gap).
-(5) *Stopping:* stop discovery when (a) a Track-P candidate is
-frozen for study-design handoff, OR (b) two consecutive generations
-add no candidate improving lexicographic fitness *and* all
-promotion-blocking gaps have had ≥2 independent attacks, OR (c)
-budget (§9) exhausted — labeled *partial*. Max **4 generations**
-for non-promoting survivors without new external evidence.
+(5) *Continuation (v2.3, holder direction 2026-11-03):* there is
+**no generation cap and no loop stopping rule**. The v2.2 rules
+(stop on handoff / two no-improvement generations + ≥2 attacks /
+budget; max 4 generations) are **removed**. Generations, gap
+attacks, and evidence sweeps continue, recombining the best
+results and broadening/deepening along the most promising
+findings, until a candidate legitimately wins (promotion gates
+unchanged) or the holder directs otherwise. A Track-P freeze
+for handoff is a milestone, not a stop. Per-candidate kill
+criteria (§8) and FMEA persistent-harm stopping rules (App. C)
+are falsifiability/safety rules, not loop stops, and are kept.
 (6) *Independent lenses:* biophysics, developmental neuroscience,
 surgical/translational, evidence-synthesis, stakeholder (§9).
 Failed/unavailable reviewer = synthesis note, never a vote.
@@ -792,8 +797,13 @@ v2.1: Round 2 fixes — G1 NA/portfolio rule + point
 anchor, frozen diagnostics/EI contents, modality co-primaries,
 GRADE→score map, FAIL-first fitness, G/H design+kills, unilateral
 variant dropped, human dual extraction, open-synthesis deliverable.
-v2.2 (this file): Sol 6.1 model routing (§9) — xhigh for ideation/
+v2.2: Sol 6.1 model routing (§9) — xhigh for ideation/
 judging/synthesis, high for generation execution workers.
+v2.3 (this file, holder direction 2026-11-03): generation cap
+and §7 loop stopping rules removed (§7 rule 5); loop continues
+until a legitimate win or holder directs otherwise. Broaden +
+deepen mandate added. Gates, PASS bar, and human-freeze rules
+unchanged.
 
 ## Appendix A. Gate operationalization (normative skeleton)
 

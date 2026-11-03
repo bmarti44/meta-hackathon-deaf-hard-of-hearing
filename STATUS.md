@@ -8,6 +8,15 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+GOAL v2.3 — STOP RULES REMOVED, BROADEN + DEEPEN
+(2026-11-03, holder direction): generation cap and §7
+loop stopping rules deleted from GOAL.md; loop runs until
+a legitimate win or holder directs otherwise. Kill criteria
++ FMEA safety stops kept. LOOP-EXHAUSTED (clock 4/4) is
+superseded by this amendment. Codex Astra unstick mission
+running in parallel. Next: broadened Gen 5 (new families +
+deepened best lineages).
+
 LOOP EXHAUSTED AT CLOCK 4/4 — GEN 3 + GEN 4 DONE
 (2026-11-03): Gen 3 (P3/W3/QR3/AD3) and Gen 4 final
 generation (P4/W4/QR4/AD4) each tied cell-for-cell
