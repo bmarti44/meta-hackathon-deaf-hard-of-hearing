@@ -22,7 +22,13 @@ fresh-material confirmation package as the promotion gate
 (research/gen19/astra-review-gen19.md). Gen 20 paired 12k
 continuations (legacy vs crowd80, shared continuation seed
 20261120, per-example substreams, regression safeguards,
-A/B-minus-parent readouts) launching blocked-sequentially.
+A/B-minus-parent readouts). GEN 20 RESULT (same day): NULL —
+B−A at −5 dB VAL +0.02 dB / ΔSTOI −0.002 vs required +0.30/≥0;
+both arms +~0.26 over parent from the restart alone; bench v2
+agrees (@−5 dB +1.17 vs +1.12; competing worse under B).
+Legacy k retained, no scratch crowd80. Next per Astra ranking:
+Gen 21 = 48k from scratch on the retained recipe, after her
+Gen 20 review (research/gen20/results.md).
 
 REVIEW HANDOFF + GEN 16 NULL + PHASE 0 STARTED (2026-11-03):
 Independent REVIEW.md (holder-commissioned) diagnoses babble
