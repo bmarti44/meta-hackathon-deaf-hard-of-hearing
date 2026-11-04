@@ -67,7 +67,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--device", default="cpu")
     ap.add_argument("--out", default=str(HERE / "dev_audit.json"))
+    ap.add_argument("--system", action="append", default=None, metavar="NAME=PATH",
+                    help="override the Gen21 system list (repeatable; e.g. Gen22 candidate vs control)")
     a = ap.parse_args()
+    systems = [tuple(s.split("=", 1)) for s in a.system] if a.system else SYSTEMS
     items = build_items()
     print(f"items={len(items)} device={a.device}", flush=True)
     rows = []
@@ -76,7 +79,7 @@ def main():
     for it in items:
         base[id(it)] = (_si_sdr_np(it["clean"][tr], it["mix_wav"][tr]),
                         float(stoi(it["clean"][tr].astype(np.float64), it["mix_wav"][tr].astype(np.float64), FS)))
-    for name, path in SYSTEMS:
+    for name, path in systems:
         model, sha = load_model(path, a.device)
         t0 = time.time()
         with torch.no_grad():

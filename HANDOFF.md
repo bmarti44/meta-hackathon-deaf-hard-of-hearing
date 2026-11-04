@@ -52,8 +52,8 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
   gone): dev-clean at `/tmp/gen12dl/LibriSpeech/dev-clean`,
   train-clean-100 at `/tmp/gen17dl/LibriSpeech/train-clean-100`
   (251 spk; archive SHA-256 `d4ddd1d5…bf6e2`).
-- Tests (23 green at handoff):
-  `/tmp/gen9env/bin/python -m pytest research/bench-n6/ research/gen20/ research/gen21/ -q`
+- Tests (28 green as of 13:10):
+  `/tmp/gen9env/bin/python -m pytest research/bench-n6/ research/gen20/ research/gen21/ research/gen22/ -q`
 - Model: `research/gen15/model_causal.py` — causal waveform
   TasNet-style, 602,510 params, exact causality asserted in
   trainers, 5.88 ms algorithmic latency.
@@ -141,21 +141,22 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
    in `SUBMISSION.md`, update this file, commit + push.
 5. **Astra xhigh review** of completed Gen 21 + SUBMISSION.md
    accuracy; file verbatim + disposition.
-6. **Gen 22** (Astra ranking, one change at a time, seed-17
-   screen then 18/19, +0.30 both-panel bar): (1) 30 dB
-   soft-capped SI-SDR loss — the one-line denominator change
-   is quoted in her review; (2) compressed spectral
-   5·L_CS (256/512/1024 STFT, exp 0.3, 0.7 mag/0.3 complex);
-   (3) SNR concentration 60% U(−5,−2)+40% U(−2,10) with
-   paired draws; (4) STOI auxiliary only as repair;
-   (5) 4 s crops. Budget/policy = whichever Gen 21 selects
-   (R48→24k continuation, S48→48k scratch, neither→24k
-   scratch). Copy the relevant trainer (`gen19/train8.py` for
-   scratch, `gen21/train10.py` modes for continuation),
-   pre-register first, smoke-test, test before launching.
-   **Deadline caveat: only launch a Gen 22 screen today if it
-   can train+bench+file by 19:30; otherwise preregister +
-   smoke and state it as next step.**
+6. **Gen 22 — PREPARED (13:10), not launched.** Pre-reg
+   `research/gen22/prereg.md`; trainer `research/gen22/train11.py`
+   (`--loss cap30`, Astra's denominator verbatim; `--loss sisdr`
+   reproduces Gen19 s17 bit-for-bit through step 325 on MPS,
+   kill→`--resume` exact through 425); tests
+   `research/gen22/test_train11.py` (28 green total); judge
+   `research/gen22/judge_screen.py --seed 17`; dev panel via
+   `gen21/dev_audit.py --system control=<gen19 ckpt> --system
+   cap30=<cand> --out research/gen22/dev_audit_s17.json`.
+   Launch only after the Gen21 verdict + Astra review are filed,
+   and only if it can train (~76 min) + bench + file by 19:30.
+   If Gen21's verdict is not "neither", add a dated policy
+   addendum to the prereg first. Later ranks: (2) compressed
+   spectral 5·L_CS (256/512/1024 STFT, exp 0.3, 0.7 mag/0.3
+   complex); (3) SNR concentration 60% U(−5,−2)+40% U(−2,10),
+   paired draws; (4) STOI auxiliary only as repair; (5) 4 s crops.
 7. Before 20:00: final commit + push; `git status` should
    show only intentionally-untracked files.
 
