@@ -24,8 +24,11 @@ first PReLU if clipping persists. Later: R=3 capacity, finer
 L=32/S=16/X=8, MUSAN, level aug, mild reverb, binaural linked.
 
 Contract/code fixes applied with this disposition: checkpoint
-metadata (pool_n_files, dataset string), exact-resume state in
-checkpoints (optimizer + RNG), VAL loop in trainer. Known
+metadata (pool_n_files, dataset string), VAL loop in trainer.
+(Correction 2026-11-03, Astra interim review: exact-resume state
+was claimed here but NOT implemented — checkpoints hold weights
+only, no optimizer/scheduler/RNG state and no resume path.
+Stopping a run therefore cannot continue the same Adam run.) Known
 remaining holes (recorded, scheduled): scorecard does not yet
 verify quiet PESQ (needs PESQ-capable eval env), streaming RTF,
 or a fresh confirmation set — all required before promotion.
