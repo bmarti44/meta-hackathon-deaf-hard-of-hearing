@@ -31,8 +31,15 @@ Legacy k retained, no scratch crowd80. Astra's Gen 20 review
 redesigns Gen 21 as a paired policy comparison: S48 (48k
 scratch, cosine over 48k) vs R48 (parent + 24k restart),
 identical lifetime batches 24k–48k via RNG-state handoff,
-seed-17 screen first, 48k finals only. Launching
-research/gen21/ (screen cost 72k new updates, ~4.5 h).
+seed-17 screen first, 48k finals only. GEN 21 SCREEN DONE:
+both arms ADVANCE on unrounded VAL (S48 1.005/0.018, R48
+0.880/0.015 @-5 dB; parent 0.564/0.009) with 0 dB safeguards,
+but bench v2 @-5 dB diverges (S48 final +0.93 < parent +1.06;
+R48 +1.20) while overall crowd/@0/quiet improve both arms
+(S48 +3.75, R48 +3.68 vs +3.45). VAL gains concentrate in one
+of two VAL speakers. Replication (seeds 18/19, ~9 h) awaits
+Astra's evaluation per holder request
+(research/gen21/results.md).
 
 REVIEW HANDOFF + GEN 16 NULL + PHASE 0 STARTED (2026-11-03):
 Independent REVIEW.md (holder-commissioned) diagnoses babble
