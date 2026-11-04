@@ -16,9 +16,12 @@ Parent raw (R48 step 0): −5 dB 0.5641/0.0091, 0 dB 4.1004/0.0798.
 
 0 dB safeguards pass both. S48−R48 at −5 dB: +0.1249 dB
 (below the 0.15 scratch-preference margin; seed-mean rule
-applies after replication). **Per-speaker caveat:** −5 dB VAL
-gains concentrate in target 5536 (S48 1.903, R48 1.479) while
-5694 sits near zero (0.107/0.281, ΔSTOI negative both arms).
+applies after replication). **Per-speaker caveat (corrected per
+Astra review):** absolute −5 dB VAL levels are higher on target
+5536 (S48 1.903, R48 1.479) than 5694 (0.107/0.281), but the
+*gain over parent* is concentrated only for S48 (87.3% from
+5536); R48's gain is balanced (+0.345/+0.286, 54.7%). 5694's
+negative mean ΔSTOI is driven by one bad item (idx 20).
 
 ## Bench v2 (n=6/cell, seed-1 vs Gen19 seed-1 parent)
 
@@ -39,7 +42,11 @@ regressed vs parent seed-1 (0.93 vs 1.06) and R48 gained +0.14.
 Overall crowd, @0 dB, SSN, white and quiet all improved in both
 arms. Replication acceptance needs ≥+0.30 seed-mean on BOTH
 VAL and bench at −5 dB — seed-1 bench evidence puts that in
-doubt, especially for S48. Per the registered rule the screen
-still advances both arms to seeds 18/19; whether to replicate
-both, one, or adjust first is put to Astra's review (holder
-request, 2026-11-04) before the ~9 h replication spend.
+doubt, especially for S48. Astra's review
+([astra-review-gen21.md](./astra-review-gen21.md)): complete
+both arms' seeds 18/19 unchanged (launched), run an expanded
+development diagnostic alongside, and afterwards test a 30 dB
+soft-capped SI-SDR loss first — her frozen-weight diagnostic
+found quiet examples contributing ~37–53× the gradient norm of
+noisy ones (clipping on 69–78% of late batches), a concrete
+mechanism starving hard-SNR learning.
