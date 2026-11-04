@@ -212,8 +212,10 @@ summary{cursor:pointer;padding:12px 0;font-weight:600}
 details[open] summary{border-bottom:1px solid var(--rule);margin-bottom:10px}
 
 /* generations */
-.tree{margin:28px 0 8px}
-.tree svg{width:100%;height:auto;display:block}
+.tree{margin:28px 0 8px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tree svg{width:100%;min-width:720px;height:auto;display:block}
+.tree-hint{display:none;font-family:var(--mono);font-size:12px;color:var(--dim);margin:-4px 0 12px}
+@media (max-width:760px){.tree-hint{display:block}}
 .tree .trunk{stroke:var(--dim);stroke-width:3;fill:none}
 .tree .dead{stroke:var(--hot);stroke-width:2.5;fill:none;stroke-dasharray:7 5}
 .tree .live{stroke:var(--amber);stroke-width:2.5;fill:none;stroke-dasharray:4 4}

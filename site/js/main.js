@@ -28,6 +28,9 @@ secs.forEach(s => navObs.observe(s));
 // reveal
 const rvo = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); rvo.unobserve(en.target); } }), { threshold: 0.15 });
 $$('.rv').forEach(e => rvo.observe(e));
+// safety net: anything already on screen (or if the observer never fires) becomes visible
+setTimeout(() => $$('.rv:not(.in)').forEach(e => { const r = e.getBoundingClientRect(); if (r.top < innerHeight && r.bottom > 0) e.classList.add('in'); }), 1200);
+setTimeout(() => $$('.rv:not(.in)').forEach(e => e.classList.add('in')), 8000);
 
 // ---------- data ----------
 const load = p => fetch(p).then(r => { if (!r.ok) throw new Error(p); return r.json(); });
