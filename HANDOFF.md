@@ -81,53 +81,32 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
   cut clipping severity but not frequency and did not lift −5 dB, so
   the hypothesis is neither falsified nor established.
 
-## Current state (2026-11-04 17:35 — VERIFY, may be stale)
+## Current state (2026-11-04 18:40 — VERIFY, may be stale)
 
-- **Gen 22 COMPLETE — seed-17 screen FAIL.** −5 dB gains vs Gen19 s17
-  were VAL +0.149 and bench −0.010 (bar +0.30 on both); rules 2–6 all
-  passed. The cap is not retained and Gen 19 stays the baseline.
-  - Files: `research/gen22/results.md`, `screen_s17.json`.
-  - Astra's screen review (`research/gen22/astra-review-gen22-screen.md`)
-    confirmed the verdict and corrected the clipping reading: frequency
-    was similar, severity fell (median pre-clip norm 34.3 → 14.9).
-  - SUBMISSION's Gen 22 bullet keeps the substance of Astra's wording,
-    restructured.
-- **Gen 23 PREREGISTERED** (`research/gen23/prereg.md`): plain SI-SDR
-  + 5 × compressed spectral loss, with the spec frozen by Astra.
-  - The L_CS term is computed on CPU, because MPS STFT gradients are
-    nondeterministic.
-  - Smokes in `research/gen23/smoke/`: the `sisdr` path matches Gen 19
-    bit-for-bit (steps 0–200); diag on/off parity holds; the CS
-    gradient reaches the params.
-  - 51 tests green.
-  - The judge is `research/gen23/judge_screen.py`, which reuses
-    `gen22/judge_screen.judge(cand="cs5", policy=…)`. The refactor
-    reproduces `gen22/screen_s17.json` byte-for-byte.
-- **Gen 23 seed-17 screen RUNNING**, via the detached pipeline
-  `/tmp/gen23_s17_pipeline.sh`.
-  - Logs: pipeline `/tmp/gen23_s17_pipeline.log`, trainer
-    `/tmp/gen23_cs5_s17.log`.
-  - Outputs: `research/gen23/weights/sisdr_cs5_scratch_seed20261117.pt`,
-    `research/bench-n6/benchv2_g23cs5s17.json`,
-    `research/gen23/dev_audit_s17.json`, `research/gen23/screen_s17.json`.
-  - ETA: 50–100 min of training plus ~3 min of evaluation.
-  - If the trainer dies, re-running the script resumes from
-    `…_state_latest.pt`.
-- **Astra's concurrent code audit: no blocking defect.** It is filed as
-  `research/gen23/astra-code-audit.md`. Her provenance gaps are covered
-  by `research/gen23/verify_provenance.py --gen 23 --seed 17`, which
-  must PASS before the verdict is filed (Gen 22 passes).
-- **Gen 24 drafted, NOT registered** (`research/gen24/{prereg.md,
-  train13.py,judge_screen.py,test_*.py}`): narrower noisy SNR
-  `hard60`. The pipeline is `/tmp/gen24_s17_pipeline.sh`, gated on
-  exit status.
-  - It is registered only after the Gen 23 verdict and Astra's review
-    of it are filed.
-  - Before launch, add the source-hash table and run an MPS smoke
-    (legacy parity vs Gen 19; hard60 determinism).
-- Tests: 59 green.
+- **Gen 23 COMPLETE: seed-17 screen FAIL.** −5 dB gains vs Gen19 s17
+  were VAL −0.338 and bench −0.027. The STOI and white rows also fail.
+  `verify_provenance.py --gen 23` PASSES.
+  - Results in `research/gen23/results.md`; the spectral term was ~1% of
+    the gradient.
+  - Muse's review is filed: `research/gen23/muse-review-gen23-screen.md`.
+  - Astra's review is running (`/tmp/astra_g23_screen.out`). File it
+    verbatim plus disposition as `research/gen23/astra-review-gen23-screen.md`
+    BEFORE launching Gen 24.
+- **Gen 24 drafted** (`research/gen24/`), with MPS smokes passing. To
+  register: a dated header, the source-hash table and the deadline
+  pre-commit. Then launch `/tmp/gen24_s17_pipeline.sh`.
+- Gen 22 is complete (FAIL); details are in `research/gen22/results.md`.
 
-## Demo site (beforetheimplant.com) — added 2026-11-04 ~18:20
+## Demo site (beforetheimplant.com) — LIVE since 18:32 (added 2026-11-04 ~18:20)
+
+- **Status 18:38:** https://beforetheimplant.com and www return 200 over
+  HTTPS. Muse Ask/Explain work through CloudFront.
+- **Updating:** after each verdict, edit `site/data/generations.json` (one
+  source for both the site and Muse), then run `deploy/deploy_site.sh`.
+- **Explainer video:** in production by a Fable agent in `video/`, using
+  the ElevenLabs voice from the itsthemedium video. Its output goes to
+  `site/assets/video/` (git-ignored, deploy-only); the site shows it once
+  the file exists.
 
 - **Domain:** `beforetheimplant.com` registered via Route 53 at 18:08
   (operation `e9b8f53a…`). Hosted zone `Z031443727CBVQM2UB5R`. ACM cert

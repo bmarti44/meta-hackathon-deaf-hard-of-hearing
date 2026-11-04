@@ -5,6 +5,45 @@
 > listener-benefit claim. Detail: [GOAL.md](./GOAL.md),
 > [STATUS.md](./STATUS.md), [research/bench-n6/](./research/bench-n6).
 
+**Live site: [beforetheimplant.com](https://beforetheimplant.com).**
+It tells Graham's story in his dad's words and walks through the
+research. Muse, Meta's AI model, answers questions about it.
+
+## How Meta's models are used
+
+The site calls **Muse Spark** (`muse-spark-1.3`) through the Meta
+Model API Responses endpoint, from an AWS Lambda
+([api/index.mjs](./api/index.mjs)) served under `/api/*`.
+
+| Feature | What Muse does |
+|---|---|
+| **Ask the research** | Works as an agent. It picks from three function tools, runs them, then answers in plain words. Every tool step is shown. |
+| **Explain this** | Every scorecard row and generation has a button that explains it at a parent or researcher level. Answers are cached at the edge. |
+| **Generation briefs** | A short what / why / what-happened / what-it-means summary of each generation. |
+| **Second reviewer** | A direct-invoke-only mode (not reachable from the web) reviews each verdict independently of Codex Astra. Its answer is filed verbatim beside Astra's. |
+
+The three tools are `list_generations`, `get_scorecard` and
+`search_record`. The last is a keyword search over the committed
+record: this summary, results, pre-registrations, the independent
+reviews and the KPI contract.
+
+Muse only sees the research through these tools and a knowledge file
+built from committed files ([api/build_knowledge.py](./api/build_knowledge.py)),
+so every number it quotes comes from the record. It is told:
+
+- never to give medical advice;
+- never to imply the model beats the N6 or helps any listener;
+- to report nulls plainly.
+
+The API key lives only in AWS SSM Parameter Store (SecureString) and
+is read by the Lambda at runtime. It never reaches the browser or this
+repo. The Lambda URL only accepts CloudFront (origin access control),
+with reserved concurrency as a hard cap.
+
+The research loop itself (training, judging, filing) was run by
+Claude (Anthropic), with Codex Astra as the independent reviewer
+between generations. The site was designed by a Claude (Fable) agent.
+
 ## Problem and approach
 
 Cochlear-implant (CI) users struggle most in crowd noise. The
@@ -120,9 +159,24 @@ Disclosures:
     not establish zero effect or resolve the gradient-imbalance
     hypothesis.
 - **Gen 23** (plain SI-SDR + 5 × compressed multi-resolution spectral
-  loss, same rules) is pre-registered
-  ([research/gen23/prereg.md](./research/gen23/prereg.md)) and its
-  seed-17 screen is running. [GEN 23 STATUS — updated at completion]
+  loss, same rules,
+  [research/gen23/results.md](./research/gen23/results.md)).
+  - **Result:** the seed-17 screen failed. −5 dB gains versus
+    same-seed Gen 19 were −0.34 dB on VAL and −0.03 dB on the bench,
+    with STOI and white-noise rows also failing.
+  - **Provenance:** the check passed (checkpoints and sources rehashed,
+    summaries recomputed from raw rows).
+  - **Caveat:** the spectral term was only ~1% of the gradient at the
+    registered weight. So this rejects that weight, not compressed
+    spectral supervision in general.
+  - **Reviews:** Codex Astra and Muse (Meta) both reviewed the verdict,
+    filed verbatim in research/gen23/.
+  - **Design lesson:** Gen 22 and Gen 23 suggest single-seed screens of
+    small loss perturbations sit close to panel noise at the +0.30 bar.
+- **Gen 24** (narrower noisy-SNR sampling: 40% of noisy training
+  examples at −5 to −3 dB instead of 17%, same random draws) is next
+  ([research/gen24/prereg.md](./research/gen24/prereg.md)).
+  [GEN 24 STATUS — updated at submission]
 
 ## Limits (stated plainly)
 

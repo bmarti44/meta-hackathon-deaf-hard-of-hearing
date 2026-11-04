@@ -8,6 +8,25 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+GEN 23 SCREEN FAIL; BEFORETHEIMPLANT.COM LIVE (2026-11-04 18:40,
+Claude Opus 5.5). Gen 23 (plain SI-SDR + 5 x compressed spectral loss),
+seed 17 at 24k scratch vs Gen19 s17, gave −5 dB gains of −0.338 dB on
+VAL and −0.027 dB on bench, against a +0.30 bar. −5 dB STOI and the
+white-noise row also fail. Provenance passes on every item. The term is
+not retained; Gen 19 stays the baseline; promoted FALSE.
+
+The spectral term was ~1% of the gradient (median 5·L_CS/SI-SDR norm
+ratio 0.008). The screen rejects that weight, not the idea. With Gen 22
+it also suggests single-seed small-perturbation screens sit near panel
+noise at +0.30.
+
+Muse (Meta) reviewed the verdict independently, filed verbatim; Astra's
+review is pending. Next: Gen 24, narrower noisy-SNR sampling (drafted,
+smokes pass), registered after Astra's review.
+
+beforetheimplant.com is live. It has Graham's story, the research, and
+Muse Ask/Explain via the Meta Model API.
+
 GEN 22 SCREEN FAIL; GEN 23 PREREGISTERED + RUNNING (2026-11-04
 17:35, Claude Opus 5.5). Gen 22's 30 dB soft-capped SI-SDR, seed 17
 at 24k scratch vs Gen19 s17, gained +0.149 dB on VAL and −0.010 dB

@@ -140,16 +140,27 @@
    "id": "gen23",
    "label": "Gen 23",
    "change": "Plain SI-SDR + 5 × compressed multi-resolution spectral loss, seed-17 screen",
-   "status": "running",
-   "eta": "verdict expected ~18:25 EST tonight",
+   "status": "fail",
    "numbers": [
     {
-     "label": "rule 1",
-     "value": "−5 dB ΔSI-SDR ≥ +0.30 dB on VAL and bench"
+     "label": "VAL −5 dB vs Gen 19",
+     "value": "−0.338 dB"
+    },
+    {
+     "label": "Bench −5 dB vs Gen 19",
+     "value": "−0.027 dB"
+    },
+    {
+     "label": "Required (both)",
+     "value": "≥ +0.30 dB"
+    },
+    {
+     "label": "Spectral share of gradient",
+     "value": "~1%"
     }
    ],
-   "note": "Pre-registered with parity and determinism smokes and 51 green tests before launch.",
-   "link": "research/gen23/prereg.md"
+   "note": "Screen FAIL (also −5 dB STOI and white-noise rows). The spectral term was ~1% of the gradient at the registered weight, so this rejects that weight, not the idea. Not retained.",
+   "link": "research/gen23/results.md"
   },
   {
    "id": "gen24",
