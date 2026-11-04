@@ -106,11 +106,21 @@ Disclosures:
   69–79% of late batches), which motivates a causal training test.
   Its contribution to the −5 dB failure is unestablished.
 - **Gen 22** (30 dB soft-capped SI-SDR loss, 24k scratch vs
-  same-seed Gen 19) is pre-registered
-  ([research/gen22/prereg.md](./research/gen22/prereg.md)). Its
-  control mode shows logged loss/gradient-norm prefix parity with
-  Gen 19, including a resume check; full-budget parity is
-  unverified. [GEN 22 SCREEN RESULT — filled at completion]
+  same-seed Gen 19,
+  [research/gen22/results.md](./research/gen22/results.md)). Its
+  control mode showed logged loss/gradient-norm prefix parity with
+  Gen 19, including a resume check.
+  - **Result:** the pre-registered single-seed screen failed the
+    required +0.30 dB improvement on both −5 dB panels. Gains versus
+    same-seed Gen 19 were +0.149 dB on VAL and −0.010 dB on the bench.
+    All remaining screen criteria passed.
+  - **Reading:** the cap was not retained. This operational null does
+    not establish zero effect or resolve the gradient-imbalance
+    hypothesis.
+- **Gen 23** (plain SI-SDR + 5 × compressed multi-resolution spectral
+  loss, same rules) is pre-registered
+  ([research/gen23/prereg.md](./research/gen23/prereg.md)) and its
+  seed-17 screen is running. [GEN 23 STATUS — updated at completion]
 
 ## Limits (stated plainly)
 

@@ -52,8 +52,8 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
   gone): dev-clean at `/tmp/gen12dl/LibriSpeech/dev-clean`,
   train-clean-100 at `/tmp/gen17dl/LibriSpeech/train-clean-100`
   (251 spk; archive SHA-256 `d4ddd1d5…bf6e2`).
-- Tests (37 green as of 13:25; ~35 s, one CPU resume test needs the data):
-  `/tmp/gen9env/bin/python -m pytest research/bench-n6/ research/gen20/ research/gen21/ research/gen22/ -q`
+- Tests (51 green as of 17:25; ~45 s, two CPU resume tests need the data):
+  `/tmp/gen9env/bin/python -m pytest research/bench-n6/ research/gen20/ research/gen21/ research/gen22/ research/gen23/ -q`
 - Model: `research/gen15/model_causal.py` — causal waveform
   TasNet-style, 602,510 params, exact causality asserted in
   trainers, 5.88 ms algorithmic latency.
@@ -67,59 +67,78 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
   `research/bench-n6/{KPI.md,kpi_scorecard.py,bench_v2.py}`.
   Judge with:
   `kpi_scorecard.py --bench <3 seed JSONs> --spatial <hash-matched> --candidate gen19 --babble-kind crowd`
-- Nulls on record: Gen 16 multi-term loss; Gen 20 babble-k
-  concentration (paired continuations, B−A +0.02 dB). Speaker
+- Nulls on record:
+  - Gen 16 multi-term loss.
+  - Gen 20 babble-k concentration (paired continuations, B−A +0.02 dB).
+  - Gen 21 extra optimization (48k scratch or +24k restart; neither
+    qualifies on 3 seeds).
+  - Gen 22 30 dB cap (screen VAL +0.149, bench −0.010). Speaker
   count beyond ~26 was neutral at matched compute (Gen 17/18).
-- Astra's key diagnosis for the −5 dB wall (verified by her
-  frozen-weight diagnostic): near-perfect quiet examples give
-  ~37–53× the gradient norm of noisy ones; clipping on 69–78%
-  of late batches → hard examples starve. See
-  `research/gen21/astra-review-gen21.md`.
+- Astra's gradient-imbalance hypothesis for the −5 dB wall: her
+  frozen-weight diagnostic found quiet examples giving ~37–53× the
+  gradient norm of noisy ones, with clipping on 69–78% of late
+  batches. See `research/gen21/astra-review-gen21.md`. Gen 22's cap
+  cut clipping severity but not frequency and did not lift −5 dB, so
+  the hypothesis is neither falsified nor established.
 
-## Current state (2026-11-04 16:00 — VERIFY, may be stale)
+## Current state (2026-11-04 17:35 — VERIFY, may be stale)
 
-- **Gen 21 COMPLETE — NEITHER ARM QUALIFIES**; Astra's final
-  review confirmed every number (`research/gen21/astra-review-gen21-final.md`,
-  disposition filed). 3-seed mean −5 dB gains: S48 VAL +0.144 /
-  bench −0.236; R48 VAL +0.118 / bench −0.100 (bar +0.30 both).
-  Gen 19 stays the baseline. Seed-19 replay evidence committed:
-  `research/gen21/weights/aborted_s48s19_run1/{gen21_s48s19_killed.log,
-  s48_seed20261119_val_partial.json,replay_manifest.json}` (6 ckpt
-  hashes + 7 VAL evals identical).
-- **SUBMISSION.md corrected per Astra** (T0 framing, N6 untested,
-  scorecard scope, PESQ/RTF unestablished, white vocoded-ESTOI and
-  −5 dB ILD disclosures, generation-history wording). One
-  placeholder left: `[GEN 22 SCREEN RESULT — filled at completion]`.
-- **Gen 22 seed-17 screen RUNNING** (launched 15:45:55; detached
-  pipeline `/tmp/gen22_s17_pipeline.sh`, log
-  `/tmp/gen22_s17_pipeline.log`, trainer log
-  `/tmp/gen22_cap30_s17.log`). The pipeline trains → benches
-  (`research/bench-n6/benchv2_g22cap30s17.json`) → dev panel
-  (`research/gen22/dev_audit_s17.json`) → judges
-  (`research/gen22/screen_s17.json`), each gated on the previous
-  step; ETA ~16:45 for PIPELINE DONE. If the trainer dies,
-  re-running the pipeline script resumes from
-  `research/gen22/weights/cap30_scratch_seed20261117_state_latest.pt`.
-  Judge now also enforces seed identity + full 8×4×4×2 dev grid
-  (Astra's final-review gaps); 41 tests green.
+- **Gen 22 COMPLETE — seed-17 screen FAIL.** −5 dB gains vs Gen19 s17
+  were VAL +0.149 and bench −0.010 (bar +0.30 on both); rules 2–6 all
+  passed. The cap is not retained and Gen 19 stays the baseline.
+  - Files: `research/gen22/results.md`, `screen_s17.json`.
+  - Astra's screen review (`research/gen22/astra-review-gen22-screen.md`)
+    confirmed the verdict and corrected the clipping reading: frequency
+    was similar, severity fell (median pre-clip norm 34.3 → 14.9).
+  - SUBMISSION's Gen 22 bullet uses Astra's wording verbatim.
+- **Gen 23 PREREGISTERED** (`research/gen23/prereg.md`): plain SI-SDR
+  + 5 × compressed spectral loss, with the spec frozen by Astra.
+  - The L_CS term is computed on CPU, because MPS STFT gradients are
+    nondeterministic.
+  - Smokes in `research/gen23/smoke/`: the `sisdr` path matches Gen 19
+    bit-for-bit (steps 0–200); diag on/off parity holds; the CS
+    gradient reaches the params.
+  - 51 tests green.
+  - The judge is `research/gen23/judge_screen.py`, which reuses
+    `gen22/judge_screen.judge(cand="cs5", policy=…)`. The refactor
+    reproduces `gen22/screen_s17.json` byte-for-byte.
+- **Gen 23 seed-17 screen RUNNING**, via the detached pipeline
+  `/tmp/gen23_s17_pipeline.sh`.
+  - Logs: pipeline `/tmp/gen23_s17_pipeline.log`, trainer
+    `/tmp/gen23_cs5_s17.log`.
+  - Outputs: `research/gen23/weights/sisdr_cs5_scratch_seed20261117.pt`,
+    `research/bench-n6/benchv2_g23cs5s17.json`,
+    `research/gen23/dev_audit_s17.json`, `research/gen23/screen_s17.json`.
+  - ETA: 50–100 min of training plus ~3 min of evaluation.
+  - If the trainer dies, re-running the script resumes from
+    `…_state_latest.pt`.
+- **A concurrent Astra code audit of `train12.py`** writes to
+  `/tmp/astra_g23_audit.out` and is filed as
+  `research/gen23/astra-code-audit.md`. A real defect makes the run
+  INVALID (filed, not judged).
 
 ## Next actions (in order)
 
-1. **When `/tmp/gen22_s17_pipeline.log` says PIPELINE DONE**: read
-   `research/gen22/screen_s17.json`; write `research/gen22/results.md`
-   (VAL/bench/dev table vs Gen19 s17, gradient-diagnostic summary
-   from the train log `grad_diag` records, verdict ADVANCE/FAIL);
-   fill the SUBMISSION placeholder; prepend STATUS; update this
-   file; commit the final weights, train log, bench, dev JSON,
-   screen JSON (not `*_step*.pt` / `*_state_*.pt`); push.
-2. **Astra xhigh review of the Gen 22 screen** (+ final SUBMISSION
-   check) if time allows before 19:30; file verbatim + disposition.
-3. If ADVANCE: seeds 18/19 replication is the next step (tomorrow).
-   If FAIL: file the null; Gen 23 = compressed spectral 5·L_CS.
-4. By 20:00: final commit + push; `git status` shows only
-   intentionally-untracked files (interim `*_step*.pt`,
+1. File the concurrent Astra code audit verbatim plus disposition
+   when it lands.
+2. **When `/tmp/gen23_s17_pipeline.log` says PIPELINE DONE**:
+   - read `research/gen23/screen_s17.json`;
+   - write `research/gen23/results.md`;
+   - replace SUBMISSION's `[GEN 23 STATUS — updated at completion]`
+     placeholder;
+   - prepend STATUS and update this file;
+   - commit the final weights, train log, bench, dev and screen JSON
+     (not `*_step*.pt` / `*_state_*.pt`) and push.
+3. If it is not judged by 19:40, replace the placeholder with
+   "screen pending at submission", then commit and push by 20:00.
+   File the result later. Never judge an interim checkpoint.
+4. If ADVANCE, seeds 18/19 replication is next (tomorrow). If FAIL,
+   file the null; next is narrower SNR sampling (Astra's order:
+   compressed spectral → narrower SNR → STOI aux → longer crops).
+5. By 20:00: final commit and push. `git status` should show only
+   intentionally-untracked files: interim `*_step*.pt`,
    `*_state_*.pt`, `*_val_partial.json`, aborted-run ckpts, local
-   audio, pre-existing `bench_v2_gen17_control10.json`).
+   audio, and the pre-existing `bench_v2_gen17_control10.json`.
 
 ## Key files map
 
@@ -130,8 +149,9 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
 | Listening pack (gated) | `research/bench-n6/listening_pack.py` |
 | Best model (Gen 19) | `research/gen19/{train8.py,results.md,weights/}` |
 | Gen 21 trainers/logs | `research/gen21/{train10.py,prereg.md,results.md,judge_replication.py,weights/}` |
-| Gen 22 (capped SI-SDR) | `research/gen22/{prereg.md,train11.py,judge_screen.py,astra-prelaunch-review.md,smoke/}` |
-| Astra reviews | `research/gen19/astra-review-gen19.md`, `research/gen20/astra-review-gen20.md`, `research/gen21/astra-{interim-review,review-gen21}.md` |
+| Gen 22 (capped SI-SDR, FAIL) | `research/gen22/{prereg.md,train11.py,judge_screen.py,results.md,screen_s17.json,dev_audit_s17.json,diag_summary.py,astra-prelaunch-review.md,astra-review-gen22-screen.md,smoke/,weights/}` |
+| Gen 23 (SI-SDR + 5·L_CS) | `research/gen23/{prereg.md,train12.py,judge_screen.py,test_*.py,smoke/}` |
+| Astra reviews | `research/gen19/astra-review-gen19.md`, `research/gen20/astra-review-gen20.md`, `research/gen21/astra-{interim-review,review-gen21,review-gen21-final}.md`, `research/gen22/astra-{prelaunch-review,review-gen22-screen}.md` |
 | Submission summary | `SUBMISSION.md` |
 | Holder-commissioned review | `REVIEW.md` |
 

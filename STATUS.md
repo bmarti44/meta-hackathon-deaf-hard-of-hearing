@@ -8,6 +8,25 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+GEN 22 SCREEN FAIL; GEN 23 PREREGISTERED + RUNNING (2026-11-04
+17:35, Claude Opus 5.5). Gen 22's 30 dB soft-capped SI-SDR, seed 17
+at 24k scratch vs Gen19 s17, gained +0.149 dB on VAL and −0.010 dB
+on bench at −5 dB, against a +0.30 bar on both. Every other rule
+passed (0 dB, quiet, crowd CI rows, SSN, white; dev +0.076, 6/8
+targets). The cap is not retained and Gen 19 stays the baseline;
+promoted FALSE.
+
+Astra's screen review confirmed the verdict. She noted that clipping
+frequency was unchanged but its severity fell (median pre-clip norm
+34.3 → 14.9), so the result neither falsifies nor establishes the
+gradient-imbalance hypothesis.
+
+Gen 23 (plain SI-SDR + 5 × compressed multi-resolution spectral loss,
+spec frozen by Astra, L_CS on CPU for bit-determinism, same rules)
+was preregistered with parity and determinism smokes and 51 green
+tests. Its seed-17 screen is running. Files: research/gen22/,
+research/gen23/.
+
 GEN 21 REPLICATION COMPLETE — NEITHER ARM QUALIFIES; GEN 22
 PREREGISTERED (2026-11-04, Claude Opus 5.5 taking over from
 muse-wonder-full-1.0): 3-seed mean gains at -5 dB vs each seed's

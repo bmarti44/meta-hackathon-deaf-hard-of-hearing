@@ -42,10 +42,10 @@ def _val_entry(log, lifetime):
     return {snr: (statistics.fmean(v[0] for v in vs), statistics.fmean(v[1] for v in vs)) for snr, vs in by.items()}
 
 
-def _dev(rows, ctrl_sha, cand_sha):
+def _dev(rows, ctrl_sha, cand_sha, cand="cap30"):
     sys_rows = {"control": [r for r in rows if r["system"] == "control"],
-                "cap30": [r for r in rows if r["system"] == "cap30"]}
-    for name, sha in (("control", ctrl_sha), ("cap30", cand_sha)):
+                cand: [r for r in rows if r["system"] == cand]}
+    for name, sha in (("control", ctrl_sha), (cand, cand_sha)):
         shas = {r["sha256"] for r in sys_rows[name]}
         _need(shas == {sha}, f"dev {name} hash {shas} != {sha}")
     key = lambda r: (r["spk"], r["crop"], r["mix"], r["snr"])  # noqa: E731
@@ -55,19 +55,20 @@ def _dev(rows, ctrl_sha, cand_sha):
         _need(set(keys) == DEV_GRID, f"dev {name} grid != 8 targets x 4 crops x 4 mixtures x 2 SNRs "
                                      f"(missing {len(DEV_GRID - set(keys))}, extra {len(set(keys) - DEV_GRID)})")
     c = {key(r): r for r in sys_rows["control"] if r["snr"] == -5.0}
-    x = {key(r): r for r in sys_rows["cap30"] if r["snr"] == -5.0}
+    x = {key(r): r for r in sys_rows[cand] if r["snr"] == -5.0}
     tgt = {t: statistics.fmean(x[k]["d_sisdr"] - c[k]["d_sisdr"] for k in c if k[0] == t) for t in sorted(DEV_TARGETS)}
     return statistics.fmean(x[k]["d_sisdr"] - c[k]["d_sisdr"] for k in c), tgt
 
 
-def judge(ctrl_log_p, cand_log_p, ctrl_bench_p, cand_bench_p, dev_p, seed):
+def judge(ctrl_log_p, cand_log_p, ctrl_bench_p, cand_bench_p, dev_p, seed, cand="cap30", policy=POLICY):
+    """`cand`/`policy` default to Gen22; Gen23 reuses the identical rules with its own names."""
     ctrl_log = json.loads(Path(ctrl_log_p).read_text())
     cand_log = json.loads(Path(cand_log_p).read_text())
     _need(cand_log.get("seed") == seed and ctrl_log.get("seed") == seed,
           f"seed identity: candidate {cand_log.get('seed')}, control {ctrl_log.get('seed')}, registered {seed}")
-    for k, v in POLICY.items():
+    for k, v in policy.items():
         _need(cand_log.get(k) == v, f"candidate log {k}={cand_log.get(k)} != registered {v}")
-    _need(cand_log.get("lifetime_steps") == POLICY["steps"], "candidate log is not a 24k final")
+    _need(cand_log.get("lifetime_steps") == policy["steps"], "candidate log is not a 24k final")
     CB, csha = bench(ctrl_bench_p)
     XB, bsha = bench(cand_bench_p)
     _need(ctrl_log.get("parent_sha256") == csha, f"control VAL parent {ctrl_log.get('parent_sha256')} != control bench {csha}")
@@ -76,7 +77,7 @@ def judge(ctrl_log_p, cand_log_p, ctrl_bench_p, cand_bench_p, dev_p, seed):
     XV = _val_entry(cand_log, cand_log["lifetime_steps"])
     bd = json.loads(Path(cand_bench_p).read_text())
     s = bd["summary"][bd["meta"]["candidate"]]
-    dev_gain, tgt = _dev(json.loads(Path(dev_p).read_text())["rows"], csha, bsha)
+    dev_gain, tgt = _dev(json.loads(Path(dev_p).read_text())["rows"], csha, bsha, cand)
 
     g = lambda X, C, snr, i: X[snr][i] - C[snr][i]  # noqa: E731
     cr = s["crowd"]
