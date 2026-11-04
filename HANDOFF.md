@@ -127,6 +127,34 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
     (legacy parity vs Gen 19; hard60 determinism).
 - Tests: 59 green.
 
+## Demo site (beforetheimplant.com) — added 2026-11-04 ~18:20
+
+- **Domain:** `beforetheimplant.com` registered via Route 53 at 18:08
+  (operation `e9b8f53a…`). Hosted zone `Z031443727CBVQM2UB5R`. ACM cert
+  `91ad1661…` uses DNS validation. A background waiter runs
+  `deploy/attach_domain.sh` once the cert is ISSUED.
+- **Hosting:** private S3 bucket `beforetheimplant-com-site` + CloudFront
+  `E34H0K147DZSC0` (`d2lytzwcdc23no.cloudfront.net`), with OAC (the same
+  pattern as itsthemedium.com).
+- **Meta API:** Lambda `beforetheimplant-muse` (`api/index.mjs`) is served
+  at `/api/*` through a Lambda OAC, with reserved concurrency 5.
+  - It calls **Muse Spark 1.3** via the `api.meta.ai` Responses API.
+  - The key is read server-side from SSM `/itsthemedium/muse-api-key`.
+    It never leaves AWS and is never read locally.
+  - Routes: `health`, `ask` (tool-using agent: `list_generations`,
+    `get_scorecard`, `search_record`), `explain`, `brief`.
+  - A direct-invoke-only `mode:"review"` makes Muse a second reviewer of
+    verdicts.
+  - Its only view of the research is `api/build/knowledge.json`, built by
+    `api/build_knowledge.py`. Re-run `deploy/deploy_site.sh` after each
+    verdict so the Gen 23/24 entries stay current.
+- **Site:** `site/`, designed by a Fable agent (three.js scroll story
+  modelled on itsthemedium.com, with Graham's story).
+  - Family photos live in `site/assets/family/`. They are git-ignored on
+    purpose and deploy to S3 only, with metadata stripped.
+  - Deploy with `deploy/deploy_site.sh`, which runs a secret scan and an
+    audio-file refusal first.
+
 ## Next actions (in order)
 
 1. **When `/tmp/gen23_s17_pipeline.log` says PIPELINE DONE**:
