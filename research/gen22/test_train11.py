@@ -78,3 +78,44 @@ def test_replays_gen19_stream(monkeypatch):
     for _ in range(4):
         a, b = t11.make_batch(r1, pool, spk), t8.make_batch(r2, pool, spk)
         assert all((x.numpy() == y.numpy()).all() for x, y in zip(a[:3], b[:3])) and a[3:] == b[3:]
+
+
+# --- Resume guarantees (Astra pre-launch review item 6): uninterrupted vs
+# resumed run with the SAME schedule horizon, diagnostics straddling the
+# resume point; changed budget/loss must be refused. CPU, ~40 s, needs data.
+import subprocess  # noqa: E402
+
+import pytest  # noqa: E402
+
+_DATA = Path("/tmp/gen17dl/LibriSpeech/train-clean-100")
+_VAL = Path("/tmp/gen12dl/LibriSpeech/dev-clean")
+_need_data = pytest.mark.skipif(not (_DATA.exists() and _VAL.exists()), reason="LibriSpeech not present")
+
+
+def _run(tmp, name, *extra):
+    cmd = [sys.executable, str(HERE / "train11.py"), "--loss", "cap30", "--mode", "scratch",
+           "--steps", "6", "--state-every", "3", "--diag-every", "2", "--device", "cpu",
+           "--out", str(tmp / f"{name}.pt"), "--log", str(tmp / f"{name}.json"), *extra]
+    return subprocess.run(cmd, capture_output=True, text=True)
+
+
+@_need_data
+def test_resume_is_bit_identical_and_guards_identity(tmp_path):
+    import json
+    a = _run(tmp_path, "a")
+    assert a.returncode == 0, a.stderr[-2000:]
+    state = tmp_path / "a_state_latest.pt"  # rolling state at step 3 of 6
+    assert torch.load(state, weights_only=False)["step"] == 3
+    b = _run(tmp_path, "b", "--resume", str(state))
+    assert b.returncode == 0, b.stderr[-2000:]
+    sa = torch.load(tmp_path / "a.pt", weights_only=False)["state_dict"]
+    sb = torch.load(tmp_path / "b.pt", weights_only=False)["state_dict"]
+    assert all(torch.equal(sa[k], sb[k]) for k in sa)
+    strip = lambda log: [{k: v for k, v in r.items() if k != "elapsed_s"} for r in log]  # noqa: E731
+    la, lb = (json.loads((tmp_path / f"{n}.json").read_text()) for n in "ab")
+    assert strip(la["log"]) == strip(lb["log"]) and la["val_log"] == lb["val_log"]
+    assert any("grad_diag" in r and r["step"] == 4 for r in lb["log"])  # diag after resume
+    assert la["weights_sha256"] != "" and lb["resumed"] is True
+    for extra in (["--steps", "8"], ["--loss", "sisdr"]):
+        r = _run(tmp_path, "c", "--resume", str(state), *extra)
+        assert r.returncode != 0 and "REFUSED resume" in (r.stdout + r.stderr)

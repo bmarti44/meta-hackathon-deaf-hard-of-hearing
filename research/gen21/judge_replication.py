@@ -55,6 +55,8 @@ def main():
         seed = 20261100 + s
         P, _ = val(W / f"train_log_r48_seed{seed}.json", 24000)
         PB, psha = bench(B / PARENT_BENCH[s])
+        r48_parent = json.loads((W / f"train_log_r48_seed{seed}.json").read_text())["parent_sha256"]
+        assert r48_parent == psha, f"seed {s}: R48 parent {r48_parent} != parent bench {psha}"
         row = {"parent_val": P[-5.0], "parent_bench": PB[-5.0], "parent_sha": psha}
         for arm in ("s48", "r48"):
             V, vsha = val(W / f"train_log_{arm}_seed{seed}.json", 48000)

@@ -1,7 +1,8 @@
 # Gen 22 pre-registration — 30 dB soft-capped SI-SDR training loss
 
-> Claude Opus 5.5, 2026-11-04 ~13:20 EST. Written before any Gen 22
-> training. Source of the change and decision rules: Astra's Gen21
+> Claude Opus 5.5, 2026-11-04 ~13:10 EST; revised ~13:25 per Astra's
+> pre-launch review ([astra-prelaunch-review.md](./astra-prelaunch-review.md)).
+> Written before any Gen 22 training. Source of the change and decision rules: Astra's Gen21
 > review, rank 1 ([../gen21/astra-review-gen21.md](../gen21/astra-review-gen21.md)).
 > T0 in-silico only. `promoted FALSE`.
 
@@ -30,21 +31,32 @@ state every 2000 steps) do not touch the update path.
 `--loss sisdr` the trainer reproduces Gen19 seed-17's logged
 loss and grad-norm bit-for-bit at every logged step 0–325 on
 MPS (diagnostic firing at step 0), and a kill → `--resume`
-from the step-300 state stays bit-identical through 425.
+from the step-300 state stays bit-identical through 425; after
+the review fixes, a fresh run is again bit-identical through
+step 200. Logs + re-check script: `research/gen22/smoke/`
+(`parity_check.py`). Prefix parity does not prove a bit-identical
+24k final; it shows the update path and data stream are Gen19's.
 Tests: `research/gen22/test_train11.py` (cap saturates at
 −30 dB, <0.01 dB change at ~0 dB, never below plain, `sisdr`
-is the Gen19 objective, Gen19 batch stream replayed).
+is the Gen19 objective, Gen19 batch stream replayed; CPU
+uninterrupted-vs-resumed run bit-identical in weights, logs, LR
+and VAL across a diagnostic boundary; changed budget/loss
+refused) and `test_judge_screen.py` (provenance violations —
+missing dev target, wrong dev hash, interim checkpoint, bench
+hash mismatch, wrong policy — raise; failed CI bound FAILs).
 
-## Policy (frozen by the Gen21 verdict, per Astra's table)
+## Policy (frozen by the Gen21 SELECTED policy, per Astra's table)
 
-| Gen21 verdict | Gen22 screen | Exact control |
+| Gen21 selected policy | Gen22 screen | Exact control |
 |---|---|---|
-| Neither arm qualifies (expected) | 24k scratch, cosine 1e-3→1e-4 over 24k | Gen19 final of the same seed |
-| R48 qualifies | 24k restart from Gen19 parent + Gen21 RNG handoff | Gen21 R48 final, same seed |
-| S48 qualifies | 48k scratch | Gen21 S48 final, same seed |
+| Neither | 24k scratch, cosine 1e-3→1e-4 over 24k | Gen19 final of the same seed |
+| R48 | 24k restart from Gen19 parent + Gen21 RNG handoff | Gen21 R48 final, same seed |
+| S48 | 48k scratch (~174 min/seed — not launchable today) | Gen21 S48 final, same seed |
 
-If the verdict is not "neither", this file gets a dated
-addendum before launch; nothing else changes.
+`judge_screen.py` implements ONLY the 24k-scratch row (it refuses
+other policies). If Gen21 selects R48 or S48, a dated addendum
+plus a matching judge (control files, filenames, timing) is
+committed and reviewed before any launch.
 
 ## Panels and readouts (final checkpoint only)
 
@@ -68,12 +80,18 @@ Screen seed 20261117. **ADVANCE** to seeds 18/19 only if all:
 4. quiet absolute SI-SDR ≥ 25 dB and quiet ΔSTOI ≥ −0.02;
 5. other currently-passing required mono rows still pass on
    this seed's bench (crowd ΔSI-SDR ≥ 3.0, ΔSTOI ≥ 0.03,
-   ΔACE-electro ≥ 0.05, SSN ≥ 3.0, white ≥ 0);
+   ΔACE-electro ≥ 0.05, each with 95% CI lower bound > 0;
+   SSN ≥ 3.0; white ≥ 0);
 6. dev panel @−5 dB: positive mean improvement over control,
-   with ≥ 5 of 8 targets improving.
+   with ≥ 5 of 8 targets improving (exact registered 8 targets,
+   16 paired items each; hashes must match the VAL/bench
+   checkpoints).
 
-**Confirmation** (seeds 18/19, controls Gen19 s18/s19): same
-bars on seed means, positive in ≥ 2 of 3 seeds. Only then is
+**Confirmation** (seeds 18/19, controls Gen19 s18/s19 under the
+24k-scratch policy): rules 1–5 on 3-seed means; candidate −
+control positive in ≥ 2 of 3 seeds **on each of VAL and bench
+@−5 dB**; dev panel: 3-seed mean gain > 0 and ≥ 5 of 8 targets
+improving on their 3-seed mean per-target gain. Only then is
 the cap retained into the recipe. If the screen fails, the cap
 is filed as a NULL for this policy and Gen 23 tests rank 2
 (compressed spectral 5·L_CS) under the same rules.
@@ -84,7 +102,9 @@ the gradient-diagnostic log is descriptive only.
 
 ## Cost / timing
 
-24k steps ≈ 76 min on MPS. Launch only after the Gen21 verdict
+24k steps ≈ 76–85 min on MPS (Gen19 seed 17 took 84.8 min),
+plus ~25 min for bench, dev panel, judging and filing. Astra's
+guidance: launch by ~17:30 at the latest. Launch only after the Gen21 verdict
 is filed and Astra's review of it is filed with a disposition
 (holder rule). Today's deadline rule: launch the screen only if
 it can train, bench and be filed by 19:30; otherwise this

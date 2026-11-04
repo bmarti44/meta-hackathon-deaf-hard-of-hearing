@@ -52,7 +52,7 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
   gone): dev-clean at `/tmp/gen12dl/LibriSpeech/dev-clean`,
   train-clean-100 at `/tmp/gen17dl/LibriSpeech/train-clean-100`
   (251 spk; archive SHA-256 `d4ddd1d5…bf6e2`).
-- Tests (28 green as of 13:10):
+- Tests (37 green as of 13:25; ~35 s, one CPU resume test needs the data):
   `/tmp/gen9env/bin/python -m pytest research/bench-n6/ research/gen20/ research/gen21/ research/gen22/ -q`
 - Model: `research/gen15/model_causal.py` — causal waveform
   TasNet-style, 602,510 params, exact causality asserted in
@@ -76,7 +76,7 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
   of late batches → hard examples starve. See
   `research/gen21/astra-review-gen21.md`.
 
-## Current state (2026-11-04 13:10 — VERIFY, may be stale)
+## Current state (2026-11-04 13:25 — VERIFY, may be stale)
 
 - Gen 21 (S48 = 48k scratch vs R48 = Gen19 parent + 24k
   restart, paired data via RNG handoff at 24k) — pre-reg:
@@ -92,15 +92,18 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
 - **Seed-19 S48 was KILLED at step 12,500 (12:57) when the
   previous session ended** (no process left; no full state
   before 24k, so no exact resume). Relaunched from scratch,
-  same seed, at 13:00 as a detached `nohup` chain
-  S48s19 → R48s19 (logs `/tmp/gen21_s48s19.log`,
-  `/tmp/gen21_r48s19.log`, chain markers
-  `/tmp/gen21_chain_s19.log`). Rerun losses are bit-identical
+  same seed, at 13:00 (detached, PID 13713, log
+  `/tmp/gen21_s48s19.log`). **R48s19 runs CONCURRENTLY**: a
+  detached watcher (`/tmp/gen21_r48s19_watch.sh`) launches it as
+  soon as S48s19 logs "RNG HANDOFF" at 24k (~13:55), log
+  `/tmp/gen21_r48s19.log`; DONE markers for both go to
+  `/tmp/gen21_chain_s19.log` (`/tmp/gen21_s48s19_watch.sh`).
+  Deterministic training → scheduling change only. Rerun losses are bit-identical
   to the killed run (checked steps 100–225), so this is a
   faithful replay, not a protocol change. Killed-run
   artifacts kept untracked in
   `research/gen21/weights/aborted_s48s19_run1/`.
-  ETA: S48s19 ~15:32, R48s19 ~16:40.
+  ETA (both concurrent at ~0.2–0.28 s/step): ~15:30–16:00.
 - Judgment script committed: `research/gen21/judge_replication.py`
   (reproduces filed seed-17/18 numbers exactly). 2-seed means:
   VAL S +0.141 / R +0.137; bench S −0.281 / R −0.064.
@@ -110,7 +113,7 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
 
 ## Next actions (in order)
 
-1. **When R48s19 prints DONE** (~16:40; check `/tmp/gen21_chain_s19.log`): bench seed-19
+1. **When BOTH S48s19 and R48s19 print DONE** (~15:30–16:00; check `/tmp/gen21_chain_s19.log`): bench seed-19
    registered checkpoints (`bench_v2.py --n-per-cell 6`):
    `s48_seed20261119{,_step24000,_step36000}.pt`,
    `r48_seed20261119{,_step36000}.pt` → separate JSONs in
@@ -141,7 +144,11 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
    in `SUBMISSION.md`, update this file, commit + push.
 5. **Astra xhigh review** of completed Gen 21 + SUBMISSION.md
    accuracy; file verbatim + disposition.
-6. **Gen 22 — PREPARED (13:10), not launched.** Pre-reg
+6. **Gen 22 — PREPARED + Astra pre-launch reviewed (13:25), not
+   launched.** Her required fixes are all adopted (resume identity
+   validation + atomic saves, judge provenance/final-only/CI rows,
+   policy wording, confirmation aggregation, tests → 37 green):
+   `research/gen22/astra-prelaunch-review.md`. Pre-reg
    `research/gen22/prereg.md`; trainer `research/gen22/train11.py`
    (`--loss cap30`, Astra's denominator verbatim; `--loss sisdr`
    reproduces Gen19 s17 bit-for-bit through step 325 on MPS,

@@ -39,7 +39,7 @@ torch 2.15.0). Adam lr 1e-3 cosine to 1e-4, grad-clip 5. One seed
 Run: /tmp/gen9env/bin/python research/gen22/train11.py --loss cap30 --mode scratch --seed 20261117
 """
 from __future__ import annotations
-import argparse, hashlib, json, sys, time
+import argparse, hashlib, json, os, sys, time
 from pathlib import Path
 import numpy as np, soundfile as sf, torch, torch.nn.functional as F
 
@@ -247,10 +247,12 @@ def save_ckpt(model, out, steps, seed, speakers=None, mode="scratch",
 
 def save_state(model, opt, sched, rng, out, step, seed, mode, extra=None):
     """Full resumable training state (optimizer/scheduler/RNG included)."""
+    tmp = Path(f"{out}.tmp")
     torch.save({"state_dict": model.state_dict(), "opt": opt.state_dict(),
                 "sched": sched.state_dict(), "np_rng_state": rng.bit_generator.state,
                 "torch_rng_state": torch.get_rng_state(), "step": step,
-                "seed": seed, "mode": mode, "gen": "gen22", **(extra or {})}, out)
+                "seed": seed, "mode": mode, "gen": "gen22", **(extra or {})}, tmp)
+    os.replace(tmp, out)  # atomic: a kill mid-write never corrupts the previous state
     return hashlib.sha256(Path(out).read_bytes()).hexdigest()
 
 
@@ -265,7 +267,7 @@ def main():
     ap.add_argument("--loss", choices=sorted(LOSSES), required=True)
     ap.add_argument("--mode", choices=["scratch", "restart"], required=True)
     ap.add_argument("--steps", type=int, default=24000,
-                    help="Gen21 selected neither arm -> 24k scratch (Astra policy table)")
+                    help="total updates in this run (policy frozen by prereg.md; 24k scratch or 24k restart)")
     ap.add_argument("--resume", default=None, help="rolling *_state_latest.pt to resume from")
     ap.add_argument("--state-every", type=int, default=2000)
     ap.add_argument("--diag-every", type=int, default=500)
@@ -285,6 +287,17 @@ def main():
     if out.exists() and not a.force and not a.resume:
         raise SystemExit(f"REFUSED: {out} exists (pass --force to overwrite)")
     out.parent.mkdir(parents=True, exist_ok=True)
+    life0 = 0 if a.mode == "scratch" else 24000  # lifetime updates already done
+    _r = None
+    if a.resume:  # validate run identity BEFORE touching any artifact (Astra pre-launch review)
+        _r = torch.load(a.resume, map_location="cpu", weights_only=False)
+        want = {"seed": a.seed, "mode": a.mode, "loss": a.loss, "total_steps": a.steps,
+                "data_root": str(a.data_root), "init_from": a.init_from}
+        bad = {k: (_r.get(k), v) for k, v in want.items() if _r.get(k) != v}
+        if bad:
+            raise SystemExit(f"REFUSED resume: identity mismatch {bad}")
+        if not (life0 < _r["step"] < life0 + a.steps):
+            raise SystemExit(f"REFUSED resume: saved step {_r['step']} outside ({life0}, {life0 + a.steps})")
     torch.manual_seed(a.seed)
     rng = np.random.default_rng(a.seed)
     parent_sha = None
@@ -303,6 +316,8 @@ def main():
         _h = torch.load(_hf, map_location="cpu", weights_only=False)
         assert _h["seed"] == a.seed and _h["step"] == 24000, f"bad handoff {_hf}: {_h.get('seed')}/{_h.get('step')}"
         rng = rng_from_state(_h["np_rng_state"], seed=a.seed)
+        if _r is not None and _r.get("parent_sha256") != parent_sha:
+            raise SystemExit(f"REFUSED resume: parent sha {_r.get('parent_sha256')} != {parent_sha}")
         print(f"restart parent={a.init_from} parent_sha256={parent_sha} handoff={_hf}", flush=True)
     bad = audit_causality(model)
     assert not bad, bad
@@ -322,7 +337,10 @@ def main():
     counts = {k: len(v) for k, v in pool.items()}
     total_s = float(sum(counts.values()))  # file count; audio decoded on demand
     print(f"pool n_speakers={len(counts)} n_files={int(total_s)} index_s={time.time()-tload:.1f}", flush=True)
-    life0 = 0 if a.mode == "scratch" else 24000  # lifetime updates already done
+    ident = {"loss": a.loss, "total_steps": a.steps, "data_root": str(a.data_root),
+             "init_from": a.init_from, "parent_sha256": parent_sha, "pool_n_files": int(total_s)}
+    if _r is not None and _r.get("pool_n_files") != int(total_s):
+        raise SystemExit(f"REFUSED resume: pool files {_r.get('pool_n_files')} != {int(total_s)}")
     if a.mode == "scratch":
         opt = torch.optim.Adam(model.parameters(), lr=1e-3)
         sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, T_max=a.steps, eta_min=1e-4)
@@ -339,14 +357,13 @@ def main():
         sched = torch.optim.lr_scheduler.LambdaLR(opt, _lr_lambda)
         # Astra interim review: retain the initialized lifetime-24k state
         # (fresh Adam/scheduler + restored handoff RNG) before any batch.
-        _st0 = out.with_name(f"{out.stem}_state_step24000.pt")
-        print(f"initial full state {_st0} sha256={save_state(model, opt, sched, rng, _st0, 24000, a.seed, a.mode, {'loss': a.loss})}", flush=True)
+        if _r is None:
+            _st0 = out.with_name(f"{out.stem}_state_step24000.pt")
+            print(f"initial full state {_st0} sha256={save_state(model, opt, sched, rng, _st0, 24000, a.seed, a.mode, ident)}", flush=True)
     val_panel = build_val_panel()
     roll = out.with_name(f"{out.stem}_state_latest.pt")
     start, t_prev = 0, 0.0
-    if a.resume:
-        _r = torch.load(a.resume, map_location="cpu", weights_only=False)
-        assert _r["seed"] == a.seed and _r["mode"] == a.mode and _r["loss"] == a.loss, "resume mismatch"
+    if _r is not None:
         model.load_state_dict(_r["state_dict"]); opt.load_state_dict(_r["opt"]); sched.load_state_dict(_r["sched"])
         rng = rng_from_state(_r["np_rng_state"], seed=a.seed); torch.set_rng_state(_r["torch_rng_state"])
         start = _r["step"] - life0; log, val_log, t_prev = _r["log"], _r["val_log"], _r["elapsed_s"]
@@ -380,7 +397,7 @@ def main():
         opt.zero_grad(); loss.backward()
         gn = torch.nn.utils.clip_grad_norm_(model.parameters(), 5.0)
         opt.step(); sched.step()
-        if step % 25 == 0 or step == a.steps - 1:
+        if step % 25 == 0 or step == a.steps - 1 or diag:
             with torch.no_grad():
                 plain = float(neg_si_sdr(ref, est.detach()).mean())
             rec = {"step": step, "neg_sisdr_loss_db": float(loss), "neg_sisdr_uncapped_db": plain,
@@ -393,10 +410,6 @@ def main():
             ck = out.with_name(f"{out.stem}_step{life0 + step + 1}.pt")
             save_ckpt(model, ck, life0 + step + 1, a.seed, train_spk, a.mode, a.init_from, parent_sha, a.loss)
             print(f"interim ckpt {ck}", flush=True)
-        if life0 + step + 1 in (24000, 36000, 48000):
-            st = out.with_name(f"{out.stem}_state_step{life0 + step + 1}.pt")
-            _sha = save_state(model, opt, sched, rng, st, life0 + step + 1, a.seed, a.mode, {"loss": a.loss})
-            print(f"full state {st} sha256={_sha}", flush=True)
         if (step + 1) % 2000 == 0:
             v, vitems = eval_val(model, val_panel, a.device)
             val_log.append({"step": step + 1, "lifetime_step": life0 + step + 1,
@@ -406,10 +419,14 @@ def main():
             _vp = out.with_name(f"{out.stem}_val_partial.json")
             _vp.write_text(json.dumps({"mode": a.mode, "seed": a.seed,
                                         "val_log": val_log}, indent=1))
+        if life0 + step + 1 in (24000, 36000, 48000):
+            st = out.with_name(f"{out.stem}_state_step{life0 + step + 1}.pt")
+            _sha = save_state(model, opt, sched, rng, st, life0 + step + 1, a.seed, a.mode,
+                              {**ident, "log": log, "val_log": val_log, "elapsed_s": time.time() - t0})
+            print(f"full state {st} sha256={_sha}", flush=True)
         if a.state_every and (step + 1) % a.state_every == 0 and step + 1 < a.steps:
             save_state(model, opt, sched, rng, roll, life0 + step + 1, a.seed, a.mode,
-                       {"loss": a.loss, "log": log, "val_log": val_log,
-                        "elapsed_s": time.time() - t0})
+                       {**ident, "log": log, "val_log": val_log, "elapsed_s": time.time() - t0})
     wall = time.time() - t0
     model = model.to("cpu").eval()
     caus_post = suffix_invariance_test(model, seed=1)

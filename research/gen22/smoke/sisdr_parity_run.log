@@ -1,0 +1,24 @@
+device=mps loss=sisdr mode=scratch steps=24000 seed=20261117
+params=602510 rf={'rf_frames_incl_current': 509, 'past_context_samples': 16319, 'past_context_s': 1.0199375, 'future_samples': 0, 'algorithmic_latency_samples_max': 94, 'algorithmic_latency_ms_max': 5.875, 'content_delay_samples': 63}
+causality pre-train: [{'split_P': 8000, 'max_diff_prefix_P': 0.0, 'max_diff_suffix': 0.5455107092857361}, {'split_P': 16000, 'max_diff_prefix_P': 0.0, 'max_diff_suffix': 0.5915619134902954}, {'split_P': 24001, 'max_diff_prefix_P': 0.0, 'max_diff_suffix': 0.4774250090122223}]
+loading pool from /tmp/gen12dl/LibriSpeech/dev-clean
+data_root=/tmp/gen17dl/LibriSpeech/train-clean-100 speakers=251
+pool n_speakers=251 n_files=28539 index_s=0.3
+VAL step0 {'-5.0': {'d_sisdr': -23.62, 'd_stoi': -0.045}, '0.0': {'d_sisdr': -25.4, 'd_stoi': -0.14}, '5.0': {'d_sisdr': -29.94, 'd_stoi': -0.23}, '10.0': {'d_sisdr': -34.86, 'd_stoi': -0.308}, '999.0': {'d_sisdr': -171.97, 'd_stoi': -0.435}}
+/Users/bmarti44/bufferright/research-deaf-hard-of-hearing/research/gen22/train11.py:386: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:821.)
+  rec = {"step": step, "neg_sisdr_loss_db": float(loss), "neg_sisdr_uncapped_db": plain,
+{'step': 0, 'neg_sisdr_loss_db': 29.891502380371094, 'neg_sisdr_uncapped_db': 29.891502380371094, 'grad_norm': 169.6033477783203, 'lr': 0.0009999999961446857, 'elapsed_s': 0.9, 'grad_diag': {'n_quiet': 1, 'gn_quiet': 23.42115020751953, 'gn_noisy': 156.45758056640625}}
+{'step': 25, 'neg_sisdr_loss_db': 2.8486735820770264, 'neg_sisdr_uncapped_db': 2.8486735820770264, 'grad_norm': 2.5815587043762207, 'lr': 0.0009999973938101029, 'elapsed_s': 8.9}
+{'step': 50, 'neg_sisdr_loss_db': 0.5664427280426025, 'neg_sisdr_uncapped_db': 0.5664427280426025, 'grad_norm': 2.0607028007507324, 'lr': 0.000999989972364956, 'elapsed_s': 17.0}
+{'step': 75, 'neg_sisdr_loss_db': -2.1003050804138184, 'neg_sisdr_uncapped_db': -2.1003050804138184, 'grad_norm': 2.9379963874816895, 'lr': 0.0009999777318887237, 'elapsed_s': 24.7}
+{'step': 100, 'neg_sisdr_loss_db': -2.550790548324585, 'neg_sisdr_uncapped_db': -2.550790548324585, 'grad_norm': 1.5450595617294312, 'lr': 0.0009999606725124921, 'elapsed_s': 33.0}
+{'step': 125, 'neg_sisdr_loss_db': -4.841262340545654, 'neg_sisdr_uncapped_db': -4.841262340545654, 'grad_norm': 2.945256471633911, 'lr': 0.0009999387944189528, 'elapsed_s': 40.1}
+{'step': 150, 'neg_sisdr_loss_db': -1.3858964443206787, 'neg_sisdr_uncapped_db': -1.3858964443206787, 'grad_norm': 2.225318431854248, 'lr': 0.0009999120978424027, 'elapsed_s': 47.1}
+{'step': 175, 'neg_sisdr_loss_db': -5.365619659423828, 'neg_sisdr_uncapped_db': -5.365619659423828, 'grad_norm': 2.9980099201202393, 'lr': 0.0009998805830687416, 'elapsed_s': 53.9}
+{'step': 200, 'neg_sisdr_loss_db': -6.227227687835693, 'neg_sisdr_uncapped_db': -6.227227687835693, 'grad_norm': 5.751999855041504, 'lr': 0.0009998442504354662, 'elapsed_s': 61.9}
+{'step': 225, 'neg_sisdr_loss_db': -3.208847999572754, 'neg_sisdr_uncapped_db': -3.208847999572754, 'grad_norm': 2.7725088596343994, 'lr': 0.0009998031003316703, 'elapsed_s': 67.7}
+{'step': 250, 'neg_sisdr_loss_db': -1.6939725875854492, 'neg_sisdr_uncapped_db': -1.6939725875854492, 'grad_norm': 4.167987823486328, 'lr': 0.0009997571331980383, 'elapsed_s': 74.6}
+{'step': 275, 'neg_sisdr_loss_db': -4.686375617980957, 'neg_sisdr_uncapped_db': -4.686375617980957, 'grad_norm': 6.077649116516113, 'lr': 0.0009997063495268419, 'elapsed_s': 81.0}
+{'step': 300, 'neg_sisdr_loss_db': -6.233249664306641, 'neg_sisdr_uncapped_db': -6.233249664306641, 'grad_norm': 7.6996541023254395, 'lr': 0.0009996507498619331, 'elapsed_s': 87.8}
+{'step': 325, 'neg_sisdr_loss_db': -4.622635841369629, 'neg_sisdr_uncapped_db': -4.622635841369629, 'grad_norm': 8.049213409423828, 'lr': 0.0009995903347987396, 'elapsed_s': 94.0}
