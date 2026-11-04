@@ -76,7 +76,7 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
   of late batches → hard examples starve. See
   `research/gen21/astra-review-gen21.md`.
 
-## Current state (2026-11-04 12:55 — VERIFY, may be stale)
+## Current state (2026-11-04 13:10 — VERIFY, may be stale)
 
 - Gen 21 (S48 = 48k scratch vs R48 = Gen19 parent + 24k
   restart, paired data via RNG handoff at 24k) — pre-reg:
@@ -89,22 +89,28 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
   parent (1.006): S48 −0.158, R48 −0.042; bench @−5 gains:
   S48 −0.436, R48 −0.266 (parent bench file
   `benchv2_gen19s2.json`, candidate `gen19s2`, @−5 = 1.356).
-- **Seed-19 STILL TRAINING** as of writing: S48s19 at step
-  ~11,700/48,000 (log `/tmp/gen21_s48s19.log`, ETA ~14:45),
-  then R48s19 chains automatically (~65 min, ETA ~15:55;
-  chained background bash, logs in /tmp/gen21_*.log).
-- 2-seed running gain means: VAL S +0.141 / R +0.137; bench
-  S −0.28 / R −0.06. Acceptance needs seed-19 VAL gains
-  ≈ +0.62 and bench gains ≈ +1.0…+1.5 → **expect NEITHER arm
-  to qualify**; Gen 19 then stays the baseline. Do not
-  pre-judge in writing until seed-19 finals are benched.
-- A 16:05 cron (in the outgoing session) was armed with the
-  full judgment script; it may or may not survive handoff —
-  do not rely on it; run "Next actions" yourself.
+- **Seed-19 S48 was KILLED at step 12,500 (12:57) when the
+  previous session ended** (no process left; no full state
+  before 24k, so no exact resume). Relaunched from scratch,
+  same seed, at 13:00 as a detached `nohup` chain
+  S48s19 → R48s19 (logs `/tmp/gen21_s48s19.log`,
+  `/tmp/gen21_r48s19.log`, chain markers
+  `/tmp/gen21_chain_s19.log`). Rerun losses are bit-identical
+  to the killed run (checked steps 100–225), so this is a
+  faithful replay, not a protocol change. Killed-run
+  artifacts kept untracked in
+  `research/gen21/weights/aborted_s48s19_run1/`.
+  ETA: S48s19 ~15:32, R48s19 ~16:40.
+- Judgment script committed: `research/gen21/judge_replication.py`
+  (reproduces filed seed-17/18 numbers exactly). 2-seed means:
+  VAL S +0.141 / R +0.137; bench S −0.281 / R −0.064.
+  Acceptance needs 3-seed means ≥+0.30 on both panels →
+  **expect NEITHER arm to qualify**; do not pre-judge in
+  writing until seed-19 finals are benched.
 
 ## Next actions (in order)
 
-1. **When R48s19 prints DONE** (~16:00): bench seed-19
+1. **When R48s19 prints DONE** (~16:40; check `/tmp/gen21_chain_s19.log`): bench seed-19
    registered checkpoints (`bench_v2.py --n-per-cell 6`):
    `s48_seed20261119{,_step24000,_step36000}.pt`,
    `r48_seed20261119{,_step36000}.pt` → separate JSONs in
@@ -120,8 +126,8 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
    0 dB safeguards (≤0.15 dB / 0.003 STOI degradation),
    quiet safeguards. Scratch preferred only if S48−R48
    ≥0.15 on both panel means. A failed R48 is NOT accepted
-   by default. Reuse `/tmp/gen21_judge.py`-style item means
-   (or rewrite from train-log `val_log[].items`).
+   by default. Run `python research/gen21/judge_replication.py --out
+   research/gen21/replication_judgment.json`.
 3. **Only if an arm qualifies**: `spatial_bench.py` on its
    48k finals (hash-matched) + `kpi_scorecard.py` with that
    arm's three 48k-final benches ONLY (never 3 checkpoints of
