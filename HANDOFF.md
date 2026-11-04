@@ -76,53 +76,50 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
   of late batches → hard examples starve. See
   `research/gen21/astra-review-gen21.md`.
 
-## Current state (2026-11-04 15:40 — VERIFY, may be stale)
+## Current state (2026-11-04 16:00 — VERIFY, may be stale)
 
-- **Gen 21 COMPLETE — NEITHER ARM QUALIFIES** (filed:
-  `research/gen21/results.md` bottom section,
-  `research/gen21/replication_judgment.json`). 3-seed mean −5 dB
-  gains: S48 VAL +0.144 / bench −0.236; R48 VAL +0.118 / bench
-  −0.100 (bar +0.30 both). Gen 19 stays the accepted baseline.
-  Seed-19 S48 was killed at 12.5k by a session end and relaunched
-  same-seed (bit-identical replay verified); R48s19 ran
-  concurrently after the 24k handoff. Killed-run artifacts:
-  `research/gen21/weights/aborted_s48s19_run1/` (untracked).
-- **Gen 22 selected policy = "neither" → 24k scratch, Gen19
-  controls** (prereg table row 1; `judge_screen.py` implements
-  exactly this). Trainer/judge/tests ready and Astra pre-launch
-  reviewed (`research/gen22/astra-prelaunch-review.md`).
-- No training process is running.
+- **Gen 21 COMPLETE — NEITHER ARM QUALIFIES**; Astra's final
+  review confirmed every number (`research/gen21/astra-review-gen21-final.md`,
+  disposition filed). 3-seed mean −5 dB gains: S48 VAL +0.144 /
+  bench −0.236; R48 VAL +0.118 / bench −0.100 (bar +0.30 both).
+  Gen 19 stays the baseline. Seed-19 replay evidence committed:
+  `research/gen21/weights/aborted_s48s19_run1/{gen21_s48s19_killed.log,
+  s48_seed20261119_val_partial.json,replay_manifest.json}` (6 ckpt
+  hashes + 7 VAL evals identical).
+- **SUBMISSION.md corrected per Astra** (T0 framing, N6 untested,
+  scorecard scope, PESQ/RTF unestablished, white vocoded-ESTOI and
+  −5 dB ILD disclosures, generation-history wording). One
+  placeholder left: `[GEN 22 SCREEN RESULT — filled at completion]`.
+- **Gen 22 seed-17 screen RUNNING** (launched 15:45:55; detached
+  pipeline `/tmp/gen22_s17_pipeline.sh`, log
+  `/tmp/gen22_s17_pipeline.log`, trainer log
+  `/tmp/gen22_cap30_s17.log`). The pipeline trains → benches
+  (`research/bench-n6/benchv2_g22cap30s17.json`) → dev panel
+  (`research/gen22/dev_audit_s17.json`) → judges
+  (`research/gen22/screen_s17.json`), each gated on the previous
+  step; ETA ~16:45 for PIPELINE DONE. If the trainer dies,
+  re-running the pipeline script resumes from
+  `research/gen22/weights/cap30_scratch_seed20261117_state_latest.pt`.
+  Judge now also enforces seed identity + full 8×4×4×2 dev grid
+  (Astra's final-review gaps); 41 tests green.
 
 ## Next actions (in order)
 
-1. **Astra xhigh review of completed Gen 21 + SUBMISSION.md**
-   (prompt drafted at `/tmp/astra_g21_final_prompt.txt`; run with
-   `< /dev/null` or codex waits on stdin). File verbatim +
-   disposition as `research/gen21/astra-review-gen21-final.md`;
-   apply SUBMISSION corrections; commit + push.
-2. **Gen 22 seed-17 screen — only if launchable by ~17:30**
-   (Astra) and finishable (≈85 min train + ≈25 min bench/dev/
-   judge/file) by 19:30:
-   `nohup /tmp/gen9env/bin/python research/gen22/train11.py --loss cap30 --mode scratch --seed 20261117 < /dev/null > /tmp/gen22_cap30_s17.log 2>&1 &`
-   (rolling state every 2000; if killed, relaunch the same command
-   plus `--resume research/gen22/weights/cap30_scratch_seed20261117_state_latest.pt`).
-   After DONE: `bench_v2.py --n-per-cell 6 --gen15
-   research/gen22/weights/cap30_scratch_seed20261117.pt
-   --candidate-name g22cap30s17 --out
-   research/bench-n6/benchv2_g22cap30s17.json`; dev panel
-   `gen21/dev_audit.py --system control=research/gen19/weights/causal_seed20261117.pt
-   --system cap30=research/gen22/weights/cap30_scratch_seed20261117.pt
-   --out research/gen22/dev_audit_s17.json`; then
-   `research/gen22/judge_screen.py --seed 17 --out research/gen22/screen_s17.json`;
-   file `research/gen22/results.md`, STATUS, SUBMISSION, HANDOFF.
-   Otherwise state it as the registered next step.
-3. If the screen ADVANCES: seeds 18/19 (controls Gen19 s18/s19)
-   per prereg confirmation rules — tomorrow's work. If it FAILS:
-   file the null; Gen 23 = rank 2 (compressed spectral 5·L_CS).
-4. Before 20:00: final commit + push; `git status` should show
-   only intentionally-untracked files (interim `*_step*.pt`,
-   `*_val_partial.json`, `aborted_s48s19_run1/`, local audio,
-   `bench_v2_gen17_control10.json` — pre-existing, untouched).
+1. **When `/tmp/gen22_s17_pipeline.log` says PIPELINE DONE**: read
+   `research/gen22/screen_s17.json`; write `research/gen22/results.md`
+   (VAL/bench/dev table vs Gen19 s17, gradient-diagnostic summary
+   from the train log `grad_diag` records, verdict ADVANCE/FAIL);
+   fill the SUBMISSION placeholder; prepend STATUS; update this
+   file; commit the final weights, train log, bench, dev JSON,
+   screen JSON (not `*_step*.pt` / `*_state_*.pt`); push.
+2. **Astra xhigh review of the Gen 22 screen** (+ final SUBMISSION
+   check) if time allows before 19:30; file verbatim + disposition.
+3. If ADVANCE: seeds 18/19 replication is the next step (tomorrow).
+   If FAIL: file the null; Gen 23 = compressed spectral 5·L_CS.
+4. By 20:00: final commit + push; `git status` shows only
+   intentionally-untracked files (interim `*_step*.pt`,
+   `*_state_*.pt`, `*_val_partial.json`, aborted-run ckpts, local
+   audio, pre-existing `bench_v2_gen17_control10.json`).
 
 ## Key files map
 

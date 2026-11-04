@@ -20,6 +20,7 @@ sys.path.insert(0, str(HERE.parent / "gen21"))
 from judge_replication import B, PARENT_BENCH, W, bench  # noqa: E402
 
 DEV_TARGETS = {"5536", "5694", "1988", "1993", "5895", "6241", "6295", "6313"}
+DEV_GRID = {(t, c, m, s) for t in DEV_TARGETS for c in range(4) for m in range(4) for s in (-5.0, 0.0)}
 POLICY = {"mode": "scratch", "loss": "cap30", "steps": 24000}
 
 
@@ -48,19 +49,22 @@ def _dev(rows, ctrl_sha, cand_sha):
         shas = {r["sha256"] for r in sys_rows[name]}
         _need(shas == {sha}, f"dev {name} hash {shas} != {sha}")
     key = lambda r: (r["spk"], r["crop"], r["mix"], r["snr"])  # noqa: E731
+    for name, rs in sys_rows.items():  # full registered grid, duplicate-free (Astra Gen21-final review)
+        keys = [key(r) for r in rs]
+        _need(len(keys) == len(set(keys)), f"dev {name} has duplicate items")
+        _need(set(keys) == DEV_GRID, f"dev {name} grid != 8 targets x 4 crops x 4 mixtures x 2 SNRs "
+                                     f"(missing {len(DEV_GRID - set(keys))}, extra {len(set(keys) - DEV_GRID)})")
     c = {key(r): r for r in sys_rows["control"] if r["snr"] == -5.0}
     x = {key(r): r for r in sys_rows["cap30"] if r["snr"] == -5.0}
-    _need(set(c) == set(x), "dev control/candidate items are not paired")
-    _need({k[0] for k in c} == DEV_TARGETS, f"dev targets {sorted({k[0] for k in c})} != registered 8")
-    per = collections.Counter(k[0] for k in c)
-    _need(all(n == 16 for n in per.values()), f"dev items per target != 16: {dict(per)}")
     tgt = {t: statistics.fmean(x[k]["d_sisdr"] - c[k]["d_sisdr"] for k in c if k[0] == t) for t in sorted(DEV_TARGETS)}
     return statistics.fmean(x[k]["d_sisdr"] - c[k]["d_sisdr"] for k in c), tgt
 
 
-def judge(ctrl_log_p, cand_log_p, ctrl_bench_p, cand_bench_p, dev_p):
+def judge(ctrl_log_p, cand_log_p, ctrl_bench_p, cand_bench_p, dev_p, seed):
     ctrl_log = json.loads(Path(ctrl_log_p).read_text())
     cand_log = json.loads(Path(cand_log_p).read_text())
+    _need(cand_log.get("seed") == seed and ctrl_log.get("seed") == seed,
+          f"seed identity: candidate {cand_log.get('seed')}, control {ctrl_log.get('seed')}, registered {seed}")
     for k, v in POLICY.items():
         _need(cand_log.get(k) == v, f"candidate log {k}={cand_log.get(k)} != registered {v}")
     _need(cand_log.get("lifetime_steps") == POLICY["steps"], "candidate log is not a 24k final")
@@ -111,7 +115,7 @@ def main():
     rows, checks, verdict = judge(W / f"train_log_r48_seed{seed}.json",
                                   HERE / "weights" / f"train_log_cap30_scratch_seed{seed}.json",
                                   B / PARENT_BENCH[a.seed], B / f"benchv2_g22cap30s{a.seed}.json",
-                                  HERE / f"dev_audit_s{a.seed}.json")
+                                  HERE / f"dev_audit_s{a.seed}.json", seed)
     r = rows
     print(f"seed {a.seed} candidate {r['cand_sha'][:12]} control {r['ctrl_sha'][:12]}")
     print(f"  VAL  -5: cand {r['cand_val_m5'][0]:.4f} ctrl {r['ctrl_val_m5'][0]:.4f} gain {r['val_gain_m5'][0]:+.4f} / STOI {r['val_gain_m5'][1]:+.4f}")

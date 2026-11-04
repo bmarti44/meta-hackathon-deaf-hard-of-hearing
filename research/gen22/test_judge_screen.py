@@ -24,7 +24,7 @@ CAND = "c" * 64
 def _fixture(tmp):
     s48 = json.loads(S48_LOG.read_text())
     final = [e for e in s48["val_log"] if e["lifetime_step"] == 48000][0]
-    log = {"mode": "scratch", "loss": "cap30", "steps": 24000, "lifetime_steps": 24000,
+    log = {"seed": 20261117, "mode": "scratch", "loss": "cap30", "steps": 24000, "lifetime_steps": 24000,
            "weights_sha256": CAND, "val_log": [dict(final, step=24000, lifetime_step=24000)]}
     bench = json.loads(S48_BENCH.read_text())
     bench["meta"]["checkpoint_sha256"] = CAND
@@ -42,7 +42,7 @@ def _fixture(tmp):
 def _judge(tmp, log, bench, dev):
     for n, obj in (("log", log), ("bench", bench), ("dev", dev)):
         (tmp / f"{n}.json").write_text(json.dumps(obj))
-    return J.judge(CTRL_LOG, tmp / "log.json", CTRL_BENCH, tmp / "bench.json", tmp / "dev.json")
+    return J.judge(CTRL_LOG, tmp / "log.json", CTRL_BENCH, tmp / "bench.json", tmp / "dev.json", 20261117)
 
 
 def test_real_s48_fixture_fails_on_bench(tmp_path):
@@ -71,7 +71,8 @@ def test_failed_ci_lower_bound_fails(tmp_path):
     assert not checks["5_other_required_rows"] and verdict == "FAIL"
 
 
-@pytest.mark.parametrize("breakage", ["missing_target", "wrong_dev_hash", "interim_ckpt", "bench_hash", "policy"])
+@pytest.mark.parametrize("breakage", ["missing_target", "wrong_dev_hash", "interim_ckpt", "bench_hash", "policy",
+                                      "wrong_seed", "no_0db_panel", "one_crop_replacement", "duplicate_item"])
 def test_provenance_violations_raise(tmp_path, breakage):
     log, bench, dev = _fixture(tmp_path)
     if breakage == "missing_target":
@@ -86,5 +87,14 @@ def test_provenance_violations_raise(tmp_path, breakage):
         bench["meta"]["checkpoint_sha256"] = "e" * 64
     elif breakage == "policy":
         log["loss"] = "sisdr"
+    elif breakage == "wrong_seed":
+        log["seed"] = 20261118
+    elif breakage == "no_0db_panel":
+        dev["rows"] = [r for r in dev["rows"] if r["snr"] != 0.0]
+    elif breakage == "one_crop_replacement":  # 16 items/target kept, but all from crop 0
+        for r in dev["rows"]:
+            r["crop"], r["mix"] = 0, (r["crop"] * 4 + r["mix"])
+    elif breakage == "duplicate_item":
+        dev["rows"].append(dict(dev["rows"][0]))
     with pytest.raises(J.Invalid):
         _judge(tmp_path, log, bench, dev)

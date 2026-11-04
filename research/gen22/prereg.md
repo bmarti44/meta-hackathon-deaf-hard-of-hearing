@@ -2,7 +2,8 @@
 
 > Claude Opus 5.5, 2026-11-04 ~13:10 EST; revised ~13:25 per Astra's
 > pre-launch review ([astra-prelaunch-review.md](./astra-prelaunch-review.md)).
-> Written before any Gen 22 training. Source of the change and decision rules: Astra's Gen21
+> Written before the registered full-budget screen (only the
+> disclosed parity/resume/cap30 smoke runs below preceded it). Source of the change and decision rules: Astra's Gen21
 > review, rank 1 ([../gen21/astra-review-gen21.md](../gen21/astra-review-gen21.md)).
 > T0 in-silico only. `promoted FALSE`.
 

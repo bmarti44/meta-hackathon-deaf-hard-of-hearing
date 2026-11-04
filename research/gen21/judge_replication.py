@@ -40,8 +40,13 @@ def bench(path):
         k = lambda r: base[(r["kind"], r["crop"], r["spk"], r["snr_db"])]
         out[snr] = (statistics.fmean(r["sisdr"] - k(r)["sisdr"] for r in rs),
                     statistics.fmean(r["stoi"] - k(r)["stoi"] for r in rs))
-    q = d["summary"][cand]["quiet"]
+    s = d["summary"][cand]
+    q = s["quiet"]
     out["quiet"] = (q["sisdr"], q["d_stoi"]["mean"])
+    cr = s["crowd"]
+    out["other"] = {"crowd": [cr[k]["mean"] for k in ("d_sisdr", "d_stoi", "d_ace_electro_corr")],
+                    "crowd_ci_lo": [cr[k]["ci_lo"] for k in ("d_sisdr", "d_stoi", "d_ace_electro_corr")],
+                    "ssn": s["ssn"]["d_sisdr"]["mean"], "white": s["white-heldout"]["d_sisdr"]["mean"]}
     return out, d["meta"]["checkpoint_sha256"]
 
 
@@ -70,6 +75,7 @@ def main():
                 "val_gain_0": [V[0.0][i] - P[0.0][i] for i in (0, 1)],
                 "bench_gain_0": [Bn[0.0][i] - PB[0.0][i] for i in (0, 1)],
                 "bench_quiet": Bn["quiet"],
+                "bench_other": Bn["other"],
             }
         res["per_seed"][s] = row
     n = len(a.seeds)
@@ -84,12 +90,26 @@ def main():
             "positive_ge_2of3_both": pos["val"] >= 2 and pos["bench"] >= 2,
             "zero_db_safeguard": all(g[k][0] >= -0.15 and g[k][1] >= -0.003 for k in ("val_gain_0", "bench_gain_0")),
             "quiet_safeguard": all(r["bench_quiet"][0] >= 25 and r["bench_quiet"][1] >= -0.02 for r in rows),
+            # Other currently-passing required mono rows (KPI.md), seed-mean + every seed's CI lo > 0.
+            "other_required_rows": (lambda o: o[0] >= 3.0 and o[1] >= 0.03 and o[2] >= 0.05)(
+                [statistics.fmean(r["bench_other"]["crowd"][i] for r in rows) for i in range(3)])
+                and all(x > 0 for r in rows for x in r["bench_other"]["crowd_ci_lo"])
+                and statistics.fmean(r["bench_other"]["ssn"] for r in rows) >= 3.0
+                and statistics.fmean(r["bench_other"]["white"] for r in rows) >= 0,
         }
         res["arms"][arm] = {"mean_gains": g, "positive_seeds": pos, "checks": checks,
                             "qualifies": n == 3 and all(checks.values())}
     sr = {p: statistics.fmean(res["per_seed"][s]["s48"][f"{p}_m5"][0] - res["per_seed"][s]["r48"][f"{p}_m5"][0]
                               for s in a.seeds) for p in ("val", "bench")}
     res["s48_minus_r48_m5"] = sr
+    d = {p: [[res["per_seed"][s]["s48"][f"{p}_m5"][i] - res["per_seed"][s]["r48"][f"{p}_m5"][i] for s in a.seeds]
+             for i in (0, 1)] for p in ("val", "bench")}
+    res["scratch_preferred"] = {  # complete prereg Boolean (Astra Gen21-final review)
+        "margin_ge_0.15_both": all(statistics.fmean(d[p][0]) >= 0.15 for p in d),
+        "stoi_nonworsening_both": all(statistics.fmean(d[p][1]) >= 0 for p in d),
+        "positive_ge_2_seeds_both": all(sum(x > 0 for x in d[p][0]) >= 2 for p in d),
+    }
+    res["scratch_preferred"]["preferred"] = all(res["scratch_preferred"].values())
 
     for s in a.seeds:
         r = res["per_seed"][s]
@@ -104,7 +124,7 @@ def main():
         print(f"{arm.upper()} mean gain -5: VAL {g['val_gain_m5'][0]:+.4f} (STOI {g['val_gain_m5'][1]:+.4f}) "
               f"bench {g['bench_gain_m5'][0]:+.4f} (STOI {g['bench_gain_m5'][1]:+.4f}); positive VAL {v['positive_seeds']['val']}/{n} "
               f"bench {v['positive_seeds']['bench']}/{n}; checks {v['checks']}; QUALIFIES={v['qualifies']}")
-    print(f"S48-R48 @-5 seed-mean: VAL {sr['val']:+.4f} bench {sr['bench']:+.4f} (scratch preferred only if both >= 0.15)")
+    print(f"S48-R48 @-5 seed-mean: VAL {sr['val']:+.4f} bench {sr['bench']:+.4f}; scratch preference {res['scratch_preferred']}")
     if a.out:
         Path(a.out).write_text(json.dumps(res, indent=1))
 

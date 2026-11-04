@@ -42,7 +42,9 @@ per-example records retained. Bench 24k/36k/48k checkpoints;
 - **Prefer scratch only if** S48−R48 ≥0.15 dB at −5 dB on both
   VAL and bench seed means, non-worsening STOI, positive in
   ≥2 seeds; otherwise prefer continuation (reuses parents).
-- Progress ≠ milestone: Gen19 −5 dB means are VAL 0.7800 /
+- Progress ≠ milestone: Gen19 −5 dB means are VAL 0.7800
+  [annotated 2026-11-04 after the verdict: rounded; unrounded
+  0.7808299135 — thresholds unchanged] /
   bench 1.187654; +0.30 still leaves bench at 1.488 < 1.5.
   Milestone needs the unchanged KPI contract (3 seeds +
   hash-matched spatial); promotion additionally needs the

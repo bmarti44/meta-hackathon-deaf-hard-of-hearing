@@ -1,0 +1,72 @@
+{
+ "what": "Gen21 S48 seed 20261119: killed run (12:57, step 12500, session end) vs same-seed rerun (13:00)",
+ "checkpoints": [
+  {
+   "step": 2000,
+   "killed_run_sha256": "b82e691451ddc06e266e78b351675ba1b8126260646af8f8e26ec4e39ee0a828",
+   "rerun_sha256": "b82e691451ddc06e266e78b351675ba1b8126260646af8f8e26ec4e39ee0a828",
+   "identical": true
+  },
+  {
+   "step": 4000,
+   "killed_run_sha256": "0d898de4df3fb872340909a5135861f17380b5ea3d369fd4598ce18eafc4ea2c",
+   "rerun_sha256": "0d898de4df3fb872340909a5135861f17380b5ea3d369fd4598ce18eafc4ea2c",
+   "identical": true
+  },
+  {
+   "step": 6000,
+   "killed_run_sha256": "da5299738c48696a939c73d57a74f785108e0e7b39c64aea4001c39112d13b63",
+   "rerun_sha256": "da5299738c48696a939c73d57a74f785108e0e7b39c64aea4001c39112d13b63",
+   "identical": true
+  },
+  {
+   "step": 8000,
+   "killed_run_sha256": "62002aee00a2df20b30db0676895a330371d0505c038d644140409a5d4b7228f",
+   "rerun_sha256": "62002aee00a2df20b30db0676895a330371d0505c038d644140409a5d4b7228f",
+   "identical": true
+  },
+  {
+   "step": 10000,
+   "killed_run_sha256": "5a3a9fff5acaed33bce83b8b9b3451773ab63a83aaee0c2d306076fe1e5915d5",
+   "rerun_sha256": "5a3a9fff5acaed33bce83b8b9b3451773ab63a83aaee0c2d306076fe1e5915d5",
+   "identical": true
+  },
+  {
+   "step": 12000,
+   "killed_run_sha256": "376e21d1b1949ff271022973a3b437e184f18aa20c487bb38a9e64e14974be48",
+   "rerun_sha256": "376e21d1b1949ff271022973a3b437e184f18aa20c487bb38a9e64e14974be48",
+   "identical": true
+  }
+ ],
+ "val_evaluations": [
+  {
+   "lifetime_step": 0,
+   "items_identical": true
+  },
+  {
+   "lifetime_step": 2000,
+   "items_identical": true
+  },
+  {
+   "lifetime_step": 4000,
+   "items_identical": true
+  },
+  {
+   "lifetime_step": 6000,
+   "items_identical": true
+  },
+  {
+   "lifetime_step": 8000,
+   "items_identical": true
+  },
+  {
+   "lifetime_step": 10000,
+   "items_identical": true
+  },
+  {
+   "lifetime_step": 12000,
+   "items_identical": true
+  }
+ ],
+ "all_identical": true
+}

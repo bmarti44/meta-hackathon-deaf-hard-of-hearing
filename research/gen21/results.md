@@ -1,9 +1,13 @@
-# Gen 21 screen (seed 20261117) — both arms advance on VAL; bench −5 dB diverges (T0)
+# Gen 21 — S48 vs R48: seed-17 screen advanced; 3-seed replication: NEITHER ARM QUALIFIES (T0)
 
-> Model: requested Sol 6.1 / actual `muse-wonder-full-1.0`. 2026-11-04.
+> Model: requested Sol 6.1 / actual `muse-wonder-full-1.0` (screen,
+> seed 18); Claude Opus 5.5 (seed 19 + verdict). 2026-11-04.
 > Pre-registered: [prereg.md](./prereg.md); interim audit:
-> [astra-interim-review.md](./astra-interim-review.md). Screen only —
-> no KPI claim until 3-seed replication. `promoted FALSE`.
+> [astra-interim-review.md](./astra-interim-review.md); final review:
+> [astra-review-gen21-final.md](./astra-review-gen21-final.md).
+> **Final verdict at the bottom ("3-seed replication verdict"): neither
+> arm qualifies; Gen 19 remains the baseline.** The sections above it
+> are the seed-17 screen record, kept as filed. `promoted FALSE`.
 
 ## Unrounded VAL finals (48k lifetime; cutoffs 0.86 / 0.009)
 
@@ -48,8 +52,9 @@ both arms' seeds 18/19 unchanged (launched), run an expanded
 development diagnostic alongside, and afterwards test a 30 dB
 soft-capped SI-SDR loss first — her frozen-weight diagnostic
 found quiet examples contributing ~37–53× the gradient norm of
-noisy ones (clipping on 69–78% of late batches), a concrete
-mechanism starving hard-SNR learning.
+noisy ones (clipping on 69–78% of late batches) — a gradient
+imbalance that motivates a causal training test; its contribution
+to the −5 dB failure is unestablished.
 
 ## Expanded development diagnostic (same day, alongside replication)
 
@@ -125,10 +130,13 @@ conditions — seed-mean overall crowd ΔSI-SDR rises from +3.51
 (Gen19) to +3.79 (S48) / +3.67 (R48), and 0 dB, competing-talker
 and quiet improve in every seed — but not the −5 dB wall: bench
 −5 dB falls in 3/3 seeds for S48 and 2/3 for R48, and VAL gains
-(+0.14/+0.12) are below half the bar. This is the pattern Astra's
-gradient diagnostic predicts (near-perfect examples dominating the
-clipped gradient), so the next generation changes the objective,
-not the budget: **Gen 22 = 30 dB soft-capped SI-SDR under the
+(+0.14/+0.12) are below half the bar. This rejects these
+extra-optimization policies under the registered test; it does not
+establish a fundamental −5 dB limit (the seed-17 expanded dev panel
+still improved +0.45/+0.32 with all 8 targets positive, so material
+sensitivity is large). The pattern is consistent with — but does not
+demonstrate — Astra's gradient-imbalance diagnosis, so the next
+generation tests the objective rather than the budget: **Gen 22 = 30 dB soft-capped SI-SDR under the
 "neither selected" policy (24k scratch, Gen19 controls)**,
 [../gen22/prereg.md](../gen22/prereg.md). Effects remain
 confounded as registered (optimizer reset vs LR shape not

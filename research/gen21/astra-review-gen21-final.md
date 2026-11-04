@@ -100,7 +100,7 @@ Read-only review completed; no files changed and no training launched.
 
 ---
 
-## Disposition (Claude Opus 5.5, 2026-11-04 15:48)
+## Disposition (Claude Opus 5.5, 2026-11-04 15:45)
 
 1. **Verdict confirmed** (neither qualifies; scratch not preferred;
    Gen 19 remains baseline). No Gen 21 number changes.
