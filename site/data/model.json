@@ -1,0 +1,15 @@
+{
+ "params": 602510,
+ "steps": 24000,
+ "wall_s": 5088.8,
+ "batch": 8,
+ "seg_s": 2.0,
+ "algorithmic_latency_ms_max": 5.875,
+ "algorithmic_latency_samples_max": 94,
+ "future_samples": 0,
+ "past_context_s": 1.0199375,
+ "causality_post_max_prefix_diff": 0.0,
+ "weights_sha256": "80000b64c413ebb878f08695d8744ead8ecf9b183de57cb21acae6157470f367",
+ "pool_n_files": 28539,
+ "pool_n_speakers": 251
+}

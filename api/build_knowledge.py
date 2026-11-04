@@ -15,20 +15,21 @@ SCORECARD = {  # Gen 19, 3-seed means: research/bench-n6/kpi_scorecard.py (bench
     "source": "research/bench-n6/kpi_scorecard.py over bench_v2_gen19.json, benchv2_gen19s2.json, benchv2_gen19s3.json, spatial_gen19.json",
     "verdict": "ALL REQUIRED: FAIL - keep optimizing (13 of 14 required rows pass); promoted FALSE",
     "rows": [
-        {"id": "crowd_dsisdr", "name": "Crowd noise: SI-SDR improvement", "actual": "+3.51 dB", "required": ">= +3.0 dB and 95% CI lower bound > 0", "pass": True},
-        {"id": "crowd_dstoi", "name": "Crowd noise: STOI improvement", "actual": "+0.035", "required": ">= +0.03 and CI lower bound > 0", "pass": True},
-        {"id": "crowd_dace", "name": "Crowd noise: simulated ACE electrodogram correlation improvement", "actual": "+0.072", "required": ">= +0.05 and CI lower bound > 0", "pass": True},
+        {"id": "crowd_sisdr", "name": "Crowd noise: SI-SDR improvement", "actual": "+3.51 dB", "required": ">= +3.0 dB and 95% CI lower bound > 0", "pass": True},
+        {"id": "crowd_stoi", "name": "Crowd noise: STOI improvement", "actual": "+0.035", "required": ">= +0.03 and CI lower bound > 0", "pass": True},
+        {"id": "crowd_ace", "name": "Crowd noise: simulated ACE electrodogram correlation improvement", "actual": "+0.072", "required": ">= +0.05 and CI lower bound > 0", "pass": True},
         {"id": "crowd_m5", "name": "Crowd noise at -5 dB SNR: SI-SDR improvement", "actual": "+1.19 dB", "required": ">= +1.5 dB", "pass": False},
         {"id": "crowd_0", "name": "Crowd noise at 0 dB SNR: SI-SDR improvement", "actual": "+4.65 dB", "required": ">= +1.5 dB", "pass": True},
         {"id": "crowd_m5_stoi", "name": "Crowd noise at -5 dB: STOI no-harm guard", "actual": "+0.005", "required": ">= 0", "pass": True},
-        {"id": "every_seed", "name": "Every seed improves crowd SI-SDR", "actual": "+3.45, +3.57, +3.53 dB", "required": "> 0 in all 3 seeds", "pass": True},
-        {"id": "beats_gate", "name": "Crowd SI-SDR beats a classical causal noise gate", "actual": "6.03", "required": "> 3.21 (gate)", "pass": True},
+        {"id": "crowd_every_seed", "name": "Every seed improves crowd SI-SDR", "actual": "+3.45, +3.57, +3.53 dB", "required": "> 0 in all 3 seeds", "pass": True},
+        {"id": "crowd_vs_gate", "name": "Crowd SI-SDR beats a classical causal noise gate", "actual": "6.03", "required": "> 3.21 (gate)", "pass": True},
         {"id": "ssn", "name": "Speech-shaped noise: SI-SDR improvement", "actual": "+6.45 dB", "required": ">= +3.0 dB", "pass": True},
         {"id": "white", "name": "Held-out white noise: SI-SDR improvement", "actual": "+0.73 dB", "required": ">= 0 dB", "pass": True},
-        {"id": "quiet_sisdr", "name": "Quiet speech left intact: absolute SI-SDR", "actual": "36.3 dB", "required": ">= 25 dB", "pass": True},
+        {"id": "quiet_abs", "name": "Quiet speech left intact: absolute SI-SDR", "actual": "36.3 dB", "required": ">= 25 dB", "pass": True},
         {"id": "quiet_stoi", "name": "Quiet speech: STOI change", "actual": "-0.005", "required": ">= -0.02", "pass": True},
         {"id": "ild", "name": "Direction cue: target interaural level difference error (seed 17, four simulated scenes)", "actual": "5.47 dB", "required": "< 5.96 dB (unprocessed)", "pass": True},
         {"id": "itd", "name": "Direction cue: interaural time difference error (seed 17, four simulated scenes)", "actual": "4.0 samples", "required": "<= 5.8 samples (unprocessed)", "pass": True},
+        {"id": "ild_distortion", "name": "ILD distortion vs the mixture (diagnostic only, not a required row)", "actual": "1.14", "required": "diagnostic only", "pass": None},
     ],
     "disclosures": [
         "Quiet PESQ and CPU streaming real-time factor are required by the KPI contract but remain unestablished.",
@@ -64,7 +65,12 @@ GENERATIONS = [
      "files": ["research/gen24/prereg.md"]},
 ]
 
-STORY = ("Graham, the author's son, was born with bilateral, sensorineural, severe-to-profound hearing loss and wears "
+STORY = ("In his dad's words (shared for this site): the day Graham was born, someone was running a jackhammer right outside the hospital room, "
+         "so loud his dad could feel it shaking his feet under the bed; Graham slept the whole time. For a long time all the family knew was that something was wrong; "
+         "his hearing test showed he was getting almost no sound. Weeks of blood tests, urine tests, MRIs and echocardiograms, several appointments a week, "
+         "and no definitive answer beyond bilateral sensorineural hearing loss. The doctors said one day he may grow to enjoy music. He does: he loves to dance. "
+         "His sister is Maggie. "
+         "Graham, the author's son, was born with bilateral, sensorineural, severe-to-profound hearing loss and wears "
          "bilateral Cochlear Nucleus 6 processors. Crowds are where cochlear-implant users struggle most. The author has normal hearing. "
          "This project cannot inform Graham's own care (GOAL.md section 1.1/1.4): it is literature, public-data and in-silico research only. "
          "No implant or patient was involved; the N6's processing was not tested; no candidate has earned a listening test.")
@@ -102,10 +108,19 @@ def goal_story():
     return {"file": "GOAL.md", "heading": "1.1 Motivation and conflict disclosure", "text": s.strip()[:1400]}
 
 
+def site_generations():
+    """Single source of truth: the site's generations.json (edited after each verdict)."""
+    f = ROOT / "site" / "data" / "generations.json"
+    if not f.exists():
+        return GENERATIONS
+    g = json.loads(f.read_text())
+    return g if isinstance(g, list) else g.get("generations", GENERATIONS)
+
+
 def main():
     docs = [c for f in CORPUS if (ROOT / f).exists() for c in chunks(f)] + [goal_story()]
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(json.dumps({"story": STORY, "facts": FACTS, "scorecard": SCORECARD, "generations": GENERATIONS,
+    OUT.write_text(json.dumps({"story": STORY, "facts": FACTS, "scorecard": SCORECARD, "generations": site_generations(),
                                "docs": docs, "repo": "https://github.com/bmarti44/meta-hackathon-deaf-hard-of-hearing"}, indent=0))
     print(f"wrote {OUT} ({OUT.stat().st_size // 1024} KB, {len(docs)} chunks)")
 

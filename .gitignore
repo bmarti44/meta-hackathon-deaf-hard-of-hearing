@@ -12,3 +12,7 @@ __pycache__/
 site/assets/family/
 api/build/
 api/lambda.zip
+# explainer video + renders (contain family media): deploy-only
+site/assets/video/
+video/out/
+video/narration/clips/

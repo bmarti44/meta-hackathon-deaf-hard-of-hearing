@@ -1,0 +1,144 @@
+{
+ "source": "research/bench-n6/kpi_scorecard.py on 3 Gen 19 seeds + spatial_gen19.json",
+ "candidate": "gen19",
+ "rows": [
+  {
+   "kpi": "babble dSI-SDR",
+   "status": "PASS",
+   "actual": "3.51",
+   "required": ">=+3.0 & CIlo>0",
+   "stretch": ">=+5.0",
+   "stretch_pass": false,
+   "id": "crowd_sisdr"
+  },
+  {
+   "kpi": "babble dSTOI",
+   "status": "PASS",
+   "actual": "0.035",
+   "required": ">=+0.03 & CIlo>0",
+   "stretch": ">=+0.06",
+   "stretch_pass": false,
+   "id": "crowd_stoi"
+  },
+  {
+   "kpi": "babble dACE-electro",
+   "status": "PASS",
+   "actual": "0.072",
+   "required": ">=+0.05 & CIlo>0",
+   "stretch": ">=+0.10",
+   "stretch_pass": false,
+   "id": "crowd_ace"
+  },
+  {
+   "kpi": "babble dSI-SDR @-5dB",
+   "status": "FAIL",
+   "actual": "1.19",
+   "required": ">=+1.5",
+   "stretch": ">=+3.0",
+   "stretch_pass": false,
+   "id": "crowd_m5"
+  },
+  {
+   "kpi": "babble dSI-SDR @0dB",
+   "status": "PASS",
+   "actual": "4.65",
+   "required": ">=+1.5",
+   "stretch": ">=+3.0",
+   "stretch_pass": true,
+   "id": "crowd_0"
+  },
+  {
+   "kpi": "babble dSTOI @-5dB (no-harm guard)",
+   "status": "PASS",
+   "actual": "0.005",
+   "required": ">=0",
+   "stretch": ">=+0.02",
+   "stretch_pass": false,
+   "id": "crowd_m5_stoi"
+  },
+  {
+   "kpi": "every seed crowd dSI-SDR > 0",
+   "status": "PASS",
+   "actual": "[3.45, 3.57, 3.53]",
+   "required": ">0 all seeds",
+   "stretch": null,
+   "stretch_pass": null,
+   "id": "crowd_every_seed"
+  },
+  {
+   "kpi": "babble SI-SDR > classical gate",
+   "status": "PASS",
+   "actual": "6.03",
+   "required": "> 3.21",
+   "stretch": null,
+   "stretch_pass": null,
+   "id": "crowd_vs_gate"
+  },
+  {
+   "kpi": "SSN dSI-SDR",
+   "status": "PASS",
+   "actual": "6.45",
+   "required": ">=+3.0",
+   "stretch": ">=+5.0",
+   "stretch_pass": true,
+   "id": "ssn"
+  },
+  {
+   "kpi": "white dSI-SDR",
+   "status": "PASS",
+   "actual": "0.73",
+   "required": ">=0",
+   "stretch": ">=+1.5",
+   "stretch_pass": false,
+   "id": "white"
+  },
+  {
+   "kpi": "quiet abs SI-SDR",
+   "status": "PASS",
+   "actual": "36.3",
+   "required": ">=25",
+   "stretch": ">=30",
+   "stretch_pass": true,
+   "id": "quiet_abs"
+  },
+  {
+   "kpi": "quiet dSTOI",
+   "status": "PASS",
+   "actual": "-0.005",
+   "required": ">=-0.02",
+   "stretch": ">=-0.01",
+   "stretch_pass": true,
+   "id": "quiet_stoi"
+  },
+  {
+   "kpi": "target-ILD error (dB)",
+   "status": "PASS",
+   "actual": "5.47",
+   "required": "<5.96 (unproc)",
+   "stretch": ">=30% below unproc",
+   "stretch_pass": false,
+   "id": "ild"
+  },
+  {
+   "kpi": "ITD error (samples)",
+   "status": "PASS",
+   "actual": "4.0",
+   "required": "<=5.8 (unproc)",
+   "stretch": null,
+   "stretch_pass": null,
+   "id": "itd"
+  },
+  {
+   "kpi": "ILD distortion vs mixture (diagnostic)",
+   "status": "INFO",
+   "actual": "1.14",
+   "required": "diagnostic only",
+   "stretch": null,
+   "stretch_pass": null,
+   "id": "ild_distortion"
+  }
+ ],
+ "verdict": "FAIL - keep optimizing",
+ "n_required": 14,
+ "n_pass": 13
+}
