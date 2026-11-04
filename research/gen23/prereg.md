@@ -98,7 +98,9 @@ Every 500 steps:
   - finite gradient at silence;
   - MPS-input gradient bit-deterministic;
   - Gen 19 batch stream replayed;
-  - CPU kill → resume bit-identical, with the renamed fields;
+  - CPU uninterrupted run vs a run resumed from its saved intermediate
+    state is bit-identical, with the renamed fields (wording corrected
+    per the Astra code audit, 17:40);
   - a changed loss refused on resume;
   - judge = Gen 22 rules with the Gen 23 name and policy, Gen 22 logs
     and dev rows refused.

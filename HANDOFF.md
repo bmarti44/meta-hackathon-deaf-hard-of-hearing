@@ -52,8 +52,8 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
   gone): dev-clean at `/tmp/gen12dl/LibriSpeech/dev-clean`,
   train-clean-100 at `/tmp/gen17dl/LibriSpeech/train-clean-100`
   (251 spk; archive SHA-256 `d4ddd1d5…bf6e2`).
-- Tests (51 green as of 17:25; ~45 s, two CPU resume tests need the data):
-  `/tmp/gen9env/bin/python -m pytest research/bench-n6/ research/gen20/ research/gen21/ research/gen22/ research/gen23/ -q`
+- Tests (59 green as of 17:40; ~100 s, three CPU resume tests need the data; avoid running while an MPS run trains, the CPU contention slows it):
+  `/tmp/gen9env/bin/python -m pytest research/bench-n6/ research/gen20/ research/gen21/ research/gen22/ research/gen23/ research/gen24/ -q`
 - Model: `research/gen15/model_causal.py` — causal waveform
   TasNet-style, 602,510 params, exact causality asserted in
   trainers, 5.88 ms algorithmic latency.
@@ -90,7 +90,8 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
   - Astra's screen review (`research/gen22/astra-review-gen22-screen.md`)
     confirmed the verdict and corrected the clipping reading: frequency
     was similar, severity fell (median pre-clip norm 34.3 → 14.9).
-  - SUBMISSION's Gen 22 bullet uses Astra's wording verbatim.
+  - SUBMISSION's Gen 22 bullet keeps the substance of Astra's wording,
+    restructured.
 - **Gen 23 PREREGISTERED** (`research/gen23/prereg.md`): plain SI-SDR
   + 5 × compressed spectral loss, with the spec frozen by Astra.
   - The L_CS term is computed on CPU, because MPS STFT gradients are
@@ -112,30 +113,41 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
   - ETA: 50–100 min of training plus ~3 min of evaluation.
   - If the trainer dies, re-running the script resumes from
     `…_state_latest.pt`.
-- **A concurrent Astra code audit of `train12.py`** writes to
-  `/tmp/astra_g23_audit.out` and is filed as
-  `research/gen23/astra-code-audit.md`. A real defect makes the run
-  INVALID (filed, not judged).
+- **Astra's concurrent code audit: no blocking defect.** It is filed as
+  `research/gen23/astra-code-audit.md`. Her provenance gaps are covered
+  by `research/gen23/verify_provenance.py --gen 23 --seed 17`, which
+  must PASS before the verdict is filed (Gen 22 passes).
+- **Gen 24 drafted, NOT registered** (`research/gen24/{prereg.md,
+  train13.py,judge_screen.py,test_*.py}`): narrower noisy SNR
+  `hard60`. The pipeline is `/tmp/gen24_s17_pipeline.sh`, gated on
+  exit status.
+  - It is registered only after the Gen 23 verdict and Astra's review
+    of it are filed.
+  - Before launch, add the source-hash table and run an MPS smoke
+    (legacy parity vs Gen 19; hard60 determinism).
+- Tests: 59 green.
 
 ## Next actions (in order)
 
-1. File the concurrent Astra code audit verbatim plus disposition
-   when it lands.
-2. **When `/tmp/gen23_s17_pipeline.log` says PIPELINE DONE**:
-   - read `research/gen23/screen_s17.json`;
-   - write `research/gen23/results.md`;
-   - replace SUBMISSION's `[GEN 23 STATUS — updated at completion]`
-     placeholder;
+1. **When `/tmp/gen23_s17_pipeline.log` says PIPELINE DONE**:
+   - run `research/gen23/verify_provenance.py --gen 23 --seed 17`
+     (it must PASS);
+   - read `research/gen23/screen_s17.json` and write
+     `research/gen23/results.md`;
+   - replace SUBMISSION's `[GEN 23 STATUS — updated at completion]`;
    - prepend STATUS and update this file;
    - commit the final weights, train log, bench, dev and screen JSON
      (not `*_step*.pt` / `*_state_*.pt`) and push.
-3. If it is not judged by 19:40, replace the placeholder with
-   "screen pending at submission", then commit and push by 20:00.
-   File the result later. Never judge an interim checkpoint.
-4. If ADVANCE, seeds 18/19 replication is next (tomorrow). If FAIL,
-   file the null; next is narrower SNR sampling (Astra's order:
-   compressed spectral → narrower SNR → STOI aux → longer crops).
-5. By 20:00: final commit and push. `git status` should show only
+2. Run Astra's xhigh review of the Gen 23 result and file it verbatim
+   with a disposition.
+   - If Gen 23 FAILs and she agrees, register Gen 24: dated header,
+     source hashes, MPS smoke. Launch `/tmp/gen24_s17_pipeline.sh`.
+     Its result will likely land after 20:00, so it is filed later and
+     never judged from an interim checkpoint.
+   - If Gen 23 ADVANCEs, seeds 18/19 replication comes next.
+3. If Gen 23 is not judged by 19:40, mark the placeholder "screen
+   pending at submission", then commit and push.
+4. By 20:00: final commit and push. `git status` should show only
    intentionally-untracked files: interim `*_step*.pt`,
    `*_state_*.pt`, `*_val_partial.json`, aborted-run ckpts, local
    audio, and the pre-existing `bench_v2_gen17_control10.json`.
@@ -150,7 +162,8 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
 | Best model (Gen 19) | `research/gen19/{train8.py,results.md,weights/}` |
 | Gen 21 trainers/logs | `research/gen21/{train10.py,prereg.md,results.md,judge_replication.py,weights/}` |
 | Gen 22 (capped SI-SDR, FAIL) | `research/gen22/{prereg.md,train11.py,judge_screen.py,results.md,screen_s17.json,dev_audit_s17.json,diag_summary.py,astra-prelaunch-review.md,astra-review-gen22-screen.md,smoke/,weights/}` |
-| Gen 23 (SI-SDR + 5·L_CS) | `research/gen23/{prereg.md,train12.py,judge_screen.py,test_*.py,smoke/}` |
+| Gen 23 (SI-SDR + 5·L_CS) | `research/gen23/{prereg.md,train12.py,judge_screen.py,verify_provenance.py,astra-code-audit.md,test_*.py,smoke/}` |
+| Gen 24 (DRAFT, narrower SNR) | `research/gen24/{prereg.md,train13.py,judge_screen.py,test_*.py}` |
 | Astra reviews | `research/gen19/astra-review-gen19.md`, `research/gen20/astra-review-gen20.md`, `research/gen21/astra-{interim-review,review-gen21,review-gen21-final}.md`, `research/gen22/astra-{prelaunch-review,review-gen22-screen}.md` |
 | Submission summary | `SUBMISSION.md` |
 | Holder-commissioned review | `REVIEW.md` |

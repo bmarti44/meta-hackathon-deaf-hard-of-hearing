@@ -42,9 +42,11 @@ legacy go/no-go file. It does not yet enforce the current
 scorecard, checkpoint identity or fresh-material clearance; those
 are required before any evidence pack.
 
-Tests: 17 bench/spatial tests in `research/bench-n6/`, plus 24
-trainer/judge tests in `research/gen20–22/` (`pytest research/bench-n6
-research/gen20 research/gen21 research/gen22`). KPI arithmetic is
+Tests: 17 bench/spatial tests in `research/bench-n6/`, plus 42
+trainer/judge tests in `research/gen20–24/` (`pytest research/bench-n6
+research/gen20 research/gen21 research/gen22 research/gen23
+research/gen24`; Gen 24's 8 cover a drafted, not-yet-registered
+trainer). KPI arithmetic is
 reproducible from committed bench JSONs. Diagnostic and parity
 evidence is identified separately where it is used.
 
