@@ -1,8 +1,9 @@
 # Gen 20 pre-registration — babble-k distribution, paired continuations
 
 > Model: requested Sol 6.1 / actual `muse-wonder-full-1.0`. 2026-11-04.
-> Written before training; Astra Gen19 review pending (rate limit
-> until ~1:35 AM) — launches wait for its disposition.
+> Written before training; amended 2026-11-04 per Astra Gen19
+> review disposition ([../gen19/astra-review-gen19.md](../gen19/astra-review-gen19.md)),
+> still before any Gen20 training.
 
 ## Hypotheses
 
@@ -22,3 +23,23 @@ B: 80% k8–12 / 20% k4–7 (no k2/3). VAL acceptance B vs A:
 ≥+0.3 dB at −5 dB, ΔSTOI not worse. If accepted, B is retrained
 from scratch (24k) before any bench claim; continuations alone
 make no KPI claim. Judged on final checkpoints.
+
+## Amendment (Astra disposition, pre-launch)
+
+- **Continuation seed 20261120**, shared by both arms (the parent
+  seed replayed parent mixtures in arm A — Astra verified four
+  bit-identical batches). Per-example purpose-isolated substreams:
+  arms share clean targets, SNRs, quiet/SSN choices and the
+  interferer prefix; only k differs. Tested in test_train9.py.
+- Branch-specific outputs `legacy_seed20261120.pt` /
+  `crowd80_seed20261120.pt`; checkpoints record branch, parent
+  hash (`80000b64…f367`), continuation seed, schedule.
+- **Safeguards:** B−A at 0 dB (VAL) no worse than −0.15 dB
+  SI-SDR / −0.003 STOI; quiet read on bench v2 finals
+  (abs ≥25 dB, ΔSTOI ≥−0.02) before B advances.
+- Report **A−parent and B−parent** (VAL step 0 = parent). A B
+  "win" caused by A deteriorating is not an absolute improvement
+  and does not advance B.
+- Rank after Gen20 (Astra): if B accepted → 24k from-scratch
+  crowd80 ×3 seeds; then 48k on the retained recipe; then
+  compressed-spectral → SNR → STOI auxiliaries.

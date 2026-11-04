@@ -118,21 +118,32 @@ def sample_k(rng, k_mode):
 
 
 def make_batch(rng, pool, speakers, batch=8, quiet_p=0.10, k_mode="legacy"):
+    """Per-example purpose-isolated substreams (Astra Gen19 review #4):
+    a shared master seed draws one example seed, from which target,
+    condition, k and noise substreams derive independently. Two arms
+    differing only in k_mode therefore share clean targets, SNRs,
+    quiet/SSN choices and the interferer-draw prefix; only k and the
+    extra interferer draws it implies can differ."""
     cleans, noises, mixs, snrs, kinds = [], [], [], [], []
     for _ in range(batch):
-        spk = speakers[rng.integers(0, len(speakers))]
-        clean = crop(rng, pool_get(pool, spk, int(rng.integers(0, len(pool[spk])))))
+        ex = int(rng.integers(0, 2**31 - 1))
+        r_t = np.random.default_rng([ex, 1])   # target speaker/file/crop
+        r_c = np.random.default_rng([ex, 2])   # quiet / SNR / noise kind
+        r_k = np.random.default_rng([ex, 3])   # babble k (arm-specific)
+        r_n = np.random.default_rng([ex, 4])   # interferers / SSN
+        spk = speakers[r_t.integers(0, len(speakers))]
+        clean = crop(r_t, pool_get(pool, spk, int(r_t.integers(0, len(pool[spk])))))
         clean = (clean / (rms(clean) + 1e-9) * 0.1).astype(np.float32)
-        if rng.random() < quiet_p:
+        if r_c.random() < quiet_p:
             noise = np.zeros_like(clean); snr = 999.0; kind = "quiet"
         else:
-            snr = float(rng.uniform(-5, 5)) if rng.random() < 0.6 else float(rng.uniform(-5, 10))
-            if rng.random() < 0.70:
+            snr = float(r_c.uniform(-5, 5)) if r_c.random() < 0.6 else float(r_c.uniform(-5, 10))
+            if r_c.random() < 0.70:
                 others = [s for s in speakers if s != spk]
-                k = sample_k(rng, k_mode)
-                noise = babble(rng, pool, others, k=k); kind = f"babble{k}"
+                k = sample_k(r_k, k_mode)
+                noise = babble(r_n, pool, others, k=k); kind = f"babble{k}"
             else:
-                noise = make_ssn_fast(rng); kind = "ssn"
+                noise = make_ssn_fast(r_n); kind = "ssn"
             noise = (noise / (rms(noise) + 1e-9) * rms(clean) * 10 ** (-snr / 20)).astype(np.float32)
         cleans.append(clean); noises.append(noise); mixs.append(clean + noise)
         snrs.append(snr); kinds.append(kind)
@@ -205,13 +216,21 @@ def eval_val(model, panel, device):
             for k, vs in sorted(agg.items())}
 
 
-def save_ckpt(model, out, steps, seed, speakers=None):
+K_RECIPES = {"legacy": "uniform {2..12}",
+             "crowd80": "80% uniform {8..12} / 20% uniform {4..7}"}
+
+
+def save_ckpt(model, out, steps, seed, speakers=None, k_mode="legacy",
+              init_from=None, parent_sha256=None):
     torch.save({"state_dict": model.state_dict(), "steps": steps, "seed": seed,
+                "continuation_seed": seed, "branch": k_mode,
+                "init_from": init_from, "parent_sha256": parent_sha256,
                 "train_speakers": speakers or TRAIN_SPK,
                 "data": "LibriSpeech train-clean-100 OpenSLR12 CC-BY-4.0 (archive sha256 d4ddd1d5...bf6e2)",
-                "gen": "gen19", "arch": "causal Conv-TasNet-style (gen15/model_causal.py)",
+                "gen": "gen20", "arch": "causal Conv-TasNet-style (gen15/model_causal.py)",
                 "loss": "negative waveform SI-SDR vs DELAY-shifted clean (Gen15 recipe)",
-                "babble_k": "uniform {2..12}", "snr_mix": "60% U(-5,5) + 40% U(-5,10)",
+                "optimizer": "fresh Adam, 250-step warm-up 3e-5->3e-4, cosine->3e-5, clip 5",
+                "babble_k": K_RECIPES[k_mode], "snr_mix": "60% U(-5,5) + 40% U(-5,10)",
                 "noise_mix": "70% babble / 30% SSN, 10% quiet"}, out)
     return hashlib.sha256(Path(out).read_bytes()).hexdigest()
 
@@ -221,15 +240,16 @@ def main():
     ap.add_argument("--steps", type=int, default=12000)
     ap.add_argument("--init-from", required=True, help="Gen19 parent checkpoint (paired design)")
     ap.add_argument("--k-mode", choices=["legacy", "crowd80"], default="legacy")
-    ap.add_argument("--seed", type=int, default=20261117)
+    ap.add_argument("--seed", type=int, default=20261120,
+                    help="registered continuation seed, shared by both arms (NOT the parent seed)")
     ap.add_argument("--device", default="mps" if torch.backends.mps.is_available() else "cpu")
     ap.add_argument("--data-root", default="/tmp/gen17dl/LibriSpeech/train-clean-100")
     ap.add_argument("--force", action="store_true")
     ap.add_argument("--out", default=None)
     ap.add_argument("--log", default=None)
     a = ap.parse_args()
-    out = Path(a.out) if a.out else HERE / "weights" / f"causal_seed{a.seed}.pt"
-    logp = Path(a.log) if a.log else HERE / "weights" / f"train_log_seed{a.seed}.json"
+    out = Path(a.out) if a.out else HERE / "weights" / f"{a.k_mode}_seed{a.seed}.pt"
+    logp = Path(a.log) if a.log else HERE / "weights" / f"train_log_{a.k_mode}_seed{a.seed}.json"
     if out.exists() and not a.force:
         raise SystemExit(f"REFUSED: {out} exists (pass --force to overwrite)")
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -240,7 +260,8 @@ def main():
     model = CausalTasNetEnh()
     _ck = torch.load(a.init_from, map_location="cpu", weights_only=False)
     model.load_state_dict(_ck["state_dict"] if "state_dict" in _ck else _ck)
-    print(f"init_from={a.init_from} k_mode={a.k_mode}", flush=True)
+    parent_sha = hashlib.sha256(Path(a.init_from).read_bytes()).hexdigest()
+    print(f"init_from={a.init_from} parent_sha256={parent_sha} k_mode={a.k_mode} seed={a.seed}", flush=True)
     bad = audit_causality(model)
     assert not bad, bad
     caus = suffix_invariance_test(model)
@@ -289,7 +310,7 @@ def main():
             log.append(rec); print(rec, flush=True)
         if (step + 1) % 500 == 0 and step + 1 < a.steps:
             ck = out.with_name(f"{out.stem}_step{step+1}.pt")
-            save_ckpt(model, ck, step + 1, a.seed, train_spk)
+            save_ckpt(model, ck, step + 1, a.seed, train_spk, a.k_mode, a.init_from, parent_sha)
             print(f"interim ckpt {ck}", flush=True)
         if (step + 1) % 2000 == 0:
             v = eval_val(model, val_panel, a.device)
@@ -300,9 +321,11 @@ def main():
     caus_post = suffix_invariance_test(model, seed=1)
     for r in caus_post:
         assert r["max_diff_prefix_P"] == 0.0, f"causality violated post-train: {r}"
-    sha = save_ckpt(model, out, a.steps, a.seed, train_spk)
+    sha = save_ckpt(model, out, a.steps, a.seed, train_spk, a.k_mode, a.init_from, parent_sha)
     meta = {"steps": a.steps, "wall_s": round(wall, 1), "batch": 8, "seg_s": 2.0,
-            "seed": a.seed, "weights": str(out), "weights_sha256": sha,
+            "seed": a.seed, "continuation_seed": a.seed, "branch": a.k_mode,
+            "init_from": a.init_from, "parent_sha256": parent_sha,
+            "weights": str(out), "weights_sha256": sha,
             "params": model.count_parameters(), "pool_files": counts,
             "pool_n_files": int(total_s), "receptive_field": receptive_field(),
             "causality_pre": caus, "causality_post": caus_post,

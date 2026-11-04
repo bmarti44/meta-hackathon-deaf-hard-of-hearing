@@ -8,6 +8,22 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+GEN 19 COMPLETE + ASTRA REVIEW + GEN 20 LAUNCHING (2026-11-04):
+Gen 19 (24k steps, 3 seeds) seed-mean crowd +3.51 dB, 13/14
+required KPIs pass; sole FAIL crowd @-5 dB +1.19 vs +1.5
+(complete-evidence verdict FAIL; promoted FALSE; Stage C
+evidence NOT earned — shakedown pilot only). Astra xhigh
+independently recomputed all rows from raw bench rows and
+confirmed the arithmetic; she kept k-distribution first over
+48k (VAL 18k->24k gains are real but anneal-confounded),
+required Gen 20's RNG be repaired first (parent-seed replay +
+arm misalignment, verified bit-identical batches), and set a
+fresh-material confirmation package as the promotion gate
+(research/gen19/astra-review-gen19.md). Gen 20 paired 12k
+continuations (legacy vs crowd80, shared continuation seed
+20261120, per-example substreams, regression safeguards,
+A/B-minus-parent readouts) launching blocked-sequentially.
+
 REVIEW HANDOFF + GEN 16 NULL + PHASE 0 STARTED (2026-11-03):
 Independent REVIEW.md (holder-commissioned) diagnoses babble
 as target-ambiguity (k=3 from 2 voices) + 10x too little data;
