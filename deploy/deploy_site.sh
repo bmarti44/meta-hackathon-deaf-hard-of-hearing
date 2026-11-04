@@ -13,7 +13,11 @@ if find site -iname "*.wav" -o -iname "*.mp3" -o -iname "*.flac" -o -iname "*.m4
 aws lambda update-function-code --function-name beforetheimplant-muse --zip-file fileb://api/lambda.zip --query LastUpdateStatus --output text
 aws lambda wait function-updated --function-name beforetheimplant-muse
 aws s3 sync site "s3://$BUCKET" --delete --exclude ".DS_Store" --exclude "tools/*" --exclude "*.py" --exclude "index.html" \
-  --cache-control "public, max-age=3600"
-aws s3 cp site/index.html "s3://$BUCKET/index.html" --content-type "text/html; charset=utf-8" --cache-control "public, max-age=60"
+  --exclude "css/*" --exclude "js/*" --exclude "data/*" --cache-control "public, max-age=3600"
+# code + data change often tonight: short browser cache, and index.html references are version-stamped
+aws s3 sync site "s3://$BUCKET" --exclude "*" --include "css/*" --include "js/*" --include "data/*" --cache-control "public, max-age=60"
+STAMP=$(date +%s); TMPI=$(mktemp)
+sed -E "s#(href=\"css/[a-z0-9_-]+\.css)\"#\1?v=$STAMP\"#g; s#(src=\"js/[a-z0-9_-]+\.js)\"#\1?v=$STAMP\"#g" site/index.html > "$TMPI"
+aws s3 cp "$TMPI" "s3://$BUCKET/index.html" --content-type "text/html; charset=utf-8" --cache-control "public, max-age=60"; rm -f "$TMPI"
 aws cloudfront create-invalidation --distribution-id "$DIST" --paths "/*" --query Invalidation.Id --output text
 echo "deployed"

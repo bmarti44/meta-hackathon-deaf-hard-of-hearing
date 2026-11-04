@@ -313,11 +313,11 @@ footer nav a{color:var(--dim)}
 @media (max-width:600px){section{padding-left:18px;padding-right:18px}.ask-form{flex-direction:column}.gen dl{grid-template-columns:1fr}.gen dd{text-align:left}h1{font-size:clamp(36px,11vw,60px)}.electrodes{height:80px}}
 
 /* Graham's clip is portrait (406x720): show it whole, never cropped */
-.video-box.portrait{aspect-ratio:406/720;width:min(100%,calc(78vh*406/720));max-height:78vh;margin-inline:auto}
+.video-box.portrait{aspect-ratio:406/720;width:min(100%,460px);height:auto;max-height:none;margin-inline:auto}
 .video-box.portrait video{object-fit:contain;background:#000}
 .dance{grid-template-columns:minmax(0,auto) 1fr}
 .vbtn-sound{font-size:16px;padding:12px 20px;background:var(--signal);color:#0a0c10;box-shadow:0 0 0 0 rgba(94,200,255,.6);animation:snd-pulse 2.2s ease-out infinite}
 .vbtn-sound.is-on{animation:none;background:var(--bone)}
 @keyframes snd-pulse{0%{box-shadow:0 0 0 0 rgba(94,200,255,.55)}70%{box-shadow:0 0 0 14px rgba(94,200,255,0)}100%{box-shadow:0 0 0 0 rgba(94,200,255,0)}}
 @media (prefers-reduced-motion:reduce){.vbtn-sound{animation:none}}
-@media (max-width:900px){.dance{grid-template-columns:1fr}.video-box.portrait{width:min(100%,calc(70vh*406/720))}}
+@media (max-width:900px){.dance{grid-template-columns:1fr}.video-box.portrait{width:100%}}

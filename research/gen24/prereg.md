@@ -96,6 +96,15 @@ Any change to these before the judge runs invalidates the screen.
 | `gen21/dev_audit.py` | `4d160387aab1aab604d9dd2c4d0a575afebd883234d7d35a66493f605a4ab168` |
 | `gen23/verify_provenance.py` | `1b1bf42bba4bbefed0e7b89895dc9573fe3cc187fd853b95807741cb99481880` |
 
+## Run log
+
+**Run 1 aborted** at about step 100 (18:49–18:50). The machine was shared
+with the site and video builds, so the trainer ran at about 0.7 s/step,
+roughly 4.7 h for 24k steps. The holder decided to stop it and restart
+after deployment. Logs are in `aborted_run1/`. It is not judged and no
+checkpoint was kept. The restart uses this registration unchanged, from
+step 0.
+
 ## Timing, filing cutoff and pending policy
 
 - **Expected finish:** Gen 23 trained in 65.5 min. Launched ~18:50, Gen 24

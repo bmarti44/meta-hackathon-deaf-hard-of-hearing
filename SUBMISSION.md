@@ -172,7 +172,7 @@ Disclosures:
 - **Gen 24** (narrower noisy-SNR sampling: 40% of noisy training
   examples at −5 to −3 dB instead of 17%, same random draws) is next
   ([research/gen24/prereg.md](./research/gen24/prereg.md)).
-  [GEN 24 STATUS — updated at submission]
+  It is registered and will run after tonight's deployment. A first launch was stopped at step ~100 because the machine was shared with the site build; it is not judged.
 
 ## Limits (stated plainly)
 

@@ -92,9 +92,16 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
   - Astra's review is running (`/tmp/astra_g23_screen.out`). File it
     verbatim plus disposition as `research/gen23/astra-review-gen23-screen.md`
     BEFORE launching Gen 24.
-- **Gen 24 drafted** (`research/gen24/`), with MPS smokes passing. To
-  register: a dated header, the source-hash table and the deadline
-  pre-commit. Then launch `/tmp/gen24_s17_pipeline.sh`.
+- **Gen 24 REGISTERED** (`research/gen24/prereg.md`, 18:50).
+  - Run 1 was stopped at step ~100 by holder decision: 0.7 s/step on a
+    shared machine. Logs are in `research/gen24/aborted_run1/`; not
+    judged.
+  - **Restart after deployment** with `/tmp/gen24_s17_pipeline.sh` (log
+    `/tmp/gen24_s17_pipeline.log`). It runs train → bench → dev → judge →
+    provenance, each gated. Delete `/tmp/gen24_s17_pipeline.log` and
+    `/tmp/gen24_hard60_s17.log` first.
+  - Then file `research/gen24/results.md`, reviews (Astra + Muse) and
+    disposition.
 - Gen 22 is complete (FAIL); details are in `research/gen22/results.md`.
 
 ## Demo site (beforetheimplant.com) — LIVE since 18:32 (added 2026-11-04 ~18:20)
