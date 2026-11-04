@@ -50,3 +50,18 @@ soft-capped SI-SDR loss first — her frozen-weight diagnostic
 found quiet examples contributing ~37–53× the gradient norm of
 noisy ones (clipping on 69–78% of late batches), a concrete
 mechanism starving hard-SNR learning.
+
+## Expanded development diagnostic (same day, alongside replication)
+
+[dev_audit.py](./dev_audit.py): 8 targets × 4 crops × 4 mixtures
+@−5/0 dB (128 items/SNR, seed 20261123), paired vs parent.
+@−5 dB paired ΔSI-SDR: S48@36k +0.353 (93/128 items positive),
+**S48 final +0.453 (96/128)**, R48@36k +0.329 (111/128),
+**R48 final +0.322 (104/128)**; per-target means improve for
+all 8 targets in both finals, and S48's bench 36k→48k dip does
+NOT reproduce (final > 36k here). Absolute levels differ from
+the registered panels (parent @−5 +2.05 here vs +1.06 bench /
++0.56 VAL) — single-mixture and 4-mixture panels are simply
+noisy draws (e.g. parent on 5536: −0.49 here vs +1.13 on VAL's
+fixed items). Development evidence only; registered panels and
+acceptance rules unchanged.
