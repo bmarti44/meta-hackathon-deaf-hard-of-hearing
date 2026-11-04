@@ -57,7 +57,13 @@ These are unchanged from Gen 22/23:
 - a CPU resume that is bit-identical, with a changed SNR mode refused;
 - the judge refusing legacy-SNR logs.
 
-The MPS smoke is not yet run.
+MPS smokes in `research/gen24/smoke/` (re-check with `check_smokes.py`;
+run ~17:41 while Gen 23 trained):
+
+- `--snr legacy` matches Gen 19 seed-17 loss and grad norm bit-for-bit,
+  steps 0–200;
+- two `hard60` runs are bit-identical, and they differ from legacy as
+  expected (step-25 loss 5.25 vs 2.85).
 
 ## Timing
 
