@@ -23,13 +23,18 @@ fresh Adam warm-up 3e-5→3e-4 cosine→3e-5. A: legacy k~U{2..12}
 | B crowd80 | 0.83 | 0.014 | 4.35 | 0.086 |
 | **B−A** | **+0.02** (req ≥+0.30 ✗) | **−0.002** (req ≥0 ✗) | −0.01 ✓ | 0.000 ✓ |
 
-A−parent +0.25, B−parent +0.27 at −5 dB: both arms gained
-equally from the optimizer restart/anneal; the k change itself
-contributed nothing measurable. 0 dB safeguards pass trivially.
+A−parent +0.25, B−parent +0.27 at −5 dB (VAL): additional
+training under this restart protocol improved both arms
+similarly; crowd80 failed to deliver the registered benefit.
+(Extra updates, fresh mixtures, optimizer reset and LR schedule
+changed together — the A-arm gain is not isolated to any one
+cause, and a single-seed null bounds the k effect, it does not
+prove zero. Astra review wording, adopted.) 0 dB safeguards
+pass trivially.
 
 Bench v2 on finals (n=6/cell) agrees: crowd ΔSI-SDR A +3.59 vs
-B +3.64 (parent seed-1 +3.45); crowd @−5 dB A +1.12 vs B +1.17
-(parent +1.06), ΔSTOI −0.002 B−A; quiet safeguard passes both
+B +3.64 (parent seed-1 +3.45); crowd @−5 dB A +1.12 vs B +1.16
+(raw 1.164864; parent +1.06), ΔSTOI −0.002 B−A; quiet safeguard passes both
 (abs 40.0/40.7 ≥25, ΔSTOI −0.003/−0.004 ≥−0.02). Competing
 talkers: B is worse (+1.10 vs A +1.70) — expected direction for
 dropping low-k training, and a further reason not to adopt B.

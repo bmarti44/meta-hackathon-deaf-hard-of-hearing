@@ -25,10 +25,14 @@ continuations (legacy vs crowd80, shared continuation seed
 A/B-minus-parent readouts). GEN 20 RESULT (same day): NULL —
 B−A at −5 dB VAL +0.02 dB / ΔSTOI −0.002 vs required +0.30/≥0;
 both arms +~0.26 over parent from the restart alone; bench v2
-agrees (@−5 dB +1.17 vs +1.12; competing worse under B).
-Legacy k retained, no scratch crowd80. Next per Astra ranking:
-Gen 21 = 48k from scratch on the retained recipe, after her
-Gen 20 review (research/gen20/results.md).
+agrees (@−5 dB +1.16 vs +1.12; competing worse under B).
+Legacy k retained, no scratch crowd80. Astra's Gen 20 review
+(research/gen20/astra-review-gen20.md) confirms the null and
+redesigns Gen 21 as a paired policy comparison: S48 (48k
+scratch, cosine over 48k) vs R48 (parent + 24k restart),
+identical lifetime batches 24k–48k via RNG-state handoff,
+seed-17 screen first, 48k finals only. Launching
+research/gen21/ (screen cost 72k new updates, ~4.5 h).
 
 REVIEW HANDOFF + GEN 16 NULL + PHASE 0 STARTED (2026-11-03):
 Independent REVIEW.md (holder-commissioned) diagnoses babble
