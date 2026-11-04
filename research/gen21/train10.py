@@ -271,6 +271,8 @@ def main():
     if a.mode == "restart":
         assert a.init_from, "restart requires --init-from"
         _ck = torch.load(a.init_from, map_location="cpu", weights_only=False)
+        assert _ck.get("steps") == 24000 and _ck.get("seed") == a.seed, \
+            f"parent metadata mismatch: steps={_ck.get('steps')} seed={_ck.get('seed')}"
         model.load_state_dict(_ck["state_dict"] if "state_dict" in _ck else _ck)
         parent_sha = hashlib.sha256(Path(a.init_from).read_bytes()).hexdigest()
         _hf = Path(a.rng_handoff) if a.rng_handoff else HERE / "weights" / f"rng_handoff_seed{a.seed}.pt"
@@ -311,6 +313,10 @@ def main():
             return 1.0 + 4.5 * (1.0 + math.cos(math.pi * t))
 
         sched = torch.optim.lr_scheduler.LambdaLR(opt, _lr_lambda)
+        # Astra interim review: retain the initialized lifetime-24k state
+        # (fresh Adam/scheduler + restored handoff RNG) before any batch.
+        _st0 = out.with_name(f"{out.stem}_state_step24000.pt")
+        print(f"initial full state {_st0} sha256={save_state(model, opt, sched, rng, _st0, 24000, a.seed, a.mode)}", flush=True)
     val_panel = build_val_panel()
     _v0, _items0 = eval_val(model, val_panel, a.device)
     val_log = [{"step": 0, "lifetime_step": life0, "val": _v0, "items": _items0}]
@@ -349,6 +355,10 @@ def main():
             val_log.append({"step": step + 1, "lifetime_step": life0 + step + 1,
                             "val": v, "items": vitems})
             print(f"VAL step{step+1} {v}", flush=True)
+            # Incremental persistence: a crash must not lose per-example VAL.
+            _vp = out.with_name(f"{out.stem}_val_partial.json")
+            _vp.write_text(json.dumps({"mode": a.mode, "seed": a.seed,
+                                        "val_log": val_log}, indent=1))
     wall = time.time() - t0
     model = model.to("cpu").eval()
     caus_post = suffix_invariance_test(model, seed=1)
