@@ -8,6 +8,7 @@ baseline `frozen_bilateral_eCI_v1`, two-track gates G1–G6
 (Appendix A), and the generations → selection → recombination loop
 adapted from the `~/bufferright/business` S&P 500 strategy search.
 
+Submission summary (2026-11-04): [SUBMISSION.md](SUBMISSION.md) ·
 Reviews: [R1](reviews/round-1-scores.md) (68/57) ·
 [R2](reviews/round-2-scores.md) (90/85) ·
 [R3](reviews/round-3-scores.md) (92/91 PASS) ·
