@@ -27,13 +27,17 @@ speakers now extracted (was 14); MPS training verified
 
 ## Primary — crowd babble, held-out talkers (the hard problem)
 
-| KPI | Required | Stretch | Gen 15 | Oracle ceiling |
+| KPI | Required | Stretch | Gen 15 (v2 crowd) | Oracle ceiling |
 |---|---|---|---|---|
-| ΔSI-SDR (dB), 95% CI lo > 0 | ≥ +3.0 | ≥ +5.0 | +1.07 | +10.9 |
-| ΔSTOI, CI lo > 0 | ≥ +0.03 | ≥ +0.06 | −0.016 | +0.28 |
-| ΔACE electro-corr (post 8-of-22), CI lo > 0 | ≥ +0.05 | ≥ +0.10 | +0.011 | +0.34 |
-| ΔSI-SDR at −5 dB and 0 dB SNR | ≥ +1.5 each | ≥ +3.0 each | ≈0 / +0.4 | — |
+| ΔSI-SDR (dB), 95% CI lo > 0 | ≥ +3.0 | ≥ +5.0 | +1.75 | +9.66 |
+| ΔSTOI, CI lo > 0 | ≥ +0.03 | ≥ +0.06 | +0.002 | +0.24 |
+| ΔACE electro-corr (post 8-of-22), CI lo > 0 | ≥ +0.05 | ≥ +0.10 | +0.037 | +0.26 |
+| ΔSI-SDR at −5 dB and 0 dB SNR | ≥ +1.5 each | ≥ +3.0 each | +0.43 / +1.48 | — |
+| ΔSTOI at −5 dB (no-harm guard, registered 2026-11-03) | ≥ 0 seed-mean | ≥ +0.02 | negative | — |
 | Babble SI-SDR > classical gate | yes | yes | yes | — |
+
+(Legacy-bench Gen 15 values +1.07/−0.016/+0.011 remain filed in
+results.md run 2; this table reads against bench v2 crowd.)
 
 Rationale: +3 dB is roughly a third of the oracle headroom and
 the lower end of improvements reported for lab DNN systems in CI

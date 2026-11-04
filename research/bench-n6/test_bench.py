@@ -113,9 +113,9 @@ def test_kpi_scorecard_pass_and_fail():
     spatial = {"cand": {"ild_distortion_db": 0.15, "ild_target_err_db": 3.0, "itd_err_samples": 3.0},
                "gate_linked": {"ild_distortion_db": 0.19},
                "unproc": {"ild_target_err_db": 6.0, "itd_err_samples": 5.0}}
-    card = score_kpis(_kpi_summary(3.5, 0.04, 0.06), per_snr, spatial, "cand", spatial_candidate="cand")
+    card = score_kpis(_kpi_summary(3.5, 0.04, 0.06), per_snr, spatial, "cand", spatial_candidate="cand", per_snr_stoi={-5.0: 0.01}, seed_crowd_means=[3.4, 3.5, 3.6])
     assert card["all_required_pass"] is True
-    weak = score_kpis(_kpi_summary(1.07, -0.016, 0.011), per_snr, spatial, "cand", spatial_candidate="cand")
+    weak = score_kpis(_kpi_summary(1.07, -0.016, 0.011), per_snr, spatial, "cand", spatial_candidate="cand", per_snr_stoi={-5.0: 0.01}, seed_crowd_means=[3.4, 3.5, 3.6])
     assert weak["all_required_pass"] is False
     failed = {r["kpi"] for r in weak["rows"] if not r["pass"]}
     assert {"babble dSI-SDR", "babble dSTOI", "babble dACE-electro"} <= failed
@@ -123,7 +123,7 @@ def test_kpi_scorecard_pass_and_fail():
 
 def test_kpi_missing_spatial_is_incomplete_never_pass():
     per_snr = {-5.0: 2.0, 0.0: 2.5, 5.0: 4.0, 10.0: 5.0}
-    card = score_kpis(_kpi_summary(3.5, 0.04, 0.06), per_snr, None, "cand", spatial_candidate="cand")
+    card = score_kpis(_kpi_summary(3.5, 0.04, 0.06), per_snr, None, "cand", spatial_candidate="cand", per_snr_stoi={-5.0: 0.01}, seed_crowd_means=[3.4, 3.5, 3.6])
     assert card["incomplete"] is True and card["all_required_pass"] is False
 
 
@@ -142,7 +142,7 @@ def test_kpi_perfect_target_not_rejected_by_spatial_gate():
     per_snr = {-5.0: 2.0, 0.0: 2.5, 5.0: 4.0, 10.0: 5.0}
     spatial = {"cand": {"ild_distortion_db": 5.96, "ild_target_err_db": 0.0, "itd_err_samples": 0.0},
                "unproc": {"ild_target_err_db": 5.96, "itd_err_samples": 5.75}}
-    card = score_kpis(_kpi_summary(3.5, 0.04, 0.06), per_snr, spatial, "cand", spatial_candidate="cand")
+    card = score_kpis(_kpi_summary(3.5, 0.04, 0.06), per_snr, spatial, "cand", spatial_candidate="cand", per_snr_stoi={-5.0: 0.01}, seed_crowd_means=[3.4, 3.5, 3.6])
     assert card["all_required_pass"] is True
 
 

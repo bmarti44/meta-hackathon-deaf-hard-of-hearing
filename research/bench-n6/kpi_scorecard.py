@@ -19,7 +19,8 @@ def _row(name, actual, required, ok, stretch=None, stretch_ok=None, required_row
 
 def score_kpis(summary, per_snr_babble_d, spatial_summary, candidate,
                gate_name="causal_gate", linked_name="gate_linked", spatial_candidate=None,
-               babble_kind="babble-heldout-spk", evidence_complete=True):
+               babble_kind="babble-heldout-spk", evidence_complete=True,
+               per_snr_stoi=None, seed_crowd_means=None):
     c = summary[candidate]
     b = c[babble_kind]
     rows = [
@@ -36,6 +37,11 @@ def score_kpis(summary, per_snr_babble_d, spatial_summary, candidate,
              per_snr_babble_d.get(-5.0, -9) >= 1.5, ">=+3.0", per_snr_babble_d.get(-5.0, -9) >= 3.0),
         _row("babble dSI-SDR @0dB", round(per_snr_babble_d.get(0.0, float("nan")), 2), ">=+1.5",
              per_snr_babble_d.get(0.0, -9) >= 1.5, ">=+3.0", per_snr_babble_d.get(0.0, -9) >= 3.0),
+        _row("babble dSTOI @-5dB (no-harm guard)", round((per_snr_stoi or {}).get(-5.0, float("nan")), 3), ">=0",
+             (per_snr_stoi or {}).get(-5.0, -9) >= 0, ">=+0.02", (per_snr_stoi or {}).get(-5.0, -9) >= 0.02),
+        _row("every seed crowd dSI-SDR > 0",
+             None if not seed_crowd_means else [round(v, 2) for v in seed_crowd_means], ">0 all seeds",
+             bool(seed_crowd_means) and min(seed_crowd_means) > 0),
         _row("babble SI-SDR > classical gate", round(b["sisdr"], 2),
              f"> {round(summary[gate_name][babble_kind]['sisdr'], 2)}",
              b["sisdr"] > summary[gate_name][babble_kind]["sisdr"]),
@@ -111,25 +117,35 @@ def main():
                 if r["system"] == src:
                     r["system"] = a.candidate
         summaries.append(s)
-    per_snr = {}
+    per_snr, per_snr_stoi, seed_crowd_means, cells_complete = {}, {}, [], True
+    for bench in benches:
+        base = {r["crop"]: r for r in bench["rows"] if r["system"] == "unproc"}
+        crowd_vals = [r["sisdr"] - base[r["crop"]]["sisdr"] for r in bench["rows"]
+                      if r["system"] == a.candidate and r["kind"] == a.babble_kind]
+        seed_crowd_means.append(float(np.mean(crowd_vals)) if crowd_vals else float("nan"))
     for snr in [-5.0, 0.0, 5.0, 10.0]:
-        seed_vals = []
-        for bench in benches:
-            base = {r["crop"]: r for r in bench["rows"] if r["system"] == "unproc"}
-            vals = [r["sisdr"] - base[r["crop"]]["sisdr"] for r in bench["rows"]
-                    if r["system"] == a.candidate and r["kind"] == a.babble_kind and r["snr_db"] == snr]
-            seed_vals.append(float(np.mean(vals)) if vals else float("nan"))
-        per_snr[snr] = float(np.nanmean(seed_vals))
+        for key, store in [("sisdr", per_snr), ("stoi", per_snr_stoi)]:
+            seed_vals = []
+            for bench in benches:
+                base = {r["crop"]: r for r in bench["rows"] if r["system"] == "unproc"}
+                vals = [r[key] - base[r["crop"]][key] for r in bench["rows"]
+                        if r["system"] == a.candidate and r["kind"] == a.babble_kind and r["snr_db"] == snr]
+                if not vals or not np.all(np.isfinite(vals)):
+                    cells_complete = False
+                seed_vals.append(float(np.mean(vals)) if vals else float("nan"))
+            store[snr] = float(np.mean(seed_vals)) if np.all(np.isfinite(seed_vals)) else float("nan")
     summary = _merge_seed_summaries(summaries, a.candidate)
     bench_hashes = {b.get("meta", {}).get("checkpoint_sha256") for b in benches}
     spatial_doc = json.loads(Path(a.spatial).read_text()) if a.spatial else None
     spatial = spatial_doc["summary"] if spatial_doc else None
     spatial_hash = (spatial_doc or {}).get("meta", {}).get("checkpoint_sha256")
-    evidence_complete = (len(benches) >= 3 and spatial_hash is not None
-                         and spatial_hash in bench_hashes)
+    distinct_hashes = {h for h in bench_hashes if h}
+    evidence_complete = (len(distinct_hashes) >= 3 and cells_complete
+                         and spatial_hash is not None and spatial_hash in distinct_hashes)
     card = score_kpis(summary, per_snr, spatial, a.candidate,
                       spatial_candidate=a.spatial_candidate or a.candidate,
-                      babble_kind=a.babble_kind, evidence_complete=evidence_complete)
+                      babble_kind=a.babble_kind, evidence_complete=evidence_complete,
+                      per_snr_stoi=per_snr_stoi, seed_crowd_means=seed_crowd_means)
     for r in card["rows"]:
         st = "PASS" if r["pass"] else "FAIL"
         if not r["required_row"]:
