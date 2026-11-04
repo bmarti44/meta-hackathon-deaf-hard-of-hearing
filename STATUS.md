@@ -8,6 +8,26 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+GEN 21 REPLICATION COMPLETE — NEITHER ARM QUALIFIES; GEN 22
+PREREGISTERED (2026-11-04, Claude Opus 5.5 taking over from
+muse-wonder-full-1.0): 3-seed mean gains at -5 dB vs each seed's
+Gen19 parent — S48 VAL +0.144 / bench -0.236, R48 VAL +0.118 /
+bench -0.100 (bar +0.30 on BOTH; bench negative in 3/3 and 2/3
+seeds). Safeguards pass; scratch not preferred (S48-R48 VAL +0.026,
+bench -0.136). Gen 19 stays the accepted baseline (13/14 KPIs; crowd
+@-5 +1.19 vs +1.5); promoted FALSE. More optimization buys easy
+conditions only (overall crowd +3.51 -> +3.79/+3.67; 0 dB, competing,
+quiet up in every seed), matching Astra's gradient-starvation
+diagnosis. Seed-19 S48 had been killed at 12.5k by a session end;
+relaunched same-seed, bit-identical replay verified (losses + VAL
+items); R48s19 ran concurrently after the 24k handoff. Judge:
+research/gen21/judge_replication.py (+ replication_judgment.json).
+Gen 22 (30 dB soft-capped SI-SDR, 24k scratch, Gen19 controls)
+preregistered, Astra pre-launch reviewed, all required fixes
+adopted (validated/atomic resume, judge provenance + CI rows; 37
+tests): research/gen22/. Next: Astra review of Gen 21 + SUBMISSION.md,
+then the Gen 22 seed-17 screen if it fits today's deadline.
+
 GEN 19 COMPLETE + ASTRA REVIEW + GEN 20 LAUNCHING (2026-11-04):
 Gen 19 (24k steps, 3 seeds) seed-mean crowd +3.51 dB, 13/14
 required KPIs pass; sole FAIL crowd @-5 dB +1.19 vs +1.5

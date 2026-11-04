@@ -31,7 +31,7 @@ correlation), a spatial direction-cue screen (assumed head
 model), hard KPI scorecard (3 distinct-hash seeds +
 hash-matched spatial or INCOMPLETE), and a blinded vocoder
 listening-pack builder that refuses unpassed candidates.
-21+ automated tests; every number below is reproducible from
+28 automated tests; every number below is reproducible from
 committed JSONs.
 
 ## Headline result (Gen 19, complete evidence)
@@ -47,7 +47,9 @@ train-clean-100. Seed-mean crowd performance vs unprocessed:
 | Crowd ΔACE-electro | ≥ +0.05 | **+0.072 ✓** |
 | Crowd @ 0 dB | ≥ +1.5 dB | +4.65 ✓ |
 | Crowd @ −5 dB | ≥ +1.5 dB | **+1.19 ✗** |
-| SSN / quiet / spatial | no-harm | ✓ all pass |
+| SSN / white / quiet | no-harm | ✓ all pass |
+| Direction cues: target-ILD error | < unprocessed (5.96 dB) | 5.47 ✓ |
+| Direction cues: ITD error | ≤ unprocessed (5.75 smp) | 4.0 ✓ |
 
 **13 of 14 required KPIs pass; the sole failure is the hardest
 condition (crowd at −5 dB). Verdict: FAIL — keep optimizing.
@@ -62,13 +64,21 @@ from raw data and confirmed the arithmetic.)
   crowd-concentrated sampling (Gen 20) were clean nulls under
   matched/paired controls.
 - Gen 21 (48k scratch vs parent+24k continuation, paired data
-  via RNG handoff): both arms passed the validation screen,
-  [REPLICATION VERDICT — filled at completion].
+  via RNG handoff): both arms passed the seed-1 validation
+  screen but **neither qualified on 3 seeds** — mean −5 dB gains
+  VAL +0.14/+0.12 and bench −0.24/−0.10 vs the +0.30 bar on both
+  panels. Extra optimization raised overall crowd (+3.51 → +3.79
+  dB) and the easy conditions, not the −5 dB wall; Gen 19 stays
+  the baseline. Filed as a null
+  ([research/gen21/results.md](./research/gen21/results.md)).
 - Astra's gradient diagnostic found a concrete mechanism for
   the −5 dB wall: near-perfect quiet examples produce ~37–53×
   the gradient norm of noisy ones, starving hard examples.
-  Next registered change: 30 dB soft-capped SI-SDR loss, then
-  compressed-spectral loss, SNR concentration, STOI auxiliary.
+  Next change, Gen 22, is pre-registered and smoke-tested
+  ([research/gen22/prereg.md](./research/gen22/prereg.md)): 30 dB
+  soft-capped SI-SDR loss (its control mode reproduces Gen 19
+  bit-for-bit), then compressed-spectral loss, SNR
+  concentration, STOI auxiliary.
 
 ## Limits (stated plainly)
 

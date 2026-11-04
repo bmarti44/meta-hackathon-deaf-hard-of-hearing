@@ -76,105 +76,53 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
   of late batches → hard examples starve. See
   `research/gen21/astra-review-gen21.md`.
 
-## Current state (2026-11-04 14:15 — VERIFY, may be stale)
+## Current state (2026-11-04 15:40 — VERIFY, may be stale)
 
-- Gen 21 (S48 = 48k scratch vs R48 = Gen19 parent + 24k
-  restart, paired data via RNG handoff at 24k) — pre-reg:
-  `research/gen21/prereg.md`, results: `…/results.md`.
-  Seed-17 screen: both ADVANCE on VAL (S48 1.005, R48 0.880
-  @−5 vs parent 0.564). Bench @−5 seed-17: S48 0.93, R48 1.20
-  (parent 1.06). Dev diagnostic (128 paired items @−5):
-  S48 +0.453, R48 +0.322 over parent, all 8 targets positive.
-- Seed-18 pair DONE and benched: VAL gains vs its strong
-  parent (1.006): S48 −0.158, R48 −0.042; bench @−5 gains:
-  S48 −0.436, R48 −0.266 (parent bench file
-  `benchv2_gen19s2.json`, candidate `gen19s2`, @−5 = 1.356).
-- **Seed-19 S48 was KILLED at step 12,500 (12:57) when the
-  previous session ended** (no process left; no full state
-  before 24k, so no exact resume). Relaunched from scratch,
-  same seed, at 13:00 (detached, PID 13713, log
-  `/tmp/gen21_s48s19.log`). **R48s19 runs CONCURRENTLY**: a
-  detached watcher (`/tmp/gen21_r48s19_watch.sh`) launches it as
-  soon as S48s19 logs "RNG HANDOFF" at 24k (~13:55), log
-  `/tmp/gen21_r48s19.log`; DONE markers for both go to
-  `/tmp/gen21_chain_s19.log` (`/tmp/gen21_s48s19_watch.sh`).
-  Deterministic training → scheduling change only.
-  R48s19 launched 14:04 (parent sha 89837737… = gen19s3 bench).
-  Concurrent rates 0.24 / 0.20 s/step → both DONE ~15:30–15:35.
-  **Auto-bench watcher** `/tmp/gen21_s19_bench_watch.sh` (log
-  `/tmp/gen21_s19_bench_watch.log`) benches each registered ckpt
-  (36k on its save line, finals on DONE) into
-  `research/bench-n6/benchv2_g21{s48,r48}s19_{36k,48k}.json` and then
-  runs `judge_replication.py --out research/gen21/replication_judgment.json`.
-  S48s19 24k already benched: `benchv2_g21s48s19_24k.json`
-  (crowd +3.62, descriptive only). Rerun losses are bit-identical
-  to the killed run (checked steps 100–225), so this is a
-  faithful replay, not a protocol change. Killed-run
-  artifacts kept untracked in
-  `research/gen21/weights/aborted_s48s19_run1/`.
-  ETA (both concurrent at ~0.2–0.28 s/step): ~15:30–16:00.
-- Judgment script committed: `research/gen21/judge_replication.py`
-  (reproduces filed seed-17/18 numbers exactly). 2-seed means:
-  VAL S +0.141 / R +0.137; bench S −0.281 / R −0.064.
-  Acceptance needs 3-seed means ≥+0.30 on both panels →
-  **expect NEITHER arm to qualify**; do not pre-judge in
-  writing until seed-19 finals are benched.
+- **Gen 21 COMPLETE — NEITHER ARM QUALIFIES** (filed:
+  `research/gen21/results.md` bottom section,
+  `research/gen21/replication_judgment.json`). 3-seed mean −5 dB
+  gains: S48 VAL +0.144 / bench −0.236; R48 VAL +0.118 / bench
+  −0.100 (bar +0.30 both). Gen 19 stays the accepted baseline.
+  Seed-19 S48 was killed at 12.5k by a session end and relaunched
+  same-seed (bit-identical replay verified); R48s19 ran
+  concurrently after the 24k handoff. Killed-run artifacts:
+  `research/gen21/weights/aborted_s48s19_run1/` (untracked).
+- **Gen 22 selected policy = "neither" → 24k scratch, Gen19
+  controls** (prereg table row 1; `judge_screen.py` implements
+  exactly this). Trainer/judge/tests ready and Astra pre-launch
+  reviewed (`research/gen22/astra-prelaunch-review.md`).
+- No training process is running.
 
 ## Next actions (in order)
 
-1. **When BOTH S48s19 and R48s19 print DONE** (~15:30–16:00; check `/tmp/gen21_chain_s19.log`): bench seed-19
-   registered checkpoints (`bench_v2.py --n-per-cell 6`):
-   `s48_seed20261119{,_step24000,_step36000}.pt`,
-   `r48_seed20261119{,_step36000}.pt` → separate JSONs in
-   `research/bench-n6/` named like the seed-18 ones.
-2. **Full 3-seed judgment** per `research/gen21/prereg.md`:
-   unrounded VAL gains vs each seed's own parent (parent raw
-   −5 values: s17 0.5641/0.0091, s18 1.0061/0.0134, s19 from
-   its R48 val_log step 0 items); bench @−5 gains vs
-   `bench_v2_gen19.json` (gen19), `benchv2_gen19s2.json`
-   (gen19s2), `benchv2_gen19s3.json` (check meta for name).
-   Acceptance per arm: mean gain ≥+0.30 on BOTH panels,
-   non-worsening mean STOI @−5, positive in ≥2/3 seeds,
-   0 dB safeguards (≤0.15 dB / 0.003 STOI degradation),
-   quiet safeguards. Scratch preferred only if S48−R48
-   ≥0.15 on both panel means. A failed R48 is NOT accepted
-   by default. Run `python research/gen21/judge_replication.py --out
-   research/gen21/replication_judgment.json`.
-3. **Only if an arm qualifies**: `spatial_bench.py` on its
-   48k finals (hash-matched) + `kpi_scorecard.py` with that
-   arm's three 48k-final benches ONLY (never 3 checkpoints of
-   one seed). If all 14 required rows pass: fresh-material
-   confirmation (Astra's package in
-   `research/gen19/astra-review-gen19.md`) still gates any
-   listening test; `listening_pack.py` needs hash-binding
-   work first and must run WITHOUT `--allow-unpassed`.
-4. File the replication section in `research/gen21/results.md`,
-   prepend `STATUS.md`, fill the `[REPLICATION VERDICT]` line
-   in `SUBMISSION.md`, update this file, commit + push.
-5. **Astra xhigh review** of completed Gen 21 + SUBMISSION.md
-   accuracy; file verbatim + disposition.
-6. **Gen 22 — PREPARED + Astra pre-launch reviewed (13:25), not
-   launched.** Her required fixes are all adopted (resume identity
-   validation + atomic saves, judge provenance/final-only/CI rows,
-   policy wording, confirmation aggregation, tests → 37 green):
-   `research/gen22/astra-prelaunch-review.md`. Pre-reg
-   `research/gen22/prereg.md`; trainer `research/gen22/train11.py`
-   (`--loss cap30`, Astra's denominator verbatim; `--loss sisdr`
-   reproduces Gen19 s17 bit-for-bit through step 325 on MPS,
-   kill→`--resume` exact through 425); tests
-   `research/gen22/test_train11.py` (28 green total); judge
-   `research/gen22/judge_screen.py --seed 17`; dev panel via
-   `gen21/dev_audit.py --system control=<gen19 ckpt> --system
-   cap30=<cand> --out research/gen22/dev_audit_s17.json`.
-   Launch only after the Gen21 verdict + Astra review are filed,
-   and only if it can train (~76 min) + bench + file by 19:30.
-   If Gen21's verdict is not "neither", add a dated policy
-   addendum to the prereg first. Later ranks: (2) compressed
-   spectral 5·L_CS (256/512/1024 STFT, exp 0.3, 0.7 mag/0.3
-   complex); (3) SNR concentration 60% U(−5,−2)+40% U(−2,10),
-   paired draws; (4) STOI auxiliary only as repair; (5) 4 s crops.
-7. Before 20:00: final commit + push; `git status` should
-   show only intentionally-untracked files.
+1. **Astra xhigh review of completed Gen 21 + SUBMISSION.md**
+   (prompt drafted at `/tmp/astra_g21_final_prompt.txt`; run with
+   `< /dev/null` or codex waits on stdin). File verbatim +
+   disposition as `research/gen21/astra-review-gen21-final.md`;
+   apply SUBMISSION corrections; commit + push.
+2. **Gen 22 seed-17 screen — only if launchable by ~17:30**
+   (Astra) and finishable (≈85 min train + ≈25 min bench/dev/
+   judge/file) by 19:30:
+   `nohup /tmp/gen9env/bin/python research/gen22/train11.py --loss cap30 --mode scratch --seed 20261117 < /dev/null > /tmp/gen22_cap30_s17.log 2>&1 &`
+   (rolling state every 2000; if killed, relaunch the same command
+   plus `--resume research/gen22/weights/cap30_scratch_seed20261117_state_latest.pt`).
+   After DONE: `bench_v2.py --n-per-cell 6 --gen15
+   research/gen22/weights/cap30_scratch_seed20261117.pt
+   --candidate-name g22cap30s17 --out
+   research/bench-n6/benchv2_g22cap30s17.json`; dev panel
+   `gen21/dev_audit.py --system control=research/gen19/weights/causal_seed20261117.pt
+   --system cap30=research/gen22/weights/cap30_scratch_seed20261117.pt
+   --out research/gen22/dev_audit_s17.json`; then
+   `research/gen22/judge_screen.py --seed 17 --out research/gen22/screen_s17.json`;
+   file `research/gen22/results.md`, STATUS, SUBMISSION, HANDOFF.
+   Otherwise state it as the registered next step.
+3. If the screen ADVANCES: seeds 18/19 (controls Gen19 s18/s19)
+   per prereg confirmation rules — tomorrow's work. If it FAILS:
+   file the null; Gen 23 = rank 2 (compressed spectral 5·L_CS).
+4. Before 20:00: final commit + push; `git status` should show
+   only intentionally-untracked files (interim `*_step*.pt`,
+   `*_val_partial.json`, `aborted_s48s19_run1/`, local audio,
+   `bench_v2_gen17_control10.json` — pre-existing, untouched).
 
 ## Key files map
 
@@ -184,7 +132,8 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
 | Bench / spatial / vocoder | `research/bench-n6/bench_v2.py`, `spatial_bench.py`, `vocoder.py` |
 | Listening pack (gated) | `research/bench-n6/listening_pack.py` |
 | Best model (Gen 19) | `research/gen19/{train8.py,results.md,weights/}` |
-| Gen 21 trainers/logs | `research/gen21/{train10.py,prereg.md,results.md,weights/}` |
+| Gen 21 trainers/logs | `research/gen21/{train10.py,prereg.md,results.md,judge_replication.py,weights/}` |
+| Gen 22 (capped SI-SDR) | `research/gen22/{prereg.md,train11.py,judge_screen.py,astra-prelaunch-review.md,smoke/}` |
 | Astra reviews | `research/gen19/astra-review-gen19.md`, `research/gen20/astra-review-gen20.md`, `research/gen21/astra-{interim-review,review-gen21}.md` |
 | Submission summary | `SUBMISSION.md` |
 | Holder-commissioned review | `REVIEW.md` |
