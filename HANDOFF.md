@@ -76,7 +76,7 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
   of late batches → hard examples starve. See
   `research/gen21/astra-review-gen21.md`.
 
-## Current state (2026-11-04 13:25 — VERIFY, may be stale)
+## Current state (2026-11-04 14:15 — VERIFY, may be stale)
 
 - Gen 21 (S48 = 48k scratch vs R48 = Gen19 parent + 24k
   restart, paired data via RNG handoff at 24k) — pre-reg:
@@ -98,7 +98,16 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
   soon as S48s19 logs "RNG HANDOFF" at 24k (~13:55), log
   `/tmp/gen21_r48s19.log`; DONE markers for both go to
   `/tmp/gen21_chain_s19.log` (`/tmp/gen21_s48s19_watch.sh`).
-  Deterministic training → scheduling change only. Rerun losses are bit-identical
+  Deterministic training → scheduling change only.
+  R48s19 launched 14:04 (parent sha 89837737… = gen19s3 bench).
+  Concurrent rates 0.24 / 0.20 s/step → both DONE ~15:30–15:35.
+  **Auto-bench watcher** `/tmp/gen21_s19_bench_watch.sh` (log
+  `/tmp/gen21_s19_bench_watch.log`) benches each registered ckpt
+  (36k on its save line, finals on DONE) into
+  `research/bench-n6/benchv2_g21{s48,r48}s19_{36k,48k}.json` and then
+  runs `judge_replication.py --out research/gen21/replication_judgment.json`.
+  S48s19 24k already benched: `benchv2_g21s48s19_24k.json`
+  (crowd +3.62, descriptive only). Rerun losses are bit-identical
   to the killed run (checked steps 100–225), so this is a
   faithful replay, not a protocol change. Killed-run
   artifacts kept untracked in
