@@ -90,8 +90,6 @@ def main():
         print(f"{name} done {time.time()-t0:.0f}s", flush=True)
         del model
     agg = {}
-    for (sysn, snr), rs in collections.defaultdict(list, {}).items():
-        pass
     groups = collections.defaultdict(list)
     for r in rows:
         groups[(r["system"], r["snr"])].append(r)
