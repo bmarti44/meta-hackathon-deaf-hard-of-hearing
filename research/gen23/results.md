@@ -52,10 +52,13 @@ spectral term is **not retained** and Gen 19 stays the baseline.
   the 8-item VAL panel. That spread is about as large as the +0.30 screen
   bar.
 
-**Reading.** This screen rejects compressed spectral supervision *at the
-registered weight* as a fix for the −5 dB wall. It does not test the
-idea at a weight large enough to matter, which would be a separate,
-re-registered experiment.
+**Reading (per Astra's and Muse's reviews).**
+- This establishes failure of this specific seed/budget/recipe, not
+  equivalence or a general spectral-loss null.
+- The small sampled auxiliary-gradient ratio and the falling `cs_raw` do
+  not identify why performance worsened, and they do not justify
+  increasing the coefficient. (My earlier "rejects that weight, not the
+  idea" line is withdrawn.)
 
 Gen 22 and Gen 23 together suggest that single-seed screens of small
 loss perturbations sit close to panel and trajectory noise at the

@@ -101,6 +101,8 @@ def test_resume_is_bit_identical_and_guards_snr(tmp_path):
     sa = torch.load(tmp_path / "a.pt", weights_only=False)["state_dict"]
     sb = torch.load(tmp_path / "b.pt", weights_only=False)["state_dict"]
     assert all(torch.equal(sa[k], sb[k]) for k in sa)
+    ck = torch.load(tmp_path / "a.pt", weights_only=False)
+    assert ck["snr_mode"] == "hard60" and ck["snr_mix"].startswith("60% U(-5,-2)")  # Astra Gen23 review: ckpt records the real mode
     la, lb = (json.loads((tmp_path / f"{n}.json").read_text()) for n in "ab")
     strip = lambda log: [{k: v for k, v in r.items() if k != "elapsed_s"} for r in log]  # noqa: E731
     assert strip(la["log"]) == strip(lb["log"]) and la["val_log"] == lb["val_log"] and la["snr"] == "hard60"

@@ -303,15 +303,18 @@ def eval_val(model, panel, device):
     return summary, items
 
 
+SNR_DESC = {"legacy": "60% U(-5,5) + 40% U(-5,10)", "hard60": "60% U(-5,-2) + 40% U(-2,10) (affine remap of the legacy draws)"}
+
+
 def save_ckpt(model, out, steps, seed, speakers=None, mode="scratch",
-              init_from=None, parent_sha256=None, loss="cap30"):
+              init_from=None, parent_sha256=None, loss="cap30", snr="legacy"):
     torch.save({"state_dict": model.state_dict(), "steps": steps, "seed": seed,
                 "mode": mode, "init_from": init_from, "parent_sha256": parent_sha256,
                 "train_speakers": speakers or TRAIN_SPK,
                 "data": "LibriSpeech train-clean-100 OpenSLR12 CC-BY-4.0 (archive sha256 d4ddd1d5...bf6e2)",
                 "gen": "gen24", "arch": "causal Conv-TasNet-style (gen15/model_causal.py)",
                 "loss": LOSS_DESC[loss], "loss_key": loss,
-                "babble_k": "uniform {2..12}", "snr_mix": "60% U(-5,5) + 40% U(-5,10)",
+                "babble_k": "uniform {2..12}", "snr_mode": snr, "snr_mix": SNR_DESC[snr],
                 "noise_mix": "70% babble / 30% SSN, 10% quiet"}, out)
     return hashlib.sha256(Path(out).read_bytes()).hexdigest()
 
@@ -493,7 +496,7 @@ def main():
             log.append(rec); print(rec, flush=True)
         if (step + 1) % 2000 == 0 and step + 1 < a.steps:
             ck = out.with_name(f"{out.stem}_step{life0 + step + 1}.pt")
-            save_ckpt(model, ck, life0 + step + 1, a.seed, train_spk, a.mode, a.init_from, parent_sha, a.loss)
+            save_ckpt(model, ck, life0 + step + 1, a.seed, train_spk, a.mode, a.init_from, parent_sha, a.loss, snr=a.snr)
             print(f"interim ckpt {ck}", flush=True)
         if (step + 1) % 2000 == 0:
             v, vitems = eval_val(model, val_panel, a.device)
@@ -517,7 +520,7 @@ def main():
     caus_post = suffix_invariance_test(model, seed=1)
     for r in caus_post:
         assert r["max_diff_prefix_P"] == 0.0, f"causality violated post-train: {r}"
-    sha = save_ckpt(model, out, life0 + a.steps, a.seed, train_spk, a.mode, a.init_from, parent_sha, a.loss)
+    sha = save_ckpt(model, out, life0 + a.steps, a.seed, train_spk, a.mode, a.init_from, parent_sha, a.loss, snr=a.snr)
     meta = {"steps": a.steps, "lifetime_steps": life0 + a.steps, "mode": a.mode, "loss": a.loss, "snr": a.snr,
             "resumed": bool(a.resume),
             "init_from": a.init_from, "parent_sha256": parent_sha,

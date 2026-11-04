@@ -158,21 +158,17 @@ Disclosures:
   - **Reading:** the cap was not retained. This operational null does
     not establish zero effect or resolve the gradient-imbalance
     hypothesis.
-- **Gen 23** (plain SI-SDR + 5 × compressed multi-resolution spectral
-  loss, same rules,
-  [research/gen23/results.md](./research/gen23/results.md)).
-  - **Result:** the seed-17 screen failed. −5 dB gains versus
-    same-seed Gen 19 were −0.34 dB on VAL and −0.03 dB on the bench,
-    with STOI and white-noise rows also failing.
-  - **Provenance:** the check passed (checkpoints and sources rehashed,
-    summaries recomputed from raw rows).
-  - **Caveat:** the spectral term was only ~1% of the gradient at the
-    registered weight. So this rejects that weight, not compressed
-    spectral supervision in general.
-  - **Reviews:** Codex Astra and Muse (Meta) both reviewed the verdict,
-    filed verbatim in research/gen23/.
-  - **Design lesson:** Gen 22 and Gen 23 suggest single-seed screens of
-    small loss perturbations sit close to panel noise at the +0.30 bar.
+- **Gen 23** ([research/gen23/results.md](./research/gen23/results.md)).
+  - **Result:** the pre-registered single-seed, 24k-scratch screen of
+    plain SI-SDR plus 5× compressed multi-resolution spectral loss
+    failed. −5 dB gains versus same-seed Gen 19 were −0.3375 dB on VAL
+    and −0.0268 dB on the bench, STOI worsened on both, and white-noise
+    ΔSI-SDR missed its ≥0 safeguard.
+  - **Reading:** provenance checks passed and the auxiliary was not
+    retained. This T0 result does not establish zero effect or a
+    general spectral-loss null.
+  - **Reviews:** Codex Astra and Muse (Meta) both reviewed the verdict
+    independently; both reviews are filed verbatim in research/gen23/.
 - **Gen 24** (narrower noisy-SNR sampling: 40% of noisy training
   examples at −5 to −3 dB instead of 17%, same random draws) is next
   ([research/gen24/prereg.md](./research/gen24/prereg.md)).
