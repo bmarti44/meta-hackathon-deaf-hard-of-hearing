@@ -121,13 +121,13 @@
   <div class="wrap">
     <div class="dance rv">
       <figure class="video-fig">
-        <div class="video-box">
-          <video id="dance" muted playsinline loop preload="none" poster="assets/family/graham-dancing-poster.jpg" width="1280" height="720" aria-describedby="dance-cap">
+        <div class="video-box portrait">
+          <video id="dance" muted playsinline loop preload="none" poster="assets/family/graham-dancing-poster.jpg" width="406" height="720" aria-describedby="dance-cap">
             <track kind="captions" src="assets/family/graham-dancing.en.vtt" srclang="en" label="English captions" default>
           </video>
           <div class="video-ctl">
             <button type="button" class="vbtn" id="v-play" aria-pressed="false">Play</button>
-            <button type="button" class="vbtn" id="v-sound" aria-pressed="false" aria-label="Sound is off. Turn sound on">Sound: off</button>
+            <button type="button" class="vbtn vbtn-sound" id="v-sound" aria-pressed="false" aria-label="Sound is off. Turn sound on"><span aria-hidden="true">♪ </span>Turn sound on</button>
             <span class="vnote mono" id="v-note">Captions on. Music is playing in this clip.</span>
           </div>
         </div>
@@ -167,9 +167,8 @@
           <figcaption>Built by Graham's dad.</figcaption>
         </figure>
         <div class="panel">
-          <h3>Why this exists, and why that is a risk</h3>
-          <p>This project exists because of Graham. That is also its biggest hazard.</p>
-          <p class="small muted"><strong>Conflict disclosure.</strong> The author has a personal stake and, in his own words, "a natural urgency bias toward near-term fixes." That bias is treated as a risk to the project: results are judged by pre-registered rules and an independent reviewer, the author is recused from scoring, and nothing here can inform Graham's own care.</p>
+          <h3>Why this exists</h3>
+          <p>This project exists because of Graham.</p>
         </div>
       </div>
     </div>
@@ -438,7 +437,6 @@
       <li><strong>White-noise vocoded ESTOI decreases</strong> in all three Gen 19 seeds (mean <span class="num" data-bench="white_estoi">−0.059</span>), even though the registered white-noise SI-SDR row passes.</li>
       <li><strong>Direction-cue rows are one seed on four simulated scenes.</strong> In the −5 dB scene, target-ILD error worsens (10.29 → 11.22 dB). Nothing here implies a directional-hearing benefit.</li>
       <li><strong>Earlier generations were less disciplined.</strong> Gen 17 changed the speaker pool, mixtures, SNR weighting and budget together.</li>
-      <li>This site is <strong>not medical advice</strong> and is <strong>not affiliated with Cochlear Ltd.</strong></li>
     </ul>
   </div>
 </section>
@@ -513,7 +511,7 @@
     <nav aria-label="Footer">
       <a href="#short">The short version</a><a href="#wall">The wall</a><a href="#scorecard">Scorecard</a><a href="#generations">Generations</a><a href="#ask">Ask the data</a><a href="#honest">Honesty</a><a href="#limits">Limits</a><a href="#made">How it was made</a><a href="#methods">Methods</a><a data-repo="" id="repo-link">Repository</a>
     </nav>
-    <p class="disc"><strong data-brand-name>Before the Implant</strong> is a public research record of in-silico (T0) experiments. It is not medical advice. It is not affiliated with Cochlear Ltd. The Cochlear Nucleus 6's own processing was not tested and nothing here compares against it. No benefit for any listener is claimed. No candidate is promoted (promoted FALSE). The listening/evidence gate requires all required KPIs plus fresh-material confirmation, and vocoder audio is not what a cochlear-implant user hears.</p>
+    <p class="disc"><strong data-brand-name>Before the Implant</strong> is a public record of computer-only experiments. Graham's Nucleus 6 processors were never compared against it, and nothing here has been tried with any listener yet. Vocoder audio isn't what a cochlear-implant user hears.</p>
     <p class="disc small">Research loop run by Claude (Anthropic) under human direction, reviewed by Codex Astra. Ask and Explain are powered by Muse, Meta's AI model, via Meta's API. AI answers can contain mistakes. Fonts: Fraunces, Archivo, IBM Plex Mono. three.js r170, MIT.</p>
   </div>
 </footer>

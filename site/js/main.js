@@ -57,14 +57,13 @@ $$('[data-bench="white_estoi"]').forEach(e => e.textContent = fmt(bench.summary_
   if (!v) return;
   const rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const saver = (navigator.connection && navigator.connection.saveData) || innerWidth < 700;
-  const src = saver ? 'assets/family/graham-dancing-480.mp4' : 'assets/family/graham-dancing.mp4';
+  const src = saver ? 'assets/family/graham-dancing-640.mp4' : 'assets/family/graham-dancing.mp4';  // both versions have sound
   let loaded = false;
   function attach() { if (loaded) return; loaded = true; const s = document.createElement('source'); s.src = src; s.type = 'video/mp4'; v.insertBefore(s, v.firstChild); v.preload = 'metadata'; v.load(); }
-  if (saver) { snd.hidden = true; note.textContent = 'Captions on. This smaller version has no audio track.'; }
   const setPlay = on => { play.textContent = on ? 'Pause' : 'Play'; play.setAttribute('aria-pressed', on); };
   v.addEventListener('play', () => setPlay(true)); v.addEventListener('pause', () => setPlay(false));
   play.addEventListener('click', () => { attach(); v.paused ? v.play().catch(() => {}) : v.pause(); });
-  snd.addEventListener('click', () => { attach(); v.muted = !v.muted; const on = !v.muted; snd.textContent = on ? 'Sound: on' : 'Sound: off'; snd.setAttribute('aria-pressed', on); snd.setAttribute('aria-label', on ? 'Sound is on. Turn sound off' : 'Sound is off. Turn sound on'); if (on && v.paused) v.play().catch(() => {}); });
+  snd.addEventListener('click', () => { attach(); v.muted = !v.muted; const on = !v.muted; snd.innerHTML = on ? '<span aria-hidden="true">♪ </span>Sound on: tap to mute' : '<span aria-hidden="true">♪ </span>Turn sound on'; snd.classList.toggle('is-on', on); snd.setAttribute('aria-pressed', on); snd.setAttribute('aria-label', on ? 'Sound is on. Turn sound off' : 'Sound is off. Turn sound on'); if (on && v.paused) v.play().catch(() => {}); });
   // near the viewport: attach the source; in view: autoplay muted (unless reduced motion); out of view: pause
   new IntersectionObserver(es => { if (es[0].isIntersecting) attach(); }, { rootMargin: '600px 0px' }).observe(v);
   new IntersectionObserver(es => { if (es[0].isIntersecting) { if (!rm) { attach(); v.play().catch(() => {}); } } else if (!v.paused) v.pause(); }, { threshold: 0.4 }).observe(v);
@@ -299,7 +298,7 @@ if (health) {
     try {
       const r = await api.ask(q);
       steps.innerHTML = (r.steps || []).map(s => `<li><b>${esc(s.tool)}</b><span>${esc(s.input || '')}${s.output ? ` → <span class="muted">${esc(s.output)}</span>` : ''}</span></li>`).join('');
-      out.innerHTML = mdLite(r.answer) + `<p class="small muted" style="margin:12px 0 0">Answered by ${esc(r.model || health.model)}. In-silico evidence only; not medical advice.</p>`;
+      out.innerHTML = mdLite(r.answer) + `<p class="small muted" style="margin:12px 0 0">Answered by ${esc(r.model || health.model)}. Based only on the research record.</p>`;
     } catch (err) { out.innerHTML = `<p class="err">${esc(err.message)}</p>`; }
     finally { th.hidden = true; btn.disabled = false; }
   }

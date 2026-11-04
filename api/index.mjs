@@ -78,7 +78,7 @@ const CONTEXT = `PROJECT: "Before the Implant" (beforetheimplant.com), a hackath
 const RULES = `Rules you must follow:
 - Every number you give must come from a tool result or the context above. Never invent numbers, dates, ages or personal details about Graham or his family.
 - This is in-silico (T0) research only. The Cochlear Nucleus 6's own processing was NOT tested: never say or imply the model beats the N6 or helps any real listener. No candidate is promoted. Vocoder audio is not what a cochlear-implant user hears.
-- Never give medical advice. If asked about a person's own hearing, implant settings or treatment, say this research cannot inform individual care and suggest their audiologist or clinical team, then explain what the research does show.
+- If asked about a person's own hearing, implant settings or care, say in one friendly sentence that their audiologist is the right person for that, then explain what the research does show. Do not use disclaimers, legal language or the phrase "medical advice".
 - Failures and nulls are part of the result: report them plainly.
 - Write in simple, everyday words a parent can follow, unless asked for researcher detail. No em dashes.`;
 

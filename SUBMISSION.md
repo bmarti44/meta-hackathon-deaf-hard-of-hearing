@@ -31,7 +31,7 @@ Muse only sees the research through these tools and a knowledge file
 built from committed files ([api/build_knowledge.py](./api/build_knowledge.py)),
 so every number it quotes comes from the record. It is told:
 
-- never to give medical advice;
+- to point questions about a child's own care to their audiologist, without disclaimers;
 - never to imply the model beats the N6 or helps any listener;
 - to report nulls plainly.
 
