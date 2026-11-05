@@ -7,6 +7,12 @@
 //   /api/explain?row=<id>&level=parent|researcher   one scorecard row or generation, explained
 //   /api/brief?gen=<id>                  short brief of one generation
 // Muse only sees the research through knowledge.json (built by api/build_knowledge.py from committed files).
+// Direct-invoke only (no rawPath, never reachable via CloudFront):
+//   {mode:"review", prompt, effort}      Muse Spark second reviewer
+//   {mode:"wonder", prompt, effort}      Muse Wonder (muse-wonder-1.0) independent reviewer
+//   {mode:"listen", wav_b64}             Muse Spark transcribes one LibriSpeech research clip (research/meta/)
+//   {mode:"meta", method, path, body|form}  authenticated passthrough for API discovery
+//   {mode:"ws", query, send, waitMs}     realtime WebSocket probe
 import { readFileSync } from "node:fs";
 import { SSMClient, GetParameterCommand } from "@aws-sdk/client-ssm";
 
@@ -175,7 +181,45 @@ function wsSession(key, query, send, waitMs, until, auth) {
   });
 }
 
+// Muse Spark as a listener: upload a WAV to /files, then pass it as input_audio by file_id.
+// (muse-voice-transcribe-1.0 is listed by /models but no endpoint accepts it as of 2026-11-04; see research/meta/plan.md.)
+const LISTEN_INSTRUCTIONS = "You are a speech transcriber. Write down exactly the words spoken by the main talker in the audio, in order, as plain text. Write only words you actually hear. Never guess, complete, continue or tidy up a sentence. If a stretch is too unclear to make out, skip it. If you cannot make out any words at all, reply with exactly [unintelligible]. Output only the transcript.";
+async function listen(wavB64, prompt) {
+  const key = await getKey();
+  const fd = new FormData();
+  fd.append("purpose", "user_data");
+  fd.append("file", new Blob([Buffer.from(wavB64, "base64")], { type: "audio/wav" }), "clip.wav");
+  const up = await fetch(`${BASE}/files`, { method: "POST", body: fd, headers: { authorization: `Bearer ${key}`, "x-client-id": "beforetheimplant:listen" } });
+  if (!up.ok) throw new Error(`files ${up.status} ${(await up.text()).slice(0, 200)}`);
+  const file = await up.json();
+  // Spark intermittently answers as if no audio were attached (about half of identical calls on 2026-11-04);
+  // those replies are detected and retried, and the attempt count is returned so the caller can disclose it.
+  const NO_AUDIO = /(no audio|audio (file )?(was|is) not|not (see|have|detect|find|hear)[^.]{0,40}audio|upload|attach|unable to transcribe|can(no|')t transcribe|cannot transcribe|provide the audio)/i;
+  const tries = [];
+  for (let attempt = 1; attempt <= 6; attempt++) {
+    const r = await respond({ model: MODEL, store: false, max_output_tokens: 5000, reasoning: { effort: "low" },
+      input: [{ role: "user", content: [{ type: "input_text", text: prompt || LISTEN_INSTRUCTIONS }, { type: "input_audio", file_id: file.id }] }] });
+    const tag = `[${r.status}${r.incomplete_details?.reason ? "/" + r.incomplete_details.reason : ""} out=${r.usage?.output_tokens}] `;
+    const text = textOf(r.output).trim();
+    if (text && !NO_AUDIO.test(text)) return { model: MODEL, file_id: file.id, attempts: attempt, text, tries };
+    tries.push(tag + text.slice(0, 240));
+  }
+  return { model: MODEL, file_id: file.id, attempts: 6, text: null, error: "audio not received", tries };
+}
+
 export const handler = async (event) => {
+  // Direct-invoke only: transcribe one LibriSpeech-derived research clip with Muse Spark (research/meta/listen_wer.py).
+  if (!event.rawPath && event.mode === "listen" && typeof event.wav_b64 === "string" && event.wav_b64.length < 5_000_000) {
+    return await listen(event.wav_b64, typeof event.prompt === "string" ? event.prompt.slice(0, 2000) : null);
+  }
+  // Direct-invoke only: Muse Wonder (muse-wonder-1.0, Meta's deeper reasoning model) as an independent reviewer.
+  if (!event.rawPath && event.mode === "wonder" && typeof event.prompt === "string") {
+    const effort = ["low", "medium", "high", "max"].includes(event.effort) ? event.effort : "high";
+    const r = await respond({ model: "muse-wonder-1.0", store: false, max_output_tokens: 16000, reasoning: { effort },
+      instructions: "You are an independent scientific reviewer of an in-silico speech-enhancement research project for cochlear-implant users. Be concrete, skeptical and concise. Recompute any arithmetic you can from the data given. Say plainly what the evidence does and does not support. Never claim benefit for a real listener.",
+      input: event.prompt.slice(0, 120000) });
+    return { model: "muse-wonder-1.0", effort, status: r.status, text: textOf(r.output) };
+  }
   // Direct-invoke only (no rawPath, so never reachable via CloudFront): Muse as a second,
   // independent reviewer of a research verdict. The caller files the verbatim answer.
   if (!event.rawPath && event.mode === "review" && typeof event.prompt === "string") {
@@ -187,7 +231,7 @@ export const handler = async (event) => {
   }
   // Direct-invoke only: authenticated passthrough to the Meta API for model discovery/testing by the
   // project's own IAM principals (key stays server-side; never reachable via CloudFront).
-  if (!event.rawPath && event.mode === "meta" && /^\/[a-z0-9_\/.:-]+$/i.test(String(event.path || ""))) {
+  if (!event.rawPath && event.mode === "meta" && /^\/[a-z0-9_\/.:-]+(\?[a-z0-9_=&.:-]*)?$/i.test(String(event.path || ""))) {
     const key = await getKey();
     // Optional multipart body: event.form = { field: "text" | { b64, filename, type } } (e.g. audio uploads).
     let mp = null;

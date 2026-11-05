@@ -1,0 +1,39 @@
+<!-- ===== META LAB: hear and read the difference ===== -->
+<section id="meta-lab" class="solid-bg" aria-labelledby="h-metalab">
+  <div class="wrap">
+    <p class="eyebrow"><b>Our model, checked by Meta's Muse</b> · a listening test for a computer</p>
+    <h2 id="h-metalab">Can a computer understand the voice better after our cleanup?</h2>
+    <p class="lede">We took a person reading a book out loud and buried their voice in a crowd of other people talking. Then we cleaned it up with our model. Meta's Muse model listened to both and wrote down what it heard. Pick a recording to hear it and see what Muse wrote.</p>
+
+    <div class="ml" id="ml" hidden>
+      <ol class="ml-list" id="ml-list" aria-label="Recordings"></ol>
+
+      <div class="ml-stage" id="ml-stage" aria-live="polite">
+        <p class="ml-said"><span class="ml-label">What the reader actually said</span><span id="ml-ref"></span></p>
+
+        <div class="ml-pair">
+          <div class="ml-side ml-before">
+            <p class="ml-label">In the crowd, before cleanup</p>
+            <audio id="ml-a-before" controls preload="none"></audio>
+            <p class="ml-heard"><span class="ml-label">What Muse wrote down</span><span id="ml-t-before"></span></p>
+            <p class="ml-score" id="ml-s-before"></p>
+          </div>
+          <div class="ml-side ml-after">
+            <p class="ml-label">After our model cleaned it</p>
+            <audio id="ml-a-after" controls preload="none"></audio>
+            <p class="ml-heard"><span class="ml-label">What Muse wrote down</span><span id="ml-t-after"></span></p>
+            <p class="ml-score" id="ml-s-after"></p>
+          </div>
+        </div>
+        <p class="small muted ml-key">Words Muse got right are in plain type. Words it got wrong or made up are <span class="ml-miss">marked like this</span>.</p>
+      </div>
+
+      <div class="ml-total" id="ml-total"></div>
+    </div>
+    <p class="small muted" id="ml-fallback">The listening test is loading.</p>
+
+    <p class="small muted">This is a test of a computer, not of a person. It tells us whether the cleaned voice is easier for a machine to follow. It cannot tell us what Graham or anyone with an implant would hear.</p>
+    <p class="small muted">Recordings: LibriSpeech, Panayotov et al. 2015, CC BY 4.0. The crowd is mixed from other LibriSpeech readers.</p>
+    <details class="researchers"><summary>For researchers</summary><div class="small muted" id="ml-research"></div></details>
+  </div>
+</section>

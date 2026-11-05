@@ -35,7 +35,7 @@
     for (const [side, key] of [["before", "unproc"], ["after", "gen19"]]) {
       const a = $(`ml-a-${side}`); a.pause(); a.src = c[key].audio;
       const t = c[key].transcript;
-      if (t == null) { $(`ml-t-${side}`).textContent = "(Muse could not be asked about this one.)"; $(`ml-s-${side}`).textContent = ""; continue; }
+      if (t == null) { $(`ml-t-${side}`).textContent = "(This one did not get through to Muse, so there is nothing to show.)"; $(`ml-s-${side}`).textContent = ""; continue; }
       const none = /^\s*\[unintelligible\]\s*$/i.test(t);
       const al = align(c.reference, none ? "" : t);
       $(`ml-t-${side}`).innerHTML = none ? "<em>Muse said it could not make out any words.</em>" : (al.html || "<em>(nothing)</em>");
@@ -70,7 +70,7 @@
       `Recognizer: <code class="mono">${esc(m.recognizer)}</code>; <code class="mono">muse-voice-transcribe-1.0</code> is listed but had no reachable endpoint. ` +
       `Enhancer: Gen 19 seed 17 (<code class="mono">${esc(m.checkpoint)}</code>). ${m.n_clips_in_study} crowd mixtures (8 to 12 babble draws, test speakers only), whole utterances, one transcription each. ` +
       rows.map(([k, v]) => `${k}: WER ${f(v.unproc_mean_wer)}% unprocessed vs ${f(v.gen19_mean_wer)}% Gen 19, paired Δ ${f(v.delta_gen19_minus_unproc.mean)} pp (95% CI ${f(v.delta_gen19_minus_unproc.ci_lo)} to ${f(v.delta_gen19_minus_unproc.ci_hi)}).`).join(" ") +
-      (s.clean ? ` Clean-speech WER ${f(s.clean.mean_wer)}%.` : "") + ` Spark often replies as if no audio was attached, so every clip starts with a short clean check sentence (LibriSpeech ${esc(m.delivery_check_utterance || "")}, a non-test speaker); a reply counts only if Muse writes that sentence back, and only the rest is scored (${s.attempts_total} calls for ${m.n_clips_in_study * 2 + (s.clean?.n || 0)} transcripts, ${s.transcripts_failed} missing). Two earlier runs failed this check and are filed, not used. Independent review by Muse Wonder (<code class="mono">muse-wonder-1.0</code>): <code class="mono">research/meta/wonder_review.md</code>.</p>`;
+      (s.clean ? ` Clean-speech WER ${f(s.clean.mean_wer)}%.` : "") + ` Spark often replies as if no audio was attached, so every clip starts with a short clean check sentence (LibriSpeech ${esc(m.delivery_check_utterance || "")}, a non-test speaker); a reply counts only if Muse writes that sentence back, and only the rest is scored (${s.attempts_total} calls for ${m.n_clips_in_study * 2 + (s.clean?.n || 0)} transcripts, ${s.transcripts_failed} missing). Two earlier runs had broken protocols and are filed, not used; a post-hoc rescore strips check-sentence words that spilled onto the clip line (plan amendment 3). The six recordings shown are, per reader, the first with both transcripts present (chosen on availability, not outcome). Independent review by Muse Wonder (<code class="mono">muse-wonder-1.0</code>): <code class="mono">research/meta/wonder_review.md</code>.</p>`;
     root.hidden = false; $("ml-fallback").remove(); show(0);
   }).catch(() => { $("ml-fallback").textContent = "The listening test could not be loaded right now."; });
 })();

@@ -28,6 +28,8 @@ Model API Responses endpoint, from an AWS Lambda
 | **Explain this** | Every scorecard row and generation has a button that explains it at a parent or researcher level. Answers are cached at the edge. |
 | **Generation briefs** | A short what / why / what-happened / what-it-means summary of each generation. |
 | **Second reviewer** | A direct-invoke-only mode (not reachable from the web) reviews each verdict independently of Codex Astra. Its answer is filed verbatim beside Astra's. |
+| **Listening test of our model** | Muse Spark listens to crowd recordings before and after our model's cleanup, writing down what it hears ([research/meta/](./research/meta/), plan written first). Result: a null. Spark transcribed clean speech well (88% of words right) but got almost nothing in these crowds either way (−5 dB: 5% → 0%; 0 dB: 8% → 8%), so the test sits at the recognizer's floor and can't show a gain or loss. The site's "hear and read the difference" demo plays these clips. |
+| **Muse Wonder as reviewer** | `muse-wonder-1.0` independently recomputed that listening study from raw rows (filed verbatim): "no reliable evidence that Gen 19 changed this recognizer's transcripts". |
 
 The three tools are `list_generations`, `get_scorecard` and
 `search_record`. The last is a keyword search over the committed

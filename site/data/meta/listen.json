@@ -1,0 +1,198 @@
+{
+ "meta": {
+  "recognizer": "muse-spark-1.3 (Meta), /v1/responses input_audio via /v1/files file_id",
+  "checkpoint": "research/gen19/weights/causal_seed20261117.pt",
+  "checkpoint_sha256": "80000b64c413ebb878f08695d8744ead8ecf9b183de57cb21acae6157470f367",
+  "plan": "research/meta/plan.md (run 3, with delivery check)",
+  "delivery_check_utterance": "5536-43358-0000",
+  "date": "2026-11-04 19:28 EST",
+  "audio_credit": "LibriSpeech, Panayotov et al. 2015, CC BY 4.0",
+  "n_clips_in_study": 24,
+  "rescored": "amendment 3: check-sentence spill stripped from line 2 (hyp_raw keeps the original)",
+  "demo_selection": "per speaker, the first clip (utterance order, then 0 dB before -5 dB) whose unprocessed and Gen 19 transcripts both exist. Chosen on availability, not on outcome."
+ },
+ "summary": {
+  "attempts_total": 329,
+  "transcripts_failed": 14,
+  "clean": {
+   "n": 12,
+   "mean_wer": 0.141
+  },
+  "-5 dB": {
+   "n": 8,
+   "unproc_mean_wer": 0.923,
+   "gen19_mean_wer": 1.0,
+   "delta_gen19_minus_unproc": {
+    "mean": 0.07692307692307693,
+    "ci_lo": 0.0,
+    "ci_hi": 0.23076923076923078,
+    "n": 8
+   },
+   "better": 0,
+   "worse": 1,
+   "tied": 7
+  },
+  "+0 dB": {
+   "n": 6,
+   "unproc_mean_wer": 1.0,
+   "gen19_mean_wer": 0.885,
+   "delta_gen19_minus_unproc": {
+    "mean": -0.11538461538461538,
+    "ci_lo": -0.3461538461538461,
+    "ci_hi": 0.0,
+    "n": 6
+   },
+   "better": 1,
+   "worse": 0,
+   "tied": 5
+  }
+ },
+ "clips": [
+  {
+   "id": "1988-24833-0005_-5",
+   "speaker": "1988",
+   "utterance": "1988-24833-0005",
+   "snr_db": -5.0,
+   "seconds": 6.5,
+   "reference": "I explain that i'm taking music and also biology algebra english and french music he snorts",
+   "unproc": {
+    "audio": "assets/audio/meta-lab/1988-24833-0005_-5_unproc.mp3",
+    "transcript": "[unintelligible]",
+    "wer": 1.0
+   },
+   "gen19": {
+    "audio": "assets/audio/meta-lab/1988-24833-0005_-5_gen19.mp3",
+    "transcript": "[unintelligible]",
+    "wer": 1.0
+   }
+  },
+  {
+   "id": "1993-147965-0007_0",
+   "speaker": "1993",
+   "utterance": "1993-147965-0007",
+   "snr_db": 0.0,
+   "seconds": 7.6,
+   "reference": "His face had a look of weariness and pleasure like that of sick people when they feel relief from pain",
+   "unproc": {
+    "audio": "assets/audio/meta-lab/1993-147965-0007_0_unproc.mp3",
+    "transcript": "[unintelligible]",
+    "wer": 1.0
+   },
+   "gen19": {
+    "audio": "assets/audio/meta-lab/1993-147965-0007_0_gen19.mp3",
+    "transcript": "[unintelligible]",
+    "wer": 1.0
+   }
+  },
+  {
+   "id": "5895-34622-0003_-5",
+   "speaker": "5895",
+   "utterance": "5895-34622-0003",
+   "snr_db": -5.0,
+   "seconds": 5.1,
+   "reference": "From sixteen eighty to seventeen o four a great change had taken place",
+   "unproc": {
+    "audio": "assets/audio/meta-lab/5895-34622-0003_-5_unproc.mp3",
+    "transcript": "From 1688 to 1704, a great change had taken place.",
+    "wer": 0.385
+   },
+   "gen19": {
+    "audio": "assets/audio/meta-lab/5895-34622-0003_-5_gen19.mp3",
+    "transcript": "[unintelligible]",
+    "wer": 1.0
+   }
+  },
+  {
+   "id": "6241-66616-0003_-5",
+   "speaker": "6241",
+   "utterance": "6241-66616-0003",
+   "snr_db": -5.0,
+   "seconds": 5.5,
+   "reference": "A counter attack was made upon woonga and he was driven deep into the wilderness with great loss",
+   "unproc": {
+    "audio": "assets/audio/meta-lab/6241-66616-0003_-5_unproc.mp3",
+    "transcript": "[unintelligible]",
+    "wer": 1.0
+   },
+   "gen19": {
+    "audio": "assets/audio/meta-lab/6241-66616-0003_-5_gen19.mp3",
+    "transcript": "[unintelligible]",
+    "wer": 1.0
+   }
+  },
+  {
+   "id": "6295-244435-0005_0",
+   "speaker": "6295",
+   "utterance": "6295-244435-0005",
+   "snr_db": 0.0,
+   "seconds": 4.4,
+   "reference": "That white flag and those boats going out mean that sumter is ours",
+   "unproc": {
+    "audio": "assets/audio/meta-lab/6295-244435-0005_0_unproc.mp3",
+    "transcript": "[unintelligible]",
+    "wer": 1.0
+   },
+   "gen19": {
+    "audio": "assets/audio/meta-lab/6295-244435-0005_0_gen19.mp3",
+    "transcript": "That white flag, and those boats going out. I mean the sensor is off.",
+    "wer": 0.308
+   }
+  },
+  {
+   "id": "6313-76958-0010_0",
+   "speaker": "6313",
+   "utterance": "6313-76958-0010",
+   "snr_db": 0.0,
+   "seconds": 6.6,
+   "reference": "The lads found that a pair of blankets had been assigned to each of them with an ordinary wagon sheet doubled for a tarpaulin",
+   "unproc": {
+    "audio": "assets/audio/meta-lab/6313-76958-0010_0_unproc.mp3",
+    "transcript": "[unintelligible]",
+    "wer": 1.0
+   },
+   "gen19": {
+    "audio": "assets/audio/meta-lab/6313-76958-0010_0_gen19.mp3",
+    "transcript": "[unintelligible]",
+    "wer": 1.0
+   }
+  }
+ ],
+ "plain": {
+  "clean": {
+   "clean": {
+    "words_right": 183,
+    "words_total": 207,
+    "unintelligible": 1,
+    "n": 12
+   }
+  },
+  "-5 dB": {
+   "unproc": {
+    "words_right": 8,
+    "words_total": 167,
+    "unintelligible": 9,
+    "n": 10
+   },
+   "gen19": {
+    "words_right": 0,
+    "words_total": 150,
+    "unintelligible": 9,
+    "n": 9
+   }
+  },
+  "+0 dB": {
+   "unproc": {
+    "words_right": 9,
+    "words_total": 120,
+    "unintelligible": 6,
+    "n": 7
+   },
+   "gen19": {
+    "words_right": 10,
+    "words_total": 132,
+    "unintelligible": 7,
+    "n": 8
+   }
+  }
+ }
+}
