@@ -263,14 +263,14 @@
    "id": "gen29",
    "label": "Version 29",
    "change": "An even smaller dose of rooms: about one in nine noisy practice sounds echo",
-   "status": "pending",
+   "status": "running",
    "numbers": [
     {
      "label": "Why",
      "value": "Find a dose that keeps the room gain with no loss on dry sound"
     }
    ],
-   "note": "Being checked by an independent reviewer before training starts.",
+   "note": "Training now, with the result due around one in the morning.",
    "link": "research/gen29/prereg.md"
   }
  ]
