@@ -34,3 +34,4 @@ research/gen*/weights/*_val_partial.json
 
 # Gen31 WiSE-FT blends are regenerable from Gen19 + the fine-tune (index.json is committed)
 research/gen31/weights/blends/*.pt
+research/gen32/weights/blends/*.pt

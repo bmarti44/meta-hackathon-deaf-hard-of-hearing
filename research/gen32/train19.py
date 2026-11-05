@@ -1,4 +1,4 @@
-"""Gen32 DRAFT (T0, not registered): research/gen31/train18.py with ONE addition, `--preserve-dry COEF`
+"""Gen32 (T0): research/gen31/train18.py with ONE addition, `--preserve-dry COEF`
 (finetune only): a frozen copy of the Gen19 parent is the teacher, and on dry items (dry noisy + dry quiet) the
 loss adds COEF * mean_i[ mean_t((f_theta(x_i) - f_19(x_i))^2) / (mean_t(f_19(x_i)^2) + 1e-8) ] on the raw, identically
 delayed outputs (teacher detached; zero when a batch has no dry items). Astra's Gen30 review, rank 1
@@ -264,9 +264,10 @@ ROOM_DESC = {"dry": "no room augmentation (Gen19 stream)",
                       "(RT60 strata short/medium/long uniform); reference = direct + 50 ms (5 ms taper)"}
 
 
-def save_ckpt(model, out, steps, seed, speakers, loss, snr, room, rir_sha, mode="scratch", init_from=None, parent_sha=None):
+def save_ckpt(model, out, steps, seed, speakers, loss, snr, room, rir_sha, mode="scratch", init_from=None, parent_sha=None,
+              preserve_dry=0.0):
     torch.save({"state_dict": model.state_dict(), "steps": steps, "seed": seed,
-                "mode": mode, "init_from": init_from, "parent_sha256": parent_sha,
+                "mode": mode, "init_from": init_from, "parent_sha256": parent_sha, "preserve_dry": preserve_dry,
                 "train_speakers": speakers,
                 "data": "LibriSpeech train-clean-100 OpenSLR12 CC-BY-4.0 (archive sha256 d4ddd1d5...bf6e2)",
                 "gen": "gen27", "arch": "causal Conv-TasNet-style (gen15/model_causal.py)",
@@ -484,7 +485,7 @@ def main():
             log.append(rec); print(rec, flush=True)
         if (step + 1) % 2000 == 0 and step + 1 < a.steps:
             ck = out.with_name(f"{out.stem}_step{step + 1}.pt")
-            save_ckpt(model, ck, step + 1, a.seed, train_spk, a.loss, a.snr, a.room, rir_sha, a.mode, init_from, parent_sha)
+            save_ckpt(model, ck, step + 1, a.seed, train_spk, a.loss, a.snr, a.room, rir_sha, a.mode, init_from, parent_sha, a.preserve_dry)
             print(f"interim ckpt {ck} (never a substitute for the final)", flush=True)
         if a.val_every and (step + 1) % a.val_every == 0:
             v, vitems = t13.eval_val(model, val_panel, a.device)
@@ -507,7 +508,7 @@ def main():
     caus_post = suffix_invariance_test(model, seed=1)
     for r in caus_post:
         assert r["max_diff_prefix_P"] == 0.0, f"causality violated post-train: {r}"
-    sha = save_ckpt(model, out, a.steps, a.seed, train_spk, a.loss, a.snr, a.room, rir_sha, a.mode, init_from, parent_sha)
+    sha = save_ckpt(model, out, a.steps, a.seed, train_spk, a.loss, a.snr, a.room, rir_sha, a.mode, init_from, parent_sha, a.preserve_dry)
     meta = {"steps": a.steps, "lifetime_steps": a.steps + (24000 if a.mode == "finetune" else 0), "mode": a.mode, "loss": a.loss, "snr": a.snr,
             "room": a.room, "room_desc": ROOM_DESC[a.room], "rir_manifest_sha256": rir_sha,
             "rir_cache_s": round(bank_s, 2), "data_s_this_process": round(data_s, 1),

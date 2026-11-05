@@ -1,4 +1,4 @@
-"""Gen32 draft guarantees (Astra's Gen30 review pre-launch checks):
+"""Gen32 guarantees (Astra's Gen30 review pre-launch checks):
 - the penalty is exactly zero when student == teacher, and zero for a batch with no dry items;
 - after a perturbation the student gets finite gradients and the frozen teacher gets none;
 - batches are unchanged vs Gen31's train18 (make_batch is untouched);
@@ -93,4 +93,19 @@ def test_smoke_and_refusal(tmp_path):
     assert ok.returncode == 0, ok.stderr[-1500:]
     log = json.loads((tmp_path / "f.json").read_text())
     assert log["preserve_dry"] == 100.0 and log["log"][0]["preserve_pen"] == 0.0
-    assert torch.load(tmp_path / "f.pt", weights_only=False)["mode"] == "finetune"
+    ck = torch.load(tmp_path / "f.pt", weights_only=False)
+    assert ck["mode"] == "finetune" and ck["preserve_dry"] == 100.0
+
+
+def test_val2_identical_panel_and_rule():
+    v1 = load("val1_g32", HERE.parent / "gen31" / "val_testclean.py")
+    v2 = load("val2_g32", HERE / "val_testclean2.py")
+    assert v1.TARGETS == v2.TARGETS and v1.RESERVED == v2.RESERVED and v1.SEED == v2.SEED
+    grid = [round(0.1 * i, 1) for i in range(1, 11)]
+    rng = np.random.default_rng(0)
+    for _ in range(50):
+        s = {f"{a:.1f}": {snr: {"d_sisdr": float(rng.normal(0, 0.01)), "d_stoi": float(rng.normal(0, 0.001))} for snr in ("-5.0", "0.0")}
+             for a in grid}
+        assert v1.select_alpha(s, grid) == v2.select_alpha(s, grid)
+    if v2.ROOT.exists():
+        assert v2.material_hash(v2.build_items()) == "c2c4f89a59533601dc0a3f2b219fb6b65fe9a4d468349cd5a442709c9873b638"
