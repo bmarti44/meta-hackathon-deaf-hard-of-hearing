@@ -8,6 +8,30 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+GEN 30–33 ROOM LINE FAIL; GEN 34 REAL-RECORDING ASSET VALID; GEN 35 OUTPUT
+REPAIR INVESTIGATE (2026-11-05 05:25, Claude Opus 5.5).
+
+**Room line:**
+- Gen 30's failure ended the dose campaign.
+- Gen 31 (WiSE-FT) gave no candidate.
+- Gen 32 (WiSE-FT with dry preservation) was the closest fail.
+- Gen 33 (linked two-ear mask) was rejected.
+
+**Gen 34:** a frozen BRUDEX real-recording audit, VALID ASSET. It found
+output **polarity inversion** (seeds 17 and 19) and a **DC offset** (the
+decoder bias), both invisible to every registered metric.
+
+**Gen 35:** the repair audit returned INVESTIGATE (STOI DC sensitivity, one
+ITD bin, real clipping on write). Nothing was published. A model-card
+erratum awaits the owner's approval.
+
+**Next:** Gen 36, an output-contract repair with a peak-safe stage on fresh
+material, then the reverberant-target preservation fine-tune.
+
+**Site:** round 25 scored 87.0; Fable is on round 26.
+
+---
+
 GEN 30 FAIL (DOSE CAMPAIGN ENDS); GEN 31 WISE-FT NO CANDIDATE; GEN 32
 (FINE-TUNE WITH DRY-OUTPUT PRESERVATION) TRAINING (2026-11-05 02:30,
 Claude Opus 5.5).

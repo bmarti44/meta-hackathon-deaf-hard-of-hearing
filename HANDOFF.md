@@ -81,22 +81,39 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
   cut clipping severity but not frequency and did not lift −5 dB, so
   the hypothesis is neither falsified nor established.
 
-## Current state (2026-11-05 02:30 — VERIFY, may be stale)
+## Current state (2026-11-05 05:25 — VERIFY, may be stale)
 
-- **Room line (seed 17, judge_v3 vs Gen 19), all FAIL:**
-  - Gen 27–30 scratch room doses (P = 0.5 → 0.0625): room gain +0.51 → +0.31; dry 0 dB cost −0.49 → −0.06; D failed every time.
-  - Gen 30's failure ended the dose-only campaign (registered boundary).
-  - Gen 31 (WiSE-FT: fine-tune Gen 19 on aug50, blend back, α on fresh test-clean voices) gave **NO CANDIDATE**: α = 0.1 missed only on −5 dB STOI −0.00003.
-  - All are filed with Astra + Muse reviews.
-- **Margins:** the reviewers split (Muse wants NI margins; Astra finds none justifiable a priori). The disposition **keeps zero-margin** D and the VAL rule; see `research/gen31/astra-review-gen31.md`.
-- **Gen 32 is TRAINING** (launched 02:15; both reviewers cleared it): Gen 31's procedure plus `--preserve-dry 100`, a relative-MSE penalty vs frozen Gen 19 outputs on dry items.
-  - Logs: `/tmp/gen32_s17_pipeline.log` and `/tmp/gen32_ft_s17.log`.
-  - The verdict is due ~02:37.
-  - Exit "NO CANDIDATE" = FAIL with no screen run.
-- **Reserved, untouched voices:** screen-v2's 4 dev-clean voices and 24 test-clean voices. The test-clean VAL panel (16 voices) is development material since Gen 31.
-- **Before any seed-18/19 replication of a WiSE-FT line:** add the Gen 19 seed-18/19 parent hashes to `GEN19_SHA` in train18/train19.
-- **Site:** round 15 scored 86.1 (Trust 92, Perf 91; Meta 80 because of Explain bugs, now fixed server-side but not yet deployed). Fable is on round-16 fixes.
-  - **Deploy only when Fable is idle:** `deploy/deploy_site.sh` uploads the working tree.
+- **Gen 19 is still the baseline.** Every room-line try, Gen 27–33, FAILED. Each is filed with Astra + Muse reviews.
+  - Gen 32 came closest: room gain +0.283 vs the +0.30 bar; one dry mean of −0.0012; SP ILD +0.066.
+  - Gen 33 (linked two-ear mask) was REJECTED.
+- **Gen 34, the real-recording audit (BRUDEX), is a VALID ASSET.** It is development material only.
+  - Data: `/tmp/brudex_dl/data`, 51 files. Refetch with `research/gen34/fetch_brudex.py`, then `--merge`.
+  - Gen 19 improves objective scores in recorded babble but lowers them in quiet, very reverberant conditions and on clean reverberant speech. Gen 32 is slightly better than Gen 19 on STOI in 15/15 cell means.
+  - The audit exposed two output defects that every registered metric misses:
+    - **sign inversion** for seeds 17 and 19;
+    - **a DC offset** equal to the decoder bias (+0.110 / −0.165 / −0.146).
+  - Evidence: `research/gen34/polarity_check.json`.
+- **Gen 35, the output-path repair audit, returned INVESTIGATE.** Sign plus bias repair works, but trips STOI (DC sensitivity; it mostly raises STOI), one ITD bin (from the flush) and clipping (real distortion on write).
+  - Both reviewers: **publish no executable Hugging Face patch now.**
+- **Owner decisions pending:**
+  1. a **model-card erratum** on Hugging Face (report the polarity and DC defects and the Gen 35 INVESTIGATE);
+  2. any later inference release.
+  Nothing has been published.
+- **Next research step: Gen 36**, a registered output-contract repair. Spec: Astra's rule in `research/gen35/astra-review-gen35.md`, disposition item 3:
+  - polarity and bias correction before level restoration;
+  - a single gain capped at −1 dBFS after resampling;
+  - STOI_DC;
+  - an equally flushed spatial comparator;
+  - decoded-file peak checks;
+  - a sealed fresh evaluation manifest.
+- **Then:** the reverberant-target preservation fine-tune (Astra's two-arm spec: corrected parent with polarity folded into the decoder and zero bias), then trained bilateral, then the ACE auxiliary.
+- **Reserved, untouched voices:**
+  - screen-v2's 4 dev-clean voices;
+  - 24 test-clean voices (`research/gen31/val_testclean.py`).
+  The test-clean VAL panel (16 voices) and BRUDEX are development material.
+- **Site:** the review loop is at round 25 = 87.0 (best: round 23 = 88.4). Fable is on round 26.
+  - **Deploy only when Fable is idle**, because `deploy/deploy_site.sh` uploads the working tree.
+  - Muse rules live in `api/index.mjs` RULES.
 
 ## Demo site (beforetheimplant.com) — LIVE since 18:32 (added 2026-11-04 ~18:20)
 
@@ -182,19 +199,12 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
 
 ## Next actions (in order)
 
-1. **When `/tmp/gen32_s17_pipeline.log` says PIPELINE DONE:**
-   - write `research/gen32/results.md`, in the Gen 31 format;
-   - run the Astra + Muse reviews (Muse inline, effort medium, under 700 words, or it returns empty);
-   - file them with a disposition;
-   - update `site/data/generations.json` and SUBMISSION, plus STATUS and this file;
-   - commit the FT final weights and log (`git add -f`), the blend index, the selection JSON and, if screened, the screen JSONs.
-2. **If Gen 32 fails:** ask both reviewers for the next step. Candidates from their earlier rankings:
-   - better measured-room training coverage;
-   - a deployable dry-bypass/gating design (which could truly satisfy zero-margin D);
-   - two-input linked gain;
-   - an ACE envelope auxiliary.
-   Plus Astra's standing item: a frozen actual-room-recording evaluation.
-3. **Site:** when Fable reports round 16, commit, deploy (that also ships the Lambda fixes) and run review round 17 with a fresh Opus reviewer (brief: `scratchpad/site_review_r14_prompt.txt`, updated). Repeat until every category is ≥ 90.
+1. **Site:** when Fable reports round 26, commit, deploy, and run review round 27 with a fresh Opus reviewer.
+   - Brief: `scratchpad/site_review_r19_prompt.txt`; bump the qa folder.
+   - Keep going until every category is ≥ 90 (Performance 94 and AI tells were ≥ 90 in some rounds).
+2. **Gen 36:** build, register and get Astra's pre-launch review. Expect several NOT CLEARED rounds: Astra attacks judge completeness. Use `judge_safe`, exact key sets, key-derived applicability and rejection of unregistered groups from the start (see `research/gen35/judge_repair.py`).
+3. **After Gen 36:** register the reverberant-target preservation fine-tune.
+4. **Owner questions to surface:** the Hugging Face model-card erratum, and a later release if Gen 36 passes.
 
 ## Key files map
 
