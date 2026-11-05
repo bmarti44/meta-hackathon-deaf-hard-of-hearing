@@ -38,20 +38,15 @@
       <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 16 Q7 3 11 16 T19 16 T27 16" fill="none" stroke="#5fdcff" stroke-width="2.4"/><circle cx="29" cy="16" r="2.2" fill="#ece7dc"/></svg>
       <span>Before the <em>Implant</em></span>
     </a>
-    <span class="live-chip" id="live-chip" title="Live status of the current generation"><span class="dot" aria-hidden="true"></span><span class="t" id="live-text">loading…</span></span>
+    <a class="live-chip" id="live-chip" href="#generations" aria-label="Latest version status"><span class="dot" aria-hidden="true"></span><span class="t" id="live-text">loading…</span></a>
     <button class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="chapnav">Menu</button>
     <nav class="chapters" id="chapnav" aria-label="Chapters">
       <a href="#born">Graham</a>
-      <a href="#short">The short version</a>
-      <a href="#implant">How an implant hears</a>
+      <a href="#implant">The implant</a>
       <a href="#wall">The hardest crowd</a>
       <a href="#scorecard">The 14 checks</a>
-      <a href="#generations">Versions</a>
       <a href="#ask">Ask a question</a>
       <a href="#graham">For Graham</a>
-      <a href="#honest">Honesty</a>
-      <a href="#made">How it was made</a>
-      <a href="#methods">How the tests work</a>
     </nav>
   </div>
 </header>
@@ -63,8 +58,7 @@
 <section id="hero" aria-labelledby="h-hero">
   <div class="wrap">
     <div class="hero-text">
-      <p class="eyebrow"><b>A research diary</b> · computer tests only · nothing approved for use</p>
-      <h1 id="h-hero">Before the implant, <em>there is the bench.</em></h1>
+      <h1 id="h-hero">Before anything reaches the implant, <em>it has to pass the tests.</em></h1>
       <p class="lede">A small computer program that tries to pull one voice out of a noisy crowd, for people who hear through cochlear implants. We test it only on a computer, against rules we wrote down before each try. It passes 13 of our 14 checks. This site is about the one it does not.</p>
       <p class="wave-key">The fuzzier the line behind this page, the harder it is to hear one voice. Watch it clear up (or not) as you read.</p>
       <div class="ctas">
@@ -78,14 +72,13 @@
     </div>
   </div>
   <p class="scroll-hint" aria-hidden="true"><span class="ln"></span>Scroll · it starts with a jackhammer</p>
-  <p class="clarity" id="clarity" aria-hidden="true"><span class="mono">how much cleaner, in crowds</span><b id="clarity-v">+0.00 dB</b></p>
+  <p class="clarity" id="clarity" aria-hidden="true" hidden><span class="mono">how much cleaner, in crowds</span><b id="clarity-v">+0.00 dB</b></p>
 </section>
 
 <!-- ===== GRAHAM'S STORY, in his dad's words ===== -->
 <section class="chapter" id="born" aria-labelledby="h-born" data-gl="quake">
   <div class="wrap">
     <div class="panel narrow rv story-panel">
-      <p class="eyebrow">Graham's story · in his dad's words</p>
       <h2 id="h-born">The day Graham was born, there was a jackhammer outside.</h2>
       <p class="lede story-q">"Someone was using a jackhammer right outside our hospital room. It was so loud I could feel the reverberations shaking my feet underneath his bed.</p>
       <p class="lede story-q"><em class="hot-em">He was asleep the whole time."</em></p>
@@ -123,7 +116,6 @@
         <figcaption>Graham and his sister Maggie.</figcaption>
       </figure>
       <div class="panel rv">
-        <p class="eyebrow">Part 1 · The crowd</p>
         <h2 id="h-crowd">Music and talking in a crowd are still the hardest thing.</h2>
         <p class="lede">Graham was born with bilateral, sensorineural, severe-to-profound hearing loss. He wears bilateral Cochlear Nucleus 6 processors; that is what he uses, and nothing on this site has ever been used by him. His dad, who built this project, has normal hearing.</p>
         <p>Crowds are where cochlear-implant users struggle most. A dance class on a lawn, a birthday table, a playground: many voices at once, and the one you need is no louder than the rest. That is where the −5 dB wall lives, and it is the only thing this research is about.</p>
@@ -135,8 +127,9 @@
 
 <section id="dancing" aria-labelledby="h-dance" data-gl="music">
   <div class="wrap">
-    <div class="dance rv">
-      <figure class="video-fig">
+    <h2 id="h-dance" class="sr-only">Graham, dancing</h2>
+    <div class="spread rv">
+      <div class="spread-video">
         <div class="video-box portrait">
           <video id="dance" muted playsinline loop preload="none" poster="assets/family/graham-dancing-poster.jpg" width="540" height="960" aria-describedby="dance-cap">
             <track kind="captions" src="assets/family/graham-dancing.en.vtt" srclang="en" label="English captions" default>
@@ -147,24 +140,23 @@
           <button type="button" class="vbtn vbtn-sound" id="v-sound" aria-pressed="false" aria-label="Sound is off. Turn sound on">Turn sound on</button>
           <span class="vnote mono" id="v-note">Captions on. Music is playing in this clip. With sound on, the wave behind the page moves to it.</span>
         </div>
-        <figcaption id="dance-cap">
-          <p class="lede story-q">"Turns out, he does love music. <em class="hot-em">And he's pretty great."</em></p>
-          <p class="muted">Graham, shaking his booty with the gray hairs at an outdoor workout class.</p>
-        </figcaption>
-      </figure>
-    </div>
-    <div class="story after-dance">
-      <div class="why rv">
-        <figure class="photo photo-tall">
-          <picture>
-            <source type="image/webp" srcset="assets/family/family-900.webp 600w, assets/family/family.webp 1200w" sizes="(max-width: 700px) 70vw, 30vw">
-            <img src="assets/family/family-900.jpg" srcset="assets/family/family-900.jpg 600w, assets/family/family.jpg 1200w" sizes="(max-width: 700px) 70vw, 30vw" width="1200" height="1800" loading="lazy" decoding="async" alt="Graham's dad with Maggie and Graham on a tree-lined path, all three laughing.">
-          </picture>
-          <figcaption>Built by Graham's dad.</figcaption>
-        </figure>
-        <div class="panel">
-          <h3>Why this exists</h3>
-          <p>This project exists because of Graham.</p>
+      </div>
+      <div class="spread-text">
+        <p class="spread-quote" id="dance-cap">"Turns out, he does love music. <em class="hot-em">And he's pretty great."</em></p>
+        <p class="muted spread-cap">Graham, shaking his booty with the gray hairs at an outdoor workout class.</p>
+        <hr class="rule thin">
+        <div class="why-spread">
+          <figure class="photo photo-small">
+            <picture>
+              <source type="image/webp" srcset="assets/family/family-900.webp 600w, assets/family/family.webp 1200w" sizes="(max-width: 900px) 60vw, 220px">
+              <img src="assets/family/family-900.jpg" srcset="assets/family/family-900.jpg 600w, assets/family/family.jpg 1200w" sizes="(max-width: 900px) 60vw, 220px" width="1200" height="1800" loading="lazy" decoding="async" alt="Graham's dad with Maggie and Graham on a tree-lined path, all three laughing.">
+            </picture>
+            <figcaption>Built by Graham's dad.</figcaption>
+          </figure>
+          <div class="why-text">
+            <h3>Why this exists</h3>
+            <p>This project exists because of Graham. His dad built it to find out, carefully and in the open, whether a small program could one day help him pick one voice out of a crowd. Crowds are where his implants struggle most.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -175,7 +167,6 @@
 <section class="chapter" id="model" aria-labelledby="h-model" data-gl="voice2">
   <div class="wrap">
     <div class="panel rv">
-      <p class="eyebrow">Part 2 · The program</p>
       <h2 id="h-model">A program that cleans sound as it arrives, without peeking ahead.</h2>
       <div class="grid g2">
         <div>
@@ -193,13 +184,8 @@
           <h3 class="sub">How we know it never cheats</h3>
           <p>After every training run we play it two recordings that start the same and then go different ways. If the model ever peeked ahead, its output for the shared beginning would change. It never does, down to the very last bit.</p>
           <details class="researchers"><summary>For researchers</summary><p class="small muted">Strictly causal waveform Conv-TasNet-style enhancer, 602,510 parameters, 5.88 ms algorithmic latency (excluding compute), about 1.02 s receptive field; exact causality re-verified on final weights (suffix invariance: outputs identical for the first <var>P</var> samples of two inputs that share them).</p></details>
-          <div class="stats" id="model-stats">
-            <div class="stat"><div class="v num" data-model="params">—</div><div class="l">numbers inside the program</div></div>
-            <div class="stat"><div class="v num sig" data-model="latency">—</div><div class="l">thousandths of a second it needs before answering</div></div>
-            <div class="stat"><div class="v num" data-model="future">0</div><div class="l">peeks into the future</div></div>
-            <div class="stat"><div class="v num" data-model="prefix">—</div><div class="l">difference found in the no-cheating test</div></div>
-          </div>
-        </div>
+          <p class="figures-line">In numbers: about <span data-model="params">602,510</span> numbers inside the program, <span data-model="latency">5.88</span> thousandths of a second before it answers, zero peeks into the future, and a difference of exactly <span data-model="prefix">0.0</span> in the no-cheating test.</p>
+                </div>
         <div>
           <h3>How quick is 5.88 ms?</h3>
           <p class="small muted">Our own rule allows up to 10 thousandths of a second. The program uses about 6.</p>
@@ -219,7 +205,6 @@
   <div class="imp-wrap">
 
     <header class="imp-head">
-      <p class="eyebrow"><b>Inside the implant</b> · what happens to sound</p>
       <h2 id="h-imp">How a cochlear implant <em>hears</em>.</h2>
       <p class="lede">A hearing ear has thousands of tiny hair cells, each one listening for its own little sliver of pitch. A cochlear implant takes the place of all of them with one thin wire that has just 22 tiny electrodes along it, like trading thousands of piano keys for 22. Everything the microphone picks up, a voice, a crowd, a song, has to squeeze through those 22 spots.</p>
     </header>
@@ -364,8 +349,7 @@
 <section class="chapter" id="wall" aria-labelledby="h-wall" data-gl="wall">
   <div class="wrap">
     <div class="panel rv">
-      <p class="eyebrow">Part 3 · The hardest crowd</p>
-      <p class="big num" aria-hidden="true">−5 dB <small>is where it stops.</small></p>
+      <p class="big num" aria-hidden="true">−5 dB <small>when the crowd is louder than the voice, the program stops helping enough.</small></p>
       <h2 id="h-wall" class="sr-only">When the crowd is louder than the voice, the program stops helping enough.</h2>
       <div class="grid g2">
         <div>
@@ -387,11 +371,11 @@
           <p>Partly, and on purpose. We set it ourselves before running any tests, so we could not move the goalposts after seeing results. It is half of our overall +3 dB goal, and +3 dB is in the range that lab noise-reduction systems have reached in published studies with cochlear-implant listeners (those studies used a different measure, so it's a rough guide). Missing by 0.3 dB is not a disaster. It means this model is not yet strong enough in the hardest rooms to earn a listening test.</p>
           <h3 class="sub">Why did we miss?</h3>
           <p>At −5 dB, the crowd is made of other voices that sound a lot like the one you want. The model has one microphone, cannot hear the future (it has to answer within 6 thousandths of a second), and is tiny on purpose so it could one day run on a hearing device. A "cheating" version that hears the future and already knows the answer gets about +12 dB here, so there is room to improve. More training and two different scoring changes did not close the gap. Next, we train on far more hard examples, and after that we give the model two ears so it can use direction as a clue.</p>
+          <p class="small muted">Drag the slider to see how it does as the crowd gets louder.</p>
           <details class="researchers"><summary>For researchers</summary><p class="small muted">Metric: ΔSI-SDR vs unprocessed, three-seed mean, bench v2 crowd condition, n = 6 crops per cell. Rule: crowd ΔSI-SDR ≥ +1.5 dB at both −5 dB and 0 dB. Gen 19: +1.19 dB at −5 dB (FAIL), +4.65 dB at 0 dB (PASS); overall crowd +3.51 dB; non-causal oracle +11.94 dB at −5 dB.</p></details>
-          <p class="small muted">Drag the slider to walk the bench.</p>
           <div class="slider-box">
             <label for="snr" class="mono small">How loud the crowd is compared with the voice (slide left for harder)</label>
-            <input type="range" id="snr" min="-5" max="10" step="1" value="10" aria-describedby="snr-read">
+            <input type="range" id="snr" min="-5" max="10" step="1" value="-5" aria-describedby="snr-read">
             <div class="slider-read" id="snr-read" aria-live="polite">
               <div><span class="muted">crowd loudness</span><b id="snr-v" class="num">+10 dB</b></div>
               <div><span class="muted">our program: how much cleaner</span><b id="snr-g" class="num">—</b></div>
@@ -404,7 +388,7 @@
         <div>
           <div class="chart" id="snr-chart" aria-describedby="snr-table-cap"></div>
           <div class="legend" id="snr-legend"></div>
-          <details><summary id="snr-table-cap">Table: how much cleaner the voice gets at each crowd loudness (dB)</summary><div class="table-wrap" id="snr-table"></div></details>
+          <details><summary id="snr-table-cap">The same numbers as a table</summary><div class="table-wrap" id="snr-table"></div></details>
         </div>
       </div>
     </div>
@@ -415,19 +399,13 @@
 <section id="short" class="solid-bg" aria-labelledby="h-short">
   <div class="wrap">
     <h2 id="h-short">The short version</h2>
-    <div class="cols3 numbered">
+    <div class="cols3">
       <div class="col rv"><h3>The question</h3><p>Can a tiny program that never peeks ahead clean up crowd noise for cochlear-implant users well enough to earn a real listening test? We judge it on computer tests, with the passing scores fixed before we start.</p></div>
       <div class="col rv"><h3>What we found</h3><p>Our best version so far, number 19, passes 13 of 14 checks. In everyday crowd noise it cuts the leftover noise to less than half. In the hardest crowds, where the crowd is louder than the voice, it falls just short of the score we set. Four later versions tried to fix that. Three did not help, and one is being tested right now.</p></div>
       <div class="col rv"><h3>What it does not mean</h3><p>We have not compared it with the Nucleus 6 processors Graham already wears, tested it on any implant, or played it to any listener. Everything here is from computer tests. Our own verdict is: not good enough yet, keep working. No version has been approved for anything.</p><details class="researchers"><summary>For researchers</summary><p class="small muted">T0 in-silico evidence only. Scorecard verdict FAIL (keep optimizing); promoted FALSE. Vocoder audio is not what a CI user hears; N6 processing was never tested.</p></details></div>
     </div>
-    <div class="stats figures">
-      <div class="stat"><div class="v num">13<span class="muted">/14</span></div><div class="l">of our 14 checks passed</div></div>
-      <div class="stat"><div class="v num sig">+3.51</div><div class="l">dB cleaner in everyday crowds</div></div>
-      <div class="stat"><div class="v num hot">+1.19</div><div class="l">dB cleaner when the crowd is louder than the voice; we wanted +1.5</div></div>
-      <div class="stat"><div class="v num" id="null-count">—</div><div class="l">later versions that did not help</div></div>
-      <div class="stat"><div class="v num">0</div><div class="l">versions approved for use</div></div>
+    <p class="lede figures-line">In numbers: 13 of our 14 checks passed; the voice comes through 3.51 dB cleaner in everyday crowds and 1.19 dB cleaner when the crowd is louder than the voice, where we wanted 1.5; <span id="null-count">three</span> later versions did not help; and no version is approved for use.</p>
     </div>
-  </div>
 </section>
 
 <!-- ===== SCORECARD ===== -->
@@ -457,7 +435,7 @@
     <div class="table-wrap">
       <table id="score-table">
         <caption class="sr-only">Gen 19 KPI scorecard, three-seed mean</caption>
-        <thead><tr><th scope="col">Row</th><th scope="col" class="num">Actual</th><th scope="col">Required</th><th scope="col">Status</th><th scope="col" class="ai-only" hidden><span class="sr-only">Explain</span></th></tr></thead>
+        <thead><tr><th scope="col">Check</th><th scope="col" class="num">Result</th><th scope="col">What it needs</th><th scope="col">Status</th><th scope="col" class="ai-only" hidden><span class="sr-only">Explain</span></th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
@@ -505,7 +483,6 @@
 <!-- ===== ASK ===== -->
 <section id="ask" class="solid-bg" aria-labelledby="h-ask">
   <div class="wrap narrow">
-    <p class="eyebrow">Ask the diary · answered by <b>Muse</b>, Meta's AI model</p>
     <h2 id="h-ask">Ask anything about this project, in your own words</h2>
     <p class="lede">Muse, an AI model from Meta, has read everything we wrote down: the plans, the results, the checks and the reviews. It decides what to look up, looks it up, and shows you each step. It follows the same rules as this page: computer tests only, and no promises about any listener.</p>
     <div class="ai-only" id="ask-ui" hidden>
@@ -530,7 +507,6 @@
 <!-- ===== META LAB: hear and read the difference ===== -->
 <section id="meta-lab" class="solid-bg" aria-labelledby="h-metalab">
   <div class="wrap">
-    <p class="eyebrow"><b>Our model, checked by Meta's Muse</b> · a listening test for a computer</p>
     <h2 id="h-metalab">Can a computer understand the voice better after our cleanup?</h2>
     <p class="lede">We took a person reading a book out loud and buried their voice in a crowd of other people talking. Then we cleaned it up with our model. Meta's Muse model listened to both and wrote down what it heard. Pick a recording to hear it and see what Muse wrote.</p>
 
@@ -635,13 +611,13 @@
 <section id="honest" class="solid-bg" aria-labelledby="h-hon">
   <div class="wrap">
     <h2 id="h-hon">How we keep ourselves honest</h2>
-    <div class="cols3 numbered">
+    <div class="cols3">
       <div class="col rv"><h3>We write the plan down first</h3><p>Before we train a new version we write down the one thing we are changing, how long we will train it, and the score it has to reach. Version 24 is drafted but does not count until version 23 has its result and its review.</p></div>
-      <div class="col rv"><h3>We train it three times</h3><p>Every version is trained three separate times from scratch and judged on the average, so one lucky run cannot fool us. A single good run only earns the right to be repeated.</p></div>
+      <div class="col rv"><h3>We train it three times</h3><p>Every version is trained three separate times from scratch and judged on the average, so one lucky run cannot fool us. If one run looks good, we repeat it twice more before we believe it.</p></div>
       <div class="col rv"><h3>We judge the finished version only</h3><p>We save and report the program at several points during training, but the verdict always uses the final one. No picking the best moment after the fact.</p></div>
       <div class="col rv"><h3>We replay interrupted runs exactly</h3><p>One training run was cut off halfway when a computer session ended. We restarted it from the beginning and checked that it reproduced the original, number for number, before its result counted.</p></div>
       <div class="col rv"><h3>Someone else checks the sums</h3><p>A second AI, Codex Astra, made by a different company, recomputes every result from the raw data between versions. Its reviews are published word for word, including the ones that made us fix things before launch.</p>
-        <blockquote class="quote">"Nothing here implies a directional-hearing benefit."<cite>SUBMISSION.md, disclosures, after the Astra review of Gen 19</cite></blockquote></div>
+        <blockquote class="quote">"Nothing here implies a directional-hearing benefit."<cite>from our project summary, after the independent review of version 19</cite></blockquote></div>
       <div class="col rv"><h3>Failures stay on the record</h3><p>Versions 16, 20, 21 and 22 did not help, and they are on the tree with their numbers. Not helping once does not prove an idea can never work, and the record says so.</p></div>
     </div>
   </div>
@@ -669,7 +645,7 @@
   <div class="wrap narrow">
     <h2 id="h-made">How this was made, mistakes included</h2>
     <ol class="log">
-      <li><div><div class="ey">Who did what</div><b>Meta's AI ran most of the experiments, a second AI checked them, a dad directed</b><p>Most of the experiments, from the very first version through Gen 21, were designed, run and written up by Muse Wonder Full, Meta's AI model, under Graham's dad's direction. That includes building the computer test bench, the 14 checks, and training the model on this page. Claude, an AI from Anthropic, took over on the last day to run the final experiments and build this website. Codex Astra, an AI from a different company, checked every result before the next step. And Muse answers your questions right here on this page.</p></div></li>
+      <li><div><div class="ey">Who did what</div><b>Meta's AI ran most of the experiments, a second AI checked them, a dad directed</b><p>Most of the experiments, from the very first version through version 21, were designed, run and written up by Muse Wonder Full, Meta's AI model, under Graham's dad's direction. That includes building the computer test bench, the 14 checks, and training the model on this page. Claude, an AI from Anthropic, took over on the last day to run the final experiments and build this website. Codex Astra, an AI from a different company, checked every result before the next step. And Muse answers your questions right here on this page.</p></div></li>
       <li><div><div class="ey">Mistake</div><b>Version 17 changed four things at once</b><p>So we cannot say which change helped. Every version since changes one thing.</p></div></li>
       <li><div><div class="ey">Mistake</div><b>A quick test run once overwrote a finished version's file</b><p>Now test runs have to save somewhere else, and every saved version is scored so none can be quietly swapped.</p></div></li>
       <li><div><div class="ey">Correction</div><b>A training run was cut off and replayed</b><p>A computer session ended halfway through. We restarted the run and checked it reproduced the original exactly before using it.</p></div></li>
@@ -740,7 +716,7 @@
     <nav aria-label="Footer">
       <a href="#short">The short version</a><a href="#wall">The hardest crowd</a><a href="#scorecard">The 14 checks</a><a href="#generations">Versions</a><a href="#ask">Ask a question</a><a href="#honest">Honesty</a><a href="#limits">What it does not show</a><a href="#made">How it was made</a><a href="#methods">How the tests work</a><a data-repo="" id="repo-link">Repository</a><a data-hf id="hf-link">Try the model on Hugging Face</a>
     </nav>
-    <p class="disc"><strong data-brand-name>Before the Implant</strong> is a public record of computer-only experiments. Graham's Nucleus 6 processors were never compared against it, and nothing here has been tried with any listener yet. Vocoder audio isn't what a cochlear-implant user hears.</p>
+    <p class="disc"><strong data-brand-name>Before the Implant</strong> is a public record of computer-only experiments. Graham's Nucleus 6 processors were never compared against it, and nothing here has been tried with any listener yet. The implant sound clips are a rough computer imitation, not what Graham actually hears.</p>
     <p class="disc small">Research loop run mostly by Muse Wonder Full, Meta's AI model (Gen 0 to 21, including the model on this page), then by Claude (Anthropic) for the final experiments, under Graham's dad's direction, and checked by Codex Astra. Ask and Explain are powered by Muse, Meta's AI model, via Meta's API. AI answers can contain mistakes. Fonts: Fraunces, Archivo, IBM Plex Mono. three.js r170, MIT.</p>
   </div>
 </footer>

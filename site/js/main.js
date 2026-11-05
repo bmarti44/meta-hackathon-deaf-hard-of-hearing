@@ -22,6 +22,16 @@ $$('a[data-hf]').forEach(a => { if (C.huggingface) { a.href = C.huggingface; a.t
 const bar = $('#bar'), nav = $('#chapnav'), menu = $('#menu-btn');
 addEventListener('scroll', () => bar.classList.toggle('solid', scrollY > 40), { passive: true });
 menu.addEventListener('click', () => { const o = nav.classList.toggle('open'); menu.setAttribute('aria-expanded', o); });
+// Nav fit: show the inline chapter links only when every item fits on one line; otherwise the Menu button.
+function fitNav() {
+  bar.classList.remove('compact'); bar.classList.add('measuring'); nav.classList.remove('open'); menu.setAttribute('aria-expanded', 'false');
+  const barIn = bar.querySelector('.bar-in');
+  const used = [...barIn.children].filter(e => e !== nav && e !== menu).reduce((a, e) => a + e.getBoundingClientRect().width, 0) + 16 * (barIn.children.length);
+  const fits = nav.scrollWidth + used <= barIn.clientWidth;
+  bar.classList.remove('measuring');
+  if (!fits) bar.classList.add('compact');
+}
+fitNav(); let navT; addEventListener('resize', () => { clearTimeout(navT); navT = setTimeout(fitNav, 80); }); document.fonts && document.fonts.ready.then(fitNav);
 nav.addEventListener('click', e => { if (e.target.tagName === 'A') { nav.classList.remove('open'); menu.setAttribute('aria-expanded', 'false'); } });
 const secs = $$('main section[id]');
 const navObs = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) $$('a', nav).forEach(a => a.setAttribute('aria-current', a.getAttribute('href') === '#' + en.target.id)); }), { rootMargin: '-40% 0px -55% 0px' });
@@ -89,9 +99,9 @@ $$('[data-bench="white_estoi"]').forEach(e => e.textContent = fmt(bench.summary_
     const perceived = mode === 'none' ? voice : mode === 'separate' ? [170, 190] : voice;
     const nAlpha = mode === 'none' ? 0.9 : 0.35, vSize = mode === 'none' ? 14 : 20;
     let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Illustration: a child in the centre of a noisy room, a voice on the left. In 'each ear separately' mode the voice seems to come from nearer the middle; in 'both ears linked' mode it stays on the left.">
-      <rect x="20" y="20" width="${W - 40}" height="${H - 40}" rx="18" fill="none" stroke="var(--rule)"/>
+      <rect x="20" y="20" width="${W - 40}" height="${H - 40}" fill="none" stroke="var(--rule)"/>
       <text x="30" y="${H - 28}" class="lbl dim">top-down room · illustration of the idea, not measured data</text>`;
-    noise.forEach(([x, y]) => s += `<circle cx="${x}" cy="${y}" r="10" fill="var(--dim)" opacity="${nAlpha}"/><text x="${x}" y="${y + 24}" text-anchor="middle" class="lbl dim">chatter</text>`);
+    noise.forEach(([x, y]) => s += `<circle cx="${x}" cy="${y}" r="10" fill="var(--dim)" opacity="${nAlpha}"/><text x="${x}" y="${y + 22}" text-anchor="middle" class="lbl dim" font-size="10">noise</text>`);
     // child (head with two ears)
     s += `<circle cx="${cx}" cy="${cy}" r="22" fill="var(--bg3)" stroke="var(--bone)" stroke-width="2"/><circle cx="${cx - 24}" cy="${cy}" r="6" fill="var(--bone)"/><circle cx="${cx + 24}" cy="${cy}" r="6" fill="var(--bone)"/><text x="${cx}" y="${cy + 44}" text-anchor="middle" class="lbl">Graham</text>`;
     // true voice
@@ -109,6 +119,9 @@ $$('[data-bench="white_estoi"]').forEach(e => e.textContent = fmt(bench.summary_
 })();
 
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+{ const cl = $('#clarity'), md = $('#model'); if (cl && md) new IntersectionObserver(es => { cl.hidden = !(es[0].isIntersecting || es[0].boundingClientRect.top < 0); }, { threshold: 0 }).observe(md); }
+// implant chapter: show the 3 most important clips by default
+{ const tracks = $$('#implant .imp-track'); if (tracks.length > 3) { tracks.slice(3).forEach(t => t.hidden = true); const b = document.createElement('button'); b.type = 'button'; b.className = 'explain-btn imp-more'; b.textContent = `Show all ${tracks.length} clips`; b.addEventListener('click', () => { const open = tracks[3].hidden; tracks.slice(3).forEach(t => t.hidden = !open); b.textContent = open ? 'Show fewer clips' : `Show all ${tracks.length} clips`; }); tracks[0].parentElement.after(b); } }
 
 // ---------- SNR chart + slider ----------
 const SNRS = bench.snrs, sys = bench.systems;
@@ -167,12 +180,13 @@ if (!reduce) {
   let done = false, h = null; const read = $('#snr-read');
   const stop = () => { if (h) { clearInterval(h); h = null; } read.setAttribute('aria-live', 'polite'); };
   sl.addEventListener('pointerdown', stop); sl.addEventListener('keydown', stop);
-  new IntersectionObserver(es => { if (es[0].isIntersecting && !done) { done = true; read.setAttribute('aria-live', 'off'); let v = 10; h = setInterval(() => { v--; sl.value = v; slide(); if (v <= -5) { stop(); } }, 420); } }, { threshold: 0.5 }).observe($('#wall'));
+  new IntersectionObserver(es => { if (es[0].isIntersecting && !done) { done = true; read.setAttribute('aria-live', 'off'); let v = 10; h = setInterval(() => { v--; sl.value = v; slide(); sl.dispatchEvent(new Event('input', { bubbles: true })); if (v <= -5) { stop(); } }, 420); } }, { threshold: 0.6 }).observe($('.slider-box'));
 }
 // the slider also drives the shader: the voice line frays toward −5 dB
 sl.addEventListener('input', () => { window.__fray = (10 - +sl.value) / 15; });
 
 // ---------- scorecard ----------
+const NEED = { crowd_sisdr: 'needs at least +3.0 dB cleaner', crowd_stoi: 'needs at least +0.03 more understandable', crowd_ace: 'needs at least +0.05 closer electrode pattern', crowd_m5: 'needs at least +1.5 dB cleaner', crowd_0: 'needs at least +1.5 dB cleaner', crowd_m5_stoi: 'must not get less understandable', crowd_every_seed: 'must help in all three runs', crowd_vs_gate: 'must beat the simple filter', ssn: 'needs at least +3.0 dB cleaner', white: 'must not get worse', quiet_abs: 'must stay very clean (25 dB or better)', quiet_stoi: 'must stay understandable', ild: 'must be closer than with no cleanup', itd: 'must be at least as close as with no cleanup', ild_distortion: 'no requirement' };
 const PLAIN = { crowd_sisdr: 'Crowd: how clean the voice is', crowd_stoi: 'Crowd: how understandable it is', crowd_ace: 'Crowd: what the electrodes would receive',
   crowd_m5: 'Crowd louder than the voice (−5 dB)', crowd_0: 'Crowd as loud as the voice (0 dB)', crowd_m5_stoi: 'Never harder to understand in the loudest crowd',
   crowd_every_seed: 'Helps in all three training runs', crowd_vs_gate: 'Better than the simple filter that already exists', ssn: 'Steady hum (speech-shaped noise)',
@@ -185,8 +199,8 @@ tb.innerHTML = score.rows.map(r => {
   const st = r.status === 'INFO' ? 'pending' : r.status === 'PASS' ? 'advance' : 'fail';
   const word = r.status === 'INFO' ? 'for information' : r.status === 'PASS' ? 'pass' : 'miss';
   return `<tr class="${r.status === 'FAIL' ? 'fail' : r.status === 'INFO' ? 'info' : ''}" data-row="${ROW_IDS(r)}">
-    <td data-l="Row">${esc(PLAIN[r.id] || r.kpi)}${r.status === 'FAIL' ? ' <span class="hot">(the hardest crowd)</span>' : ''}<br><span class="tech mono">${esc(r.kpi)}</span></td>
-    <td class="num" data-l="Actual">${esc(r.actual)}</td><td class="mono small" data-l="Required">${esc(r.required)}${r.stretch ? `<br><span class="muted">stretch ${esc(r.stretch)}: ${r.stretch_pass ? 'met' : 'not met'}</span>` : ''}</td>
+    <td data-l="Check">${esc(PLAIN[r.id] || r.kpi)}${r.status === 'FAIL' ? ' <span class="hot">(the hardest crowd)</span>' : ''}<details class="researchers row"><summary>For researchers</summary><span class="small muted">${esc(r.kpi)}: ${esc(r.required)}${r.stretch ? `; stretch ${esc(r.stretch)} ${r.stretch_pass ? 'met' : 'not met'}` : ''}</span></details></td>
+    <td class="num" data-l="Result">${esc(r.actual)}</td><td class="small" data-l="Needs">${esc(NEED[r.id] || r.required)}</td>
     <td data-l="Status"><span class="status" data-status="${st}" data-glyph="${GLYPH[st]}">${word}</span></td>
     <td class="ai-only" hidden><button class="explain-btn" type="button" data-explain="${ROW_IDS(r)}" aria-label="Explain ${esc(r.kpi)}">Explain</button></td></tr>`;
 }).join('');
@@ -195,7 +209,7 @@ $('#level-toggle').addEventListener('click', e => { const b = e.target.closest('
 
 // ---------- generations: tree + cards ----------
 const G = gens.generations;
-$('#gen-updated').textContent = 'updated ' + gens.updated;
+$('#gen-updated').textContent = gens.updated;
 $('#null-count').textContent = G.filter(g => (g.status === 'null' || g.status === 'fail') && +g.id.replace('gen', '') > 19).length;
 const live = G.find(g => g.status === 'running');
 const chip = $('#live-chip');
@@ -277,7 +291,7 @@ if (health) {
   $$('.ai-only').forEach(e => e.hidden = false);
   $('#ask-off').hidden = true;
   const SUGGEST = [
-    "Why can't the model pass crowd noise at −5 dB?",
+    'Why does it struggle when the crowd is louder than the voice?',
     'What did version 22 change and why did it not help?',
     'Is this better than his Nucleus 6?',
     'What would have to happen before Graham could try this?',

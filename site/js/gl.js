@@ -8,7 +8,8 @@ import * as THREE from '../vendor/three.module.min.js';
 
 const host = document.getElementById('gl');
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, powerPreference: 'low-power' });
+const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, powerPreference: 'low-power', preserveDrawingBuffer: true });
+window.__gl = renderer;
 renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5));
 renderer.setClearColor(0x000000, 0);
 host.appendChild(renderer.domElement);
@@ -18,7 +19,7 @@ const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
 camera.position.set(0, 0, 9);
 
 const isSmall = innerWidth < 700;
-const N = isSmall ? 10000 : 24000;
+const N = isSmall ? 18000 : 24000;
 const crowd = new Float32Array(N * 3), voice = new Float32Array(N * 3), wall = new Float32Array(N * 3), seed = new Float32Array(N);
 let s = 20261117; const rnd = () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296;
 const env = x => { const t = x * 0.9 + 3; return (0.55 + 0.45 * Math.sin(t * 2.1)) * (0.6 + 0.4 * Math.sin(t * 0.7 + 1.3)); };
@@ -46,14 +47,14 @@ geo.setAttribute('aSeed', new THREE.BufferAttribute(seed, 1));
 const U = {
   uTime: { value: 0 }, uClarity: { value: 0.1 }, uShake: { value: 0 }, uWaver: { value: 0 }, uBeat: { value: 0 },
   uBands: { value: 0 }, uEars: { value: 0 }, uEarsDrift: { value: 0 }, uWall: { value: 0 }, uThin: { value: 0 },
-  uPR: { value: renderer.getPixelRatio() }, uScale: { value: isSmall ? 0.8 : 1 },
+  uPR: { value: renderer.getPixelRatio() }, uScale: { value: isSmall ? 1.15 : 1.15 }, uXS: { value: 1 }, uYOff: { value: 0 }, uAlphaK: { value: isSmall ? 1.0 : 1.2 },
   uBone: { value: new THREE.Color('#c9c2b2') }, uSignal: { value: new THREE.Color('#5fdcff') }, uHot: { value: new THREE.Color('#ff5c3f') }
 };
 const mat = new THREE.ShaderMaterial({
   uniforms: U, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
   vertexShader: `
     attribute vec3 aVoice; attribute vec3 aWall; attribute float aSeed;
-    uniform float uTime, uClarity, uShake, uWaver, uBeat, uBands, uEars, uEarsDrift, uWall, uThin, uPR, uScale;
+    uniform float uTime, uClarity, uShake, uWaver, uBeat, uBands, uEars, uEarsDrift, uWall, uThin, uPR, uScale, uXS, uYOff;
     varying float vClar, vSeed, vDepth, vStill, vWall, vLit, vThin;
     vec3 hash3(vec3 p){ p = fract(p*0.3183099+vec3(.1,.2,.3)); p *= 17.0; return fract(vec3(p.x*p.y*p.z*(p.x+p.y+p.z)))*2.0-1.0; }
     float ease(float t){ return t*t*(3.0-2.0*t); }
@@ -81,9 +82,11 @@ const mat = new THREE.ShaderMaterial({
       vLit = mix(1.0, lit, uBands);
       // two ears: split into two lines; "separate" lets them drift apart, "linked" locks them
       float ear = step(0.5, aSeed)*2.0-1.0;
-      p.y += uEars * ear * (0.9 + uEarsDrift*0.9);
+      p.y *= 1.0 + uEars * uEarsDrift * ear * 0.35;
+      p.y += uEars * ear * (0.06 + uEarsDrift*1.5);
       p.x += uEars * uEarsDrift * ear * 0.8 * sin(uTime*0.9);
       p = mix(p, aWall, uWall);
+      p.x *= uXS; p.y += uYOff;
       vec4 mv = modelViewMatrix * vec4(p,1.0);
       gl_Position = projectionMatrix * mv;
       float size = mix(2.6, 2.2, c) * (1.0 + 0.9*uShake*(1.0-still)) * mix(1.0, 1.9, uWall) * mix(1.0, 0.7, uThin) * uPR * uScale;
@@ -92,7 +95,7 @@ const mat = new THREE.ShaderMaterial({
     }`,
   fragmentShader: `
     precision mediump float;
-    uniform vec3 uBone, uSignal, uHot;
+    uniform vec3 uBone, uSignal, uHot; uniform float uAlphaK;
     varying float vClar, vSeed, vDepth, vStill, vWall, vLit, vThin;
     void main(){
       vec2 q = gl_PointCoord - 0.5; float d = dot(q,q); if (d > 0.25) discard;
@@ -100,10 +103,10 @@ const mat = new THREE.ShaderMaterial({
       vec3 col = mix(uBone, uSignal, vClar * (0.6 + 0.4*vSeed));
       col = mix(col, uHot, vWall);
       col = mix(col, uSignal*0.6, vStill);
-      float a = (0.55 + 0.35*vClar) * soft;
+      float a = (0.55 + 0.35*vClar) * soft * uAlphaK;
       a *= mix(1.0, 0.18, vStill);
       a *= 0.25 + 0.75*vLit;
-      a *= mix(1.0, 0.75, vThin);
+      a *= mix(1.0, 0.9, vThin);
       a *= mix(1.0, 0.35 + 0.65*step(0.985, fract(vSeed*7.0)), vWall);
       a *= clamp(1.7 - vDepth*0.1, 0.3, 1.0);
       gl_FragColor = vec4(col, a);
@@ -128,7 +131,7 @@ const modelLevel = () => bench ? show(bench.summary_seed_mean.gen19.crowd.d_sisd
 
 const $ = id => document.getElementById(id);
 const els = () => ({ born: $('born'), tests: $('tests'), music: $('music'), crowd: $('crowd'), dancing: $('dancing'),
-  model: $('model'), implant: $('implant'), wall: $('wall'), gens: $('generations'), attempts: $('attempts'), graham: $('graham'), honest: $('honest') });
+  model: $('model'), implant: $('implant'), impStage: document.querySelector('#imp-stage') || document.querySelector('#implant .imp-steps'), wall: $('wall'), gens: $('generations'), attempts: $('attempts'), graham: $('graham'), honest: $('honest') });
 let E = els();
 const clamp01 = v => Math.min(1, Math.max(0, v));
 const top = el => el ? el.getBoundingClientRect().top + scrollY : 0;
@@ -163,9 +166,10 @@ function measure() {
   T.waver = presence(E.tests);
   const lvl = window.__waveLevel;
   T.beat = Math.max(presence(E.music) * 0.25, presence(E.dancing) * (lvl > 0 ? lvl * 1.2 : 0.18));
-  T.bands = presence(E.implant);
+  T.bands = presence(E.impStage, 0.05);
   T.ears = presence(E.graham);
   T.drift = window.__ears === 'separate' ? 1 : window.__ears === 'linked' ? 0 : 0.5;
+  if (presence(E.graham) > 0 && window.__ears === 'none') T.clarity = Math.min(T.clarity, 0.25);   // no cleanup: fuzzier
   T.wall = pw > 0 && sliderClar != null ? pw * clamp01((0.32 - sliderClar) / 0.1) : 0;   // slams in only toward −5 dB
   T.thin = clamp01((y - (top(E.wall) + (E.wall ? E.wall.offsetHeight : 0))) / h);
   const afterModel = y + h * 0.5 > top(E.model);
@@ -174,7 +178,7 @@ function measure() {
 document.addEventListener('input', e => { if (e.target && e.target.id === 'snr') { sliderClar = show(ratioAt(+e.target.value)); measure(); } });
 addEventListener('load', () => { const sl = $('snr'); if (sl) sliderClar = show(ratioAt(+sl.value)); measure(); });
 
-function resize() { const w = innerWidth, h = innerHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+function resize() { const w = innerWidth, h = innerHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); U.uXS.value = Math.min(1, Math.max(0.35, camera.aspect * 0.6)); U.uYOff.value = camera.aspect < 0.9 ? -2.1 : 0; }
 addEventListener('resize', () => { resize(); measure(); });
 addEventListener('scroll', measure, { passive: true });
 resize(); measure();
@@ -187,7 +191,7 @@ function frame(now) {
   const t = (now - t0) / 1000; U.uTime.value = t;
   for (const k in T) C[k] += (T[k] - C[k]) * (k === 'shake' ? 0.12 : 0.08);
   let cl = C.clarity;
-  if (E.gens && presence(E.gens) > 0) { gensPhase += 0.02; cl += Math.sin(gensPhase) * 0.02 * presence(E.gens); }  // nulls: a flat wobble
+  if (E.gens && presence(E.gens) > 0) { gensPhase += 0.012; cl += Math.sin(gensPhase) * 0.12 * presence(E.gens); }  // nulls: a flat wobble
   U.uClarity.value = cl; U.uShake.value = C.shake; U.uWaver.value = C.waver; U.uBeat.value = C.beat;
   U.uBands.value = C.bands; U.uEars.value = C.ears; U.uEarsDrift.value = C.drift; U.uWall.value = C.wall; U.uThin.value = C.thin;
   camera.position.z = 9 - 0.6 * cl - 4.5 * C.wall * C.wall;

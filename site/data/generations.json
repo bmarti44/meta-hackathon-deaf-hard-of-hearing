@@ -9,11 +9,11 @@
       "status": "null",
       "numbers": [
         {
-          "label": "How much cleaner than version 15 (dB)",
+          "label": "Cleaner than version 15 by",
           "value": "+0.93 dB"
         },
         {
-          "label": "Change in how understandable (negative is worse)",
+          "label": "Change in how easy to understand",
           "value": "−0.033"
         }
       ],
@@ -27,7 +27,7 @@
       "status": "advance",
       "numbers": [
         {
-          "label": "How much cleaner in crowds (dB)",
+          "label": "Cleaner in crowds by",
           "value": "+0.26 dB"
         }
       ],
@@ -41,7 +41,7 @@
       "status": "advance",
       "numbers": [
         {
-          "label": "Effect with the short training of the time",
+          "label": "What it did",
           "value": "roughly neutral"
         }
       ],
@@ -55,11 +55,11 @@
       "status": "baseline",
       "numbers": [
         {
-          "label": "How much cleaner in crowds (average of 3 runs)",
+          "label": "Cleaner in everyday crowds by",
           "value": "+3.51 dB"
         },
         {
-          "label": "Crowd louder than voice",
+          "label": "Cleaner when the crowd is louder than the voice",
           "value": "+1.19 dB vs +1.5 required"
         },
         {
@@ -77,11 +77,11 @@
       "status": "null",
       "numbers": [
         {
-          "label": "Extra improvement, crowd louder than voice",
+          "label": "Extra help in the hardest crowd",
           "value": "+0.02 dB vs +0.30 required"
         },
         {
-          "label": "Change in how understandable there",
+          "label": "Change in how easy to understand there",
           "value": "−0.002 vs ≥ 0 required"
         }
       ],
@@ -95,15 +95,15 @@
       "status": "null",
       "numbers": [
         {
-          "label": "Way 1: hardest crowd, test set 1 / test set 2",
+          "label": "Way 1, hardest crowd (two test sets)",
           "value": "+0.14 / −0.24 dB"
         },
         {
-          "label": "Way 2: hardest crowd, test set 1 / test set 2",
+          "label": "Way 2, hardest crowd (two test sets)",
           "value": "+0.12 / −0.10 dB"
         },
         {
-          "label": "Needed on both test sets",
+          "label": "What we needed",
           "value": "+0.30 dB on both panels"
         },
         {
@@ -121,11 +121,11 @@
       "status": "null",
       "numbers": [
         {
-          "label": "Hardest crowd, test set 1 / test set 2",
+          "label": "Hardest crowd (two test sets)",
           "value": "+0.149 / −0.010 dB"
         },
         {
-          "label": "Needed on both test sets",
+          "label": "What we needed",
           "value": "+0.30 dB on both panels"
         },
         {
