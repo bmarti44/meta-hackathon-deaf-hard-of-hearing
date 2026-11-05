@@ -32,9 +32,11 @@ preservation is measured.
 - Room mix **aug50** (Gen 27's: 45 / 45 / 10).
   - Muse's sketch named the aug125 mix. aug50 is used because the blend
     step can only give back part of the fine-tune's room gain.
-  - The strongest registered room exposure gives the blend the most to
-    keep, and the dry loss it brings is exactly what the blend is chosen
-    to remove.
+  - The strongest registered room exposure is expected to give the blend
+    the most to keep, and the dry loss it brings is what the blend is
+    chosen to remove.
+  - This is a fixed hypothesis, not a guarantee (Astra): neither stronger
+    augmentation nor a larger α is certain to give more room benefit.
 - **8,000 updates**, a fresh Adam at lr 1e-4 with cosine decay to 1e-5,
   final checkpoint only. Everything else is as in Gen 27–30:
   - batch 8 × 2 s, SI-SDR loss, clipping 5;
@@ -82,8 +84,10 @@ preservation is measured.
 
 **Mechanics smoke (stand-in fine-tune, not a result):** Gen 19 plus
 N(0, 1e-3) noise.
-- It ran end to end: blends, VAL and the rule gave NO CANDIDATE, at −0.002
-  dB for every α, in 92 s.
+- It ran end to end in 92 s, and the rule gave NO CANDIDATE.
+  - SI-SDR changes ran from about −0.0001 dB at α = 0.1 (−0.000112 /
+    −0.000032 dB at −5 / 0 dB) to about −0.002 dB at α = 1.
+  - Corrected per Astra; the earlier text said −0.002 dB at every α.
 - This shows the rule is strict. Like D, it treats any measurable dry loss
   as a failure.
 - The smoke used no room-trained weights, so it reveals nothing about the
@@ -125,6 +129,25 @@ N(0, 1e-3) noise.
 Run: `research/gen31/pipeline.sh` (fine-tune ~13 min; blends and VAL
 ~3 min; screen ~5 min).
 
+## Pre-launch amendment (2026-11-05 ~01:35, before any run)
+
+From Astra's pre-launch review
+([astra-prelaunch-review.md](./astra-prelaunch-review.md)), which
+CLEARED Gen 31 with no blocking items. Muse also CLEARED it
+([muse-prelaunch-review.md](./muse-prelaunch-review.md)).
+
+1. `pipeline.sh` now refuses to run unless `research/gen30/screen_s17.json`
+   says `"verdict": "FAIL"`.
+2. The aug50 rationale is softened, and the smoke description is
+   corrected (above).
+3. Before any seed-18/19 replication, the Gen 19 seed-18/19 parent hashes
+   must be added to `GEN19_SHA`; the trainer currently permits only
+   seed 17.
+4. No tolerance and no finer-grid rescue will follow a failure.
+
+The hash table below is updated for `pipeline.sh` only; every other
+hash is unchanged.
+
 ## Source hashes (sha256)
 
 | File | sha256 |
@@ -133,7 +156,7 @@ Run: `research/gen31/pipeline.sh` (fine-tune ~13 min; blends and VAL
 | `research/gen31/blend.py` | `652206ffed4ae4bd8138ef34a3756b57c55e7027f23d79da81dbd5c6d23654e1` |
 | `research/gen31/val_testclean.py` | `349e6a0f7a17f4d59374f96e418ca1d76fd9e482cbb0cef416f2170e4f92a776` |
 | `research/gen31/test_gen31.py` | `41a55ff0267aa61ed700d2a41079b59b026f6828476c648e697c68f5a02a806b` |
-| `research/gen31/pipeline.sh` | `de4c687f2019b1e85cc4d7812d4a0980e636267a4ff260c7266aec48e39bf6d1` |
+| `research/gen31/pipeline.sh` | `2d4bf71c6f00cf0d6f17d8b79f848f32b67fd92fcef2ea926959450591be5dc2` |
 | `research/gen30/train17.py` | `3966507a07ec470d505668a5575ff05efb278bd75f79cd079d9e9d6e96eacbfa` |
 | `research/gen27/train14.py` | `9d39741c2e63aaa7773bd6e88165676a33ff207c034b215664a805b5c01567e7` |
 | `research/gen27/rirbank.py` | `14376aafb87c73eaed6482d07b3958834b86b51b96100b7698d8e7ea7cc0e7f1` |

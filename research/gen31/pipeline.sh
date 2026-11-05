@@ -9,6 +9,9 @@ cd "$(dirname "$0")/../.."
 PY=/tmp/gen9env/bin/python; S=17; SEED=20261117; L=/tmp/gen31_s17_pipeline.log; G=research/gen31; G27=research/gen27
 C19=research/gen19/weights/causal_seed$SEED.pt; HO=research/gen21/weights/rng_handoff_seed$SEED.pt
 FT=$G/weights/ft_aug50_seed$SEED.pt; ST=$G/weights/ft_aug50_seed${SEED}_state_latest.pt; CK=$G/weights/wiseft_seed$SEED.pt
+# Registered prerequisite (Astra pre-launch note): Gen31 runs only after Gen30's seed-17 screen returned FAIL.
+G30V=$($PY -c "import json;print(json.load(open('research/gen30/screen_s17.json'))['verdict'])" 2>/dev/null)
+[ "$G30V" = "FAIL" ] || { echo "REFUSED: Gen30 verdict is '$G30V', not FAIL $(date)" >> $L; exit 1; }
 [ -e $G/screen_s17.json ] && { echo "REFUSED: screen exists" >> $L; exit 1; }
 [ -e $G/val_selection_s17.json ] && { echo "REFUSED: VAL selection exists" >> $L; exit 1; }
 echo "finetune start $(date)" >> $L
