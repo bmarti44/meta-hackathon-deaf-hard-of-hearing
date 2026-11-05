@@ -177,6 +177,8 @@ def _research(seed):
                 if it["snr"] is None:
                     rec[f"alpha_{e}"] = RP.signed_alpha(ref, o, w); rec[f"wave_err_{e}"] = RP.wave_err_db(ref, o, w)
                     rec[f"lag_{e}"] = RP.peak_lag(ref, o, w)
+                    rec[f"ac_gain_err_db_{e}"] = float(abs(20 * np.log10((np.std(np.asarray(o, np.float64)[w]) + 1e-12)
+                                                                         / (np.std(np.asarray(ref, np.float64)[w]) + 1e-12))))
             rows.append(rec)
     crops = [c for c in build_crops(1) if c["kind"].startswith("babble")]
     for i, c in enumerate(crops):

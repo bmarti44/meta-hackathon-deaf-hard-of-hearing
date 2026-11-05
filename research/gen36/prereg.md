@@ -155,6 +155,26 @@ overload item that worsens, and export lag.
 
 The hash table is updated below.
 
+## Pre-launch amendment 2 (2026-11-05 ~06:45, before any candidate output was scored)
+
+Astra's verification of amendment 1 was **NOT CLEARED**, with three items.
+Fixes:
+
+1. **Manifest binding.**
+   - The judge pins `manifest.json`'s bytes (`MANIFEST_SHA`) and refuses any other content.
+   - With `rebuild`, it rebuilds the manifest from the audio. The hash, the target and crowd lists, and every F1 / F2 item identity and per-rate representability must all equal the seal.
+   - A refusal is caught by `judge_safe`, which now also catches `SystemExit`, and becomes INVESTIGATE rather than a crash.
+2. **Research target preservation.** Per-ear |AC-gain error| is now recorded on P1 target-only items, and gated by item-ear non-worsening of A2 vs A1.
+3. **Metric domains.** STOI and STOI_DC, including per-ear fields, must lie in [−1, 1].
+
+**Tests:** `test_gen36.py`, 6/6 passing. They now include Astra's attacks:
+- A2 AC-gain errors worsening to 9 dB;
+- STOI_DC = 2 on F1 and on P4 per ear;
+- STOI = −1.5;
+- the manifest tampered in memory, with 63 of 64 F1 items removed and the claimed hash kept, with `rebuild=True`.
+
+The hash table is updated below.
+
 ## Source hashes (sha256)
 
 | File | sha256 |
@@ -163,9 +183,9 @@ The hash table is updated below.
 | `research/gen36/contract.py` | `9e11fea5ea2c8a6f36fedf544f4c51820cd3359f2a7fffa6b0beffcd20a3057c` |
 | `research/gen36/manifest.py` | `95514afc1cb7a0c97abc2781355341977bf363516be576c7cf5a748c97d69925` |
 | `research/gen36/manifest.json` | `41dc19934a8ee955b60d596bb793dc65eea94734d9e687143c57345710793550` |
-| `research/gen36/run_contract.py` | `2da1956dd9b118fbc60dda9f8a79abeb6bfd21518fc562e64f4bb03a1b96ef9f` |
-| `research/gen36/judge_contract.py` | `0bc585b541a33da19715c7eda699ae57943486da5686ee15dd6fa78304839ebc` |
-| `research/gen36/test_gen36.py` | `b4561faf3ac839d67ac8888cdc48da8422e8c9e8f7aaa46d8e42787aea059447` |
+| `research/gen36/run_contract.py` | `b3e765785e01c941754a60f5180c56170c24dde9284b0dde3f4f01dd37c3a5da` |
+| `research/gen36/judge_contract.py` | `61553de9191f7a42ebe2b3928cc773f9a2f21d7a94ef431ea03b4eb8a5058478` |
+| `research/gen36/test_gen36.py` | `d619787ef19ee6c1453eec41c3d55b48ab216d2e69d36fffa6051506a1e62d4b` |
 | `research/gen36/pipeline.sh` | `ad893db7df797cfdd4d67613c08b4a0cfc1ca007edf7ad665018e854181a9c84` |
 | `research/gen35/repair.py` | `9b822da5635fdec44aa6bfb5622d937623148d52592e45656b7ce32b53c16ebb` |
 | `research/gen35/published/enhance.py` | `59b65cdaead7aca31d54fb73f1b1d2a7fcf6b3c1bb7feb07dcd42588d79611b5` |

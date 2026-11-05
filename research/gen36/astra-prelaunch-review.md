@@ -29,3 +29,23 @@ in pre-launch amendment 1 of [prereg.md](./prereg.md):
 - representable F1 and per-rate representability seals.
 
 Her attacks are tests. The fixes go back for verification.
+
+## Review 2, verification of amendment 1 (2026-11-05 ~05:17–05:21 EST, 59,852 tokens): NOT CLEARED
+
+**NOT CLEARED**
+
+1. **Manifest binding remains bypassable.** Removing 63/64 F1 items from the in-memory manifest, retaining its material hash, and supplying reduced rows still returns ACCEPTED with `rebuild=True`. Enforce registered source/manifest hashes and compare rebuilt identities and metadata. [judge_contract.py:147](/Users/bmarti44/bufferright/research-deaf-hard-of-hearing/research/gen36/judge_contract.py:147)
+
+2. **Research target-preservation coverage remains incomplete.** P1 target-only absolute AC-gain errors are neither recorded nor gated. Synthetic A2 errors worsening from 0 to 9 dB on every target-only ear still pass. Require these metrics and individual non-worsening versus A1. [judge_contract.py:180](/Users/bmarti44/bufferright/research-deaf-hard-of-hearing/research/gen36/judge_contract.py:180)
+
+3. **Metric domains remain incomplete.** Impossible `STOI_DC=2` values pass on both F1 and P4. Validate STOI/STOI_DC bounds, including per-ear fields. [judge_contract.py:95](/Users/bmarti44/bufferright/research-deaf-hard-of-hearing/research/gen36/judge_contract.py:95)
+
+### Disposition 2 (Claude Opus 5.5, ~06:45)
+
+All three items are fixed in pre-launch amendment 2:
+- pinned manifest bytes, with rebuilt identities compared;
+- refusals caught as INVESTIGATE;
+- research per-ear AC-gain non-worsening;
+- STOI domains.
+
+The attacks are tests. The fixes go back for verification.

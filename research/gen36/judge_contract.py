@@ -4,7 +4,8 @@ REPAIR ACCEPTED (inference release only, owner approval required; promoted FALSE
     - every row's panel/seed/arm is registered; every key field is PRESENT with the registered type (no bools, no
       missing fields read as null); each panel x seed x arm has EXACTLY its registered key set, unique;
     - every required metric is present, numeric, finite and inside its domain (peaks/RMS/ILD/ITD/abs-gain >= 0,
-      saturation fraction in [0, 1], lag an integer);
+      saturation fraction in [0, 1], STOI and STOI_DC (incl. per ear) in [-1, 1], lag an integer);
+    - manifest.json's bytes equal the sealed MANIFEST_SHA;
     - release safetensors/config/enhance/model module hashes and the contract table equal the registered ones and
       contract.build_table(); every seed's fresh material hash equals the sealed manifest.json; with rebuild, the
       manifest is rebuilt from the audio and must reproduce the sealed hash.
@@ -12,7 +13,8 @@ REPAIR ACCEPTED (inference release only, owner approval required; promoted FALSE
     target-only ear.
  G2 target preservation: mean wave_err(C) < mean wave_err(E1) in every cell (F2 level x rate x format; X3 level x
     setting; X3q); on EVERY export target-only row (overload included) wave_err(C) <= E1 and |AC gain error|(C) <= E1;
-    research P1 target-only: mean wave_err(A2) < A1 per setting x ear, and wave_err(A2) <= A1 on every item-ear.
+    research P1 target-only: mean wave_err(A2) < A1 per setting x ear, and wave_err(A2) <= A1 and |AC gain error|(A2)
+    <= A1 on every item-ear.
  G3 noisy quality: SI-SDR(C) - SI-SDR(E1) >= -0.01 dB and STOI_DC(C) - STOI_DC(E1) >= -0.001 on every F1/X1/X2 row;
     the same per ear for A2 vs A1 on every P1 noisy item and P4 scene.
  G4 alignment and cues: lag(C) == 0 on every export target-only row; vs the EQUALLY FLUSHED A1: ILD error +<= 0.05 dB
@@ -38,8 +40,10 @@ FMTS = ("WAV_PCM_16", "WAV_FLOAT", "FLAC_PCM_16")
 CEIL = 10 ** (-1 / 20)
 NOISY = ("sisdr", "stoi", "stoi_dc", "peak", "sat", "pre_write_peak")
 TONLY = NOISY + ("alpha", "wave_err", "ac_gain_err_db", "lag")
-NONNEG = {"peak", "pre_write_peak", "rms", "ac_gain_err_db", "ild_target_err_db", "itd_err_samples"}
+MANIFEST_SHA = "41dc19934a8ee955b60d596bb793dc65eea94734d9e687143c57345710793550"   # research/gen36/manifest.json, sealed (amendment 2)
+NONNEG = {"peak", "pre_write_peak", "rms", "ac_gain_err_db", "ac_gain_err_db_L", "ac_gain_err_db_R", "ild_target_err_db", "itd_err_samples"}
 UNIT = {"sat"}
+SIGNED_UNIT = {"stoi", "stoi_dc", "stoi_dc_L", "stoi_dc_R"}       # STOI-family values lie in [-1, 1]
 INTS = {"lag", "lag_L", "lag_R"}
 
 
@@ -65,7 +69,11 @@ T_INT_OR_NONE = lambda v: v is None or _isint(v)
 
 def _spec():
     from panel_v2 import TARGETS
-    man = json.loads((HERE / "manifest.json").read_text())
+    raw = (HERE / "manifest.json").read_bytes()
+    import hashlib
+    if hashlib.sha256(raw).hexdigest() != MANIFEST_SHA:
+        raise SystemExit("REFUSED: manifest.json differs from the sealed registration")
+    man = json.loads(raw)
     f1 = {(k["spk"], k["utt"], k["snr"], r, f) for k in man["items"]["F1"] for r in RATES for f in FMTS}
     f2 = {(k["spk"], k["utt"], k["level"], r, f) for k in man["items"]["F2"] for r in RATES for f in FMTS}
     T, S, A, N = (1, 2, 3, 4), ("low", "medium", "high"), (-60, -30, 30, 60), (-5.0, 0.0, 5.0, 10.0)
@@ -101,6 +109,8 @@ def _metric_ok(m, v):
         return False
     if m in UNIT and not (0 <= v <= 1):
         return False
+    if m in SIGNED_UNIT and not (-1 <= v <= 1):
+        return False
     return True
 
 
@@ -130,7 +140,7 @@ def judge(rows_p, rebuild=True):
             for k, r in got.items():
                 need = req
                 if p == "P1" and k[3] is None:
-                    need = req + tuple(f"{m}_{e}" for m in ("alpha", "wave_err", "lag") for e in "LR")
+                    need = req + tuple(f"{m}_{e}" for m in ("alpha", "wave_err", "lag", "ac_gain_err_db") for e in "LR")
                 if not all(m in r and _metric_ok(m, r[m]) for m in need):
                     ok = False; why.append(f"{p} {s} {a} {k}: missing, non-finite or out-of-domain metric")
     bound = True
@@ -142,9 +152,15 @@ def judge(rows_p, rebuild=True):
         bound &= D.get("release_enhance_sha256") == contract.PUBLISHED_ENHANCE_SHA
         bound &= D.get("model_module_sha256") == contract.PUBLISHED_MODEL_MODULE_SHA == enhance_v2.model_module_sha()
         bound &= D.get("fresh_material_by_seed") == {str(s): man["material_sha256"] for s in SEEDS}
-        if rebuild:
+        if rebuild:   # rebuild from the audio: the hash AND every item identity and representability must match the seal
             import manifest as M
-            bound &= M.build()[1] == man["material_sha256"]
+            items, mh, meta = M.build()
+            bound &= mh == man["material_sha256"] and meta["targets"] == man["targets"] and meta["crowd"] == man["crowd"]
+            f1 = sorted((i["spk"], i["utt"], i["snr"], tuple(sorted((str(r), v) for r, v in i["representable"].items()))) for i in items if i["panel"] == "F1")
+            f2 = sorted((i["spk"], i["utt"], str(i["level"]), tuple(sorted((str(r), v) for r, v in i["representable"].items()))) for i in items if i["panel"] == "F2")
+            s1 = sorted((k["spk"], k["utt"], k["snr"], tuple(sorted(k["representable"].items()))) for k in man["items"]["F1"])
+            s2 = sorted((k["spk"], k["utt"], str(k["level"]), tuple(sorted(k["representable"].items()))) for k in man["items"]["F2"])
+            bound &= f1 == s1 and f2 == s2
     except SystemExit as e:
         bound = False; why.append(str(e))
     if not bound:
@@ -177,7 +193,8 @@ def judge(rows_p, rebuild=True):
             ks = [k for k in spec["P1"][1] if TO(k) and k[1] == st]
             m1, m2 = mean(A1[k][f"wave_err_{e}"] for k in ks), mean(A2[k][f"wave_err_{e}"] for k in ks)
             g2d[f"{s}|P1|{st}|{e}"] = [m1, m2]; g2 &= m2 < m1
-        g2 &= all(A2[k][f"wave_err_{e}"] <= A1[k][f"wave_err_{e}"] for k in spec["P1"][1] if TO(k) for e in "LR")
+        g2 &= all(A2[k][f"wave_err_{e}"] <= A1[k][f"wave_err_{e}"] and A2[k][f"ac_gain_err_db_{e}"] <= A1[k][f"ac_gain_err_db_{e}"]
+                  for k in spec["P1"][1] if TO(k) for e in "LR")
     g3, w3 = True, [0.0, 0.0]
     for s in SEEDS:
         for p in ("F1", "X1", "X2"):
@@ -222,7 +239,7 @@ def judge(rows_p, rebuild=True):
 def judge_safe(rows_p, rebuild=True):
     try:
         return judge(rows_p, rebuild)
-    except Exception as e:  # noqa: BLE001  malformed input -> INVESTIGATE, never a pass
+    except (Exception, SystemExit) as e:  # noqa: BLE001  malformed or refused input -> INVESTIGATE, never a pass or a crash
         return {"checks": {"well_formed": False}, "verdict": "INVESTIGATE", "error": f"{type(e).__name__}: {e}"}
 
 

@@ -56,7 +56,7 @@ def _synthetic(table):
             for a in arms:
                 for k in keys:
                     r = {"panel": p, "seed": s, "arm": a, **{f: v for (f, _), v in zip(kf, k)}}
-                    need = req + (tuple(f"{m}_{e}" for m in ("alpha", "wave_err", "lag") for e in "LR") if p == "P1" and k[3] is None else ())
+                    need = req + (tuple(f"{m}_{e}" for m in ("alpha", "wave_err", "lag", "ac_gain_err_db") for e in "LR") if p == "P1" and k[3] is None else ())
                     for m in need:
                         r[m] = 0 if m.startswith("lag") else 0.0
                     for m in [m for m in r if m.startswith("alpha")]:
@@ -121,3 +121,26 @@ def test_judge_complete_and_attacks(table, tmp_path):
     assert run(lambda d: first(d, "X2", arm="C_candidate").__setitem__("pre_write_peak", 0.95)) == "INVESTIGATE"
     assert run(lambda d: first(d, "X4", arm="C_candidate").__setitem__("rms", 1.0)) == "INVESTIGATE"
     assert run(lambda d: first(d, "P6", arm="A2_repair").__setitem__("rms", 1.0)) == "INVESTIGATE"
+    # Astra verification attacks: research AC-gain worsening, impossible STOI values, manifest tampering
+    assert run(setall("P1", "A2_repair", "ac_gain_err_db_L", 9.0, lambda r: r["snr"] is None)) == "INVESTIGATE"
+    assert run(lambda d: first(d, "F1", arm="C_candidate").__setitem__("stoi_dc", 2.0)) == "INVESTIGATE"
+    assert run(lambda d: first(d, "P4", arm="A2_repair").__setitem__("stoi_dc_L", 2.0)) == "INVESTIGATE"
+    assert run(lambda d: first(d, "F1", arm="E0_published").__setitem__("stoi", -1.5)) == "INVESTIGATE"
+
+
+def test_manifest_tampering_refused(table, tmp_path, monkeypatch):
+    """Removing 63 of 64 F1 items from the manifest while keeping its claimed hash must not pass (Astra)."""
+    base = _synthetic(table)
+    man = json.loads((HERE / "manifest.json").read_text())
+    keep = man["items"]["F1"][:1]
+    tampered = {**man, "items": {**man["items"], "F1": keep}}
+    real = Path.read_bytes
+    def fake_read_bytes(self):
+        if self.name == "manifest.json" and self.parent == HERE:
+            return json.dumps(tampered).encode()
+        return real(self)
+    monkeypatch.setattr(Path, "read_bytes", fake_read_bytes)
+    d = copy.deepcopy(base)
+    d["rows"] = [r for r in d["rows"] if r["panel"] != "F1" or (r["spk"], r["utt"], r["snr"]) == (keep[0]["spk"], keep[0]["utt"], keep[0]["snr"])]
+    p = tmp_path / "r.json"; p.write_text(json.dumps(d))
+    assert JC.judge_safe(p, rebuild=True)["verdict"] == "INVESTIGATE"
