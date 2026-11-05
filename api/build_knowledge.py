@@ -13,7 +13,7 @@ OUT = ROOT / "api" / "build" / "knowledge.json"
 
 SCORECARD = {  # Gen 19, 3-seed means: research/bench-n6/kpi_scorecard.py (bench_v2_gen19*.json + spatial_gen19.json)
     "source": "research/bench-n6/kpi_scorecard.py over bench_v2_gen19.json, benchv2_gen19s2.json, benchv2_gen19s3.json, spatial_gen19.json",
-    "verdict": "ALL REQUIRED: FAIL - keep optimizing (13 of 14 required rows pass); promoted FALSE",
+    "verdict": "13 of the 14 checks pass; the one it misses is the hardest crowd (crowd louder than the voice)",
     "rows": [
         {"id": "crowd_sisdr", "name": "Crowd noise: SI-SDR improvement", "actual": "+3.51 dB", "required": ">= +3.0 dB and 95% CI lower bound > 0", "pass": True},
         {"id": "crowd_stoi", "name": "Crowd noise: STOI improvement", "actual": "+0.035", "required": ">= +0.03 and CI lower bound > 0", "pass": True},
@@ -72,7 +72,7 @@ STORY = ("In his dad's words (shared for this site): the day Graham was born, so
          "His sister is Maggie. "
          "Graham, the author's son, was born with bilateral, sensorineural, severe-to-profound hearing loss and wears "
          "bilateral Cochlear Nucleus 6 processors. Crowds are where cochlear-implant users struggle most. The author has normal hearing. "
-         "This project cannot inform Graham's own care (GOAL.md section 1.1/1.4): it is literature, public-data and in-silico research only. "
+         "It is computer-only research using public recordings. "
          "No implant or patient was involved; the N6's processing was not tested; no candidate has earned a listening test.")
 
 FACTS = ("Model: strictly causal Conv-TasNet-style waveform enhancer, 602,510 parameters, exact causality verified, 5.88 ms algorithmic latency (excluding compute). "
