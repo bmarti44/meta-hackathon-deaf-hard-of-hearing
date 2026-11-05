@@ -70,7 +70,8 @@ const mat = new THREE.ShaderMaterial({
       quake.y += (ring*0.6 + sin(uTime*60.0 + position.x*3.0)*0.15) * uShake * (1.0-still);
       quake.z += ring*0.6 * uShake * (1.0-still);
       p += quake;
-      p.y = mix(p.y, (aSeed-0.5)*0.15, still * uShake);
+      p.y = mix(p.y, uStillC.y + (aSeed-0.5)*0.15, still * uShake);
+      p.x = mix(p.x, uStillC.x + (position.x - uStillC.x), still * uShake);
       // weeks of tests: slow, uncertain wavering
       p.y += uWaver * (sin(p.x*0.7 + uTime*0.7 + aSeed) * 0.5 + sin(p.x*1.9 - uTime*0.4)*0.2);
       // music: a rhythm runs through it

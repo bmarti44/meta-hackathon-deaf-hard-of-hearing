@@ -70,7 +70,7 @@
       const verdict = g.better > g.worse ? `Muse did better after the cleanup on ${g.better} of ${g.n} recordings, and worse on ${g.worse}.`
         : g.better < g.worse ? `So here the cleanup did not help Muse: it did better on ${g.better} of ${g.n} recordings and worse on ${g.worse}.`
         : `It was a draw: Muse did better on ${g.better} of ${g.n} recordings and worse on ${g.worse}.`;
-      return `<p><span class="ml-label">The ${g.n} recording${g.n === 1 ? "" : "s"} above, when ${loud(parseFloat(k))}</span>Before cleanup, Muse got <b>${g.b4h}</b> of ${g.tot} words right. After cleanup, <b>${g.afh}</b>. ${verdict}</p>`;
+      return `<p><span class="ml-label">When ${loud(parseFloat(k))}</span>Muse checked ${g.n} recording${g.n === 1 ? "" : "s"}, ${g.tot} words in all. Before cleanup it got <b>${g.b4h}</b> words right; after cleanup, <b>${g.afh}</b>. ${verdict}</p>`;
     }).join("");
 
     const m = d.meta, f = x => (x >= 0 ? "+" : "") + (100 * x).toFixed(1);

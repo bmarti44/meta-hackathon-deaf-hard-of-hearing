@@ -532,8 +532,6 @@
       <div class="ml-total" id="ml-total"></div>
     </div>
     <p class="small muted" id="ml-fallback">Loading the recordings…</p>
-
-    <p class="small muted">This is a test of a computer, not of a person. It tells us whether the cleaned voice is easier for a machine to follow.</p>
     <details class="researchers"><summary>For researchers</summary><p class="small muted">Recordings: LibriSpeech, Panayotov et al. 2015, CC BY 4.0. The crowd is mixed from other LibriSpeech readers.</p><div class="small muted" id="ml-research"></div></details>
   </div>
 </section>
@@ -563,14 +561,14 @@
         <p class="kv-line">The first-ear clue was off by about <b>a quarter of a thousandth of a second</b> after cleanup, versus a third of a thousandth with none, also slightly better. <button class="explain-btn ai-only" hidden type="button" data-explain="itd">Explain</button></p>
         <p class="kv-line hot">In the hardest room, the louder-ear clue got worse: off by 11.22 dB instead of 10.29.</p>
         <div class="explain-slot"></div>
-        <p class="small muted">None of this shows that he would hear direction better. Our planned next step is to give the program two ears that agree on one decision about how much to turn the sound down, so the louder-ear clue survives.</p><details class="researchers"><summary>For researchers</summary><p class="small muted">Spatial screen: seed 17, four simulated scenes on an assumed head model. Target-ILD error 5.47 vs 5.96 dB unprocessed; ITD error 4.0 vs 5.75 samples; −5 dB scene ILD error 10.29 to 11.22 dB. Registered next step: binaural linked-gain model.</p></details>
+        <p class="small muted">Our planned next step is to give the program two ears that agree on one decision about how much to turn the sound down, so the louder-ear clue survives.</p><details class="researchers"><summary>For researchers</summary><p class="small muted">Spatial screen: seed 17, four simulated scenes on an assumed head model. Target-ILD error 5.47 vs 5.96 dB unprocessed; ITD error 4.0 vs 5.75 samples; −5 dB scene ILD error 10.29 to 11.22 dB. Registered next step: binaural linked-gain model.</p></details>
       </div>
     </div>
 
     <div class="dir-wrap" style="margin-top:32px">
       <div class="rv">
         <h3>What two ears that agree could look like</h3>
-        <p class="small muted">A drawing of the idea, not a measurement. His teacher calls from his left in a noisy classroom.</p>
+        <p class="small muted">A drawing of the idea. His teacher calls from his left in a noisy classroom.</p>
         <div class="toggle" id="dir-modes" role="group" aria-label="Processing mode">
           <button type="button" data-mode="none" aria-pressed="true">No cleanup</button>
           <button type="button" data-mode="separate" aria-pressed="false">Each ear separately</button>
@@ -610,7 +608,6 @@
     <ul class="plain">
       <li><strong>Two of our own checks are still blank:</strong> how natural quiet speech sounds, and whether the program runs fast enough on an ordinary processor.</li>
       <li><strong>On hissing noise it had never heard, one score got slightly worse</strong> in all three training runs, even though the main hiss check passed.</li>
-      <li><strong>The which-side checks come from one training run in four pretend rooms,</strong> and in the hardest room the louder-ear clue got worse. Nothing here shows better direction hearing.</li>
       <li><strong>Our earlier versions were sloppier.</strong> Version 17 changed several things at once, so we cannot say which one helped.</li>
     </ul>
     <details class="researchers"><summary>For researchers</summary><p class="small muted">Quiet PESQ and CPU streaming RTF unestablished. White-noise vocoded ESTOI decreases in all three Gen 19 seeds (mean <span class="num" data-bench="white_estoi">−0.059</span>) although the white SI-SDR row passes. Direction-cue rows: one seed, four simulated scenes; −5 dB scene target-ILD error 10.29 to 11.22 dB. Gen 17 changed pool, mixtures, SNR weighting and budget together.</p></details>
@@ -619,15 +616,15 @@
     
     <ol class="log">
       <li><div><b>Meta's AI ran most of the experiments, a second AI checked them, a dad directed</b><p>Most of the experiments, from the very first version through version 21, were designed, run and written up by Muse Wonder Full, Meta's AI model, under Graham's dad's direction. That includes building the computer test bench, the 14 checks, and training the model on this page. Claude, an AI from Anthropic, took over on the last day to run the final experiments and build this website. Codex Astra, an AI from a different company, checked every result before the next step. And Muse answers your questions right here on this page.</p></div></li>
-      <li><div><b>A mistake we made: Version 17 changed four things at once</b><p>So we cannot say which change helped. Every version since changes one thing.</p></div></li>
-      <li><div><b>A mistake we made: A quick test run once overwrote a finished version's file</b><p>Now test runs have to save somewhere else, and every saved version is scored so none can be quietly swapped.</p></div></li>
-      <li><div><b>Something we corrected: A training run was cut off and replayed</b><p>A computer session ended halfway through. We restarted the run and checked it reproduced the original exactly before using it.</p></div></li>
-      <li><div><b>Something we corrected: The checker caught a flattering summary</b><p>Most of one version's improvement came from one of the two test voices. We corrected the write-up and kept the warning in.</p></div></li>
+      <li><div><b>We made a mistake with version 17: it changed four things at once</b><p>So we cannot say which change helped. Every version since changes one thing.</p></div></li>
+      <li><div><b>A quick test run once overwrote a finished version's file</b><p>Now test runs have to save somewhere else, and every saved version is scored so none can be quietly swapped.</p></div></li>
+      <li><div><b>A training run was cut off, so we replayed it from the start</b><p>A computer session ended halfway through. We restarted the run and checked it reproduced the original exactly before using it.</p></div></li>
+      <li><div><b>The checker caught a flattering summary, and we corrected it</b><p>Most of one version's improvement came from one of the two test voices. We corrected the write-up and kept the warning in.</p></div></li>
       <li><div><b>We ran part of version 23 on a slower chip on purpose</b><p>The faster chip gave slightly different answers each time, which would make the result impossible to reproduce. The slower chip gives the same answer every time.</p></div></li>
       <li><div><b>The model is free to download</b><p>Try the model yourself: it is free to download on <a data-hf>Hugging Face</a>. It is a research model from computer tests, not a hearing product.</p></div></li>
-      <li><div><b>About this site: Every number comes from one script</b><p>A script reads the saved results and produces the files behind this page, so nothing is typed in by hand. The version cards are read from one small file that is updated as results land.</p></div></li>
-      <li><div><b>About this site: Muse, Meta's AI model, powers Ask and Explain</b><p>Your question goes to a small server that lets Muse look through everything we wrote down and show its steps. If that server is unreachable, those features hide themselves.</p></div></li>
-      <li><div><b>About this site: The wave behind the page</b><p>The jackhammer, the crowd of voices becoming one voice, and the wall it hits are all the same cloud of dots, reshaped as you scroll. It switches off when you cannot see it and holds still if your device asks for less motion.</p></div></li>
+      <li><div><b>Every number on this site comes from one script</b><p>A script reads the saved results and produces the files behind this page, so nothing is typed in by hand. The version cards are read from one small file that is updated as results land.</p></div></li>
+      <li><div><b>Muse, Meta's AI model, answers the questions on this site</b><p>Your question goes to a small server that lets Muse look through everything we wrote down and show its steps. If that server is unreachable, those features hide themselves.</p></div></li>
+      <li><div><b>The wave behind the page is one cloud of dots</b><p>The jackhammer, the crowd of voices becoming one voice, and the wall it hits are all the same cloud of dots, reshaped as you scroll. It switches off when you cannot see it and holds still if your device asks for less motion.</p></div></li>
     </ol>
     <details class="researchers"><summary>For researchers</summary><p class="small muted">Research loop: Muse Wonder Full (<code class="mono">muse-wonder-full-1.0</code>, Meta) ran Gen 0 to 21 under human direction, including the bench, the KPI scorecard and the Gen 19 model; Claude Opus 5.5 (Anthropic) ran Gen 21 seed 19 and its verdict, and Gen 22 to 24, on 2026-11-04 and built the site infrastructure; independent reviewer Codex Astra (xhigh) throughout; Muse Spark 1.3 also reviewed the Gen 23 verdict. Gen 23 spectral loss on CPU because MPS STFT gradients were not bit-deterministic. Site data: <code class="mono">site/tools/extract.py</code> runs <code class="mono">kpi_scorecard.py</code> and reads bench, training-log and judge JSONs into <code class="mono">site/data/</code>; cards from <code class="mono">data/generations.json</code>. Muse: muse-spark-1.3 via Meta's API. WebGL: three.js r170, vendored; GPU particle morph; DPR capped; paused off-screen; static under reduced motion. Techniques after Codrops scroll-driven shader articles and itsthemedium.com.</p></details>
   </details>

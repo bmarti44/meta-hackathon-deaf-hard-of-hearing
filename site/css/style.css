@@ -681,7 +681,6 @@ details.fold.fold-phone{border:0;margin:0}
 .imp-num,.imp-n{display:none!important}
 @media (max-width:760px){
   .story-panel,.chapter .panel,#wall .grid.g2>div:first-child,.col,.checks li,.figures-line,#short .lede,#generations .lede,#scorecard .lede,.tree-hint,details.researchers>summary,.ladder li>div,.log li>div,.imp-steps li,.imp-group,.imp-how,#dir-read,.gen,.kv-line,.spread-text,.quote,.fold>summary,.files li,.dl-lead,.slider-box,.legend,.table-wrap,.ratio,.chart,.answer-text,.explain-out,#meta-lab .ml-list,.gen-cards{background:none!important}
-  .ladder li>div::before,.log li>div::before,#dir-read::before,.imp-steps li::before,.imp-group::before,.imp-how::before,.imp-listen-head::before,.imp-head::before,.imp-fig figcaption::before,#graham .col::before,#graham .dir-wrap::before,#graham .ladder::before,.slider-read::before,.chart::before,#wall .grid.g2>div:first-child>h3::before,#wall .grid.g2>div:first-child>p::before,#wall .grid.g2>div:first-child>ul::before,#wall .grid.g2>div:first-child>details::before{content:none!important}
   main,main p,main li,main h1,main h2,main h3,main h4,main span,main b,main a,main summary,main dt,main dd,main td,main th,main label,main button,main figcaption,main small{text-shadow:0 0 12px #090b10,0 0 3px #090b10,0 0 3px #090b10}
   .hero-text::before,.chapter .panel::before,.story-panel::before{background:radial-gradient(80% 70% at 50% 50%,rgba(9,11,16,.6),rgba(9,11,16,.35) 60%,rgba(9,11,16,0) 100%)}
 }
@@ -757,16 +756,13 @@ details.researchers>summary{background:rgba(9,11,16,.86);padding:0 8px}
 header.bar.solid{background:rgba(9,11,16,.98)}
 .chart .axis text,.chart .lbl,.chart .req-l{font-size:13px}
 @media (max-width:420px){.live-chip{display:inline-flex}.live-chip span.t{display:none}.live-chip::after{content:attr(data-short);font-size:11px;color:var(--dim);white-space:nowrap}}
-@media (max-width:760px){.imp-group:not(:first-of-type) .imp-tracks{display:none}.imp-group:not(:first-of-type).open .imp-tracks{display:block}}
 /* round 11 fixes */
 #wall .grid.g2>div:last-child{position:sticky!important;top:calc(var(--head-h) + 16px);align-self:start}
 .slider-box,.legend,.ratio{background:none!important}
 .chapter .panel::before,.story-panel::before,.col::before,.gen::before,.ask-form::before,.chips::before,.kv-line::before,#dir-read::before,.steps::before,#wall .grid.g2>div:first-child::before,#wall .grid.g2>div:last-child::before,.ladder li>div::before,.log li>div::before,.imp-group-side::before,.imp-steps::before,.imp-how::before{inset:-48px;background:radial-gradient(closest-side,rgba(9,11,16,.92) 86%,transparent)}
-@media (max-width:760px){.imp-group:not(:first-of-type) .imp-tracks{display:block}.imp-group + .imp-group .imp-tracks{display:none}.imp-group + .imp-group.open .imp-tracks{display:block}}
 /* round 11: let the wave through around the wall, versions and honesty blocks */
 #wall .grid.g2>div:first-child::before,#wall .grid.g2>div:last-child::before{inset:-16px;background:radial-gradient(closest-side,rgba(9,11,16,.86) 72%,transparent)}
 .col::before,.gen::before{inset:-20px;background:radial-gradient(closest-side,rgba(9,11,16,.86) 74%,transparent)}
-#implant .imp-group h4[role=button]{min-height:44px;display:flex;align-items:center}
 /* ===== round 12 ===== */
 @media (max-width:400px){.bar-in{gap:8px}.wordmark{font-size:17px}.live-chip{display:none}}
 @media (max-width:760px){.chapter .panel::before,.story-panel::before,.col::before,.gen::before,.ask-form::before,.chips::before,.kv-line::before,#dir-read::before,.steps::before,#wall .grid.g2>div:first-child::before,#wall .grid.g2>div:last-child::before,.ladder li>div::before,.log li>div::before,.imp-group-side::before,.imp-steps::before,.imp-how::before,#model .grid.g2>div:last-child::before{inset:-24px -12px;background:linear-gradient(transparent,rgba(9,11,16,.9) 24px,rgba(9,11,16,.9) calc(100% - 24px),transparent)}.legend{background:rgba(9,11,16,.9)!important}.slider-box label{background:rgba(9,11,16,.9)}}
@@ -776,8 +772,18 @@ header.bar.solid{background:rgba(9,11,16,.98)}
 @media (min-width:761px) and (max-width:1100px){#born .story-panel::before{inset:-64px}}
 #dir-demo{background:none!important}
 @media (max-width:1000px){#wall .grid.g2,#attempts .grid.g2{grid-template-columns:1fr}}
-details.fold.fold-phone>summary::marker,details.fold>summary::marker,details.researchers>summary::marker{content:""}details.fold>summary::before,details.researchers>summary::before{content:"Show ";color:var(--dim)}details[open].fold>summary::before,details[open].researchers>summary::before{content:"Hide "}
+details.fold.fold-phone>summary::marker,details.fold>summary::marker,details.researchers>summary::marker{content:""}details.fold>summary::before,details.researchers>summary::before{content:"Show\00a0";color:var(--dim)}details[open].fold>summary::before,details[open].researchers>summary::before{content:"Hide\00a0"}
 .col::before{background:radial-gradient(closest-side,rgba(9,11,16,.8) 70%,transparent)}
-@media (max-width:760px){.imp-stage,#imp-stage,.imp-fig{background:none!important}.imp-group + .imp-group .imp-group-side p{display:none}.imp-group + .imp-group.open .imp-group-side p{display:block}}
-@media (max-width:760px){#wall .grid.g2>div:first-child::before,#wall .grid.g2>div:last-child::before,.gen::before{content:none}#wall .grid.g2>div:first-child p,#wall .grid.g2>div:first-child li,#wall .grid.g2>div:first-child h3,.gen *{text-shadow:0 0 12px #090b10,0 0 3px #090b10,0 0 3px #090b10}}
-@media (max-width:760px){#wall .grid.g2>div:first-child::before{content:"";inset:-24px -12px;background:linear-gradient(transparent,rgba(9,11,16,.88) 24px,rgba(9,11,16,.88) calc(100% - 24px),transparent)}}
+@media (max-width:760px){.imp-stage,#imp-stage,.imp-fig{background:none!important}}
+
+/* ===== round 13: ONE phone backing block (source of truth for ≤760 px) ===== */
+summary{align-items:baseline}
+.dir-wrap>div:first-child{position:relative}
+.dir-wrap>div:first-child::before{content:"";position:absolute;inset:-24px;background:radial-gradient(closest-side,rgba(9,11,16,.92) 86%,transparent);z-index:-1;pointer-events:none}
+@media (max-width:760px){
+  .chapter .panel::before,.story-panel::before,.col::before,.ask-form::before,.chips::before,.kv-line::before,#dir-read::before,.steps::before,.ladder li>div::before,.log li>div::before,.imp-group-side::before,.imp-steps::before,.imp-how::before,#model .grid.g2>div:last-child::before,#wall .grid.g2>div:first-child::before,.dir-wrap>div:first-child::before,#wall .big::before{content:"";position:absolute;inset:-24px -12px;background:linear-gradient(transparent,rgba(9,11,16,.9) 24px,rgba(9,11,16,.9) calc(100% - 24px),transparent);z-index:-1;pointer-events:none}
+  #music .story-panel::before,#wall .grid.g2>div:last-child::before,.gen::before{content:none}
+  .gen *,#wall .grid.g2>div:last-child *{text-shadow:0 0 12px #090b10,0 0 3px #090b10,0 0 3px #090b10}
+  .legend,.slider-box label{background:rgba(9,11,16,.9)}
+}
+@media (max-width:760px){.col::before,.dir-wrap>div:first-child::before,#dir-read::before{inset:-20px -10px;background:radial-gradient(closest-side,rgba(9,11,16,.86) 62%,transparent)}}

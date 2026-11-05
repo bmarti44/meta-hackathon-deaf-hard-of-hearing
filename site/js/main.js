@@ -193,7 +193,7 @@ sl.addEventListener('input', () => { window.__fray = (10 - +sl.value) / 15; });
 // ---------- scorecard ----------
 const NEED = { crowd_sisdr: 'needs at least +3.0 dB cleaner', crowd_stoi: 'needs at least +0.03 more understandable', crowd_ace: 'the implant pulses must come out at least 0.05 closer to the clean voice', crowd_m5: 'needs at least +1.5 dB cleaner', crowd_0: 'needs at least +1.5 dB cleaner', crowd_m5_stoi: 'must not get less understandable', crowd_every_seed: 'must help in all three runs', crowd_vs_gate: 'must beat the simple filter', ssn: 'needs at least +3.0 dB cleaner', white: 'must not get worse', quiet_abs: 'must stay very clean (25 dB or better)', quiet_stoi: 'must stay understandable', ild: 'must be closer than with no cleanup', itd: 'must be at least as close as with no cleanup', ild_distortion: 'no requirement' };
 const UNIT = { crowd_sisdr: ' dB', crowd_m5: ' dB', crowd_0: ' dB', ssn: ' dB', white: ' dB', quiet_abs: ' dB', ild: ' dB', itd: ' samples', crowd_stoi: ' points', crowd_ace: ' points', crowd_m5_stoi: ' points', quiet_stoi: ' points', crowd_vs_gate: ' dB', ild_distortion: ' dB' };
-const RESULT = r => { const v = r.actual; if (/^\[/.test(v)) return v.replace(/[\[\]]/g, '').split(',').map(x => '+' + x.trim()).join(', ') + ' dB'; const n = parseFloat(v); if (isNaN(n)) return v; const sign = /^(crowd_|ssn|white)/.test(r.id) && n > 0 && !/abs|vs_gate/.test(r.id) ? '+' : ''; return sign + v + (UNIT[r.id] || ''); };
+const RESULT = r => { const v = String(r.actual); if (r.id === 'itd') return 'timing off by ' + v + ' steps of 1/16,000 of a second'; if (r.id === 'crowd_every_seed') return v.replace(/[\[\]]/g, '').split(',').map(x => '+' + x.trim() + ' dB').join(', '); const n = parseFloat(v); if (isNaN(n)) return v; const neg = n < 0 ? '−' : ''; const abs = v.replace(/^-/, ''); if (UNIT[r.id] === ' points') return neg + abs + ' on a 0-to-1 scale'; const sign = /^(crowd_|ssn|white)/.test(r.id) && n > 0 && !/abs|vs_gate/.test(r.id) ? '+' : ''; return sign + neg + abs + (UNIT[r.id] || ''); };
 const PLAIN = { crowd_sisdr: 'Crowd: how clean the voice is', crowd_stoi: 'Crowd: how understandable it is', crowd_ace: 'Crowd: what the electrodes would receive',
   crowd_m5: 'Crowd louder than the voice (−5 dB)', crowd_0: 'Crowd as loud as the voice (0 dB)', crowd_m5_stoi: 'Never harder to understand in the loudest crowd',
   crowd_every_seed: 'Helps in all three training runs', crowd_vs_gate: 'Better than the simple filter that already exists', ssn: 'A steady hum',
@@ -261,12 +261,12 @@ setTimeout(fitNav, 0);
   $('#tree').innerHTML = s + '</svg>';
   $('#tree-desc').textContent = 'The versions, in order. ' + G.map(g => `${g.label}, ${WORD[g.status]}: ${g.change}.`).join(' ') + ` The versions we kept building on: ${trunk.map(t => t.label).join(', ')}.`;
 })();
-const FOLD = new Set(['gen16', 'gen17', 'gen18', 'gen20']);
+const FOLD = new Set(['gen16', 'gen17', 'gen18']);
 const cardHtml = g => `<article class="gen" data-status="${g.status}" id="${g.id}" aria-labelledby="${g.id}-h">
   <h3 id="${g.id}-h"><span>${esc(g.label)}</span><span class="st" data-status="${g.status}">${GLYPH[g.status]} ${WORD[g.status]}</span></h3>
   <p class="change">${esc(g.change)}</p>
   ${g.eta ? `<p class="eta">${esc(g.eta)}</p>` : ''}
-  <dl>${(g.numbers || []).map(n => `<dt>${esc(n.label)}</dt><dd>${esc(n.value)}</dd>`).join('')}</dl>
+  ${(g.numbers || []).length ? `<details class="researchers nums"><summary>The numbers</summary><dl>${(g.numbers || []).map(n => `<dt>${esc(n.label)}</dt><dd>${esc(n.value)}</dd>`).join('')}</dl></details>` : ''}
   ${g.note ? `<p class="note">${esc(g.note)}</p>` : ''}
   <div class="acts">${g.link ? `<a href="${/^https?:/.test(g.link) ? esc(g.link) : esc(repoUrl(g.link) || '#')}" target="_blank" rel="noopener">read the full write-up</a>` : ''}
     <button class="explain-btn ai-only" hidden type="button" data-explain="${g.id}">Explain</button>
@@ -371,5 +371,3 @@ if (health) {
 }
 // text equivalent of the wave state (aria-live)
 { const ws = $('#wave-state'); if (ws) { let lastTxt = '', lastAt = 0, lastSec = ''; setInterval(() => { const st = window.__waveState; if (!st) return; const c = st.C; let txt = c.shake > 0.5 ? 'The line is shaking hard, with a calm centre.' : c.wall > 0.25 ? 'The line has hit a wall.' : c.bands > 0.5 ? 'The line has split into 22 bands.' : c.ears > 0.5 ? (c.clean < 0.5 ? 'The line is fuzzy: no cleanup.' : c.drift > 0.5 ? 'Two lines, drifting apart.' : 'The two lines have become one.') : (window.__mlFuzz > 0) ? 'The line has gone fuzzy: the recording before cleanup.' : (window.__mlFuzz < 0) ? 'The line is clearer: the recording after cleanup.' : (c.kick > 0.3 || c.beat > 0.3) ? 'A rhythm is running through the line.' : (c.waver > 0.3 && c.clarity > 0.3) ? 'The line wobbles but does not change: those versions did not help.' : c.clarity > 0.75 ? 'The line is mostly clear.' : c.clarity > 0.6 ? 'The line is clear.' : c.clarity > 0.3 ? 'The line is clearing up.' : 'The line is fuzzy, like a crowd.'; if (txt === lastTxt || performance.now() - lastAt < 2500) return; lastTxt = txt; lastAt = performance.now(); ws.textContent = txt; }, 500); } }
-// phones: implant listen groups 2 and 3 fold until their heading is tapped
-{ if (innerWidth < 760) $$('#implant .imp-group + .imp-group h4').forEach(h4 => { h4.style.cursor = 'pointer'; h4.setAttribute('role', 'button'); h4.setAttribute('tabindex', '0'); h4.setAttribute('aria-expanded', 'false'); const t = () => { const g = h4.closest('.imp-group'); g.classList.toggle('open'); h4.setAttribute('aria-expanded', g.classList.contains('open')); }; h4.addEventListener('click', t); h4.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); t(); } }); }); }
