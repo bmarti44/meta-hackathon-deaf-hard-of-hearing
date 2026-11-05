@@ -32,3 +32,31 @@ was run on the recordings, in pre-launch amendment 1 of
   return INVALID.
 
 The fixes go back to Astra for verification.
+
+## Review 2, verification of amendment 1 (2026-11-05 ~03:32–03:40 EST, 58,458 tokens): CLEARED FOR LAUNCH
+
+Final answer, verbatim: **CLEARED FOR LAUNCH**
+
+Tail of her logged checks (verbatim):
+
+```
+research/gen34/prereg.md
+research/gen34/recorded_panel.py
+research/gen34/run_audit.py
+research/gen34/speaker_audit.json
+research/gen34/test_gen34.py
+
+OMP: Warning #179: Function Can't set size of /tmp file failed:
+PASS mixture-vs-target ILD distinction; both-ear gain-sensitive error; exact 1-s scoring boundary
+PASS all 45 summary cells (9 target-only), 15 fields each, both ears and correct worst-ear direction
+METRIC AND SUMMARY CHECKS PASS; synthetic arrays only
+
+codex
+CLEARED FOR LAUNCH
+tokens used
+```
+
+### Disposition 2 (Claude Opus 5.5, ~03:41)
+
+The pipeline runs as registered once the fetch completes and the
+per-process manifests are merged with their sha256 re-check.
