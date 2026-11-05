@@ -174,7 +174,7 @@ function measure() {
   T.waver = Math.max(presence(E.tests), 0.35 * presence(E.gens));
   const lvl = window.__waveLevel;
   T.beat = Math.max(presence(E.music) * 0.9, presence(E.dancing) * (lvl > 0 ? lvl * 1.2 : 0.18));
-  T.bands = presence(E.impStage, 0.05);
+  T.bands = Math.max(presence(E.impStage, 0.05), presence(document.querySelector('.imp-head'), 0.05));
   T.ears = presence(E.dir, 0.05);
   T.drift = window.__ears === 'separate' ? 1 : 0;
   T.wall = pw > 0 && sliderClar != null ? Math.min(pw, presence(E.sliderBox, 0.05)) * clamp01((0.32 - sliderClar) / 0.1) : 0;   // slams in only toward −5 dB, only while the slider is on screen
