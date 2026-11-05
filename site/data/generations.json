@@ -365,15 +365,23 @@
       "label": "Version 33",
       "aim": "room",
       "change": "No new training: version 32, but both ears share one cleanup plan, so the program treats the left and right sides the same way",
-      "status": "pending",
+      "status": "fail",
       "numbers": [
         {
-          "label": "Why",
-          "value": "Every echoey-room version made the which-side clues slightly worse when each ear was cleaned on its own"
+          "label": "Which-side clue in loud crowds (−5 and 0 dB)",
+          "value": "Better than version 19 by about 0.75 dB"
+        },
+        {
+          "label": "Which-side clue in quieter crowds (+5 and +10 dB)",
+          "value": "Worse than version 19 by 0.85 to 1.0 dB"
+        },
+        {
+          "label": "Clearness in each ear in quieter crowds",
+          "value": "Up to 1 dB worse"
         }
       ],
-      "note": "A quick check that runs in about two minutes once it has been reviewed. It cannot turn version 32 into a pass; it only tells us whether sharing helps the which-side clues.",
-      "link": "research/gen33/prereg.md"
+      "note": "Sharing one cleanup plan between the ears helped the which-side clue when the crowd was loud, but hurt it, and each ear's clearness, when the crowd was quieter. Our rule needs no loss anywhere, so this way of sharing did not pass.",
+      "link": "research/gen33/results.md"
     }
   ]
 }
