@@ -30,12 +30,8 @@ async function call(path, params = {}) {
 
 export const api = {
   async health() {
-    try {
-      const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 6000);
-      const r = await fetch('/api/health', { signal: ctl.signal }); clearTimeout(t);
-      if (!r.ok) return null;
-      const j = await r.json(); return j && j.ok ? j : null;
-    } catch (_) { return null; }
+    const once = async ms => { try { const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), ms); const r = await fetch('/api/health', { signal: ctl.signal }); clearTimeout(t); if (!r.ok) return null; const j = await r.json(); return j && j.ok ? j : null; } catch (_) { return null; } };
+    return (await once(6000)) || (await once(12000));
   },
   ask: q => call('/api/ask', { q }),
   explain: (row, level, context) => call('/api/explain', { row, level, context }),

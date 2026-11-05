@@ -46,7 +46,7 @@ geo.setAttribute('aSeed', new THREE.BufferAttribute(seed, 1));
 
 const U = {
   uTime: { value: 0 }, uClarity: { value: 0.1 }, uShake: { value: 0 }, uWaver: { value: 0 }, uBeat: { value: 0 },
-  uBands: { value: 0 }, uEars: { value: 0 }, uEarsDrift: { value: 0 }, uEarsClean: { value: 1 }, uKick: { value: 0 }, uPulse: { value: 0 }, uStillC: { value: new THREE.Vector2(3.2, 0) }, uWall: { value: 0 }, uThin: { value: 0 },
+  uBands: { value: 0 }, uEars: { value: 0 }, uEarsDrift: { value: 0 }, uEarsClean: { value: 1 }, uKick: { value: 0 }, uPulse: { value: 0 }, uKickGain: { value: 2.4 }, uStillC: { value: new THREE.Vector2(3.2, 0) }, uWall: { value: 0 }, uThin: { value: 0 },
   uPR: { value: renderer.getPixelRatio() }, uScale: { value: isSmall ? 1.15 : 1.15 }, uXS: { value: 1 }, uYOff: { value: 0 }, uAlphaK: { value: isSmall ? 1.0 : 1.2 },
   uBone: { value: new THREE.Color('#c9c2b2') }, uSignal: { value: new THREE.Color('#5fdcff') }, uHot: { value: new THREE.Color('#ff5c3f') }
 };
@@ -54,7 +54,7 @@ const mat = new THREE.ShaderMaterial({
   uniforms: U, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
   vertexShader: `
     attribute vec3 aVoice; attribute vec3 aWall; attribute float aSeed;
-    uniform float uTime, uClarity, uShake, uWaver, uBeat, uBands, uEars, uEarsDrift, uEarsClean, uWall, uThin, uPR, uScale, uXS, uYOff, uKick, uPulse; uniform vec2 uStillC;
+    uniform float uTime, uClarity, uShake, uWaver, uBeat, uBands, uEars, uEarsDrift, uEarsClean, uWall, uThin, uPR, uScale, uXS, uYOff, uKick, uPulse, uKickGain; uniform vec2 uStillC;
     varying float vClar, vSeed, vDepth, vStill, vWall, vLit, vThin, vEar, vLinked;
     vec3 hash3(vec3 p){ p = fract(p*0.3183099+vec3(.1,.2,.3)); p *= 17.0; return fract(vec3(p.x*p.y*p.z*(p.x+p.y+p.z)))*2.0-1.0; }
     float ease(float t){ return t*t*(3.0-2.0*t); }
@@ -76,7 +76,7 @@ const mat = new THREE.ShaderMaterial({
       p.y += uWaver * (sin(p.x*0.7 + uTime*0.7 + aSeed) * 0.5 + sin(p.x*1.9 - uTime*0.4)*0.2);
       // music: a rhythm runs through it
       p.y += uBeat * sin(p.x*1.4 + uTime*8.0) * 1.3;
-      p.y += uKick * sin(p.x*0.9 + aSeed*3.0) * 2.4 * (1.0 + 0.5*sin(uTime*30.0));   // lands on the beat
+      p.y += uKick * sin(p.x*0.9 + aSeed*3.0) * uKickGain * (1.0 + 0.5*sin(uTime*30.0));   // lands on the beat
       p.y += uPulse * sin(p.x*2.0 - uTime*5.0) * 0.35;                               // Muse is writing
       // the implant: 22 horizontal bands, about 8 lit at a time
       float band = floor(aSeed*22.0);
@@ -93,7 +93,7 @@ const mat = new THREE.ShaderMaterial({
       p.x *= uXS; p.y += uYOff;
       vec4 mv = modelViewMatrix * vec4(p,1.0);
       gl_Position = projectionMatrix * mv;
-      float size = mix(1.0, 1.6, uBands) * mix(2.6, 2.2, c) * (1.0 + 0.9*uShake*(1.0-still)) * mix(1.0, 1.9, uWall) * mix(1.0, 0.95, uThin) * mix(1.0, 1.5, uEars) * (1.0 + 0.2*uEars*(1.0-uEarsDrift)*uEarsClean) * uPR * uScale;
+      float size = mix(1.0, 1.6, uBands) * mix(2.6, 2.2, c) * (1.0 + 0.9*uShake*(1.0-still)) * mix(1.0, 1.9, uWall) * mix(1.0, 0.95, uThin) * mix(1.0, 1.5, uEars) * uPR * uScale;
       gl_PointSize = size * (12.0 / -mv.z);
       vClar = c; vSeed = aSeed; vDepth = -mv.z; vStill = still*uShake; vWall = uWall; vThin = uThin; vLinked = uEars*(1.0-uEarsDrift)*uEarsClean;
     }`,
@@ -113,7 +113,7 @@ const mat = new THREE.ShaderMaterial({
       a *= mix(1.0, 1.1, vStill);
       a *= 0.35 + 1.6*vLit;
       a *= mix(1.0, 1.0, vThin);
-      a *= mix(1.0, 0.9, vLinked);
+      a *= mix(1.0, 0.45, vLinked);
       a *= mix(1.0, 0.35 + 0.65*step(0.985, fract(vSeed*7.0)), vWall);
       a *= clamp(1.7 - vDepth*0.1, 0.3, 1.0);
       gl_FragColor = vec4(col, a);
@@ -209,8 +209,8 @@ function frame(now) {
   let cl = C.clarity;
   if (E.gens && presence(E.gens) > 0) { gensPhase += 0.05; cl += Math.sin(gensPhase) * 0.3 * presence(E.gens); }  // nulls: a flat wobble
   U.uClarity.value = cl; U.uShake.value = C.shake; U.uWaver.value = C.waver; U.uBeat.value = C.beat;
-  U.uBands.value = C.bands; U.uEars.value = C.ears; U.uEarsDrift.value = C.drift; U.uEarsClean.value = C.clean; U.uKick.value = C.kick; U.uPulse.value = C.pulse;
-  U.uAlphaK.value = baseAlpha * 1 * (1 + 0.5 * C.wall) * (isSmall ? 1 + 0.5 * C.thin : 1) * (1 + 0.3 * presence(E.music)) * ((window.__mlFuzz || 0) > 0 && presence(E.meta) > 0.2 ? 1.8 : 1); U.uWall.value = C.wall; U.uThin.value = C.thin;
+  U.uBands.value = C.bands; U.uEars.value = C.ears; U.uEarsDrift.value = C.drift; U.uEarsClean.value = C.clean; U.uKick.value = C.kick; U.uPulse.value = C.pulse; U.uKickGain.value = (window.__waveLevel > 0) ? 3.5 : 2.4;
+  U.uAlphaK.value = baseAlpha * 1 * (1 + 0.5 * C.wall) * (isSmall ? 1 + 0.5 * C.thin : 1) * (1 + 0.3 * presence(E.music)) * (isSmall && C.ears > 0.5 ? 1.4 : 1) * ((window.__mlFuzz || 0) > 0 && presence(E.meta) > 0.2 ? 1.8 : 1); U.uWall.value = C.wall; U.uThin.value = C.thin;
   camera.position.z = 9 - 0.6 * cl - 4.5 * C.wall * C.wall;
   camera.position.x = Math.sin(t * 0.1) * 0.25 + (Math.random() - 0.5) * 0.12 * C.shake;
   camera.position.y = (Math.random() - 0.5) * 0.12 * C.shake;

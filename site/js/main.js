@@ -84,7 +84,7 @@ $$('[data-bench="white_estoi"]').forEach(e => e.textContent = fmt(bench.summary_
     let bassPrev = 0; (function tick() { if (!an) return; an.getByteFrequencyData(buf); let sum = 0, bass = 0; for (let i = 0; i < 24; i++) sum += buf[i]; for (let i = 1; i <= 6; i++) bass += buf[i]; bass /= 6 * 255; const rise = Math.max(0, bass - bassPrev); bassPrev = bassPrev * 0.8 + bass * 0.2; const off = v.muted || v.paused; window.__waveLevel = off ? 0 : sum / (24 * 255); window.__kick = off ? 0 : Math.min(1, rise * 6); requestAnimationFrame(tick); })();
   }
   const setPlay = on => { play.textContent = on ? 'Pause' : 'Play'; play.setAttribute('aria-pressed', on); };
-  v.addEventListener('play', () => setPlay(true)); v.addEventListener('pause', () => setPlay(false));
+  v.addEventListener('play', () => { setPlay(true); window.__dancePlaying = true; }); v.addEventListener('pause', () => { setPlay(false); window.__dancePlaying = false; });
   play.addEventListener('click', () => { attach(); v.paused ? v.play().catch(() => {}) : v.pause(); });
   snd.addEventListener('click', () => { attach(); v.muted = !v.muted; const on = !v.muted; snd.textContent = on ? 'Sound on: tap to mute' : 'Turn sound on'; if (on) analyser(); snd.classList.toggle('is-on', on); snd.setAttribute('aria-pressed', on); snd.setAttribute('aria-label', on ? 'Sound is on. Turn sound off' : 'Sound is off. Turn sound on'); if (on && v.paused) v.play().catch(() => {}); });
   // near the viewport: attach the source; in view: autoplay muted (unless reduced motion); out of view: pause
@@ -135,7 +135,7 @@ const SERIES = [
   { k: 'oracle_noncausal', label: 'a version that cheats by hearing the future', color: 'var(--bone)', w: 1.5, dash: '5 4' }
 ];
 function lineChart(hostId, { xs, series, xl, yl, req, reqLabel, ymin, ymax, xfmt = String, ytick = 2, ariaLabel }) {
-  const phone = innerWidth < 1000;
+  const phone = innerWidth < 700;
   const W = phone ? 360 : 560, H = phone ? 260 : 320, m = { l: 44, r: 16, t: 16, b: 44 };
   const x = v => m.l + (v - xs[0]) / (xs[xs.length - 1] - xs[0]) * (W - m.l - m.r);
   const y = v => m.t + (1 - (v - ymin) / (ymax - ymin)) * (H - m.t - m.b);
@@ -213,9 +213,9 @@ const scoreRow = r => {
 };
 {
   const fails = score.rows.filter(r => r.status === 'FAIL'), passes = score.rows.filter(r => r.status !== 'FAIL');
-  tb.innerHTML = fails.map(scoreRow).join('') + `<tr class="fold-row"><td colspan="5"><details class="fold"><summary>The ${passes.filter(r => r.status === 'PASS').length} checks it passes, plus one we only record</summary><table class="inner"><tbody>${passes.map(scoreRow).join('')}</tbody></table></details></td></tr>`;
+  tb.innerHTML = fails.map(scoreRow).join('') + `<tr class="fold-row"><td colspan="5"><details class="fold"><summary>the ${passes.filter(r => r.status === 'PASS').length} checks it passes, plus one we only record</summary><table class="inner"><tbody>${passes.map(scoreRow).join('')}</tbody></table></details></td></tr>`;
   const tech = score.rows.map(r => `<li>${esc(r.kpi)}: result ${esc(r.actual)}, required ${esc(r.required)}${r.stretch ? `; stretch ${esc(r.stretch)} ${r.stretch_pass ? 'met' : 'not met'}` : ''}</li>`).join('');
-  $('#score-verdict').insertAdjacentHTML('afterend', `<details class="researchers"><summary>For researchers</summary><ul class="plain small muted">${tech}</ul></details>`);
+  $('#score-verdict').insertAdjacentHTML('afterend', `<details class="researchers"><summary>notes for researchers</summary><ul class="plain small muted">${tech}</ul></details>`);
 }
 $('#score-verdict').textContent = `${score.n_pass} of ${score.n_required} checks pass. Our verdict: not good enough yet, keep working.`;
 $('#level-toggle').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; level = b.dataset.level; $$('button', e.currentTarget).forEach(x => x.setAttribute('aria-pressed', x === b)); });
@@ -266,13 +266,24 @@ const cardHtml = g => `<article class="gen" data-status="${g.status}" id="${g.id
   <h3 id="${g.id}-h"><span>${esc(g.label)}</span><span class="st" data-status="${g.status}">${GLYPH[g.status]} ${WORD[g.status]}</span></h3>
   <p class="change">${esc(g.change)}</p>
   ${g.eta ? `<p class="eta">${esc(g.eta)}</p>` : ''}
-  ${(g.numbers || []).length ? `<details class="researchers nums"><summary>The numbers</summary><dl>${(g.numbers || []).map(n => `<dt>${esc(n.label)}</dt><dd>${esc(n.value)}</dd>`).join('')}</dl></details>` : ''}
+  ${(g.numbers || []).length ? `<details class="researchers nums"><summary>the numbers</summary><dl>${(g.numbers || []).map(n => `<dt>${esc(n.label)}</dt><dd>${esc(n.value)}</dd>`).join('')}</dl></details>` : ''}
   ${g.note ? `<p class="note">${esc(g.note)}</p>` : ''}
   <div class="acts">${g.link ? `<a href="${/^https?:/.test(g.link) ? esc(g.link) : esc(repoUrl(g.link) || '#')}" target="_blank" rel="noopener">read the full write-up</a>` : ''}
     <button class="explain-btn ai-only" hidden type="button" data-explain="${g.id}">Explain</button>
 </div>
   <div class="explain-slot"></div></article>`;
-$('#gen-cards').innerHTML = G.filter(g => !FOLD.has(g.id)).map(cardHtml).join('') + `<details class="fold earlier"><summary>Earlier versions (16, 17, 18 and 20)</summary><div class="gen-cards">${G.filter(g => FOLD.has(g.id)).map(cardHtml).join('')}</div></details>`;
+{
+  const nums = a => a.map(g => g.id.replace('gen', ''));
+  const list = a => a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1];
+  if (innerWidth < 760) {
+    const newest = G[G.length - 1], base = G.find(g => g.status === 'baseline');
+    const shown = [base, newest].filter(Boolean), rest = G.filter(g => !shown.includes(g));
+    $('#gen-cards').innerHTML = shown.map(cardHtml).join('') + `<details class="fold earlier"><summary>every other version (${list(nums(rest))})</summary><div class="gen-cards">${rest.map(cardHtml).join('')}</div></details>`;
+  } else {
+    const early = G.filter(g => FOLD.has(g.id));
+    $('#gen-cards').innerHTML = G.filter(g => !FOLD.has(g.id)).map(cardHtml).join('') + `<details class="fold earlier"><summary>earlier versions (${list(nums(early))})</summary><div class="gen-cards">${early.map(cardHtml).join('')}</div></details>`;
+  }
+}
 
 // ---------- Gen 21 chart (per-seed −5 dB gains, VAL vs bench, two arms) ----------
 (function g21chart() {
@@ -318,7 +329,7 @@ $('#gen-cards').innerHTML = G.filter(g => !FOLD.has(g.id)).map(cardHtml).join(''
 { const fab = $('#ask-fab'); if (fab) { let last = scrollY; const near = () => ['ask', 'meta-lab'].some(id => { const e = $('#' + id); if (!e) return false; const r = e.getBoundingClientRect(); return r.top < innerHeight && r.bottom > 0; }); addEventListener('scroll', () => { const up = scrollY < last - 2; last = scrollY; fab.classList.toggle('show', up && !near() && scrollY > innerHeight); }, { passive: true }); } }
 $$('.ai-only').forEach(e => { e.hidden = false; e.classList.add('ai-wait'); });
 const health = await api.health();
-if (!health) $$('.ai-only').forEach(e => { e.hidden = true; e.classList.remove('ai-wait'); }); else $$('.ai-only').forEach(e => e.classList.remove('ai-wait'));
+if (!health) { $$('.ai-only').forEach(e => { e.hidden = true; e.classList.remove('ai-wait'); }); const off = $('#ask-off'); if (off) off.hidden = false; } else $$('.ai-only').forEach(e => e.classList.remove('ai-wait'));
 if (health) {
   $$('.ai-only').forEach(e => { e.hidden = false; e.classList.add('ai-ready'); });
   $('#ask-off').hidden = true;
@@ -359,9 +370,9 @@ if (health) {
       if (!slot || !slot.classList.contains('explain-row')) { slot = document.createElement('tr'); slot.className = 'explain-row'; slot.innerHTML = `<td colspan="5"></td>`; b.closest('tr').after(slot); }
       slot = slot.firstElementChild;
     }
-    window.__musePulse = 1; slot.innerHTML = `<div class="explain-out"><span class="thinking"><i aria-hidden="true"></i>Muse is writing${isBrief ? ' a brief' : ` for ${level === 'parent' ? 'a parent' : 'a researcher'}`}…</span></div>`;
+    window.__musePulse = 1; slot.innerHTML = `<div class="explain-out"><span class="thinking"><i aria-hidden="true"></i>Muse is writing${isBrief ? ' a brief' : ` for ${level === 'parent' ? 'a parent' : 'a researcher'}`}… <span class="elapsed">0 s</span></span></div>`; const t0 = Date.now(); const tick = setInterval(() => { const el = slot.querySelector('.elapsed'); if (!el) { clearInterval(tick); return; } el.textContent = Math.round((Date.now() - t0) / 1000) + ' s'; }, 1000);
     b.disabled = true;
-    const ctx = (b.closest('tr') ? b.closest('tr').querySelector('td') : b.closest('.kv-line') || b.closest('.gen')) ; const label = ctx ? (ctx.querySelector('h3 span, b') || ctx).textContent.trim().slice(0, 120) : '';
+    const ctx = b.closest('tr') ? b.closest('tr').querySelector('td') : b.closest('.kv-line') || (b.closest('.gen') && b.closest('.gen').querySelector('h3 span, .change')); const label = ctx ? ctx.cloneNode(true).textContent.replace(/\s*(Show|Hide)?\s*notes for researchers[\s\S]*$/i, '').replace(/\bExplain\b/g, '').replace(/\s+/g, ' ').trim().slice(0, 160) : '';
     try { const r = isBrief ? await api.brief(id) : await api.explain(id, level, label); slot.innerHTML = `<div class="explain-out">${renderAnswer(r.text)}<p class="small muted" style="margin:8px 0 0">Explained by Muse (Meta) for ${level === 'parent' ? 'a parent' : 'a researcher'}</p></div>`; }
     catch (err) { slot.innerHTML = `<div class="explain-out err">${esc(err.message)}</div>`; }
     finally { b.disabled = false; window.__musePulse = 0; }
@@ -370,4 +381,4 @@ if (health) {
   chip.classList.add('off');
 }
 // text equivalent of the wave state (aria-live)
-{ const ws = $('#wave-state'); if (ws) { let lastTxt = '', lastAt = 0, lastSec = ''; setInterval(() => { const st = window.__waveState; if (!st) return; const c = st.C; let txt = c.shake > 0.5 ? 'The line is shaking hard, with a calm centre.' : c.wall > 0.25 ? 'The line has hit a wall.' : c.bands > 0.5 ? 'The line has split into 22 bands.' : c.ears > 0.5 ? (c.clean < 0.5 ? 'The line is fuzzy: no cleanup.' : c.drift > 0.5 ? 'Two lines, drifting apart.' : 'The two lines have become one.') : (window.__mlFuzz > 0) ? 'The line has gone fuzzy: the recording before cleanup.' : (window.__mlFuzz < 0) ? 'The line is clearer: the recording after cleanup.' : (c.kick > 0.3 || c.beat > 0.3) ? 'A rhythm is running through the line.' : (c.waver > 0.3 && c.clarity > 0.3) ? 'The line wobbles but does not change: those versions did not help.' : c.clarity > 0.75 ? 'The line is mostly clear.' : c.clarity > 0.6 ? 'The line is clear.' : c.clarity > 0.3 ? 'The line is clearing up.' : 'The line is fuzzy, like a crowd.'; if (txt === lastTxt || performance.now() - lastAt < 2500) return; lastTxt = txt; lastAt = performance.now(); ws.textContent = txt; }, 500); } }
+{ const ws = $('#wave-state'); if (ws) { let lastTxt = '', lastAt = 0, lastSec = ''; setInterval(() => { const st = window.__waveState; if (!st) return; const c = st.C; let txt = c.shake > 0.5 ? 'The line is shaking hard, with a calm centre.' : c.wall > 0.25 ? 'The line has hit a wall.' : c.bands > 0.5 ? 'The line has split into 22 bands.' : c.ears > 0.5 ? (c.clean < 0.5 ? 'The line is fuzzy: no cleanup.' : c.drift > 0.5 ? 'Two lines, drifting apart.' : 'The two lines have become one.') : (window.__mlFuzz > 0) ? 'The line has gone fuzzy: the recording before cleanup.' : (window.__mlFuzz < 0) ? 'The line is clearer: the recording after cleanup.' : (c.waver > 0.5 && c.beat < 0.3) ? 'The line wavers, unsure.' : (c.kick > 0.3 || c.beat > 0.3 || (window.__dancePlaying && st.T.beat > 0.1)) ? 'A rhythm is running through the line.' : (c.waver > 0.3 && c.clarity > 0.3) ? 'The line wobbles but does not change: those versions did not help.' : c.clarity > 0.75 ? 'The line is mostly clear.' : c.clarity > 0.6 ? 'The line is clear.' : c.clarity > 0.3 ? 'The line is clearing up.' : 'The line is fuzzy, like a crowd.'; if (txt === lastTxt || performance.now() - lastAt < 2500) return; lastTxt = txt; lastAt = performance.now(); ws.textContent = txt; }, 500); } }
