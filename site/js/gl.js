@@ -93,7 +93,7 @@ const mat = new THREE.ShaderMaterial({
       p.x *= uXS; p.y += uYOff;
       vec4 mv = modelViewMatrix * vec4(p,1.0);
       gl_Position = projectionMatrix * mv;
-      float size = mix(1.0, 1.6, uBands) * mix(2.6, 2.2, c) * (1.0 + 0.9*uShake*(1.0-still)) * mix(1.0, 1.9, uWall) * mix(1.0, 0.95, uThin) * mix(1.0, 1.5, uEars) * uPR * uScale;
+      float size = mix(1.0, 1.4, uEars*(1.0-uEarsDrift)*uEarsClean) * mix(1.0, 1.6, uBands) * mix(2.6, 2.2, c) * (1.0 + 0.9*uShake*(1.0-still)) * mix(1.0, 1.9, uWall) * mix(1.0, 0.95, uThin) * mix(1.0, 1.5, uEars) * uPR * uScale;
       gl_PointSize = size * (12.0 / -mv.z);
       vClar = c; vSeed = aSeed; vDepth = -mv.z; vStill = still*uShake; vWall = uWall; vThin = uThin; vLinked = uEars*(1.0-uEarsDrift)*uEarsClean;
     }`,
@@ -113,7 +113,7 @@ const mat = new THREE.ShaderMaterial({
       a *= mix(1.0, 1.1, vStill);
       a *= 0.35 + 1.6*vLit;
       a *= mix(1.0, 1.0, vThin);
-      a *= mix(1.0, 1.4, vLinked);
+      a *= mix(1.0, 2.2, vLinked);
       a *= mix(1.0, 0.35 + 0.65*step(0.985, fract(vSeed*7.0)), vWall);
       a *= clamp(1.7 - vDepth*0.1, 0.3, 1.0);
       gl_FragColor = vec4(col, a);
@@ -205,7 +205,7 @@ function frame(now) {
   T.clean = window.__ears === 'none' ? 0 : 1;
   const mf = window.__mlFuzz || 0; if (mf !== 0 && presence(E.meta) > 0.2) { T.clarity = mf > 0 ? 0.1 : 0.8; T.waver = Math.max(T.waver, mf > 0 ? 0.5 : 0); }
   const pm = Math.max(presence(E.music), (lvl > 0 ? 0 : presence(E.dancing))); const synth = pm > 0.2 ? (Math.sin(t * Math.PI * 4) > 0.9 ? 0.6 * pm : 0) : 0;   // a gentle 2 Hz pulse while the music line is on screen
-  T.kick = Math.max(window.__kick || 0, synth, C.kick * 0.82);          // short decaying pulse on each beat
+  T.kick = Math.max(window.__kick || 0, synth, (lvl > 0 ? (presence(E.dancing) > 0.2 && Math.sin(t * Math.PI * 4) > 0.9 ? 0.3 : 0) : 0), C.kick * 0.82);          // short decaying pulse on each beat
   T.pulse = window.__musePulse ? 0.6 + 0.4 * Math.sin(t * 3.0) : 0;
   for (const k in T) C[k] += (T[k] - C[k]) * (k === 'shake' ? 0.12 : k === 'beat' ? 0.35 : k === 'kick' ? 0.9 : 0.08);
   let cl = C.clarity;

@@ -647,8 +647,9 @@
         <li>Training (Gen 19): 24k steps, batch 8 by 2 s, 10% quiet examples, Adam, cosine 1e-3 to 1e-4, 3 seeds (20261117/18/19), 251-speaker train-clean-100 pool.</li>
         <li>Bench v2: n = 6 crops per cell; SNRs −5/0/5/10 dB; systems: unprocessed, classical causal gate, non-causal oracle, candidate.</li>
         <li>Scorecard: 14 required rows plus one diagnostic; verdicts PASS / FAIL / INCOMPLETE from <code class="mono">kpi_scorecard.py</code>; +3.0 dB crowd requirement is about a third of the oracle headroom.</li>
-        <li>Screens (Gen 21–24): candidate minus same-seed Gen 19 at −5 dB must be ≥ +0.30 dB on both the fixed VAL panel and the bench, with 0 dB, quiet and other-row safeguards.</li>
-        <li>Tests: 17 bench/spatial tests, 42 trainer/judge tests across Gen 20–24.</li>
+        <li>Screens (Gen 21 onward, including the room experiments Gen 27–33): candidate minus same-seed Gen 19 at −5 dB must be ≥ +0.30 dB on both the fixed VAL panel and the bench, with 0 dB, quiet and other-row safeguards.</li>
+        <li>Tests: bench/spatial tests plus trainer/judge tests for every registered generation (Gen 20 onward); each generation folder carries its own prereg.md and results.md.</li>
+        <li>Gen 34 (in progress) is a frozen real-recording audit: BRUDEX, recorded hearing-aid-microphone speech in a real lab, evaluation only, no training.</li>
       </ul>
     
     <h3>Limitations of the bench itself</h3>
@@ -662,7 +663,7 @@
     <ul class="plain small" id="sources">
       <li><a data-repo="SUBMISSION.md">SUBMISSION.md</a>, the judges' summary, treated as canonical wording here.</li>
       <li><a data-repo="STATUS.md">STATUS.md</a>, the running log, newest first.</li>
-      <li><a data-repo="research/gen19/results.md">Gen 19 results</a>, <a data-repo="research/gen21/results.md">Gen 21 results</a>, <a data-repo="research/gen22/results.md">Gen 22 results</a>, <a data-repo="research/gen23/prereg.md">Gen 23 pre-registration</a>, <a data-repo="research/gen24/results.md">Gen 24 results</a></li>
+      <li><a data-repo="research/gen19/results.md">Gen 19 results</a>, <a data-repo="research/gen21/results.md">Gen 21 results</a>, <a data-repo="research/gen22/results.md">Gen 22 results</a>, <a data-repo="research/gen23/results.md">Gen 23 results</a>, <a data-repo="research/gen24/results.md">Gen 24 results</a>, <a data-repo="research/gen25/results.md">Gen 25 results</a>, <a data-repo="research/gen26/results.md">Gen 26 results</a>, <a data-repo="research/gen27/results.md">Gen 27 results</a>, <a data-repo="research/gen28/results.md">Gen 28 results</a>, <a data-repo="research/gen29/results.md">Gen 29 results</a>, <a data-repo="research/gen30/results.md">Gen 30 results</a>, <a data-repo="research/gen31/results.md">Gen 31 results</a>, <a data-repo="research/gen32/results.md">Gen 32 results</a>, <a data-repo="research/gen33/results.md">Gen 33 results</a>, <a data-repo="research/gen34/prereg.md">Gen 34 audit plan</a>. Every generation folder also holds its prereg.md.</li>
       <li><a data-repo="research/bench-n6/KPI.md">KPI contract</a> and <a data-repo="research/bench-n6/kpi_scorecard.py">scorecard script</a>.</li>
     </ul>
     <h3 style="margin-top:32px">Downloads</h3>

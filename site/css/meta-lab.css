@@ -21,7 +21,7 @@
 #meta-lab .ml-after .ml-label:first-child{color:var(--signal)}
 #meta-lab audio{display:none}
 #meta-lab .ml-heard{margin:0 0 12px;font-size:16px;line-height:1.55;color:var(--bone);min-height:4.6em}
-#meta-lab .ml-miss{color:var(--hot);text-decoration:underline;text-decoration-color:var(--hot-dk);text-underline-offset:3px}
+#meta-lab .ml-miss{text-decoration:underline;text-underline-offset:3px}
 #meta-lab .ml-score{margin:0 0 16px;font-family:var(--mono);font-size:13px;color:var(--dim)}
 #meta-lab .ml-score b{font-family:var(--serif);font-weight:600;font-size:28px;color:var(--bone);margin-right:4px}
 #meta-lab .ml-key{margin-top:10px}

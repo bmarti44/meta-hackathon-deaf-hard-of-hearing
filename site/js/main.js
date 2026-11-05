@@ -85,7 +85,7 @@ $$('[data-bench="white_estoi"]').forEach(e => e.textContent = fmt(bench.summary_
   function analyser() {
     if (ac) return;
     try { ac = new (window.AudioContext || window.webkitAudioContext)(); const srcN = ac.createMediaElementSource(v); an = ac.createAnalyser(); an.fftSize = 256; buf = new Uint8Array(an.frequencyBinCount); srcN.connect(an); an.connect(ac.destination); } catch (_) { return; }
-    let bassPrev = 0; (function tick() { if (!an) return; an.getByteFrequencyData(buf); let sum = 0, bass = 0; for (let i = 0; i < 24; i++) sum += buf[i]; for (let i = 1; i <= 6; i++) bass += buf[i]; bass /= 6 * 255; const rise = Math.max(0, bass - bassPrev); bassPrev = bassPrev * 0.8 + bass * 0.2; const off = v.muted || v.paused; window.__waveLevel = off ? 0 : sum / (24 * 255); window.__kick = off ? 0 : Math.min(1, rise * 6); requestAnimationFrame(tick); })();
+    let bassPrev = 0; (function tick() { if (!an) return; an.getByteFrequencyData(buf); let sum = 0, bass = 0; for (let i = 0; i < 24; i++) sum += buf[i]; for (let i = 1; i <= 6; i++) bass += buf[i]; bass /= 6 * 255; const rise = Math.max(0, bass - bassPrev); bassPrev = bassPrev * 0.8 + bass * 0.2; const off = v.muted || v.paused; window.__waveLevel = off ? 0 : sum / (24 * 255); window.__kick = off ? 0 : Math.min(1, rise * 9); requestAnimationFrame(tick); })();
   }
   const setPlay = on => { play.textContent = on ? 'Pause' : 'Play'; play.setAttribute('aria-pressed', on); };
   v.addEventListener('play', () => { setPlay(true); window.__dancePlaying = true; }); v.addEventListener('pause', () => { setPlay(false); window.__dancePlaying = false; });
@@ -195,7 +195,7 @@ if (!reduce) {
 sl.addEventListener('input', () => { window.__fray = (10 - +sl.value) / 15; });
 
 // ---------- scorecard ----------
-const NEED = { crowd_sisdr: 'needs at least +3.0 dB cleaner', crowd_stoi: 'needs at least +0.03 more understandable', crowd_ace: 'the implant pulses must come out at least 0.05 closer to the clean voice', crowd_m5: 'needs at least +1.5 dB cleaner', crowd_0: 'needs at least +1.5 dB cleaner', crowd_m5_stoi: 'must not get less understandable', crowd_every_seed: 'must help in all three runs', crowd_vs_gate: 'must beat the simple filter', ssn: 'needs at least +3.0 dB cleaner', white: 'must not get worse', quiet_abs: 'must stay very clean (25 dB or better)', quiet_stoi: 'must stay understandable', ild: 'must be closer than with no cleanup', itd: 'must be at least as close as with no cleanup', ild_distortion: 'no requirement' };
+const NEED = { crowd_sisdr: 'at least +3.0 dB cleaner', crowd_stoi: 'at least +0.03 more understandable', crowd_ace: 'implant pulses at least 0.05 closer to the clean voice', crowd_m5: 'at least +1.5 dB cleaner', crowd_0: 'at least +1.5 dB cleaner', crowd_m5_stoi: 'no harder to understand', crowd_every_seed: 'help in all three runs', crowd_vs_gate: 'to beat the simple filter', ssn: 'at least +3.0 dB cleaner', white: 'no worse', quiet_abs: 'to stay very clean (25 dB or better)', quiet_stoi: 'to stay understandable', ild: 'to be closer than with no cleanup', itd: 'to be at least as close as with no cleanup', ild_distortion: 'nothing (recorded for information)' };
 const UNIT = { crowd_sisdr: ' dB', crowd_m5: ' dB', crowd_0: ' dB', ssn: ' dB', white: ' dB', quiet_abs: ' dB', ild: ' dB', itd: ' samples', crowd_stoi: ' points', crowd_ace: ' points', crowd_m5_stoi: ' points', quiet_stoi: ' points', crowd_vs_gate: ' dB', ild_distortion: ' dB' };
 const RESULT = r => { const v = String(r.actual); if (r.id === 'itd') return 'the timing was off by about a quarter of a thousandth of a second'; if (r.id === 'crowd_every_seed') return v.replace(/[\[\]]/g, '').split(',').map(x => '+' + x.trim() + ' dB').join(', '); const n = parseFloat(v); if (isNaN(n)) return v; const neg = n < 0 ? '−' : ''; const abs = v.replace(/^-/, ''); if (r.id === 'crowd_stoi') return 'a little easier to understand (' + neg + abs + ')'; if (r.id === 'crowd_ace') return 'the implant pulses come out a little closer to the clean voice (' + neg + abs + ')'; if (UNIT[r.id] === ' points') return neg + abs + ' points'; const sign = /^(crowd_|ssn|white)/.test(r.id) && n > 0 && !/abs|vs_gate/.test(r.id) ? '+' : ''; return sign + neg + abs + (UNIT[r.id] || ''); };
 const PLAIN = { crowd_sisdr: 'Crowd: how clean the voice is', crowd_stoi: 'Crowd: how understandable it is', crowd_ace: 'Crowd: what the electrodes would receive',
@@ -208,11 +208,11 @@ let level = 'parent';
 const tb = $('#score-table tbody');
 const scoreRow = r => {
   const st = r.status === 'INFO' ? 'pending' : r.status === 'PASS' ? 'advance' : 'fail';
-  const word = r.status === 'INFO' ? 'for information' : r.status === 'PASS' ? 'pass' : 'miss';
+  const word = r.status === 'INFO' ? 'for information only' : r.status === 'PASS' ? 'passes' : 'does not pass';
   return `<tr class="${r.status === 'FAIL' ? 'fail' : r.status === 'INFO' ? 'info' : ''}" data-row="${ROW_IDS(r)}">
     <td data-l="Check">${esc(PLAIN[r.id] || r.kpi)}${r.status === 'FAIL' ? ' <span class="hot">(the hardest crowd)</span>' : ''}</td>
     <td class="num" data-l="Result">${esc(RESULT(r))}</td><td class="small muted" data-l="Needs">${esc(NEED[r.id] || r.required)}</td>
-    <td data-l="Status"><span class="st" data-status="${st}">${GLYPH[st]} ${word}</span></td>
+    <td data-l=""><span class="st" data-status="${st}">${GLYPH[st]} ${word}</span></td>
     <td class="ai-only" hidden><button class="explain-btn" type="button" data-explain="${ROW_IDS(r)}" aria-label="Explain ${esc(r.kpi)}">Explain</button></td></tr>`;
 };
 {
@@ -252,7 +252,8 @@ if (live) { chip.classList.remove('ok', 'off'); $('#live-text').textContent = `$
 else { const last = G[G.length - 1]; chip.classList.add('ok'); $('#live-text').textContent = last.status === 'pending' ? `Next: ${last.label.toLowerCase()}${last.short ? ', ' + last.short : ''}` : `${last.label}: ${statusWord(last)}`; }
 setTimeout(fitNav, 0);
 (function tree() {
-  if (innerWidth < 760) { $('#tree').innerHTML = `<ol class="tree-list">${G.map(g => `<li data-status="${g.status}"><b>${esc(g.label)}</b> <span class="st" data-status="${g.status}">${statusWord(g)}</span></li>`).join('')}</ol>`; $('#tree-desc').textContent = 'The versions, in order. ' + G.map(g => `${g.label}, ${statusWord(g)}: ${g.change}.`).join(' '); return; }
+  if (innerWidth < 760) { $('#tree').innerHTML = ''; $('#tree-desc').textContent = 'The versions, in order. ' + G.map(g => `${g.label}, ${statusWord(g)}: ${g.change}.`).join(' '); return; }
+  if (false) { $('#tree').innerHTML = `<ol class="tree-list">${G.map(g => `<li data-status="${g.status}"><b>${esc(g.label)}</b> <span class="st" data-status="${g.status}">${statusWord(g)}</span></li>`).join('')}</ol>`; $('#tree-desc').textContent = 'The versions, in order. ' + G.map(g => `${g.label}, ${statusWord(g)}: ${g.change}.`).join(' '); return; }
   const W = 1000, step = W / (G.length + 1), yT = 140, H = 260;
   let s = `<svg viewBox="0 0 ${W} ${H}">`;
   // trunk through survivors (baseline/advance); dead branches hang off the trunk and end in ×
@@ -285,13 +286,10 @@ const cardHtml = g => `<article class="gen" data-status="${g.status}" id="${g.id
 {
   const nums = a => a.map(g => g.id.replace('gen', ''));
   const list = a => a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1];
-  if (innerWidth < 760) {
+  {
     const newest = G[G.length - 1], base = G.find(g => g.status === 'baseline');
     const shown = [base, newest].filter(Boolean), rest = G.filter(g => !shown.includes(g));
     $('#gen-cards').innerHTML = shown.map(cardHtml).join('') + `<details class="fold earlier"><summary>every other version (${list(nums(rest))})</summary><div class="gen-cards">${rest.map(cardHtml).join('')}</div></details>`;
-  } else {
-    const early = G.filter(g => FOLD.has(g.id));
-    $('#gen-cards').innerHTML = G.filter(g => !FOLD.has(g.id)).map(cardHtml).join('') + `<details class="fold earlier"><summary>earlier versions (${list(nums(early))})</summary><div class="gen-cards">${early.map(cardHtml).join('')}</div></details>`;
   }
 }
 
@@ -380,7 +378,7 @@ if (health) {
       if (!slot || !slot.classList.contains('explain-row')) { slot = document.createElement('tr'); slot.className = 'explain-row'; slot.innerHTML = `<td colspan="5"></td>`; b.closest('tr').after(slot); }
       slot = slot.firstElementChild;
     }
-    window.__musePulse = 1; slot.innerHTML = `<div class="explain-out"><span class="thinking"><i aria-hidden="true"></i>Muse is writing${isBrief ? ' a brief' : ` for ${level === 'parent' ? 'a parent' : 'a researcher'}`}… <span class="elapsed">0 s</span></span></div>`; const t0 = Date.now(); const tick = setInterval(() => { const el = slot.querySelector('.elapsed'); if (!el) { clearInterval(tick); return; } el.textContent = Math.round((Date.now() - t0) / 1000) + ' s'; }, 1000);
+    window.__musePulse = 1; slot.innerHTML = `<div class="explain-out"><span class="thinking"><i aria-hidden="true"></i>Muse is writing${isBrief ? ' a brief' : ` for ${level === 'parent' ? 'a parent' : 'a researcher'}`}… <span class="elapsed">0 s</span> <span class="muted">(usually about 10 seconds)</span></span></div>`; const t0 = Date.now(); const tick = setInterval(() => { const el = slot.querySelector('.elapsed'); if (!el) { clearInterval(tick); return; } el.textContent = Math.round((Date.now() - t0) / 1000) + ' s'; }, 1000);
     b.disabled = true;
     const ctx = b.closest('tr') ? b.closest('tr').querySelector('td') : b.closest('.kv-line') || (b.closest('.gen') && b.closest('.gen').querySelector('h3 span, .change')); const label = b.dataset.name ? b.dataset.name : ctx ? ctx.cloneNode(true).textContent.replace(/\s*(Show|Hide)?\s*notes for researchers[\s\S]*$/i, '').replace(/\bExplain\b/g, '').replace(/\s+/g, ' ').trim().slice(0, 160) : '';
     try { const r = isBrief ? await api.brief(id) : await api.explain(id, level, label); slot.innerHTML = `<div class="explain-out">${renderAnswer(r.text)}<p class="small muted" style="margin:8px 0 0">Explained by Muse (Meta) for ${level === 'parent' ? 'a parent' : 'a researcher'}</p></div>`; }
@@ -391,4 +389,4 @@ if (health) {
   chip.classList.add('off');
 }
 // text equivalent of the wave state (aria-live)
-{ const ws = $('#wave-state'); if (ws) { let lastTxt = '', lastAt = 0, lastSec = '', lastKey = -1; setInterval(() => { const st = window.__waveState; if (!st) return; const c = st.C; const secEl = document.elementFromPoint(innerWidth / 2, innerHeight / 2); const sec = secEl ? ((secEl.closest('section') || {}).id || '') : ''; const key = Math.round(c.clarity * 10) / 10; if (sec === lastSec && Math.abs(key - lastKey) < 0.1 && !window.__mlFuzz && c.ears < 0.5) return; let txt = c.shake > 0.5 ? 'The line is shaking hard, with a calm centre.' : c.wall > 0.25 ? 'The line has hit a wall.' : c.bands > 0.5 ? 'The line has split into 22 bands.' : c.ears > 0.5 ? (c.clean < 0.5 ? 'The line is fuzzy: no cleanup.' : c.drift > 0.5 ? 'Two lines, drifting apart.' : 'The two lines have become one.') : (window.__mlFuzz > 0) ? 'The line has gone fuzzy: the recording before cleanup.' : (window.__mlFuzz < 0) ? 'The line is clearer: the recording after cleanup.' : (sec === 'scorecard' && c.wall > 0.15) ? 'The line hits the wall again: the one check it fails.' : (sec === 'attempts' && c.waver > 0.2) ? 'The line wobbles but does not clear: those tries did not pass.' : (c.waver > 0.5 && c.beat < 0.3) ? 'The line wavers, unsure.' : (c.kick > 0.3 || c.beat > 0.3 || (window.__dancePlaying && st.T.beat > 0.1)) ? 'A rhythm is running through the line.' : (c.waver > 0.3 && c.clarity > 0.3) ? 'The line wobbles but does not change: those versions did not help.' : c.clarity > 0.75 ? 'The line is mostly clear.' : c.clarity > 0.6 ? 'The line is clear.' : c.clarity > 0.3 ? 'The line is clearing up.' : 'The line is fuzzy, like a crowd.'; if (sec === 'tests') txt = 'The line wavers, unsure.'; if (txt === lastTxt || performance.now() - lastAt < 1200) return; lastTxt = txt; lastSec = sec; lastKey = key; lastAt = performance.now(); ws.textContent = txt; }, 500); } }
+{ const ws = $('#wave-state'); if (ws) { let lastTxt = '', lastAt = 0, lastSec = '', lastKey = -1; setInterval(() => { const st = window.__waveState; if (!st) return; const c = st.C; const secEl = document.elementFromPoint(innerWidth / 2, innerHeight / 2); const sec = secEl ? ((secEl.closest('section') || {}).id || '') : ''; const key = Math.round(c.clarity * 10) / 10; let txt = c.shake > 0.5 ? 'The line is shaking hard, with a calm centre.' : c.wall > 0.25 ? 'The line has hit a wall.' : c.bands > 0.5 ? 'The line has split into 22 bands.' : c.ears > 0.5 ? (c.clean < 0.5 ? 'The line is fuzzy: no cleanup.' : c.drift > 0.5 ? 'Two lines, drifting apart.' : 'The two lines have become one.') : (window.__mlFuzz > 0) ? 'The line has gone fuzzy: the recording before cleanup.' : (window.__mlFuzz < 0) ? 'The line is clearer: the recording after cleanup.' : (sec === 'scorecard' && c.wall > 0.15) ? 'The line hits the wall again: the one check it fails.' : (sec === 'attempts' && c.waver > 0.2) ? 'The line wobbles but does not clear: those tries did not pass.' : (c.waver > 0.5 && c.beat < 0.3) ? 'The line wavers, unsure.' : (c.kick > 0.3 || c.beat > 0.3 || (window.__dancePlaying && st.T.beat > 0.1)) ? 'A rhythm is running through the line.' : (c.waver > 0.3 && c.clarity > 0.3) ? 'The line wobbles but does not change: those versions did not help.' : c.clarity > 0.75 ? 'The line is mostly clear.' : c.clarity > 0.6 ? 'The line is clear.' : c.clarity > 0.3 ? 'The line is clearing up.' : 'The line is fuzzy, like a crowd.'; if (sec === 'tests') txt = 'The line wavers, unsure.'; if (txt === lastTxt || performance.now() - lastAt < 1200) return; lastTxt = txt; lastSec = sec; lastKey = key; lastAt = performance.now(); ws.textContent = txt; }, 500); } }
