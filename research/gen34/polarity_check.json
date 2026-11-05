@@ -1,0 +1,1205 @@
+{
+ "input": "5536-43358-0000.flac",
+ "rows": [
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117.pt",
+   "seed": 20261117,
+   "step": null,
+   "alpha": -0.9456889401063197,
+   "decoder_bias": 0.11010077595710754,
+   "output_mean": 0.1099804574594813
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step1000.pt",
+   "seed": 20261117,
+   "step": 1000,
+   "alpha": -0.6752369576547155,
+   "decoder_bias": 0.056588537991046906,
+   "output_mean": 0.05638815594694541
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step10000.pt",
+   "seed": 20261117,
+   "step": 10000,
+   "alpha": -1.0480523517797984,
+   "decoder_bias": 0.12546788156032562,
+   "output_mean": 0.12504701327335183
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step10500.pt",
+   "seed": 20261117,
+   "step": 10500,
+   "alpha": -1.053142042557146,
+   "decoder_bias": 0.14261594414710999,
+   "output_mean": 0.1428939117177387
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step11000.pt",
+   "seed": 20261117,
+   "step": 11000,
+   "alpha": -1.0419352896293423,
+   "decoder_bias": 0.13737860321998596,
+   "output_mean": 0.13767401735967122
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step11500.pt",
+   "seed": 20261117,
+   "step": 11500,
+   "alpha": -1.0540098930636377,
+   "decoder_bias": 0.14127908647060394,
+   "output_mean": 0.1422755711947811
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step12000.pt",
+   "seed": 20261117,
+   "step": 12000,
+   "alpha": -1.0504527250768683,
+   "decoder_bias": 0.14422693848609924,
+   "output_mean": 0.1440673381205135
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step12500.pt",
+   "seed": 20261117,
+   "step": 12500,
+   "alpha": -1.0488889761774987,
+   "decoder_bias": 0.1378905177116394,
+   "output_mean": 0.13737656680020796
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step13000.pt",
+   "seed": 20261117,
+   "step": 13000,
+   "alpha": -1.040223926225495,
+   "decoder_bias": 0.1402917057275772,
+   "output_mean": 0.14015234418887784
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step13500.pt",
+   "seed": 20261117,
+   "step": 13500,
+   "alpha": -1.039849163935513,
+   "decoder_bias": 0.13917498290538788,
+   "output_mean": 0.13871999912339075
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step14000.pt",
+   "seed": 20261117,
+   "step": 14000,
+   "alpha": -1.0400246130214594,
+   "decoder_bias": 0.14107546210289001,
+   "output_mean": 0.1409010453849872
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step14500.pt",
+   "seed": 20261117,
+   "step": 14500,
+   "alpha": -1.0433508728469028,
+   "decoder_bias": 0.1268581598997116,
+   "output_mean": 0.12598159448328128
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step1500.pt",
+   "seed": 20261117,
+   "step": 1500,
+   "alpha": -0.7508117444268582,
+   "decoder_bias": 0.07958541810512543,
+   "output_mean": 0.08003257456691322
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step15000.pt",
+   "seed": 20261117,
+   "step": 15000,
+   "alpha": -1.029549804414921,
+   "decoder_bias": 0.127242311835289,
+   "output_mean": 0.12694194144473034
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step15500.pt",
+   "seed": 20261117,
+   "step": 15500,
+   "alpha": -1.020511495061187,
+   "decoder_bias": 0.11930438876152039,
+   "output_mean": 0.12005117209294869
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step16000.pt",
+   "seed": 20261117,
+   "step": 16000,
+   "alpha": -1.0243768909850433,
+   "decoder_bias": 0.12467772513628006,
+   "output_mean": 0.12352385994180565
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step16500.pt",
+   "seed": 20261117,
+   "step": 16500,
+   "alpha": -1.0184849393437523,
+   "decoder_bias": 0.12403101474046707,
+   "output_mean": 0.12401064150866549
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step17000.pt",
+   "seed": 20261117,
+   "step": 17000,
+   "alpha": -1.010740466585643,
+   "decoder_bias": 0.12352490425109863,
+   "output_mean": 0.12161743587021921
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step17500.pt",
+   "seed": 20261117,
+   "step": 17500,
+   "alpha": -1.011107858073669,
+   "decoder_bias": 0.1285260170698166,
+   "output_mean": 0.12808182494133483
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step18000.pt",
+   "seed": 20261117,
+   "step": 18000,
+   "alpha": -0.9918170754557859,
+   "decoder_bias": 0.12699513137340546,
+   "output_mean": 0.12694577939557686
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step18500.pt",
+   "seed": 20261117,
+   "step": 18500,
+   "alpha": -0.9996941397578294,
+   "decoder_bias": 0.1260291337966919,
+   "output_mean": 0.12584831825843615
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step19000.pt",
+   "seed": 20261117,
+   "step": 19000,
+   "alpha": -0.9911500817636758,
+   "decoder_bias": 0.12975451350212097,
+   "output_mean": 0.12992362273356817
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step19500.pt",
+   "seed": 20261117,
+   "step": 19500,
+   "alpha": -0.993101155503991,
+   "decoder_bias": 0.1203448548913002,
+   "output_mean": 0.12045640450455734
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step2000.pt",
+   "seed": 20261117,
+   "step": 2000,
+   "alpha": -0.8037031078145129,
+   "decoder_bias": 0.06434232741594315,
+   "output_mean": 0.06531114043806292
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step20000.pt",
+   "seed": 20261117,
+   "step": 20000,
+   "alpha": -0.9806996912641047,
+   "decoder_bias": 0.11522172391414642,
+   "output_mean": 0.11494196960686241
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step20500.pt",
+   "seed": 20261117,
+   "step": 20500,
+   "alpha": -0.9769830029387886,
+   "decoder_bias": 0.11374571919441223,
+   "output_mean": 0.11372367676624254
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step21000.pt",
+   "seed": 20261117,
+   "step": 21000,
+   "alpha": -0.9695146784820701,
+   "decoder_bias": 0.11320686340332031,
+   "output_mean": 0.11334564870536314
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step21500.pt",
+   "seed": 20261117,
+   "step": 21500,
+   "alpha": -0.9629186387177847,
+   "decoder_bias": 0.11191766709089279,
+   "output_mean": 0.11134661940362624
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step22000.pt",
+   "seed": 20261117,
+   "step": 22000,
+   "alpha": -0.9626428981739154,
+   "decoder_bias": 0.11351363360881805,
+   "output_mean": 0.11341540869024638
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step22500.pt",
+   "seed": 20261117,
+   "step": 22500,
+   "alpha": -0.9652079032584157,
+   "decoder_bias": 0.11307146400213242,
+   "output_mean": 0.113111341200491
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step23000.pt",
+   "seed": 20261117,
+   "step": 23000,
+   "alpha": -0.954836484904545,
+   "decoder_bias": 0.11063674837350845,
+   "output_mean": 0.11005144540821725
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step23500.pt",
+   "seed": 20261117,
+   "step": 23500,
+   "alpha": -0.9495997053243634,
+   "decoder_bias": 0.10996834188699722,
+   "output_mean": 0.10996738024969502
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step2500.pt",
+   "seed": 20261117,
+   "step": 2500,
+   "alpha": -0.8245345057662862,
+   "decoder_bias": 0.07641295343637466,
+   "output_mean": 0.07689929723858446
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step3000.pt",
+   "seed": 20261117,
+   "step": 3000,
+   "alpha": -0.8578831033081157,
+   "decoder_bias": 0.08857071399688721,
+   "output_mean": 0.0893498780208809
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step3500.pt",
+   "seed": 20261117,
+   "step": 3500,
+   "alpha": -0.8959403384172796,
+   "decoder_bias": 0.04399821162223816,
+   "output_mean": 0.04391589249904862
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step4000.pt",
+   "seed": 20261117,
+   "step": 4000,
+   "alpha": -0.9031794717450511,
+   "decoder_bias": 0.05061107873916626,
+   "output_mean": 0.05113407492716454
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step4500.pt",
+   "seed": 20261117,
+   "step": 4500,
+   "alpha": -0.916677565199094,
+   "decoder_bias": 0.037510164082050323,
+   "output_mean": 0.03876208295197307
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step500.pt",
+   "seed": 20261117,
+   "step": 500,
+   "alpha": -0.5898107796056907,
+   "decoder_bias": 0.04502793401479721,
+   "output_mean": 0.04437790680338157
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step5000.pt",
+   "seed": 20261117,
+   "step": 5000,
+   "alpha": -0.947257441650861,
+   "decoder_bias": 0.06457030773162842,
+   "output_mean": 0.06538176828009502
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step5500.pt",
+   "seed": 20261117,
+   "step": 5500,
+   "alpha": -0.9405565698026113,
+   "decoder_bias": 0.08618302643299103,
+   "output_mean": 0.08524135309083354
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step6000.pt",
+   "seed": 20261117,
+   "step": 6000,
+   "alpha": -0.9775232431257831,
+   "decoder_bias": 0.09269975870847702,
+   "output_mean": 0.09274906379526592
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step6500.pt",
+   "seed": 20261117,
+   "step": 6500,
+   "alpha": -0.9902095991682107,
+   "decoder_bias": 0.13580329716205597,
+   "output_mean": 0.13632272096896603
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step7000.pt",
+   "seed": 20261117,
+   "step": 7000,
+   "alpha": -0.9741468146165047,
+   "decoder_bias": 0.13419240713119507,
+   "output_mean": 0.13506336187937298
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step7500.pt",
+   "seed": 20261117,
+   "step": 7500,
+   "alpha": -1.0054219087685141,
+   "decoder_bias": 0.14321978390216827,
+   "output_mean": 0.14356627579048903
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step8000.pt",
+   "seed": 20261117,
+   "step": 8000,
+   "alpha": -1.0125854938885694,
+   "decoder_bias": 0.125443235039711,
+   "output_mean": 0.1252447161866477
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step8500.pt",
+   "seed": 20261117,
+   "step": 8500,
+   "alpha": -1.0187266982087977,
+   "decoder_bias": 0.12417879700660706,
+   "output_mean": 0.12306934848436366
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step9000.pt",
+   "seed": 20261117,
+   "step": 9000,
+   "alpha": -1.0112994442649834,
+   "decoder_bias": 0.13628162443637848,
+   "output_mean": 0.13692516985761533
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261117_step9500.pt",
+   "seed": 20261117,
+   "step": 9500,
+   "alpha": -1.0302186643870994,
+   "decoder_bias": 0.12594960629940033,
+   "output_mean": 0.12477797911701842
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118.pt",
+   "seed": 20261118,
+   "step": null,
+   "alpha": 0.9779190304326376,
+   "decoder_bias": -0.1646519899368286,
+   "output_mean": -0.16343656503185014
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step1000.pt",
+   "seed": 20261118,
+   "step": 1000,
+   "alpha": 0.7112020281762733,
+   "decoder_bias": 0.04167895391583443,
+   "output_mean": 0.04075728310983257
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step10000.pt",
+   "seed": 20261118,
+   "step": 10000,
+   "alpha": 1.0572067405204015,
+   "decoder_bias": -0.10397645086050034,
+   "output_mean": -0.10178828151301593
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step10500.pt",
+   "seed": 20261118,
+   "step": 10500,
+   "alpha": 1.0488388300887876,
+   "decoder_bias": -0.11063255369663239,
+   "output_mean": -0.11014137494290675
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step11000.pt",
+   "seed": 20261118,
+   "step": 11000,
+   "alpha": 1.061999652825459,
+   "decoder_bias": -0.1367335319519043,
+   "output_mean": -0.13504716348569132
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step11500.pt",
+   "seed": 20261118,
+   "step": 11500,
+   "alpha": 1.0689624792204988,
+   "decoder_bias": -0.12471731007099152,
+   "output_mean": -0.12341910736212187
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step12000.pt",
+   "seed": 20261118,
+   "step": 12000,
+   "alpha": 1.0618844586180498,
+   "decoder_bias": -0.13179878890514374,
+   "output_mean": -0.13154460854322841
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step12500.pt",
+   "seed": 20261118,
+   "step": 12500,
+   "alpha": 1.0768409788754294,
+   "decoder_bias": -0.13201670348644257,
+   "output_mean": -0.13116760421253923
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step13000.pt",
+   "seed": 20261118,
+   "step": 13000,
+   "alpha": 1.0667914985878575,
+   "decoder_bias": -0.12498630583286285,
+   "output_mean": -0.12467930595945499
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step13500.pt",
+   "seed": 20261118,
+   "step": 13500,
+   "alpha": 1.0610720481460965,
+   "decoder_bias": -0.13830196857452393,
+   "output_mean": -0.13802839034289416
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step14000.pt",
+   "seed": 20261118,
+   "step": 14000,
+   "alpha": 1.0548233685530486,
+   "decoder_bias": -0.14800119400024414,
+   "output_mean": -0.1469314697152937
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step14500.pt",
+   "seed": 20261118,
+   "step": 14500,
+   "alpha": 1.0514850210486955,
+   "decoder_bias": -0.13561464846134186,
+   "output_mean": -0.13385322406583394
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step1500.pt",
+   "seed": 20261118,
+   "step": 1500,
+   "alpha": 0.7671938963324337,
+   "decoder_bias": 0.016956735402345657,
+   "output_mean": 0.01817973786825744
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step15000.pt",
+   "seed": 20261118,
+   "step": 15000,
+   "alpha": 1.0645273226982903,
+   "decoder_bias": -0.14368575811386108,
+   "output_mean": -0.14198159451563547
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step15500.pt",
+   "seed": 20261118,
+   "step": 15500,
+   "alpha": 1.0435022718412692,
+   "decoder_bias": -0.1632821261882782,
+   "output_mean": -0.16395132518303795
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step16000.pt",
+   "seed": 20261118,
+   "step": 16000,
+   "alpha": 1.0459246408898948,
+   "decoder_bias": -0.16832515597343445,
+   "output_mean": -0.1669601286124975
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step16500.pt",
+   "seed": 20261118,
+   "step": 16500,
+   "alpha": 1.0483108768923675,
+   "decoder_bias": -0.1654529720544815,
+   "output_mean": -0.16390458871650465
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step17000.pt",
+   "seed": 20261118,
+   "step": 17000,
+   "alpha": 1.0410250835362889,
+   "decoder_bias": -0.16885466873645782,
+   "output_mean": -0.16784466699229786
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step17500.pt",
+   "seed": 20261118,
+   "step": 17500,
+   "alpha": 1.03554882530699,
+   "decoder_bias": -0.17237716913223267,
+   "output_mean": -0.1708346488337396
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step18000.pt",
+   "seed": 20261118,
+   "step": 18000,
+   "alpha": 1.0329985459426592,
+   "decoder_bias": -0.16128577291965485,
+   "output_mean": -0.1602337769329882
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step18500.pt",
+   "seed": 20261118,
+   "step": 18500,
+   "alpha": 1.0200400315016014,
+   "decoder_bias": -0.1622747927904129,
+   "output_mean": -0.16165932495593835
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step19000.pt",
+   "seed": 20261118,
+   "step": 19000,
+   "alpha": 1.0128705284047772,
+   "decoder_bias": -0.1656411737203598,
+   "output_mean": -0.1646537788116293
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step19500.pt",
+   "seed": 20261118,
+   "step": 19500,
+   "alpha": 1.0102232246112142,
+   "decoder_bias": -0.16392745077610016,
+   "output_mean": -0.16339475959773503
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step2000.pt",
+   "seed": 20261118,
+   "step": 2000,
+   "alpha": 0.7669953716051376,
+   "decoder_bias": 0.0004158332303632051,
+   "output_mean": 0.0015038070907352037
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step20000.pt",
+   "seed": 20261118,
+   "step": 20000,
+   "alpha": 1.0033702139418919,
+   "decoder_bias": -0.1624176949262619,
+   "output_mean": -0.16250468726319386
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step20500.pt",
+   "seed": 20261118,
+   "step": 20500,
+   "alpha": 1.0044011801390917,
+   "decoder_bias": -0.15956711769104004,
+   "output_mean": -0.1589748621648613
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step21000.pt",
+   "seed": 20261118,
+   "step": 21000,
+   "alpha": 0.99155337221403,
+   "decoder_bias": -0.160496786236763,
+   "output_mean": -0.15999257570722875
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step21500.pt",
+   "seed": 20261118,
+   "step": 21500,
+   "alpha": 0.9932004568157505,
+   "decoder_bias": -0.15992332994937897,
+   "output_mean": -0.1585706669142078
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step22000.pt",
+   "seed": 20261118,
+   "step": 22000,
+   "alpha": 0.9859637319575624,
+   "decoder_bias": -0.15937070548534393,
+   "output_mean": -0.15814526369418883
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step22500.pt",
+   "seed": 20261118,
+   "step": 22500,
+   "alpha": 0.9846086007077229,
+   "decoder_bias": -0.16018573939800262,
+   "output_mean": -0.15915557339632214
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step23000.pt",
+   "seed": 20261118,
+   "step": 23000,
+   "alpha": 0.9821385058488936,
+   "decoder_bias": -0.16320624947547913,
+   "output_mean": -0.1622945087336032
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step23500.pt",
+   "seed": 20261118,
+   "step": 23500,
+   "alpha": 0.9790147748965821,
+   "decoder_bias": -0.16486269235610962,
+   "output_mean": -0.16415614958996538
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step2500.pt",
+   "seed": 20261118,
+   "step": 2500,
+   "alpha": 0.8507682896282842,
+   "decoder_bias": 0.0010381516767665744,
+   "output_mean": 0.0027378257086330586
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step3000.pt",
+   "seed": 20261118,
+   "step": 3000,
+   "alpha": 0.8363340686369264,
+   "decoder_bias": -0.010021135210990906,
+   "output_mean": -0.008697157173719085
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step3500.pt",
+   "seed": 20261118,
+   "step": 3500,
+   "alpha": 0.8757595844903527,
+   "decoder_bias": 0.006923056673258543,
+   "output_mean": 0.007626278327683976
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step4000.pt",
+   "seed": 20261118,
+   "step": 4000,
+   "alpha": 0.8845195046814179,
+   "decoder_bias": 0.012179040350019932,
+   "output_mean": 0.012178578270726144
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step4500.pt",
+   "seed": 20261118,
+   "step": 4500,
+   "alpha": 0.9085236174245687,
+   "decoder_bias": 0.012558563612401485,
+   "output_mean": 0.01424188932194908
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step500.pt",
+   "seed": 20261118,
+   "step": 500,
+   "alpha": 0.6621771098707948,
+   "decoder_bias": 0.048988986760377884,
+   "output_mean": 0.0495042210497256
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step5000.pt",
+   "seed": 20261118,
+   "step": 5000,
+   "alpha": 0.9247077668472448,
+   "decoder_bias": -0.002891367068514228,
+   "output_mean": -0.00195407481022732
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step5500.pt",
+   "seed": 20261118,
+   "step": 5500,
+   "alpha": 0.9298236608737899,
+   "decoder_bias": -0.005919413175433874,
+   "output_mean": -0.0036594743141672974
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step6000.pt",
+   "seed": 20261118,
+   "step": 6000,
+   "alpha": 0.9364982258000183,
+   "decoder_bias": -0.007811970077455044,
+   "output_mean": -0.008511920186012866
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step6500.pt",
+   "seed": 20261118,
+   "step": 6500,
+   "alpha": 0.9881476257632261,
+   "decoder_bias": -0.03743397817015648,
+   "output_mean": -0.035507988055755786
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step7000.pt",
+   "seed": 20261118,
+   "step": 7000,
+   "alpha": 0.994522915701905,
+   "decoder_bias": -0.06377463042736053,
+   "output_mean": -0.06372745952069951
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step7500.pt",
+   "seed": 20261118,
+   "step": 7500,
+   "alpha": 1.0093463618660892,
+   "decoder_bias": -0.043355792760849,
+   "output_mean": -0.04063674101633865
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step8000.pt",
+   "seed": 20261118,
+   "step": 8000,
+   "alpha": 1.031687823958056,
+   "decoder_bias": -0.04506295174360275,
+   "output_mean": -0.04402720735838321
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step8500.pt",
+   "seed": 20261118,
+   "step": 8500,
+   "alpha": 1.0458808137939373,
+   "decoder_bias": -0.05104728788137436,
+   "output_mean": -0.05026465727463323
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step9000.pt",
+   "seed": 20261118,
+   "step": 9000,
+   "alpha": 1.0310410707120623,
+   "decoder_bias": -0.0679500550031662,
+   "output_mean": -0.06756200596598023
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261118_step9500.pt",
+   "seed": 20261118,
+   "step": 9500,
+   "alpha": 1.049545734862721,
+   "decoder_bias": -0.0990043431520462,
+   "output_mean": -0.09793060231284777
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119.pt",
+   "seed": 20261119,
+   "step": null,
+   "alpha": -1.0223647896997061,
+   "decoder_bias": -0.1456880122423172,
+   "output_mean": -0.14667472913561996
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step1000.pt",
+   "seed": 20261119,
+   "step": 1000,
+   "alpha": -0.7253850602534294,
+   "decoder_bias": 0.04106730967760086,
+   "output_mean": 0.04161963224570429
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step10000.pt",
+   "seed": 20261119,
+   "step": 10000,
+   "alpha": -1.101035283143385,
+   "decoder_bias": -0.030659744516015053,
+   "output_mean": -0.03231819581403834
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step10500.pt",
+   "seed": 20261119,
+   "step": 10500,
+   "alpha": -1.109626903726172,
+   "decoder_bias": -0.030285386368632317,
+   "output_mean": -0.030194009628222152
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step11000.pt",
+   "seed": 20261119,
+   "step": 11000,
+   "alpha": -1.1324354906818233,
+   "decoder_bias": -0.04843510687351227,
+   "output_mean": -0.050367495869010785
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step11500.pt",
+   "seed": 20261119,
+   "step": 11500,
+   "alpha": -1.128468907800885,
+   "decoder_bias": -0.0602995865046978,
+   "output_mean": -0.06114906654426502
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step12000.pt",
+   "seed": 20261119,
+   "step": 12000,
+   "alpha": -1.1357620712775605,
+   "decoder_bias": -0.06096671149134636,
+   "output_mean": -0.060972278892546194
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step12500.pt",
+   "seed": 20261119,
+   "step": 12500,
+   "alpha": -1.1343231066218746,
+   "decoder_bias": -0.06391564756631851,
+   "output_mean": -0.0641237353640684
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step13000.pt",
+   "seed": 20261119,
+   "step": 13000,
+   "alpha": -1.1214929439963757,
+   "decoder_bias": -0.06827912479639053,
+   "output_mean": -0.06867579814122775
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step13500.pt",
+   "seed": 20261119,
+   "step": 13500,
+   "alpha": -1.1277346631950236,
+   "decoder_bias": -0.08381425589323044,
+   "output_mean": -0.08489367021480353
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step14000.pt",
+   "seed": 20261119,
+   "step": 14000,
+   "alpha": -1.116702538205423,
+   "decoder_bias": -0.08355753123760223,
+   "output_mean": -0.08485323728058954
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step14500.pt",
+   "seed": 20261119,
+   "step": 14500,
+   "alpha": -1.1109918798417246,
+   "decoder_bias": -0.10450001806020737,
+   "output_mean": -0.10594084720292332
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step1500.pt",
+   "seed": 20261119,
+   "step": 1500,
+   "alpha": -0.7615971483512309,
+   "decoder_bias": 0.03197392821311951,
+   "output_mean": 0.031128534285047613
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step15000.pt",
+   "seed": 20261119,
+   "step": 15000,
+   "alpha": -1.115907527802916,
+   "decoder_bias": -0.10988209396600723,
+   "output_mean": -0.111455216930484
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step15500.pt",
+   "seed": 20261119,
+   "step": 15500,
+   "alpha": -1.1113612441086609,
+   "decoder_bias": -0.10564913600683212,
+   "output_mean": -0.10652230441320784
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step16000.pt",
+   "seed": 20261119,
+   "step": 16000,
+   "alpha": -1.1116878975998643,
+   "decoder_bias": -0.12368457764387131,
+   "output_mean": -0.12466233207364462
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step16500.pt",
+   "seed": 20261119,
+   "step": 16500,
+   "alpha": -1.0958184915405298,
+   "decoder_bias": -0.12786146998405457,
+   "output_mean": -0.12822729177998793
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step17000.pt",
+   "seed": 20261119,
+   "step": 17000,
+   "alpha": -1.090046693254762,
+   "decoder_bias": -0.13154184818267822,
+   "output_mean": -0.13220866470731915
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step17500.pt",
+   "seed": 20261119,
+   "step": 17500,
+   "alpha": -1.0770595253919104,
+   "decoder_bias": -0.12975053489208221,
+   "output_mean": -0.13064090582796065
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step18000.pt",
+   "seed": 20261119,
+   "step": 18000,
+   "alpha": -1.0847244129353844,
+   "decoder_bias": -0.13575749099254608,
+   "output_mean": -0.1358592429982378
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step18500.pt",
+   "seed": 20261119,
+   "step": 18500,
+   "alpha": -1.080611187752897,
+   "decoder_bias": -0.13766804337501526,
+   "output_mean": -0.13908991023081477
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step19000.pt",
+   "seed": 20261119,
+   "step": 19000,
+   "alpha": -1.0703390165250533,
+   "decoder_bias": -0.13729968667030334,
+   "output_mean": -0.13772562175107314
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step19500.pt",
+   "seed": 20261119,
+   "step": 19500,
+   "alpha": -1.0620461278984854,
+   "decoder_bias": -0.1339298039674759,
+   "output_mean": -0.13522331562557566
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step2000.pt",
+   "seed": 20261119,
+   "step": 2000,
+   "alpha": -0.8184812416497248,
+   "decoder_bias": 0.0318976454436779,
+   "output_mean": 0.03128023633937554
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step20000.pt",
+   "seed": 20261119,
+   "step": 20000,
+   "alpha": -1.0633980032962556,
+   "decoder_bias": -0.13384272158145905,
+   "output_mean": -0.1344195121430771
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step20500.pt",
+   "seed": 20261119,
+   "step": 20500,
+   "alpha": -1.0482051125570448,
+   "decoder_bias": -0.1359890103340149,
+   "output_mean": -0.13693107932425544
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step21000.pt",
+   "seed": 20261119,
+   "step": 21000,
+   "alpha": -1.0484644090959505,
+   "decoder_bias": -0.13716959953308105,
+   "output_mean": -0.13734248427305557
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step21500.pt",
+   "seed": 20261119,
+   "step": 21500,
+   "alpha": -1.0383182551163708,
+   "decoder_bias": -0.1418263018131256,
+   "output_mean": -0.1423666423741957
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step22000.pt",
+   "seed": 20261119,
+   "step": 22000,
+   "alpha": -1.040024400513368,
+   "decoder_bias": -0.14405421912670135,
+   "output_mean": -0.14520071711076524
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step22500.pt",
+   "seed": 20261119,
+   "step": 22500,
+   "alpha": -1.032610423147755,
+   "decoder_bias": -0.14160630106925964,
+   "output_mean": -0.14323061446099525
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step23000.pt",
+   "seed": 20261119,
+   "step": 23000,
+   "alpha": -1.0304660536410861,
+   "decoder_bias": -0.14038939774036407,
+   "output_mean": -0.14090565779663308
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step23500.pt",
+   "seed": 20261119,
+   "step": 23500,
+   "alpha": -1.025890944943427,
+   "decoder_bias": -0.1434127539396286,
+   "output_mean": -0.1442667589408224
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step2500.pt",
+   "seed": 20261119,
+   "step": 2500,
+   "alpha": -0.8163697803060042,
+   "decoder_bias": 0.005395973101258278,
+   "output_mean": 0.005350530634400403
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step3000.pt",
+   "seed": 20261119,
+   "step": 3000,
+   "alpha": -0.8353596231443915,
+   "decoder_bias": 0.002107027918100357,
+   "output_mean": 0.0017091640813051785
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step3500.pt",
+   "seed": 20261119,
+   "step": 3500,
+   "alpha": -0.8760313780842467,
+   "decoder_bias": 0.01844240538775921,
+   "output_mean": 0.01942401740817718
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step4000.pt",
+   "seed": 20261119,
+   "step": 4000,
+   "alpha": -0.9159937544052982,
+   "decoder_bias": 0.0180808212608099,
+   "output_mean": 0.01767416516035713
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step4500.pt",
+   "seed": 20261119,
+   "step": 4500,
+   "alpha": -0.926839259854442,
+   "decoder_bias": -0.003988843411207199,
+   "output_mean": -0.003985870166230491
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step500.pt",
+   "seed": 20261119,
+   "step": 500,
+   "alpha": -0.6513371128262838,
+   "decoder_bias": 0.029479391872882843,
+   "output_mean": 0.02943308906818361
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step5000.pt",
+   "seed": 20261119,
+   "step": 5000,
+   "alpha": -0.9337082186181932,
+   "decoder_bias": -0.01981341280043125,
+   "output_mean": -0.020240705210237426
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step5500.pt",
+   "seed": 20261119,
+   "step": 5500,
+   "alpha": -0.9586814944139165,
+   "decoder_bias": -0.04350778087973595,
+   "output_mean": -0.04359613528315599
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step6000.pt",
+   "seed": 20261119,
+   "step": 6000,
+   "alpha": -0.9920070201188365,
+   "decoder_bias": -0.06403245776891708,
+   "output_mean": -0.06477005319067432
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step6500.pt",
+   "seed": 20261119,
+   "step": 6500,
+   "alpha": -1.0307427575918773,
+   "decoder_bias": -0.0709717720746994,
+   "output_mean": -0.07103320540261143
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step7000.pt",
+   "seed": 20261119,
+   "step": 7000,
+   "alpha": -1.0434806810198185,
+   "decoder_bias": -0.06190592423081398,
+   "output_mean": -0.0618056353917058
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step7500.pt",
+   "seed": 20261119,
+   "step": 7500,
+   "alpha": -1.0197092838627255,
+   "decoder_bias": -0.0636889636516571,
+   "output_mean": -0.06418213948433803
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step8000.pt",
+   "seed": 20261119,
+   "step": 8000,
+   "alpha": -1.07220021592427,
+   "decoder_bias": -0.07108082622289658,
+   "output_mean": -0.07157839616430811
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step8500.pt",
+   "seed": 20261119,
+   "step": 8500,
+   "alpha": -1.0777872368401784,
+   "decoder_bias": -0.0685691386461258,
+   "output_mean": -0.06940265713470554
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step9000.pt",
+   "seed": 20261119,
+   "step": 9000,
+   "alpha": -1.0967340121806446,
+   "decoder_bias": -0.06874831765890121,
+   "output_mean": -0.06957669935692629
+  },
+  {
+   "ckpt": "research/gen19/weights/causal_seed20261119_step9500.pt",
+   "seed": 20261119,
+   "step": 9500,
+   "alpha": -1.0983637784733653,
+   "decoder_bias": -0.04132481664419174,
+   "output_mean": -0.041014224431968484
+  },
+  {
+   "ckpt": "research/gen31/weights/ft_aug50_seed20261117.pt",
+   "seed": 20261117,
+   "step": null,
+   "alpha": -0.9127376458078864,
+   "decoder_bias": 0.11615026742219925,
+   "output_mean": 0.11545420871206598
+  },
+  {
+   "ckpt": "research/gen32/weights/wiseftpd_seed20261117.pt",
+   "seed": 20261117,
+   "step": null,
+   "alpha": -0.9423311980137299,
+   "decoder_bias": 0.11009379476308823,
+   "output_mean": 0.10998825064885175
+  }
+ ],
+ "summary": {
+  "research/gen19/weights/causal_seed20261117.pt": {
+   "alpha": -0.946,
+   "decoder_bias": 0.110101,
+   "output_mean": 0.11
+  },
+  "research/gen19/weights/causal_seed20261118.pt": {
+   "alpha": 0.978,
+   "decoder_bias": -0.164652,
+   "output_mean": -0.1634
+  },
+  "research/gen19/weights/causal_seed20261119.pt": {
+   "alpha": -1.022,
+   "decoder_bias": -0.145688,
+   "output_mean": -0.1467
+  },
+  "research/gen31/weights/ft_aug50_seed20261117.pt": {
+   "alpha": -0.913,
+   "decoder_bias": 0.11615,
+   "output_mean": 0.1155
+  },
+  "research/gen32/weights/wiseftpd_seed20261117.pt": {
+   "alpha": -0.942,
+   "decoder_bias": 0.110094,
+   "output_mean": 0.11
+  }
+ },
+ "sign_constant_from_step_500": {
+  "20261117": true,
+  "20261118": true,
+  "20261119": true
+ }
+}

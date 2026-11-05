@@ -315,6 +315,19 @@ Disclosures:
     and first building a frozen real-recording evaluation (BRUDEX, recorded
     bilateral hearing-aid-microphone speech in reverberation).
 
+- **Gen 34, frozen real-recording audit** (update 2026-11-05 04:15;
+  [research/gen34/results.md](./research/gen34/results.md)), in Astra's
+  wording:
+  - **Result:** Gen 34 validated a frozen BRUDEX evaluation asset with
+    recorded speech and babble from four talkers in one laboratory, under
+    three reverberation settings; no model was promoted.
+  - **Findings:** objective scores showed gains that depend on the
+    condition, and costs to speech preservation. The review found polarity
+    and DC-offset defects that need correcting. No benefit for
+    cochlear-implant speech understanding or localisation is established.
+  - **Next:** Gen 35, a frozen output-path repair audit, before any change
+    to the published Hugging Face model.
+
 ## Limits (stated plainly)
 
 Offline bench results cannot establish superiority over the N6's

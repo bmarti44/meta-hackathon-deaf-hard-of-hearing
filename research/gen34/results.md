@@ -37,15 +37,17 @@ reverberant talker.
 - Gen 32 STOI: 0.973 / 0.959 / 0.950.
 
 **Gen 32 vs Gen 19:**
-- STOI is higher in **15 of 15** cells (+0.001 to +0.009).
+- STOI is higher in **15 of 15** cell means. These pool both ears; it is not a universal improvement. Gen 32 loses STOI on 126 of 384 noisy item-ear comparisons, and talker 2 has a small negative overall mean difference (Astra).
 - SI-SDR is higher in 11 of 15 cells.
 - Target-only SI-SDR is +0.8 to +1.0 dB higher.
-- Worst-ear differences stay within about 0.1 dB in noisy cells.
+- Worst-ear differences: the worst cell-average worst-ear difference is −0.13 dB, and the worst individual noisy item-ear SI-SDR difference is −0.76 dB.
 
-**Reading** (one lab, 4 talkers, development material; descriptive only):
-- **In crowds, on real recordings, Gen 19 helps.**
-  - It helps most at −5 / 0 dB in the least reverberant setting.
-  - The help shrinks as reverberation grows.
+**Reading** (one lab, 4 talkers, development material; descriptive only; wording tightened per Astra and Muse):
+- **Gen 19 improves these objective scores in several recorded-babble conditions.**
+  - The gains are largest at −5 / 0 dB in the least reverberant setting, and they shrink as reverberation grows.
+  - Neither speech understanding nor preserved localisation is demonstrated.
+- **Reference fidelity vs intelligibility:** BRUDEX scores against the full reverberant recording, while the room trainer targets direct sound plus 50 ms. A lower target-only STOI flags changed speech; on its own it does not prove that removing reverberation hurts listeners (Astra).
+- **Spatial diagnostics:** target-only ILD error is 1.27 / 1.54 / 1.42 dB for Gen 19 and 1.06 / 1.29 / 1.20 dB for Gen 32, vs 0 for bypass. At high reverberation, Gen 19 raises noisy-output target-ILD error at every SNR. These diagnostics do not establish localisation ability.
 - **It costs in quiet, echoey conditions.**
   - At +10 dB in the 1.3 s setting it lowers SI-SDR (−2.0 dB) and STOI (−0.034).
   - It also lowers STOI on clean reverberant speech by 0.03 to 0.06.
@@ -55,30 +57,32 @@ reverberant talker.
   - The differences are small and from one seed, so they are not evidence of a listener benefit.
   - It is still the first real-recording sign that the room work moves in the intended direction.
 
-## A deployment defect the audit found: output polarity
+## Two deployment defects the audit exposed: output polarity and DC offset
 
-The audit's gain-sensitive waveform error was about +6 dB for both models
-even where SI-SDR improved. The cause is that the model outputs an
-**inverted** waveform:
-- The projection of the output onto the reference is α ≈ −0.92, at zero lag.
-- SI-SDR, the training loss, is sign-invariant, so training never fixed the sign.
-- STOI and the ILD measures are sign-invariant too, so no registered gate could see it.
+**Polarity** (`polarity_check.py` → `polarity_check.json`):
+- The output is a sign-flipped copy of the voice for Gen 19 seeds 17 and 19 and for Gen 32. Seed 18 is not flipped.
+- Astra confirmed the sign on all 96 target-only ear recordings per checkpoint.
+- The sign is constant from step 500 onward in every seed (the intermediate checkpoints, committed evidence).
+- The SI-SDR loss is sign-blind, so training never fixed it.
+- STOI, SI-SDR, ILD and this ITD measure are blind to a sign flip common to both ears; the registered waveform-error metric is not.
 
-The sign is set early in training and differs by seed (LibriSpeech dev-clean
-check, every committed checkpoint):
+**DC offset** (found by Astra):
+- The decoder adds a constant bias to every output sample: +0.110 (seed 17), −0.165 (seed 18), −0.146 (seed 19), against an input RMS of 0.14.
+- On the low-reverb target-only panel, Gen 19's waveform error is +6.33 dB raw, −2.29 dB after sign correction, and **−18.22 dB after sign correction and bias removal**.
+- Inversion alone does **not** explain the waveform error. The earlier wording is withdrawn.
+- Mean-removed SI-SDR and STOI hide the offset. On real hardware it costs headroom and can cause clicks at speech-to-silence transitions.
 
-| Checkpoint | α (output vs clean, target-only) |
-|---|---|
-| Gen 19 seed 17 (default Hugging Face `model.safetensors`) | **−0.95** |
-| Gen 19 seed 18 | +0.98 |
-| Gen 19 seed 19 | **−1.02** |
-| Gen 31 fine-tune / Gen 32 candidate (seed 17) | −0.91 / −0.94 |
+| Gen 19 checkpoint | polarity | decoder bias |
+|---|---:|---:|
+| seed 17 (Hugging Face default) | −1 | +0.110101 |
+| seed 18 | +1 | −0.164652 |
+| seed 19 | −1 | −0.145688 |
 
-**What it changes:**
-- **Verdicts:** none (all gates are sign-invariant).
-- **Envelope-based CI coding (ACE):** probably no effect.
-- **Where it can matter:**
-  - mixing the output with natural sound (hearing aids, residual acoustic hearing, electro-acoustic stimulation);
-  - running different seeds in the two ears, which would put the ears out of phase.
-- **The fix is free:** multiply the output by the checkpoint's sign. That leaves every registered metric unchanged.
-- **Recommended:** a per-checkpoint `polarity` in the published `config.json`, applied in `enhance.py`. The Hugging Face repo is not changed without the owner's go-ahead.
+**Other implementation notes** (Astra):
+- The research runner's `undelay` pads the last 63 samples with zeros. Gen 34's scoring window includes 31 to 63 padded samples for some talkers.
+- The local Hugging Face `enhance.py` averages stereo to mono and restores RMS, so it cannot speak to two-ear direction.
+
+**Verdicts:** none change (every gate is blind to sign and DC).
+
+**Next:** Gen 35, a registered frozen **output-path repair audit**. It compares existing / sign-corrected / sign-corrected with bias removed, and decides with Astra's engineering rule before any Hugging Face change.
+- A envelope-only ACE path is plausibly unaffected by a common acoustic inversion. That is inferred from its structure; the full Nucleus 6 path is not verified.
