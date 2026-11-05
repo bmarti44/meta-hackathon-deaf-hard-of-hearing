@@ -25,7 +25,10 @@ from model_causal import CausalTasNetEnh, DELAY, undelay  # noqa: E402
 CKPTS = {17: REPO / "research/gen19/weights/causal_seed20261117.pt",
          18: REPO / "research/gen19/weights/causal_seed20261118.pt",
          19: REPO / "research/gen19/weights/causal_seed20261119.pt"}
-POLARITY = {"80000b64c413ebb878f08695d8744ead8ecf9b183de57cb21acae6157470f367": -1}  # seed 17; 18/19 filled from sha below
+# Frozen sha256 -> polarity for all three registered Gen19 finals (Astra pre-launch blocking 4); any other file is refused.
+POLARITY = {"80000b64c413ebb878f08695d8744ead8ecf9b183de57cb21acae6157470f367": -1,   # seed 17
+            "ef098dfd429f20dcf7c199b6a534795c232a372a66af65e473fb5b6325a30916": 1,    # seed 18
+            "89837737be430645441d577c44f277e2fee6b76ffb6865f613e8d72ae6fdcb32": -1}   # seed 19
 ARMS = ("A0_existing", "A1_sign", "A2_repair")
 
 
@@ -34,15 +37,18 @@ def sha(p):
 
 
 def registered_polarity():
-    """sha256 -> polarity, from the committed Gen34 evidence (signed projection on held-out speech)."""
+    """The frozen POLARITY table, cross-checked against the committed Gen34 evidence (signed projection on held-out
+    speech) and against the files on disk; any mismatch raises."""
     import json
     doc = json.loads((R / "gen34" / "polarity_check.json").read_text())
-    out = {}
     for seed, ck in CKPTS.items():
+        h = sha(ck)
+        if h not in POLARITY:
+            raise SystemExit(f"REFUSED: {ck} sha256 {h} is not a registered checkpoint")
         row = next(r for r in doc["rows"] if r["ckpt"] == str(ck.relative_to(REPO)))
-        out[sha(ck)] = int(np.sign(row["alpha"]))
-    assert out[sha(CKPTS[17])] == POLARITY[sha(CKPTS[17])]
-    return out
+        if int(np.sign(row["alpha"])) != POLARITY[h]:
+            raise SystemExit(f"REFUSED: polarity evidence for {ck} disagrees with the frozen table")
+    return dict(POLARITY)
 
 
 class Arms:
@@ -52,7 +58,9 @@ class Arms:
         sd = ck["state_dict"] if "state_dict" in ck else ck
         self.model.load_state_dict(sd); self.model.eval()
         self.sha = sha(ckpt)
-        self.polarity = registered_polarity()[self.sha]
+        if self.sha not in POLARITY:
+            raise SystemExit(f"REFUSED: {ckpt} sha256 {self.sha} is not a registered checkpoint")
+        self.polarity = POLARITY[self.sha]
         self.bias = float(sd["decoder.bias"][0])
 
     def _run(self, x):
@@ -66,6 +74,15 @@ class Arms:
         flushed = self._run(np.concatenate([np.asarray(x, np.float32), np.zeros(DELAY, np.float32)]))[DELAY:DELAY + n]
         return {"A0_existing": a0, "A1_sign": (self.polarity * flushed).astype(np.float32),
                 "A2_repair": (self.polarity * (flushed - self.bias)).astype(np.float32)}
+
+
+EXPORT_ARMS = ("E0_published", "E1_sign", "E2_repair")
+
+
+def export_arms(audio, A):
+    """dict export arm -> output: as published, sign-only, and sign + bias removal (both before the RMS restore)."""
+    return {"E0_published": export_enhance(audio, A.model), "E1_sign": export_enhance(audio, A.model, (A.polarity, 0.0)),
+            "E2_repair": export_enhance(audio, A.model, (A.polarity, A.bias))}
 
 
 def export_enhance(audio, model, repair=None, sr=16000):

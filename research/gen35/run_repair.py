@@ -1,17 +1,21 @@
-"""Gen35 runner: every panel x seeds 17/18/19 x arms A0/A1/A2, plus the exported entry point (as published and
-repaired). Writes rows only; judge_repair.py applies the registered engineering rule.
+"""Gen35 runner (rewritten per Astra's pre-launch review): every panel x seeds 17/18/19 x arms. Rows only; the
+registered rule is applied by judge_repair.py.
 
-Panels:
- P1 BRUDEX (Gen34 asset, 240 items: 192 noisy + 48 target-only), research path, recorded_panel.metrics per arm, plus
-    signed alpha / output mean / clip fraction / alignment lag per ear on target-only items.
- P2 dry development panel (screen v2 material 557ad44f..., 512 mono items): SI-SDR, STOI per arm.
- P3 quiet: the 64 unique clean crops of P2 alone: SI-SDR, STOI, waveform error, signed alpha, output mean.
- P4 spatial: the 16 crossed scenes (gen33 geometry): target-ILD error, ITD error per arm.
- P5 levels: P1 target-only items at input RMS 0.035 / 0.14 / 0.56: signed alpha, waveform error, clip fraction per ear.
- P6 silence: 2 s of zeros; and a transition (first 3 s of each P1 target-only item, then 2 s of zeros, RMS 0.14):
-    output RMS and mean of the silent tail [last 1.5 s].
- P7 exported entry point (published Hugging Face enhance.py core, mono): on P1 target-only items (mono mix-down,
-    reference = mean of the two recorded ears) at the three levels and on silence: as published and repaired.
+Research path, arms A0 existing / A1 sign / A2 repair (per ear where stereo):
+ P1 BRUDEX 240 items: recorded_panel.metrics + alpha, mean, clip per ear; lag per ear on target-only items.
+ P2 dry panel (screen v2, 512 mono items): SI-SDR, STOI, clip.
+ P3 quiet: the 64 unique clean crops of P2: SI-SDR, STOI, waveform error, alpha, mean, clip, lag.
+ P4 spatial: the 16 crossed scenes: ILD/ITD error, per-ear SI-SDR/STOI vs each ear's clean target, clip per ear.
+ P5 levels: BRUDEX target-only items at input RMS 0.035 / 0.14 / 0.56: alpha, waveform error, clip, lag per ear.
+ P6 silence (2 s zeros) and speech-to-silence transitions (3 s of each target-only item then 2 s zeros): RMS and mean
+    of the output (silence) or of its last 1.5 s (transition), clip.
+Exported entry point (the published enhance.py core, mono), arms E0 published / E1 sign / E2 repair:
+ X1 BRUDEX noisy 192 items, mono mix-down; reference = mean of the two recorded ears: SI-SDR, STOI, clip.
+ X2 dry panel 512 items: SI-SDR, STOI, clip.
+ X3 target-only: BRUDEX target-only items (mono) at the three levels, and the 64 quiet crops. The export restores the
+    output to the INPUT's RMS, and for target-only input the input IS the reference, so the unadjusted waveform error
+    against the input is the correctly scaled comparison: alpha, waveform error, clip, lag.
+ X4 silence and speech-to-silence transitions as in P6: RMS, mean, clip.
 Usage: python research/gen35/run_repair.py --out research/gen35/repair_rows.json
 """
 from __future__ import annotations
@@ -28,6 +32,11 @@ sys.path.insert(0, str(HERE))
 import repair as RP  # noqa: E402
 
 LEVELS = (0.035, 0.14, 0.56)
+TR = slice(256, -256)
+
+
+def _clip(o):
+    return float(np.mean(np.abs(o) > 1.0))
 
 
 def _p1(seed):
@@ -40,64 +49,75 @@ def _p1(seed):
             rec = {"panel": "P1", "seed": seed, "arm": arm, **{k: it[k] for k in ("talker", "setting", "az", "snr", "cond")}}
             rec.update(P.metrics(it["rL"], it["rR"], oL[arm], oR[arm], it["mL"], it["mR"]))
             for e, r, o in (("L", it["rL"], oL[arm]), ("R", it["rR"], oR[arm])):
-                rec[f"alpha_{e}"] = RP.signed_alpha(r, o, w); rec[f"mean_{e}"] = float(np.mean(o[w]))
-                rec[f"clip_{e}"] = float(np.mean(np.abs(o) > 1.0))
+                rec[f"alpha_{e}"] = RP.signed_alpha(r, o, w); rec[f"mean_{e}"] = float(np.mean(o[w])); rec[f"clip_{e}"] = _clip(o)
                 if it["cond"] == "target_only":
                     rec[f"lag_{e}"] = RP.peak_lag(r, o, w)
             rows.append(rec)
-    return seed, mh, rows
+    return {"brudex_material_sha256": mh, "rows": rows}
 
 
-def _p2p3(seed):
+def _p2p3x2(seed):
     from panel_v2 import build_items
     from pystoi import stoi
     from train13 import _si_sdr_np
-    A = RP.Arms(RP.CKPTS[seed]); tr = slice(256, -256); rows = []
+    A = RP.Arms(RP.CKPTS[seed]); rows = []
     items = build_items()
+    st = lambda c, o: float(stoi(c[TR].astype(np.float64), o[TR].astype(np.float64), 16000))
     for it in items:
+        k = {"spk": it["spk"], "crop": it["crop"], "mix": it["mix"], "snr": it["snr"]}
         o = A.outputs(it["mix_wav"])
         for arm in RP.ARMS:
-            rows.append({"panel": "P2", "seed": seed, "arm": arm, "spk": it["spk"], "crop": it["crop"], "mix": it["mix"], "snr": it["snr"],
-                         "sisdr": _si_sdr_np(it["clean"][tr], o[arm][tr]),
-                         "stoi": float(stoi(it["clean"][tr].astype(np.float64), o[arm][tr].astype(np.float64), 16000))})
+            rows.append({"panel": "P2", "seed": seed, "arm": arm, **k, "sisdr": _si_sdr_np(it["clean"][TR], o[arm][TR]),
+                         "stoi": st(it["clean"], o[arm]), "clip": _clip(o[arm])})
+        x = RP.export_arms(it["mix_wav"], A)
+        for arm in RP.EXPORT_ARMS:
+            rows.append({"panel": "X2", "seed": seed, "arm": arm, **k, "sisdr": _si_sdr_np(it["clean"][TR], x[arm][TR]),
+                         "stoi": st(it["clean"], x[arm]), "clip": _clip(x[arm])})
     seen = set()
     for it in items:
-        k = (it["spk"], it["crop"])
-        if k in seen:
+        key = (it["spk"], it["crop"])
+        if key in seen:
             continue
-        seen.add(k); o = A.outputs(it["clean"])
-        for arm in RP.ARMS:
-            rows.append({"panel": "P3", "seed": seed, "arm": arm, "spk": it["spk"], "crop": it["crop"],
-                         "sisdr": _si_sdr_np(it["clean"][tr], o[arm][tr]),
-                         "stoi": float(stoi(it["clean"][tr].astype(np.float64), o[arm][tr].astype(np.float64), 16000)),
-                         "wave_err": RP.wave_err_db(it["clean"], o[arm], tr), "alpha": RP.signed_alpha(it["clean"], o[arm], tr),
-                         "mean": float(np.mean(o[arm][tr]))})
-    return seed, rows
+        seen.add(key)
+        for panel, outs, arms in (("P3", A.outputs(it["clean"]), RP.ARMS), ("X3q", RP.export_arms(it["clean"], A), RP.EXPORT_ARMS)):
+            for arm in arms:
+                o = outs[arm]
+                rows.append({"panel": panel, "seed": seed, "arm": arm, "spk": it["spk"], "crop": it["crop"],
+                             "sisdr": _si_sdr_np(it["clean"][TR], o[TR]), "stoi": st(it["clean"], o),
+                             "wave_err": RP.wave_err_db(it["clean"], o, TR), "alpha": RP.signed_alpha(it["clean"], o, TR),
+                             "mean": float(np.mean(o[TR])), "clip": _clip(o), "lag": RP.peak_lag(it["clean"], o, TR)})
+    return {"rows": rows}
 
 
 def _rest(seed):
     import recorded_panel as P
     from bench import build_crops
+    from pystoi import stoi
     from spatial import ild_per_band, itd_samples, render_at
     from spatial_bench import TARGET_AZ
+    from train13 import _si_sdr_np
     A = RP.Arms(RP.CKPTS[seed]); rows = []
-    # P4 spatial crossed scenes
     crops = [c for c in build_crops(1) if c["kind"].startswith("babble")]
-    for i, c in enumerate(crops):
+    for i, c in enumerate(crops):                                                          # P4
         for taz in TARGET_AZ:
             cl, cr = render_at(c["clean"], taz); nl, nr = render_at(c["noise"], -taz)
-            mL, mR = cl + nl, cr + nr
+            mL, mR = (cl + nl).astype(np.float32), (cr + nr).astype(np.float32)
             ild_t, itd_t = ild_per_band(cl, cr), itd_samples(cl, cr)
-            oL, oR = A.outputs(mL.astype(np.float32)), A.outputs(mR.astype(np.float32))
+            oL, oR = A.outputs(mL), A.outputs(mR)
             for arm in RP.ARMS:
-                rows.append({"panel": "P4", "seed": seed, "arm": arm, "crop": i, "snr_db": c["snr_db"], "target_az": taz,
-                             "ild_target_err_db": float(np.mean(np.abs(ild_per_band(oL[arm], oR[arm]) - ild_t))),
-                             "itd_err_samples": float(abs(itd_samples(oL[arm], oR[arm]) - itd_t))})
+                rec = {"panel": "P4", "seed": seed, "arm": arm, "crop": i, "snr_db": c["snr_db"], "target_az": taz,
+                       "ild_target_err_db": float(np.mean(np.abs(ild_per_band(oL[arm], oR[arm]) - ild_t))),
+                       "itd_err_samples": float(abs(itd_samples(oL[arm], oR[arm]) - itd_t))}
+                for e, ref, o in (("L", cl, oL[arm]), ("R", cr, oR[arm])):
+                    rec[f"sisdr_{e}"] = _si_sdr_np(ref[TR], o[TR])
+                    rec[f"stoi_{e}"] = float(stoi(ref[TR].astype(np.float64), o[TR].astype(np.float64), 16000)); rec[f"clip_{e}"] = _clip(o)
+                rows.append(rec)
     items, _, _ = P.build()
     tgt = [it for it in items if it["cond"] == "target_only"]
-    # P5 levels
-    for it in tgt:
+    noisy = [it for it in items if it["cond"] == "noisy"]
+    for it in tgt:                                                                         # P5 + X3 levels
         w = P.score_window(len(it["rL"]))
+        mono_in = 0.5 * (it["mL"] + it["mR"])
         for lv in LEVELS:
             g = lv / P.RMS_IN
             outs = {e: A.outputs((g * it[f"m{e}"]).astype(np.float32)) for e in ("L", "R")}
@@ -106,55 +126,54 @@ def _rest(seed):
                 for e in ("L", "R"):
                     ref = g * it[f"r{e}"].astype(np.float64); o = outs[e][arm]
                     rec[f"alpha_{e}"] = RP.signed_alpha(ref, o, w); rec[f"wave_err_{e}"] = RP.wave_err_db(ref, o, w)
-                    rec[f"clip_{e}"] = float(np.mean(np.abs(o) > 1.0))
+                    rec[f"clip_{e}"] = _clip(o); rec[f"lag_{e}"] = RP.peak_lag(ref, o, w)
                 rows.append(rec)
-    # P6 silence and transitions
-    z = np.zeros(2 * 16000, np.float32); o = A.outputs(z)
-    for arm in RP.ARMS:
-        rows.append({"panel": "P6", "seed": seed, "arm": arm, "kind": "silence",
-                     "rms": float(np.sqrt(np.mean(o[arm].astype(np.float64) ** 2))), "mean": float(np.mean(o[arm]))})
+            xin = (g * mono_in).astype(np.float32); x = RP.export_arms(xin, A)
+            for arm in RP.EXPORT_ARMS:
+                rows.append({"panel": "X3", "seed": seed, "arm": arm, "level": lv, **{k: it[k] for k in ("talker", "setting", "az")},
+                             "alpha": RP.signed_alpha(xin, x[arm], w), "wave_err": RP.wave_err_db(xin, x[arm], w),
+                             "mean": float(np.mean(x[arm][w])), "clip": _clip(x[arm]), "lag": RP.peak_lag(xin, x[arm], w)})
+    for it in noisy:                                                                       # X1
+        from pystoi import stoi as _st
+        w = P.score_window(len(it["rL"]))
+        ref = 0.5 * (it["rL"].astype(np.float64) + it["rR"].astype(np.float64))
+        x = RP.export_arms((0.5 * (it["mL"] + it["mR"])).astype(np.float32), A)
+        for arm in RP.EXPORT_ARMS:
+            rows.append({"panel": "X1", "seed": seed, "arm": arm, **{k: it[k] for k in ("talker", "setting", "az", "snr")},
+                         "sisdr": _si_sdr_np(ref[w], x[arm][w]), "stoi": float(_st(ref[w], x[arm][w].astype(np.float64), 16000)),
+                         "clip": _clip(x[arm])})
+    z = np.zeros(2 * 16000, np.float32)                                                    # P6 + X4
+    for panel, outs, arms in (("P6", A.outputs(z), RP.ARMS), ("X4", RP.export_arms(z, A), RP.EXPORT_ARMS)):
+        for arm in arms:
+            o = outs[arm].astype(np.float64)
+            rows.append({"panel": panel, "seed": seed, "arm": arm, "kind": "silence", "talker": None, "setting": None, "az": None,
+                         "rms": float(np.sqrt(np.mean(o ** 2))), "mean": float(np.mean(o)), "clip": _clip(o)})
     for it in tgt:
-        x = np.concatenate([it["mL"][:3 * 16000], np.zeros(2 * 16000, np.float32)]); o = A.outputs(x)
-        for arm in RP.ARMS:
-            tail = o[arm][-24000:].astype(np.float64)
-            rows.append({"panel": "P6", "seed": seed, "arm": arm, "kind": "transition", **{k: it[k] for k in ("talker", "setting", "az")},
-                         "rms": float(np.sqrt(np.mean(tail ** 2))), "mean": float(np.mean(tail))})
-    # P7 exported entry point, as published and repaired
-    for it in tgt:
-        mono_in = 0.5 * (it["mL"] + it["mR"]); ref = 0.5 * (it["rL"].astype(np.float64) + it["rR"].astype(np.float64))
-        w = P.score_window(len(ref))
-        for lv in LEVELS:
-            g = lv / P.RMS_IN
-            for variant, rep in (("published", None), ("repaired", (A.polarity, A.bias))):
-                y = RP.export_enhance((g * mono_in).astype(np.float32), A.model, rep)
-                rows.append({"panel": "P7", "seed": seed, "variant": variant, "level": lv, **{k: it[k] for k in ("talker", "setting", "az")},
-                             "alpha": RP.signed_alpha(ref, y, w), "wave_err_norm": RP.wave_err_db(ref * (np.std(y[w]) / (np.std(ref[w]) + 1e-12)), y, w),
-                             "mean": float(np.mean(y[w])), "clip": float(np.mean(np.abs(y) > 1.0))})
-    for variant, rep in (("published", None), ("repaired", (A.polarity, A.bias))):
-        y = RP.export_enhance(np.zeros(2 * 16000, np.float32), A.model, rep)
-        rows.append({"panel": "P7", "seed": seed, "variant": variant, "kind": "silence", "rms": float(np.sqrt(np.mean(y.astype(np.float64) ** 2)))})
-    return seed, rows
+        x = np.concatenate([it["mL"][:3 * 16000], np.zeros(2 * 16000, np.float32)])
+        for panel, outs, arms in (("P6", A.outputs(x), RP.ARMS), ("X4", RP.export_arms(x, A), RP.EXPORT_ARMS)):
+            for arm in arms:
+                tail = outs[arm][-24000:].astype(np.float64)
+                rows.append({"panel": panel, "seed": seed, "arm": arm, "kind": "transition", **{k: it[k] for k in ("talker", "setting", "az")},
+                             "rms": float(np.sqrt(np.mean(tail ** 2))), "mean": float(np.mean(tail)), "clip": _clip(outs[arm])})
+    return {"rows": rows}
 
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("--out", required=True); ap.add_argument("--workers", type=int, default=6)
     a = ap.parse_args()
     assert not Path(a.out).exists(), f"REFUSED: {a.out} exists"
+    RP.registered_polarity()                      # refuses unregistered checkpoints before any work
     t0 = time.time(); rows = []; mh = None
-    jobs = [(_p1, s) for s in RP.CKPTS] + [(_p2p3, s) for s in RP.CKPTS] + [(_rest, s) for s in RP.CKPTS]
+    jobs = [(_p1, s) for s in RP.CKPTS] + [(_p2p3x2, s) for s in RP.CKPTS] + [(_rest, s) for s in RP.CKPTS]
     with get_context("spawn").Pool(a.workers) as pool:
         res = [pool.apply_async(f, (s,)) for f, s in jobs]
         for r in res:
-            out = r.get()
-            if len(out) == 3:
-                mh = out[1]; rows += out[2]
-            else:
-                rows += out[1]
+            out = r.get(); rows += out["rows"]; mh = out.get("brudex_material_sha256", mh)
             print(f"job done {time.time()-t0:.0f}s rows={len(rows)}", flush=True)
     doc = {"panel": "gen35_output_repair", "brudex_material_sha256": mh,
-           "checkpoints": {s: {"path": str(p.relative_to(RP.REPO)), "sha256": RP.sha(p)} for s, p in RP.CKPTS.items()},
-           "polarity": {s: RP.registered_polarity()[RP.sha(p)] for s, p in RP.CKPTS.items()},
-           "decoder_bias": {s: RP.Arms(p).bias for s, p in RP.CKPTS.items()}, "rows": rows}
+           "checkpoints": {str(s): {"path": str(p.relative_to(RP.REPO)), "sha256": RP.sha(p)} for s, p in RP.CKPTS.items()},
+           "polarity": {str(s): RP.POLARITY[RP.sha(p)] for s, p in RP.CKPTS.items()},
+           "decoder_bias": {str(s): RP.Arms(p).bias for s, p in RP.CKPTS.items()}, "rows": rows}
     Path(a.out).write_text(json.dumps(doc))
     print(f"WROTE {a.out} rows={len(rows)} {time.time()-t0:.0f}s")
 

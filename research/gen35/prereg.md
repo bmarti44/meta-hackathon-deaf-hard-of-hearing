@@ -17,8 +17,9 @@ bias:
 - seed 18: −0.165;
 - seed 19: −0.146.
 
-Every registered metric is blind to both. The published Hugging Face
-`enhance.py` inherits both; it then rescales the output to the input RMS
+Every registered gate metric is blind to both; Gen 34's added waveform
+error is not (Astra). The published Hugging Face `enhance.py` inherits
+both; it then rescales the output to the input RMS
 with the DC still in the signal.
 
 ## The one change: three predefined output arms (`repair.py`)
@@ -98,14 +99,44 @@ without the owner's go-ahead.
 
 Run: `research/gen35/pipeline.sh`.
 
+## Pre-launch amendment 1 (2026-11-05 ~04:45, before any repaired output was scored)
+
+Astra's first pre-launch review was **NOT CLEARED**, with four blocking items
+([astra-prelaunch-review.md](./astra-prelaunch-review.md)). Fixes:
+
+1. **V0 completeness.**
+   - Each panel × seed × arm must hold **exactly** the registered key set, with unique keys matched across arms.
+   - Every required metric must be present, numeric (not boolean) and finite.
+   - Malformed input gives INVESTIGATE, never a pass.
+2. **Full rule coverage.**
+   - R2 adds P3 and every P5 level × setting × ear.
+   - R3 adds P4 per-ear SI-SDR/STOI (now computed).
+   - R5 checks clipping on every row-ear in P1–P6, and the lag on every target-only ear or clip in P1, P3 and P5.
+3. **The exported entry point is now gated, separately.**
+   - Arms: E0 published / **E1 sign-only** / E2 repaired.
+   - Panels: X1 BRUDEX noisy, X2 dry, X3 target-only at three levels plus X3q quiet crops, X4 silence and speech-to-silence transitions.
+   - Checks E1 / E2 / E3 / E5 mirror R1 / R2 / R3 / R5.
+   - The waveform error is **unadjusted**: the export restores output to the input's RMS, and for target-only input the input is the reference.
+4. **Polarity binding.**
+   - All three sha256 → polarity entries are frozen in `repair.POLARITY`. Any other checkpoint is refused, and the table is cross-checked against the Gen 34 evidence.
+   - V0 validates provenance.
+5. The wording "every registered metric is blind to both" is corrected (above).
+
+**Tests:** `test_gen35.py`, 7/7 passing. They now:
+- confirm that a complete, rule-satisfying synthetic run is accepted;
+- reproduce Astra's attacks (a missing P2 item; the P5 high level replaced by duplicates; X4 silence replaced by a duplicate), plus a missing metric, a boolean metric, a wrong checkpoint hash, whole-panel waveform-error worsening in P3 / P5 / X3 / X3q, a P4 per-ear loss, P2 clipping, a P3 lag, an X1 STOI loss and X4 silence RMS. Each must give INVESTIGATE;
+- check that an unregistered checkpoint is refused.
+
+The hash table is updated below.
+
 ## Source hashes (sha256)
 
 | File | sha256 |
 |---|---|
-| `research/gen35/repair.py` | `37165c117d69e7fb477d305d9ae7aaa929f303c5fe6b7703f787ddd24867e57b` |
-| `research/gen35/run_repair.py` | `99e6dddaa70c23bce15fbb887f9b235213b0024dd76bda581eb7a04e05db2fe7` |
-| `research/gen35/judge_repair.py` | `2e4b38b6fcc8e7d2f4e369f46b6fcea06d778f14ee79439803694668a17e714f` |
-| `research/gen35/test_gen35.py` | `e47339078748dd89a2339d7cc813cff880a5ec0914db5e03fcda408b6e573d9b` |
+| `research/gen35/repair.py` | `9b822da5635fdec44aa6bfb5622d937623148d52592e45656b7ce32b53c16ebb` |
+| `research/gen35/run_repair.py` | `62b29c39ffc58299279909cf5492d7a48d66bc8792506d8b75d1421724e8d6a9` |
+| `research/gen35/judge_repair.py` | `947f5e5f215284c757d93671f9bcd91c78c9410fd16b26f848955c6b7a90983d` |
+| `research/gen35/test_gen35.py` | `1277050b852527bf76bf9eb8cf3245bbaef9fa66d644000ea5ccd211dbc340e3` |
 | `research/gen35/pipeline.sh` | `c2da453df248cacc5c6c82a6f4d26e9043fcc80be7bdb1d9f4cbc3ce714cad9a` |
 | `research/gen35/published/enhance.py` | `59b65cdaead7aca31d54fb73f1b1d2a7fcf6b3c1bb7feb07dcd42588d79611b5` |
 | `research/gen35/published/model_causal.py` | `e09ca1e0e8b761ed7116d5291e08c196e97243f5a111faca0fe68a15a5f8e1da` |
