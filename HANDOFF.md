@@ -141,6 +141,40 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
   - Deploy with `deploy/deploy_site.sh`, which runs a secret scan and an
     audio-file refusal first.
 
+## Site/demo work in flight (2026-11-04 19:02)
+
+- **Review loop (owner rule):** fresh Opus reviewers score 11 categories
+  each round (UX, wow, animation, mobile, story, a11y, perf, Meta AI,
+  trust, cohesiveness, AI tells). The loop continues until **every**
+  category is ≥ 90. Fable applies each round's fixes, then
+  `deploy/deploy_site.sh`.
+  - Round 1 scored 63/100. The review is in this session's agent report;
+    its screenshots are in the session scratchpad `qa/`.
+  - The capture tool `qa/shot.mjs` uses CDP device emulation, because
+    headless Chrome clamps windows to 500 px.
+- **Owner preferences:**
+  - The sound wave coming into focus is the spine of the page.
+  - No AI tells: no cards, rounded borders, pills, glass panels or emoji.
+  - No conflict-disclosure note, no "medical advice", no legalese.
+  - Muse answers are ELI5 and meaning-only, with the fixed footnote
+    "*Still needs to be verified on the Nucleus 6".
+  - Graham's clip is portrait SDR with sound and comes after #crowd,
+    captioned "shaking his booty with the gray hairs".
+- **Agents and pieces in progress:**
+  - Explainer video (Fable): `video/`, output to `site/assets/video/`.
+  - Meta integration (Opus): `api/` routes plus `site/partials/meta-lab.html`
+    and `research/meta/`. One idea: Muse Voice Transcribe word error
+    rate on noisy vs model-cleaned speech. Available Meta models:
+    muse-spark-1.3, muse-wonder-1.0, muse-voice-transcribe-1.0,
+    muse-image-1.0, sam-3.1.
+  - Implant explainer + simulated CI audio (Opus):
+    `site/partials/implant.html`, `site/assets/audio/implant/`.
+  - Hugging Face release (Opus): `bmarti44/before-the-implant-causal-enhancer`
+    (Gen 19 safetensors, `enhance.py`, model card, MIT).
+  - Snippets go into the `<!-- SLOT:implant -->` and
+    `<!-- SLOT:meta-lab -->` markers in index.html.
+- **Gen 24:** restart after the site work settles (holder instruction).
+
 ## Next actions (in order)
 
 1. **When `/tmp/gen23_s17_pipeline.log` says PIPELINE DONE**:
