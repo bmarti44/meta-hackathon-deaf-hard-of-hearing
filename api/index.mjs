@@ -95,6 +95,7 @@ const CONTEXT = `PROJECT: "Before the Implant" (beforetheimplant.com), a hackath
 const RULES = `Rules you must follow:
 - Every number you give must come from a tool result or the context above. Never invent numbers, dates, ages or personal details about Graham or his family.
 - Focus only on what the result MEANS, explained like the reader is five: short sentences, everyday words. Explain directly; avoid cute analogies (bikes, video games, building blocks, homework, training wheels). Be really clear.
+- Write short, natural sentences a parent would say out loud. No padded or stacked phrasing ("would additionally need with", "computer made hearing"); say "a listening test with simulated implant sound" instead.
 - Never describe an error or a loss as "small" or "tiny"; give the number and say plainly whether it is better or worse. Say "the voice came through 1.2 dB cleaner", not "made how clean the voice is better by +1.19 dB". Round to one decimal place for dB.
 - Do NOT add caveat lists or "what it does not mean" sections, and do not tack on reminders about testing, real listeners, promotion or the scorecard verdict; a fixed footnote about verifying on the Nucleus 6 is added after your answer automatically. Just never claim it already helps a real listener or beats the Nucleus 6.
 - Never add care, medical or audiologist caveats of any kind (a fixed footnote is added automatically). If someone asks about a specific person's own hearing care, answer only what the research shows. Do not use disclaimers, legal language or the phrase "medical advice".
@@ -105,7 +106,7 @@ const RULES = `Rules you must follow:
 - Never open with "This row", "This check" or similar; start directly with what it means for a listener.
 - Never use the words FAIL, PASS, promoted, verdict or 'keep optimizing'; describe results in plain words ("it reached the goal" / "it fell short of the goal").
 - Call the model "the program" (never "the helper" or "the AI"). Always keep apostrophes ("Graham's", "parents'").
-- Always give units with numbers (for example "5.47 dB"). Call the 14 tests "checks", never "rows". When consent comes up, say "with his parents' permission and Graham's own agreement" (the site's wording). Mention the Nucleus 6 only if the question is about it.`;
+- Always give units with numbers (for example "5.47 dB"). Call the 14 tests "checks", never "rows". Only if consent comes up, use a complete sentence such as "That would only happen with his parents' permission and Graham's own agreement." Mention the Nucleus 6 only if the question is about it.`;
 
 const askPrompt = q => ({
   instructions: `You answer questions about a cochlear-implant noise-reduction research project, using tools that read its committed research record.\n\n${CONTEXT}\n\n${RULES}
@@ -121,7 +122,7 @@ function explainPrompt(item, kind, level, label = "") {
     : "Write for a parent of a child with cochlear implants: explain it like they are five: warm, very plain words, no jargon (explain any term you must use in a few words), under 90 words. Say clearly what it means. Nothing about what it does not mean.";
   return {
     instructions: `You explain one item from a cochlear-implant noise-reduction research project.\n\n${CONTEXT}\n\n${RULES}\n${who}`,
-    input: `${label ? `On the site this ${kind} is called "${label}". Use that same name when you refer to it, not any internal name.\n` : ""}Explain this ${kind}:\n${JSON.stringify(item)}`, max: 360, tools: false,
+    input: `${label ? `On the site, the reader clicked Explain next to this text: "${label}". Do not repeat or quote that text; talk about it in your own plain words, and never use internal ids.\n` : ""}Explain this ${kind}:\n${JSON.stringify(item)}`, max: 700, tools: false,
   };
 }
 
@@ -309,7 +310,8 @@ export const handler = async (event) => {
   if (limited(ip, kind)) return { ...json(429, { error: "Too many requests. Please wait a couple of minutes." }), headers: { ...json(429, {}).headers, "retry-after": "120" } };
   const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 55000);
   try {
-    const r = await runMuse(p, ctl.signal);
+    let r = await runMuse(p, ctl.signal);
+    if (!r.answer) { console.error("muse empty answer, retrying once", kind); r = await runMuse(p, ctl.signal); }
     if (!r.answer) throw new Error("empty response");
     const out = r.answer + "\n\n*Still needs to be verified on the Nucleus 6.";  // owner request: one fixed footnote, no caveat lists
     return json(200, kind === "ask" ? { answer: out, steps: r.steps, model: MODEL } : { text: out, model: MODEL }, cache);

@@ -38,7 +38,9 @@ The full 10-point curve is in `val_selection_s17.json`.
   - **improves** 0 dB STOI at every α;
   - **costs** 0 dB SI-SDR from α = 0.2 (down to −0.10 dB at α = 1);
   - **costs** a very small amount of −5 dB STOI (−0.00003 at α = 0.1).
-- The rule failed on that last number. That is a real failure under the registered rule. Its size is far below anything a listener could notice, but no tolerance or finer-grid rescue follows (registered).
+- The rule failed on that last number (−0.0000305), and rounding does not explain it. It is numerically small, and its perceptual significance is unknown (Astra). No tolerance or finer-grid rescue follows (registered).
+- Every sampled blend fails at least one of the four measures, so removing the prefix requirement would not have produced a candidate either.
+- This was a **selection** failure. judge_v3 never ran, and no room evaluation occurred.
 - Muse's pre-launch note anticipated this: a zero-margin "≥ 0 on all four" rule fails often when the true effect is near zero. The same holds for judge_v3's D, which also requires non-negative means.
 - No listener benefit is established.
 
@@ -47,6 +49,6 @@ The full 10-point curve is in `val_selection_s17.json`.
 - the blend `index.json` (blends are regenerable from Gen 19 and the fine-tune, and are git-ignored);
 - the selection JSON.
 
-**Next:** decided with Astra and Muse (see the review files). The drafted
-default is Gen 32: the same procedure with a dry-output-preservation term
-during the fine-tune (`research/gen32/train19.py`, not registered).
+**Next:** decided with Astra and Muse (see the review files). Gen 32 is Astra's choice: the same procedure with a
+dry-output-preservation term during the fine-tune, coefficient 100
+(see [../gen32/prereg.md](../gen32/prereg.md)).

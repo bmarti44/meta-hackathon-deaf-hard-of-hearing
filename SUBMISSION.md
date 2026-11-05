@@ -278,6 +278,17 @@ Disclosures:
     campaign and triggers the registered Gen 31 experiment. Gen 19 remains
     the baseline, and no listener benefit is established.
 
+- **Gen 31, fine-tune and blend back (WiSE-FT)** (update 2026-11-05
+  02:20; [research/gen31/results.md](./research/gen31/results.md)), in
+  Astra's wording:
+  - **Result:** Gen 31 fine-tuned Gen 19 on room-augmented speech and
+    tested ten weight blends. It selected no candidate, because the first
+    blend reduced mean −5 dB dry STOI by 0.00003, failing the registered
+    zero-loss rule.
+  - **Verdict:** Gen 31 therefore failed before screening. Gen 19 remains
+    the baseline, and neither room benefit nor benefit for cochlear-implant
+    users was established.
+
 ## Limits (stated plainly)
 
 Offline bench results cannot establish superiority over the N6's
