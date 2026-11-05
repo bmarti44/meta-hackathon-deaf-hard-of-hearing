@@ -8,6 +8,20 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+SUBMISSION STATE 2026-11-04 20:00 (Claude Opus 5.5). Research: Gen 19
+remains the accepted baseline (13/14; crowd -5 dB +1.19 vs +1.5);
+Gen 21/22/23 filed as nulls with Astra (and, for Gen 23, Muse) reviews;
+Gen 24 (narrower SNR) registered, run 1 stopped by holder decision, to
+restart after deployment. Demo: beforetheimplant.com live (Fable-designed
+three.js story; Muse Ask/Explain; Meta lab listening test, a null at the
+recognizer's floor; implant explainer with LibriSpeech CI-simulation
+clips). Model public on Hugging Face
+(bmarti44/before-the-implant-causal-enhancer). Attribution corrected:
+Muse Wonder Full (Meta) ran Gen 0-21; Claude took over 2026-11-04.
+Explainer video for YouTube rendered (video/out, git-ignored), final
+voice-consistency pass in progress. Site review loop: round 1 63,
+round 2 72.9, round 3 scoring; target every category >= 90.
+
 GEN 23 SCREEN FAIL; BEFORETHEIMPLANT.COM LIVE (2026-11-04 18:40,
 Claude Opus 5.5). Gen 23 (plain SI-SDR + 5 x compressed spectral loss),
 seed 17 at 24k scratch vs Gen19 s17, gave −5 dB gains of −0.338 dB on

@@ -141,7 +141,18 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
   - Deploy with `deploy/deploy_site.sh`, which runs a secret scan and an
     audio-file refusal first.
 
-## Site/demo work in flight (2026-11-04 19:02)
+## Site/demo work in flight (updated 2026-11-04 20:00)
+
+- **20:00 state:**
+  - **Site review loop:** round 1 scored 63, round 2 scored 72.9, and the
+    round 3 fixes are deployed (fa425b8) with round 3 scoring in progress.
+  - **Video:** final at `video/out/before-the-implant.mp4` (2:58, quieter
+    jackhammer, `mix.py` jackhammer volume=0.01). A voice-consistency
+    re-render is in progress by the video agent. YouTube upload is by the
+    owner, and the site carries no film.
+  - **HF model:** published. The card credits Muse Wonder Full.
+  - **Meta lab:** live. Results are in `research/meta/`.
+
 
 - **Review loop (owner rule):** fresh Opus reviewers score 11 categories
   each round (UX, wow, animation, mobile, story, a11y, perf, Meta AI,
