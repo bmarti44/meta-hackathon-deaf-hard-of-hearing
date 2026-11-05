@@ -223,6 +223,22 @@ Disclosures:
       exposure is generally ineffective
       ([research/gen24/results.md](./research/gen24/results.md)).
 
+- **Gen 27, real rooms** (update 2026-11-04 23:25, after the 20:00
+  snapshot; [research/gen27/results.md](./research/gen27/results.md)).
+  - **Background:** the holder redirected the research to real-world
+    benefit for cochlear-implant users. On simulated reverberant rooms,
+    Gen 19 itself showed metric degradation.
+  - **Result, in Astra's wording:** Gen 27's registered single-seed
+    room-augmentation experiment improved synthetic-room SI-SDR by
+    0.514 dB versus Gen 19 (95% voice-and-room bootstrap CI 0.238–0.844;
+    15/16 voices improved), with positive aggregate measured-room and
+    target-only gains. It failed advancement because dry noisy-speech
+    performance declined, crowd STOI narrowly missed its threshold, and
+    mirrored spatial errors increased slightly. Gen 19 remains the
+    baseline, and no listener benefit is established.
+  - **Next:** Gen 28 halves the reverberant training share, to try to
+    keep the room gains without the dry cost.
+
 ## Limits (stated plainly)
 
 Offline bench results cannot establish superiority over the N6's

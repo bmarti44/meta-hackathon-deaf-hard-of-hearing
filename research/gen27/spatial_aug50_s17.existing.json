@@ -1,0 +1,192 @@
+{
+ "meta": {
+  "candidate": "aug50",
+  "checkpoint_sha256": "8c96396ed5944bd03e29614a77f5f3c9fd6799d71ee245fc28b56584c932fd8e",
+  "gen15": "research/gen27/weights/aug50_seed20261117.pt"
+ },
+ "summary": {
+  "unproc": {
+   "ild_target_err_db": 5.96418786812648,
+   "ild_distortion_db": 0.0,
+   "itd_err_samples": 5.75
+  },
+  "gate_independent": {
+   "ild_target_err_db": 5.79449380458224,
+   "ild_distortion_db": 0.2637307129647929,
+   "itd_err_samples": 4.25
+  },
+  "gate_linked": {
+   "ild_target_err_db": 5.780417682000129,
+   "ild_distortion_db": 0.18800357063089806,
+   "itd_err_samples": 4.25
+  },
+  "aug50": {
+   "ild_target_err_db": 5.48747158062424,
+   "ild_distortion_db": 0.8989238998008271,
+   "itd_err_samples": 4.25
+  }
+ },
+ "rows": [
+  {
+   "crop": 0,
+   "target_az": -60.0,
+   "noise_az": 60.0,
+   "snr_db": -5.0,
+   "system": "unproc",
+   "ild_target_err_db": 10.285541052063131,
+   "ild_distortion_db": 0.0,
+   "itd_err_samples": 16.0
+  },
+  {
+   "crop": 0,
+   "target_az": -60.0,
+   "noise_az": 60.0,
+   "snr_db": -5.0,
+   "system": "gate_independent",
+   "ild_target_err_db": 10.378529264788424,
+   "ild_distortion_db": 0.20834981366850058,
+   "itd_err_samples": 16.0
+  },
+  {
+   "crop": 0,
+   "target_az": -60.0,
+   "noise_az": 60.0,
+   "snr_db": -5.0,
+   "system": "gate_linked",
+   "ild_target_err_db": 10.17015252564895,
+   "ild_distortion_db": 0.11872132084243772,
+   "itd_err_samples": 16.0
+  },
+  {
+   "crop": 0,
+   "target_az": -60.0,
+   "noise_az": 60.0,
+   "snr_db": -5.0,
+   "system": "aug50",
+   "ild_target_err_db": 10.798826327916066,
+   "ild_distortion_db": 0.6697516481400467,
+   "itd_err_samples": 16.0
+  },
+  {
+   "crop": 1,
+   "target_az": -30.0,
+   "noise_az": 30.0,
+   "snr_db": 0.0,
+   "system": "unproc",
+   "ild_target_err_db": 4.96008012769868,
+   "ild_distortion_db": 0.0,
+   "itd_err_samples": 7.0
+  },
+  {
+   "crop": 1,
+   "target_az": -30.0,
+   "noise_az": 30.0,
+   "snr_db": 0.0,
+   "system": "gate_independent",
+   "ild_target_err_db": 4.725630676176968,
+   "ild_distortion_db": 0.2439507320619623,
+   "itd_err_samples": 1.0
+  },
+  {
+   "crop": 1,
+   "target_az": -30.0,
+   "noise_az": 30.0,
+   "snr_db": 0.0,
+   "system": "gate_linked",
+   "ild_target_err_db": 4.689061794803011,
+   "ild_distortion_db": 0.27101833289566807,
+   "itd_err_samples": 1.0
+  },
+  {
+   "crop": 1,
+   "target_az": -30.0,
+   "noise_az": 30.0,
+   "snr_db": 0.0,
+   "system": "aug50",
+   "ild_target_err_db": 4.736357757317133,
+   "ild_distortion_db": 0.378897194148184,
+   "itd_err_samples": 1.0
+  },
+  {
+   "crop": 2,
+   "target_az": 30.0,
+   "noise_az": -30.0,
+   "snr_db": 5.0,
+   "system": "unproc",
+   "ild_target_err_db": 4.193317488830034,
+   "ild_distortion_db": 0.0,
+   "itd_err_samples": 0.0
+  },
+  {
+   "crop": 2,
+   "target_az": 30.0,
+   "noise_az": -30.0,
+   "snr_db": 5.0,
+   "system": "gate_independent",
+   "ild_target_err_db": 3.9953458095526715,
+   "ild_distortion_db": 0.2359131602210394,
+   "itd_err_samples": 0.0
+  },
+  {
+   "crop": 2,
+   "target_az": 30.0,
+   "noise_az": -30.0,
+   "snr_db": 5.0,
+   "system": "gate_linked",
+   "ild_target_err_db": 4.02242567935463,
+   "ild_distortion_db": 0.1844925530653346,
+   "itd_err_samples": 0.0
+  },
+  {
+   "crop": 2,
+   "target_az": 30.0,
+   "noise_az": -30.0,
+   "snr_db": 5.0,
+   "system": "aug50",
+   "ild_target_err_db": 3.3798312975536633,
+   "ild_distortion_db": 0.8379200363228052,
+   "itd_err_samples": 0.0
+  },
+  {
+   "crop": 3,
+   "target_az": 60.0,
+   "noise_az": -60.0,
+   "snr_db": 10.0,
+   "system": "unproc",
+   "ild_target_err_db": 4.417812803914075,
+   "ild_distortion_db": 0.0,
+   "itd_err_samples": 0.0
+  },
+  {
+   "crop": 3,
+   "target_az": 60.0,
+   "noise_az": -60.0,
+   "snr_db": 10.0,
+   "system": "gate_independent",
+   "ild_target_err_db": 4.078469467810898,
+   "ild_distortion_db": 0.36670914590766923,
+   "itd_err_samples": 0.0
+  },
+  {
+   "crop": 3,
+   "target_az": 60.0,
+   "noise_az": -60.0,
+   "snr_db": 10.0,
+   "system": "gate_linked",
+   "ild_target_err_db": 4.240030728193924,
+   "ild_distortion_db": 0.17778207572015184,
+   "itd_err_samples": 0.0
+  },
+  {
+   "crop": 3,
+   "target_az": 60.0,
+   "noise_az": -60.0,
+   "snr_db": 10.0,
+   "system": "aug50",
+   "ild_target_err_db": 3.0348709397100966,
+   "ild_distortion_db": 1.7091267205922727,
+   "itd_err_samples": 0.0
+  }
+ ],
+ "note": "ASSUMED head model; distortion comparisons only"
+}
