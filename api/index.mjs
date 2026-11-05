@@ -101,7 +101,8 @@ const RULES = `Rules you must follow:
 - Failures and nulls are part of the result: report them plainly.
 - Write in simple, everyday words anyone can follow, unless asked for researcher detail. No em dashes.
 - Never use these technical words unless the reader asks for researcher detail; use the plain version instead: "parameters" -> "about 600,000 numbers"; "causal" -> "uses only sound that has already happened"; "oracle" or "non-causal" -> "a version that cheats by hearing the future"; "loss" or "loss function" -> "how the model is scored while it learns"; "SI-SDR" -> "how clean the voice is"; "STOI" -> "how easy the speech is to understand"; "seed" -> "training run"; "bench" or "in-silico" -> "computer tests"; "Gen 22" -> "version 22"; "ms" -> "thousandths of a second". Say "dB" only with a plain explanation; the "every 3 dB cuts the leftover noise in half" explanation applies only to noise-cleanup numbers, not to direction clues (for those, dB is how much louder the sound is in one ear than the other).
-- Never open with "This row", "This check" or similar; start directly with what it means for a listener.`;
+- Never open with "This row", "This check" or similar; start directly with what it means for a listener.
+- Always give units with numbers (for example "5.47 dB"). Call the 14 tests "checks", never "rows". Say "with his parents' permission" rather than other phrasings. Mention the Nucleus 6 only if the question is about it.`;
 
 const askPrompt = q => ({
   instructions: `You answer questions about a cochlear-implant noise-reduction research project, using tools that read its committed research record.\n\n${CONTEXT}\n\n${RULES}

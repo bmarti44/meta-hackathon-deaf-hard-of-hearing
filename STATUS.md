@@ -8,6 +8,34 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+GEN 24 FAIL, GEN 25 FAIL, REFOCUS ON REAL ROOMS (2026-11-04 22:08,
+Claude Opus 5.5).
+
+**Gen 24** (narrower SNR) failed with regressions: VAL −0.212 / bench
+−0.019 at −5 dB, 0 dB safeguard failed, dev 4/8.
+
+**Gen 25** (checkpoint averaging, no training) failed: +0.171 / +0.030
+at −5 dB, with small broad gains. Both are filed with Astra and Muse
+reviews. Gen 26 (weight blend) was shelved unrun.
+
+**Refocus.** The holder redirected the work to real-world benefit for CI
+users, and Astra's agenda review set the order: rooms → real recordings
+→ two-input → ACE auxiliary.
+
+**Screen v2** is registered: a 16-voice development panel with a
+voice-clustered CI, corrected for prior Gen 17 exposure.
+
+**Gen 27** (room augmentation: OpenSLR28 RIRs split by room,
+direct+50 ms target) is built and registered. Astra held the launch for
+3 fixes, now in progress.
+
+**Provisional finding:** Gen 19 shows metric degradation on simulated
+reverberant speech (STOI −0.029 / −0.017 at −5 dB; target-only
+−1.65 dB).
+
+**Site:** beforetheimplant.com review loop, rounds 1–7 scoring 63 →
+82.1. Model on Hugging Face; video done.
+
 SUBMISSION STATE 2026-11-04 20:00 (Claude Opus 5.5). Research: Gen 19
 remains the accepted baseline (13/14; crowd -5 dB +1.19 vs +1.5);
 Gen 21/22/23 filed as nulls with Astra (and, for Gen 23, Muse) reviews;

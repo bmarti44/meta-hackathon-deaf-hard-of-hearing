@@ -211,6 +211,17 @@ Disclosures:
   examples at −5 to −3 dB instead of 17%, same random draws) is next
   ([research/gen24/prereg.md](./research/gen24/prereg.md)).
   It is registered and will run after tonight's deployment. A first launch was stopped at step ~100 because the machine was shared with the site build; it is not judged.
+  - **Update, 2026-11-04 22:08 (after the 20:00 snapshot), in Astra's
+    wording:**
+    - Gen 24's pre-registered single-seed screen of narrower noisy-SNR
+      sampling failed. Versus Gen 19, −5 dB SI-SDR gains were
+      −0.212 dB on VAL and −0.019 dB on the bench, STOI declined on
+      both, the 0 dB safeguard failed, and only 4/8 dev targets
+      improved.
+    - Provenance passed, but this sampling recipe was not retained.
+      This late-filed T0 result does not establish that hard-SNR
+      exposure is generally ineffective
+      ([research/gen24/results.md](./research/gen24/results.md)).
 
 ## Limits (stated plainly)
 
