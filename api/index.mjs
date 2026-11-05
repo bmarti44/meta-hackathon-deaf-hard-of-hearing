@@ -71,11 +71,11 @@ function search(q) {
 }
 
 function runTool(name, args) {
-  if (name === "list_generations") return { step: "Listed all research generations", data: K.generations };
-  if (name === "get_scorecard") return { step: "Read the 14-row KPI scorecard", data: K.scorecard };
+  if (name === "list_generations") return { step: "Read the list of every version we tried", data: K.generations };
+  if (name === "get_scorecard") return { step: "Read the 14 checks and how the model did on each", data: K.scorecard };
   if (name === "search_record") {
     const q = String(args.query || "").slice(0, 120), r = search(q);
-    return { step: `Searched the research record for "${q}" (${r.length} passages: ${[...new Set(r.map(x => x.file))].join(", ") || "none"})`, data: r };
+    return { step: `Read ${r.length} ${r.length === 1 ? "note" : "notes"} from the project diary about "${q}"`, data: r };
   }
   return { step: null, data: { error: "unknown tool" } };
 }
@@ -85,7 +85,8 @@ const RULES = `Rules you must follow:
 - Every number you give must come from a tool result or the context above. Never invent numbers, dates, ages or personal details about Graham or his family.
 - Focus only on what the result MEANS, explained like the reader is five: short sentences, everyday words, one simple picture or comparison if it helps. Be really clear.
 - Do NOT add caveat lists or "what it does not mean" sections, and do not tack on reminders about testing, real listeners, promotion or the scorecard verdict; a fixed footnote about verifying on the Nucleus 6 is added after your answer automatically. Just never claim it already helps a real listener or beats the Nucleus 6.
-- If asked about a person's own hearing, implant settings or care, say in one friendly sentence that their audiologist is the right person for that, then explain what the research does show. Do not use disclaimers, legal language or the phrase "medical advice".
+- Only if someone directly asks for advice about their own or their child's hearing care, mention in a short clause that their audiologist can help with that; otherwise never add referral lines. Do not use disclaimers, legal language or the phrase "medical advice".
+- Always write full, friendly sentences; never shorthand fragments. Never mention file names, paths or internal labels.
 - Failures and nulls are part of the result: report them plainly.
 - Write in simple, everyday words anyone can follow, unless asked for researcher detail. No em dashes.`;
 
@@ -93,7 +94,7 @@ const askPrompt = q => ({
   instructions: `You answer questions about a cochlear-implant noise-reduction research project, using tools that read its committed research record.\n\n${CONTEXT}\n\n${RULES}
 - Prefer one to three tool calls. Use get_scorecard for KPI questions, list_generations for history, search_record for details.
 - If the question has nothing to do with this project, hearing, cochlear implants or how to read the site, do not call tools; reply in one sentence that you can only answer questions about this project.
-Final answer: under 170 words of Markdown. Lead with a direct one-sentence answer, then supporting detail. Name the file a key fact comes from when useful.`,
+Final answer: under 170 words of Markdown, in full, friendly sentences (no shorthand fragments). Lead with a direct one-sentence answer, then supporting detail. Never mention file names or paths.`,
   input: `Question: ${q}`, max: 520, tools: true,
 });
 
