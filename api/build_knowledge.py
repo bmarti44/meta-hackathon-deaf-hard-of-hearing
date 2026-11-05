@@ -80,7 +80,7 @@ FACTS = ("Model: strictly causal Conv-TasNet-style waveform enhancer, 602,510 pa
          "speech-shaped noise, held-out white noise, quiet; readouts SI-SDR, STOI, vocoded ESTOI and simulated 8-of-22 ACE electrodogram correlation; "
          "a spatial direction-cue screen on an assumed head model. Discipline: pre-registration, one change per generation, final-checkpoint-only judging, "
          "3-seed means, an independent reviewer (Codex Astra, xhigh) between generations quoted verbatim, bit-identical replay checks, nulls filed. "
-         "The research loop was run by Claude (Anthropic) with Codex Astra as reviewer; Muse (Meta) powers this site's Ask and Explain features. "
+         "WHO DID THE RESEARCH: most of the research loop (Gen 0 to Gen 21, including the bench, the 14-check scorecard and the Gen 19 model) was run by Muse Wonder Full (muse-wonder-full-1.0), Meta's AI model, under Graham's dad's direction; Claude Opus 5.5 (Anthropic) took over on the last day (Gen 21 seed 19 and verdict, Gen 22 to 24) and built the site; Codex Astra was the independent reviewer throughout; Muse Spark powers this site's Ask and Explain features and also reviewed the Gen 23 verdict. "
          "Next steps: compressed-spectral then narrower-SNR training changes; a fresh-material confirmation package (12 new speakers); a binaural linked-gain model; "
          "measuring quiet PESQ and streaming RTF. "
          "THE MODEL IS PUBLIC on Hugging Face: https://huggingface.co/bmarti44/before-the-implant-causal-enhancer (Gen 19 weights, enhance.py, MIT); anyone can try it on their own recordings. "

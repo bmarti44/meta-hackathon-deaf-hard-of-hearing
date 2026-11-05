@@ -47,9 +47,26 @@ is read by the Lambda at runtime. It never reaches the browser or this
 repo. The Lambda URL only accepts CloudFront (origin access control),
 with reserved concurrency as a hard cap.
 
-The research loop itself (training, judging, filing) was run by
-Claude (Anthropic), with Codex Astra as the independent reviewer
-between generations. The site was designed by a Claude (Fable) agent.
+### Muse Wonder Full ran the research loop
+
+Most of the research loop was run by **Muse Wonder Full**
+(`muse-wonder-full-1.0`, Meta's model) under the holder's direction:
+designing, training, judging and filing each generation, from Gen 0
+through Gen 21. That includes:
+
+- the frozen baseline and gap analyses;
+- the no-implant bench (`research/bench-n6/`) and the 14-row KPI scorecard;
+- **the Gen 19 model**, the published baseline that is now on Hugging
+  Face.
+
+Each record is labelled `Model: … actual muse-wonder-full-1.0` in its
+results file.
+
+Claude Opus 5.5 (Anthropic) took over on 2026-11-04 at about 13:00. It
+ran Gen 21's seed 19 and verdict and Gen 22 to 24, and built the site's
+infrastructure; a Claude (Fable) agent designed the site. Codex Astra
+was the independent reviewer between generations throughout, and from
+Gen 23 Muse Spark reviews each verdict alongside Astra.
 
 ## Problem and approach
 
