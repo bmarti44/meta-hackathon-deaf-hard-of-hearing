@@ -14,6 +14,6 @@ Submission summary (2026-11-04): [SUBMISSION.md](SUBMISSION.md) ·
 Reviews: [R1](reviews/round-1-scores.md) (68/57) ·
 [R2](reviews/round-2-scores.md) (90/85) ·
 [R3](reviews/round-3-scores.md) (92/91 PASS) ·
-Status: [STATUS.md](STATUS.md). Research-design only; not medical
-advice; no patient data. "How to run a generation" is a Step 2
+Status: [STATUS.md](STATUS.md). Research-design only;
+no patient data. "How to run a generation" is a Step 2
 deliverable with `research/scoring/gate_table.py` (GOAL §9/§11).
