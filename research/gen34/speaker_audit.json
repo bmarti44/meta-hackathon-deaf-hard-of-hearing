@@ -1,0 +1,8 @@
+{
+ "overlap": false,
+ "basis": "BRUDEX cleanSignals.zip (md5 fe159dd9cc89ec1fa13d8844daa53d12; readMe: 'clean signals, which have been played back using loudspeakers') holds speaker_1..4.wav at 48 kHz PCM16. Every model here was trained or tuned only on LibriSpeech (train-clean-100 for Gen19/Gen32; dev-clean for panels), which exists only at 16 kHz. Welch PSD of each clean talker: energy in 8.2-12 kHz relative to 4-7.8 kHz = -0.7, -4.4, -7.1, -10.7 dB (speaker_1..4). Upsampled 16 kHz LibriSpeech audio has essentially no content above 8 kHz, so none of the four BRUDEX talkers is LibriSpeech audio.",
+ "limitation": "The source corpus is not named in BRUDEX. The audit excludes LibriSpeech AUDIO; it cannot exclude that a BRUDEX talker is the same person as some LibriVox reader, which is unknowable here and would not share recordings.",
+ "measured": {"speaker_1": -0.7, "speaker_2": -4.4, "speaker_3": -7.1, "speaker_4": -10.7},
+ "date": "2026-11-05",
+ "by": "Claude Opus 5.5"
+}
