@@ -606,3 +606,24 @@ details.fold>summary{padding:14px 0}
 .kv-line{display:block}
 .kv-line .explain-btn{float:right;margin-left:12px}
 .kv-line::after{content:"";display:block;clear:both}
+/* ===== round 6 ===== */
+#wall .grid.g2>div:last-child{position:sticky;top:calc(var(--head-h) + 16px);align-self:start}
+.slider-box{position:static;background:rgba(9,11,16,.86);padding:12px;margin:0 0 12px}
+.slider-box label{font-family:var(--sans);font-size:14px;color:var(--bone);letter-spacing:0}
+.legend{background:rgba(9,11,16,.86);padding:12px}
+#snr-verdict.hot{color:#ff8a73}
+.imp-steps p,.imp-steps h3,.imp-how p,.imp-group-side p,.imp-meta,.imp-credit,.imp-cap,.imp-title{text-shadow:0 0 6px #090b10,0 0 2px #090b10}
+.imp-credit{color:#b9b3a6!important}
+.spread .video-box.portrait{aspect-ratio:9/16;background:none}
+.spread .video-box.portrait video{object-fit:cover}
+@media (max-width:760px){.hero-text::before{background:radial-gradient(80% 70% at 50% 55%,rgba(9,11,16,.75),rgba(9,11,16,.55) 55%,rgba(9,11,16,0) 100%)}
+  #born .panel::before,.story-panel::before{background:radial-gradient(90% 80% at 50% 50%,rgba(9,11,16,.9),rgba(9,11,16,.75) 60%,rgba(9,11,16,0) 100%);inset:-40px -40px}
+  #graham .col::before,#graham .dir-wrap::before,#graham .ladder::before,.slider-read::before,.chart::before{background:radial-gradient(90% 85% at 50% 50%,rgba(9,11,16,.78),rgba(9,11,16,.6) 60%,rgba(9,11,16,0) 100%);inset:-28px -30px}
+  #wall .grid.g2>div:first-child>h3::before,#wall .grid.g2>div:first-child>p::before,#wall .grid.g2>div:first-child>ul::before,#wall .grid.g2>div:first-child>details::before{background:radial-gradient(95% 90% at 50% 50%,rgba(9,11,16,.8),rgba(9,11,16,.65) 60%,rgba(9,11,16,0) 100%);inset:-18px -24px}}
+.wave-key,.footnote,.slider-box label,.live-chip,.vnote,.tree-hint,.electrodes-cap{font-family:var(--sans)}
+.footnote{font-size:13.5px}
+header.bar.compact .live-chip span.t{display:inline;font-size:12px}
+@media (max-width:440px){header.bar.compact .live-chip span.t{display:none}}
+.imp-more{margin:16px 0 0}
+.chart svg.phone .axis text,.chart svg.phone .lbl,.chart svg.phone .req-l{font-size:13px}
+.chart svg.phone .lbl.dim{font-size:12px}

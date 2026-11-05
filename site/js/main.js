@@ -121,7 +121,7 @@ $$('[data-bench="white_estoi"]').forEach(e => e.textContent = fmt(bench.summary_
 
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 // implant chapter: show the 3 most important clips by default
-{ const tracks = $$('#implant .imp-track'); if (tracks.length > 3) { tracks.slice(3).forEach(t => t.hidden = true); const b = document.createElement('button'); b.type = 'button'; b.className = 'explain-btn imp-more'; b.textContent = `Show all ${tracks.length} clips`; b.addEventListener('click', () => { const open = tracks[3].hidden; tracks.slice(3).forEach(t => t.hidden = !open); b.textContent = open ? 'Show fewer clips' : `Show all ${tracks.length} clips`; }); tracks[0].parentElement.after(b); } }
+{ const tracks = $$('#implant .imp-track'); if (tracks.length === 8) { const keep = new Set([1, 4, 7]); const hid = tracks.filter((t, i) => !keep.has(i)); hid.forEach(t => t.hidden = true); const b = document.createElement('button'); b.type = 'button'; b.className = 'explain-btn imp-more'; b.textContent = `Show all ${tracks.length} clips`; b.addEventListener('click', () => { const open = hid[0].hidden; hid.forEach(t => t.hidden = !open); b.textContent = open ? 'Show fewer clips' : `Show all ${tracks.length} clips`; }); const groups = $$('#implant .imp-group'); (groups[groups.length - 1] || tracks[0].parentElement).after(b); } }
 
 // ---------- SNR chart + slider ----------
 const SNRS = bench.snrs, sys = bench.systems;
@@ -131,10 +131,11 @@ const SERIES = [
   { k: 'oracle_noncausal', label: 'a version that cheats by hearing the future', color: 'var(--bone)', w: 1.5, dash: '5 4' }
 ];
 function lineChart(hostId, { xs, series, xl, yl, req, reqLabel, ymin, ymax, xfmt = String, ytick = 2, ariaLabel }) {
-  const W = 560, H = 320, m = { l: 46, r: 20, t: 16, b: 40 };
+  const phone = innerWidth < 760;
+  const W = phone ? 360 : 560, H = phone ? 260 : 320, m = { l: 44, r: 16, t: 16, b: 44 };
   const x = v => m.l + (v - xs[0]) / (xs[xs.length - 1] - xs[0]) * (W - m.l - m.r);
   const y = v => m.t + (1 - (v - ymin) / (ymax - ymin)) * (H - m.t - m.b);
-  let g = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(ariaLabel)}"><g class="grid">`;
+  let g = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(ariaLabel)}" class="${phone ? 'phone' : ''}"><g class="grid">`;
   for (let v = Math.ceil(ymin / ytick) * ytick; v <= ymax; v += ytick) g += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(v)}" y2="${y(v)}"/>`;
   g += `</g><g class="axis"><line x1="${m.l}" x2="${W - m.r}" y1="${y(0) > y(ymin) ? y(ymin) : y(0)}" y2="${y(0) > y(ymin) ? y(ymin) : y(0)}"/>`;
   for (let v = Math.ceil(ymin / ytick) * ytick; v <= ymax; v += ytick) g += `<text x="${m.l - 8}" y="${y(v) + 4}" text-anchor="end">${v}</text>`;
@@ -216,7 +217,16 @@ $('#level-toggle').addEventListener('click', e => { const b = e.target.closest('
 // ---------- generations: tree + cards ----------
 const G = gens.generations;
 $('#gen-updated').textContent = gens.updated;
-$('#null-count').textContent = G.filter(g => (g.status === 'null' || g.status === 'fail') && +g.id.replace('gen', '') > 19).length;
+{
+  const WORDS = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
+  const num = g => +g.id.replace('gen', ''), isNull = g => g.status === 'null' || g.status === 'fail';
+  const list = a => a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1];
+  const after19 = G.filter(g => isNull(g) && num(g) > 19), allNull = G.filter(isNull), running = G.filter(g => g.status === 'running');
+  $$('#null-count').forEach(e => e.textContent = WORDS[after19.length] || String(after19.length));
+  $$('[data-gen-sentence]').forEach(e => e.textContent = `${after19.length ? WORDS[after19.length][0].toUpperCase() + WORDS[after19.length].slice(1) + ' later version' + (after19.length === 1 ? '' : 's') + ' tried to fix that and did not help' : 'No later version has fixed it yet'}${running.length ? ', and version ' + running.map(num).join(' and ') + ' is being tested right now' : ''}.`);
+  $$('[data-gen-nulls-after19]').forEach(e => e.textContent = after19.length ? 'versions ' + list(after19.map(num)) : 'no later version');
+  $$('[data-gen-nulls-all]').forEach(e => e.textContent = 'Versions ' + list(allNull.map(num)) + ' did not help, and they');
+}
 const live = G.find(g => g.status === 'running');
 const chip = $('#live-chip');
 if (live) { chip.classList.remove('ok', 'off'); $('#live-text').textContent = `${live.label} is being tested now${live.eta ? ' · ' + live.eta : ''}`; }
@@ -331,7 +341,7 @@ if (health) {
   document.addEventListener('click', async e => {
     const b = e.target.closest('[data-explain],[data-brief]'); if (!b) return;
     const isBrief = 'brief' in b.dataset, id = b.dataset.explain || b.dataset.brief;
-    let slot = b.closest('tr') ? b.closest('tr').nextElementSibling : b.closest('.gen') ? $('.explain-slot', b.closest('.gen')) : b.closest('.kv').nextElementSibling;
+    let slot = b.closest('tr') ? b.closest('tr').nextElementSibling : b.closest('.gen') ? $('.explain-slot', b.closest('.gen')) : (b.closest('.col') || b.closest('section')).querySelector('.explain-slot');
     if (b.closest('tr')) {
       if (!slot || !slot.classList.contains('explain-row')) { slot = document.createElement('tr'); slot.className = 'explain-row'; slot.innerHTML = `<td colspan="4"></td>`; b.closest('tr').after(slot); }
       slot = slot.firstElementChild;

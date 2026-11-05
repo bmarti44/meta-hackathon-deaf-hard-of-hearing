@@ -188,7 +188,7 @@
           <p class="figures-line">In numbers: about <span data-model="params">602,510</span> numbers inside the program, <span data-model="latency">5.88</span> thousandths of a second before it answers, zero peeks into the future, and a difference of exactly <span data-model="prefix">0.0</span> in the no-cheating test.</p>
                 </div>
         <div>
-          <h3>How quick is 5.88 ms?</h3>
+          <h3>How quick is that?</h3>
           <p class="small muted">Our own rule allows up to 10 thousandths of a second. The program uses about 6.</p>
           <div class="latency" role="img" aria-label="The program needs 5.88 thousandths of a second, out of the 10 it is allowed">
             <div class="bar"><i id="lat-bar" style="width:58.75%"></i></div><span>5.88 / 10 ms</span>
@@ -274,6 +274,7 @@
       <div class="imp-group" role="group" aria-labelledby="imp-g2">
         <div class="imp-group-side">
           <h4 id="imp-g2">In a crowd as loud as her <span class="imp-db">0 dB</span></h4>
+          <p class="small muted">dB is how much louder or quieter one sound is than another. 0 dB means the crowd is exactly as loud as her voice.</p>
           <p class="imp-transcript"><span class="imp-tlab">What she says</span>“We were so deep in the grass that we could see nothing but the blue sky over us and the gold tree in front of us.” Around her, a crowd of other people talk at once.</p>
         </div>
         <ol class="imp-tracks">
@@ -301,6 +302,7 @@
       <div class="imp-group imp-group-wall" role="group" aria-labelledby="imp-g3">
         <div class="imp-group-side">
           <h4 id="imp-g3">In a crowd louder than her <span class="imp-db hot">−5 dB</span></h4>
+          <p class="small muted">At −5 dB the crowd carries about three times the energy of her voice.</p>
           <p class="imp-transcript"><span class="imp-tlab">What she says</span>“We were so deep in the grass that we could see nothing but the blue sky over us and the gold tree in front of us.” The same crowd, now louder than she is.</p>
         </div>
         <ol class="imp-tracks">
@@ -339,7 +341,7 @@
         <summary>For researchers</summary>
         <p>Noise vocoder from the bench (<span class="mono">research/bench-n6/vocoder.py</span>): ACE-like N-of-M, 22 bands from 188 Hz to 7.94 kHz (linear to 1312 Hz, then log-spaced; the split is assumed, see <span class="mono">gen13/ace_sim.py</span>), 512-point STFT with an 8 ms hop, the 8 largest band powers kept per frame, band envelopes modulating 4th-order Butterworth band-passed noise. Not modelled: current spread, T/C-level loudness mapping, neural survival, stimulation rate, individual fitting. Mixtures as in <span class="mono">bench_v2.py</span>: target RMS 0.1, a crowd of 10 talker streams drawn from held-out readers 8297, 8842, 6319, 6345, 7850 and 7976, scaled to 0 and −5 dB SNR over the whole clip. Target: dev-clean 1988-147956-0026 (test speaker). Enhancer: Gen 19 causal Conv-TasNet, seed 20261117, output re-aligned with <span class="mono">undelay()</span>. SI-SDR on these clips, mixture to enhanced: at 0 dB, −0.19 to 2.96 dB (+3.15); at −5 dB, −5.16 to −4.90 dB (+0.26). Clips are 16 kHz mono mp3, loudness-matched to −20.5 LUFS, peaks at or below −1.3 dBFS, no clipped samples. The animation uses each signal's 22 band envelopes and a 48-bin log spectrum at 16 ms frames, with the top 8 bands per frame picked in the browser. Generator: <span class="mono">site/tools/make_implant_audio.py</span>.</p>
       </details>
-      <p class="imp-credit">Voices: LibriSpeech (Panayotov et al. 2015), CC BY 4.0.</p>
+      <details class="researchers"><summary>For researchers</summary><p class="imp-credit">Voices: LibriSpeech (Panayotov et al. 2015), CC BY 4.0.</p></details>
     </div>
 
   </div>
@@ -369,18 +371,19 @@
             <div class="ratio-row"><span class="mono">after</span><i style="--w:11%" class="sig"></i><span>0.34×</span></div>
           </div>
           <h3 class="sub">Is +1.5 just a made-up number?</h3>
-          <p>Partly, and on purpose. We set it ourselves before running any tests, so we could not move the goalposts after seeing results. It is half of our overall +3 dB goal, and +3 dB is in the range that lab noise-reduction systems have reached in published studies with cochlear-implant listeners (those studies used a different measure, so it's a rough guide). Missing by 0.3 dB is not a disaster. It means this model is not yet strong enough in the hardest rooms to earn a listening test.</p>
+          <p>Partly, and on purpose. We set it ourselves before running any tests, so we could not move the goalposts after seeing results. It is half of our overall +3 dB goal, and +3 dB is in the range that lab noise-reduction systems have reached in published studies with cochlear-implant listeners (those studies used a different measure, so it's a rough guide). Missing by 0.3 dB is a small gap. It means this model is not yet strong enough in the hardest rooms to earn a listening test.</p>
           <h3 class="sub">Why did we miss?</h3>
           <p>At −5 dB, the crowd is made of other voices that sound a lot like the one you want. The model has one microphone, cannot hear the future (it has to answer within 6 thousandths of a second), and is tiny on purpose so it could one day run on a hearing device. A "cheating" version that hears the future and already knows the answer gets about +12 dB here, so there is room to improve. More training and two different scoring changes did not close the gap. Next, we train on far more hard examples, and after that we give the model two ears so it can use direction as a clue.</p>
           <p class="small muted">Drag the slider to see how it does as the crowd gets louder.</p>
           <details class="researchers"><summary>For researchers</summary><p class="small muted">Metric: ΔSI-SDR vs unprocessed, three-seed mean, bench v2 crowd condition, n = 6 crops per cell. Rule: crowd ΔSI-SDR ≥ +1.5 dB at both −5 dB and 0 dB. Gen 19: +1.19 dB at −5 dB (FAIL), +4.65 dB at 0 dB (PASS); overall crowd +3.51 dB; non-causal oracle +11.94 dB at −5 dB.</p></details>
-          <div class="slider-box">
-            <label for="snr" class="mono small">How loud the crowd is compared with the voice (slide left for harder)</label>
-            <input type="range" id="snr" min="-5" max="10" step="1" value="-5" aria-describedby="snr-read">
-            <p class="slider-read" id="snr-read" aria-live="polite">With the crowd at <b id="snr-v" class="num">+10 dB</b>, our program makes the voice <b id="snr-g" class="num">—</b> cleaner. The simple filter manages <b id="snr-gate" class="num">—</b>, and the cheating version <b id="snr-or" class="num">—</b>. <span id="snr-verdict">—</span></p>
-          </div>
+          
         </div>
         <div>
+          <div class="slider-box">
+            <label for="snr" class="mono small">How loud the crowd is compared with the voice (slide left for harder)</label>
+            <input type="range" id="snr" min="-5" max="10" step="1" value="10" aria-describedby="snr-read">
+            <p class="slider-read" id="snr-read" aria-live="polite">With the crowd at <b id="snr-v" class="num">+10 dB</b>, our program makes the voice <b id="snr-g" class="num">—</b> cleaner. The simple filter manages <b id="snr-gate" class="num">—</b>, and the cheating version <b id="snr-or" class="num">—</b>. <span id="snr-verdict">—</span></p>
+          </div>
           <div class="chart" id="snr-chart" aria-describedby="snr-table-cap"></div>
           <div class="legend" id="snr-legend"></div>
           <details><summary id="snr-table-cap">The same numbers as a table</summary><div class="table-wrap" id="snr-table"></div></details>
@@ -396,10 +399,10 @@
     <h2 id="h-short">The short version</h2>
     <div class="cols3">
       <div class="col rv"><h3>The question</h3><p>Can a tiny program that never peeks ahead clean up crowd noise for cochlear-implant users well enough to earn a real listening test? We judge it on computer tests, with the passing scores fixed before we start.</p></div>
-      <div class="col rv"><h3>What we found</h3><p>Our best version so far, number 19, passes 13 of 14 checks. In everyday crowd noise it cuts the leftover noise to less than half. In the hardest crowds, where the crowd is louder than the voice, it falls just short of the score we set. Four later versions tried to fix that. Three did not help, and one is being tested right now.</p></div>
-      <div class="col rv"><h3>What it does not mean</h3><p>We have not compared it with the Nucleus 6 processors Graham already wears, tested it on any implant, or played it to any listener. Everything here is from computer tests. Our own verdict is: not good enough yet, keep working. No version has been approved for anything.</p><details class="researchers"><summary>For researchers</summary><p class="small muted">T0 in-silico evidence only. Scorecard verdict FAIL (keep optimizing); promoted FALSE. Vocoder audio is not what a CI user hears; N6 processing was never tested.</p></details></div>
+      <div class="col rv"><h3>What we found</h3><p>Our best version so far, number 19, passes 13 of 14 checks. In everyday crowd noise it cuts the leftover noise to less than half. In the hardest crowds, where the crowd is louder than the voice, it falls just short of the score we set. <span data-gen-sentence>Later versions tried to fix that.</span></p></div>
+      <div class="col rv"><h3>What it does not mean</h3><p>We have not compared it with the Nucleus 6 processors Graham already wears, tested it on any implant, or played it to any listener. Everything here is from computer tests. Our own verdict so far: it is not good enough yet, so we keep working. No version has been approved for anything.</p><details class="researchers"><summary>For researchers</summary><p class="small muted">T0 in-silico evidence only. Scorecard verdict FAIL (keep optimizing); promoted FALSE. Vocoder audio is not what a CI user hears; N6 processing was never tested.</p></details></div>
     </div>
-    <p class="lede figures-line">In numbers: 13 of our 14 checks passed; the voice comes through 3.51 dB cleaner in everyday crowds and 1.19 dB cleaner when the crowd is louder than the voice, where we wanted 1.5; <span id="null-count">three</span> later versions did not help; and no version is approved for use.</p>
+    <p class="lede figures-line">In numbers: 13 of our 14 checks passed; the voice comes through 3.51 dB cleaner in everyday crowds and 1.19 dB cleaner when the crowd is louder than the voice, where we wanted 1.5; <span id="null-count">several</span> later versions did not help; and no version is approved for use.</p>
     </div>
 </section>
 
@@ -412,13 +415,13 @@
       <li>Does it help in a noisy crowd? <span class="muted">(3 checks: how clean the voice is, an estimate of how understandable it is, and what the implant's electrodes would actually receive)</span></li>
       <li>Does it still help in the hardest crowds, when the crowd is as loud as the voice or louder? <span class="muted">(2 checks)</span></li>
       <li>Does it ever make speech harder to understand there? <span class="muted">(1 check)</span></li>
-      <li>Does it work every time we train it, not just once? <span class="muted">(1 check: we train it three separate times from scratch, so one lucky run cannot fool us)</span></li>
+      <li>Does it work every time we train it, not just once? <span class="muted">(1 check: we train it three separate times from scratch, so a single lucky result cannot mislead us)</span></li>
       <li>Is it better than the simple noise filter that already exists? <span class="muted">(1 check)</span></li>
       <li>Does it cope with other kinds of noise, like a steady hum or a hiss it has never heard before? <span class="muted">(2 checks)</span></li>
       <li>Does it leave speech alone when it is already quiet? <span class="muted">(2 checks)</span></li>
       <li>Does it keep the clues that tell you which side a voice is coming from? <span class="muted">(2 checks)</span></li>
     </ul>
-    <p>That is 14. We wrote them all down, with the score each one has to reach, before running the tests. That way we could not choose the flattering numbers afterwards. The model passes 13. The one it misses is the hardest crowd, where the crowd is louder than the voice.</p>
+    <p>Together those make the 14 checks. We wrote them all down, with the score each one has to reach, before running the tests. That way we could not choose the flattering numbers afterwards. The model passes 13. The one it misses is the hardest crowd, where the crowd is louder than the voice.</p>
     <details class="researchers"><summary>For researchers</summary><p class="small muted">The scorecard is computed by <code class="mono">kpi_scorecard.py</code> from the committed bench results of three seeds plus a spatial run whose checkpoint hash matches. It reports INCOMPLETE unless all are present; Gen 19 is the first generation with a complete verdict. Technical row names are shown under each plain-language row.</p></details>
     <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin:18px 0">
       <span class="small muted ai-only" hidden>Have Muse, Meta's AI model, explain any check to you as</span>
@@ -469,7 +472,7 @@
         <div class="chart" id="val-chart"></div>
         <div class="legend" id="val-legend"></div>
         <details><summary>Table: how much cleaner the hardest crowd got as training went on (dB)</summary><div class="table-wrap" id="val-table"></div></details>
-        <p class="small muted" style="margin-top:12px">When version 23 finishes, its line will be added here.</p>
+        <p class="small muted" style="margin-top:12px">When the version being tested now finishes, its line will be added here.</p>
       </div>
     </div>
   </div>
@@ -585,7 +588,7 @@
     <div class="rv" style="margin-top:48px;max-width:760px">
       <h3>Before any of this could reach Graham</h3>
       <ol class="ladder">
-        <li class="here"><div><b>Pass all 14 computer checks, three training runs in a row</b><p>Version 19 passes 13. The hardest crowd is the one left, and versions 20 to 22 did not move it.</p><span class="pct">13 of 14 so far</span></div></li>
+        <li class="here"><div><b>Pass all 14 computer checks, three training runs in a row</b><p>Version 19 passes 13. The hardest crowd is the one left, and <span data-gen-nulls-after19>the later versions</span> did not move it.</p><span class="pct">13 of 14 so far</span></div></li>
         <li><div><b>Pass again on brand-new voices</b><p>Twelve new speakers and crowds made of voices the program has never heard. Not built yet.</p></div></li>
         <li><div><b>A careful listening test</b><p>Only with an audiologist in charge, Graham's own agreement, and sound levels his implants are set up for. Not attempted.</p></div></li>
         <li><div><b>Compare it with what he already has</b><p>We have never compared it with the noise cleanup built into his Nucleus 6. Until we do, nothing here can be called better than what he uses today.</p></div></li>
@@ -600,12 +603,12 @@
     <h2 id="h-hon">How we keep ourselves honest</h2>
     <div class="cols3">
       <div class="col rv"><h3>We write the plan down first</h3><p>Before we train a new version we write down the one thing we are changing, how long we will train it, and the score it has to reach. Version 24 is drafted but does not count until version 23 has its result and its review.</p></div>
-      <div class="col rv"><h3>We train it three times</h3><p>Every version is trained three separate times from scratch and judged on the average, so one lucky run cannot fool us. If one run looks good, we repeat it twice more before we believe it.</p></div>
-      <div class="col rv"><h3>We judge the finished version only</h3><p>We save and report the program at several points during training, but the verdict always uses the final one. No picking the best moment after the fact.</p></div>
+      <div class="col rv"><h3>We train it three times</h3><p>Every version is trained three separate times from scratch and judged on the average, so a single lucky result cannot mislead us. If one run looks good, we repeat it twice more before we believe it.</p></div>
+      <div class="col rv"><h3>We judge the finished version only</h3><p>We save and report the program at several points during training, but the verdict always uses the final one. We never go back and pick a better-looking moment from the middle of training.</p></div>
       <div class="col rv"><h3>We replay interrupted runs exactly</h3><p>One training run was cut off halfway when a computer session ended. We restarted it from the beginning and checked that it reproduced the original, number for number, before its result counted.</p></div>
       <div class="col rv"><h3>Someone else checks the sums</h3><p>A second AI, Codex Astra, made by a different company, recomputes every result from the raw data between versions. Its reviews are published word for word, including the ones that made us fix things before launch.</p>
         <blockquote class="quote">"Nothing here implies a directional-hearing benefit."<cite>from our project summary, after the independent review of version 19</cite></blockquote></div>
-      <div class="col rv"><h3>Failures stay on the record</h3><p>Versions 16, 20, 21 and 22 did not help, and they are on the tree with their numbers. Not helping once does not prove an idea can never work, and the record says so.</p></div>
+      <div class="col rv"><h3>Failures stay on the record</h3><p><span data-gen-nulls-all>The versions that did not help</span> are on the tree with their numbers. Not helping once does not prove an idea can never work, and the record says so.</p></div>
     </div>
   <details class="fold" id="limits"><summary>What this does not show</summary>
     

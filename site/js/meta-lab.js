@@ -55,15 +55,23 @@
     $("ml-list").addEventListener("click", e => { const b = e.target.closest("button[data-i]"); if (b) show(+b.dataset.i); });
 
     const s = d.summary, rows = Object.entries(s).filter(([k]) => /dB$/.test(k));
-    const P = d.plain || {}, share = o => o && o.words_total ? Math.round(100 * o.words_right / o.words_total) : null;
-    $("ml-total").innerHTML = rows.map(([k, v]) => {
-      const p = P[k] || {}, b4 = share(p.unproc), af = share(p.gen19);
-      const verdict = v.better > v.worse ? `Muse did better after the cleanup on ${v.better} of ${v.n} recordings, and worse on ${v.worse}.`
-        : v.better < v.worse ? `So here the cleanup did not help Muse: it did better on ${v.better} of ${v.n} recordings and worse on ${v.worse}.`
-        : `It was a draw: Muse did better on ${v.better} of ${v.n} recordings and worse on ${v.worse}.`;
-      return `<p><span class="ml-label">All ${v.n} recordings, when ${loud(parseFloat(k))}</span>` +
-        (b4 != null ? `Before cleanup, Muse got <b>${b4}%</b> of the reader's words right. After cleanup, <b>${af}%</b>. ` : "") + verdict + `</p>`;
-    }).join("") + (share(P.clean?.clean) != null ? `<p class="small muted">For comparison, with no crowd at all Muse got ${share(P.clean.clean)}% of the words right.</p>` : "");
+    // words-right totals over the SAME paired recordings shown above (both transcripts present), per crowd loudness
+    const groups = {};
+    const bad = s => /^\s*\[unintelligible\]\s*$/i.test(s);
+    for (const c of d.clips) {
+      const k = (c.snr_db >= 0 ? "+" : "") + c.snr_db.toFixed(0) + " dB";
+      const g = groups[k] || (groups[k] = { n: 0, b4h: 0, afh: 0, tot: 0, better: 0, worse: 0 });
+      const hb = c.unproc.transcript == null ? null : align(c.reference, bad(c.unproc.transcript) ? "" : c.unproc.transcript);
+      const ha = c.gen19.transcript == null ? null : align(c.reference, bad(c.gen19.transcript) ? "" : c.gen19.transcript);
+      if (!hb || !ha) continue;
+      g.n++; g.b4h += hb.hits; g.afh += ha.hits; g.tot += hb.total; if (ha.hits > hb.hits) g.better++; else if (ha.hits < hb.hits) g.worse++;
+    }
+    $("ml-total").innerHTML = Object.entries(groups).map(([k, g]) => {
+      const verdict = g.better > g.worse ? `Muse did better after the cleanup on ${g.better} of ${g.n} recordings, and worse on ${g.worse}.`
+        : g.better < g.worse ? `So here the cleanup did not help Muse: it did better on ${g.better} of ${g.n} recordings and worse on ${g.worse}.`
+        : `It was a draw: Muse did better on ${g.better} of ${g.n} recordings and worse on ${g.worse}.`;
+      return `<p><span class="ml-label">The ${g.n} recording${g.n === 1 ? "" : "s"} above, when ${loud(parseFloat(k))}</span>Before cleanup, Muse got <b>${g.b4h}</b> of ${g.tot} words right. After cleanup, <b>${g.afh}</b>. ${verdict}</p>`;
+    }).join("");
 
     const m = d.meta, f = x => (x >= 0 ? "+" : "") + (100 * x).toFixed(1);
     $("ml-research").innerHTML = `<p>Exploratory, descriptive check, not a registered KPI (plan written before results: <code class="mono">research/meta/plan.md</code>). ` +

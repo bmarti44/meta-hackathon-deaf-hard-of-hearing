@@ -72,6 +72,7 @@
       <div class="imp-group" role="group" aria-labelledby="imp-g2">
         <div class="imp-group-side">
           <h4 id="imp-g2">In a crowd as loud as her <span class="imp-db">0 dB</span></h4>
+          <p class="small muted">dB is how much louder or quieter one sound is than another. 0 dB means the crowd is exactly as loud as her voice.</p>
           <p class="imp-transcript"><span class="imp-tlab">What she says</span>“We were so deep in the grass that we could see nothing but the blue sky over us and the gold tree in front of us.” Around her, a crowd of other people talk at once.</p>
         </div>
         <ol class="imp-tracks">
@@ -99,6 +100,7 @@
       <div class="imp-group imp-group-wall" role="group" aria-labelledby="imp-g3">
         <div class="imp-group-side">
           <h4 id="imp-g3">In a crowd louder than her <span class="imp-db hot">−5 dB</span></h4>
+          <p class="small muted">At −5 dB the crowd carries about three times the energy of her voice.</p>
           <p class="imp-transcript"><span class="imp-tlab">What she says</span>“We were so deep in the grass that we could see nothing but the blue sky over us and the gold tree in front of us.” The same crowd, now louder than she is.</p>
         </div>
         <ol class="imp-tracks">
@@ -137,7 +139,7 @@
         <summary>For researchers</summary>
         <p>Noise vocoder from the bench (<span class="mono">research/bench-n6/vocoder.py</span>): ACE-like N-of-M, 22 bands from 188 Hz to 7.94 kHz (linear to 1312 Hz, then log-spaced; the split is assumed, see <span class="mono">gen13/ace_sim.py</span>), 512-point STFT with an 8 ms hop, the 8 largest band powers kept per frame, band envelopes modulating 4th-order Butterworth band-passed noise. Not modelled: current spread, T/C-level loudness mapping, neural survival, stimulation rate, individual fitting. Mixtures as in <span class="mono">bench_v2.py</span>: target RMS 0.1, a crowd of 10 talker streams drawn from held-out readers 8297, 8842, 6319, 6345, 7850 and 7976, scaled to 0 and −5 dB SNR over the whole clip. Target: dev-clean 1988-147956-0026 (test speaker). Enhancer: Gen 19 causal Conv-TasNet, seed 20261117, output re-aligned with <span class="mono">undelay()</span>. SI-SDR on these clips, mixture to enhanced: at 0 dB, −0.19 to 2.96 dB (+3.15); at −5 dB, −5.16 to −4.90 dB (+0.26). Clips are 16 kHz mono mp3, loudness-matched to −20.5 LUFS, peaks at or below −1.3 dBFS, no clipped samples. The animation uses each signal's 22 band envelopes and a 48-bin log spectrum at 16 ms frames, with the top 8 bands per frame picked in the browser. Generator: <span class="mono">site/tools/make_implant_audio.py</span>.</p>
       </details>
-      <p class="imp-credit">Voices: LibriSpeech (Panayotov et al. 2015), CC BY 4.0.</p>
+      <details class="researchers"><summary>For researchers</summary><p class="imp-credit">Voices: LibriSpeech (Panayotov et al. 2015), CC BY 4.0.</p></details>
     </div>
 
   </div>
