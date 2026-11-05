@@ -278,3 +278,50 @@ def test_aug50_resume_bit_identical_and_room_change_refused(tmp_path):
     assert la["room_counts"] == lb["room_counts"] and sum(la["room_counts"]["cond"].values()) == 48
     r = _run(HERE / "train14.py", tmp_path, "c", "--room", "dry", "--resume", str(state))
     assert r.returncode != 0 and "REFUSED resume" in (r.stdout + r.stderr) and "room" in (r.stdout + r.stderr)
+
+
+# ---------------- direct-arrival rule (Astra pre-launch review, blocking 1) ----------------
+def test_arrival_rule_synthetic_multipeak():
+    h = np.zeros(4000)
+    h[100], h[300] = 0.8, 1.0                     # reflection larger than the direct path
+    h[90:100] = 0.02 * np.sin(np.arange(10))      # pre-direct ripple at < -20 dB re peak
+    assert rb.direct_index_peak(h) == 300 and rb.direct_index(h) == 100
+    g = np.zeros(4000)
+    g[200:205] = [0.15, 0.5, 0.9, 0.6, 0.2]       # spread pulse: onset 200, refined to its peak 202
+    g[600] = 1.0
+    assert rb.direct_index(g) == 202
+    k = np.zeros(4000)
+    k[500] = 1.0; k[520] = 0.09                   # later small arrival below -20 dB never anchors
+    assert rb.direct_index(k) == 500
+
+
+_FLAGGED = {"RIRS_NOISES/simulated_rirs/smallroom/Room179/Room179-00007.wav": (464, 229),
+            "RIRS_NOISES/simulated_rirs/mediumroom/Room192/Room192-00012.wav": (293, 208)}
+_need_rirs = pytest.mark.skipif(not (rb.FILE_ROOT / next(iter(_FLAGGED))).exists(), reason="RIR audio absent")
+
+
+@_need_rirs
+def test_arrival_rule_on_astra_flagged_files():
+    for f, (peak, direct) in _FLAGGED.items():
+        h = rb.truncate(rb.read_rir(rb.FILE_ROOT / f))
+        assert rb.direct_index_peak(h) == peak and rb.direct_index(h) == direct
+        a = np.abs(h)
+        assert a[:direct - rb.ONSET_REFINE].max() < 0.1 * a.max()  # nothing within 20 dB of the peak arrives earlier
+        assert a[direct] >= 0.5 * a.max()
+
+
+@_need_rirs
+@_need_man
+def test_manifest_uses_superseding_arrival_rule():
+    man = json.loads(MAN.read_text())
+    recs = [f for r in man["rooms"] for f in r["rirs"]]
+    for f in recs:
+        h = rb.truncate(rb.read_rir(rb.FILE_ROOT / f["file"]))
+        assert f["direct_idx"] == rb.direct_index(h), f["file"]
+        d = rb.direct_index(h)
+        # threshold insensitivity: -14 dB and -26 dB onsets land within 1 ms of the registered arrival
+        for db in (-14.0, -26.0):
+            a = np.abs(h); o = int(np.argmax(a >= 10 ** (db / 20) * a.max()))
+            assert abs(o + int(np.argmax(a[o:o + rb.ONSET_REFINE + 1])) - d) <= rb.ONSET_REFINE
+    flagged = {f["file"]: f["direct_idx"] for f in recs if f["file"] in _FLAGGED}
+    assert flagged == {f: v[1] for f, v in _FLAGGED.items()}

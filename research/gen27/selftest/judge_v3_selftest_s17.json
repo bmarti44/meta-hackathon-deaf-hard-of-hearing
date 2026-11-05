@@ -5,11 +5,40 @@
   "cand": "selftest",
   "cand_sha": "80000b64c413ebb878f08695d8744ead8ecf9b183de57cb21acae6157470f367",
   "ctrl_sha": "80000b64c413ebb878f08695d8744ead8ecf9b183de57cb21acae6157470f367",
+  "rev_material_sha256": "5f7d268a9d3753e8e4b4fe71f699fa624424188dc42f5730aa95e2a522e16459",
+  "rir_manifest_sha256": "f306700d0dce5aded749a5f48e6da6d6bc66a6bdce3d0e27677081a41b7c1711",
+  "dry_material_sha256": "557ad44f3f874c25f6fe80c158844ce4a622f52db171f35c1f84464dbfb3eafb",
   "rev": {
    "primary_gain": 0.0,
    "primary_ci": [
     0.0,
     0.0
+   ],
+   "voices": [
+    "84",
+    "1462",
+    "1673",
+    "1919",
+    "3081",
+    "3536",
+    "3576",
+    "3853",
+    "174",
+    "251",
+    "422",
+    "652",
+    "777",
+    "1272",
+    "2803",
+    "2902"
+   ],
+   "rooms": [
+    "mediumroom-Room007",
+    "mediumroom-Room038",
+    "mediumroom-Room046",
+    "mediumroom-Room123",
+    "mediumroom-Room192",
+    "smallroom-Room034"
    ],
    "per_voice": {
     "84": 0.0,
@@ -38,14 +67,6 @@
     "mediumroom-Room192": 0.0,
     "smallroom-Room034": 0.0
    },
-   "rooms": [
-    "mediumroom-Room007",
-    "mediumroom-Room038",
-    "mediumroom-Room046",
-    "mediumroom-Room123",
-    "mediumroom-Room192",
-    "smallroom-Room034"
-   ],
    "cell": [
     [
      0.0,
@@ -194,9 +215,288 @@
      "stoi": 0.0
     }
    },
-   "target_only_sisdr_gain": 0.0,
-   "target_only_stoi_gain": 0.0,
-   "target_only_cand_abs_sisdr": 7.442593109730122
+   "target_only": {
+    "synthetic": {
+     "sisdr_gain": 0.0,
+     "stoi_gain": 0.0,
+     "control_d_sisdr": -2.117256225914231,
+     "control_d_stoi": -0.0669947684656614,
+     "cand_abs_sisdr": 8.904742070796049
+    },
+    "measured": {
+     "sisdr_gain": 0.0,
+     "stoi_gain": 0.0,
+     "control_d_sisdr": -1.1647763679078078,
+     "control_d_stoi": -0.060922785631033226,
+     "cand_abs_sisdr": 5.962578824112509
+    }
+   },
+   "by_room": {
+    "mediumroom-Room007": {
+     "stratum": "synthetic",
+     "rt60_stratum": "short",
+     "-5.0": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": 0.18480449447814384,
+      "control_d_stoi": -0.0341797141502913
+     },
+     "0.0": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": 2.446918540304344,
+      "control_d_stoi": 0.00024368347067573967
+     },
+     "target_only": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": -3.284938025926894,
+      "control_d_stoi": -0.059481362672424376
+     }
+    },
+    "mediumroom-Room038": {
+     "stratum": "synthetic",
+     "rt60_stratum": "medium",
+     "-5.0": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": 0.886895680887625,
+      "control_d_stoi": -0.02450174819971736
+     },
+     "0.0": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": 2.621803930021772,
+      "control_d_stoi": 0.0018413879512690196
+     },
+     "target_only": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": -1.2757743892300102,
+      "control_d_stoi": -0.05284835309232339
+     }
+    },
+    "mediumroom-Room046": {
+     "stratum": "synthetic",
+     "rt60_stratum": "long",
+     "-5.0": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": 0.6372855921699524,
+      "control_d_stoi": -0.023393912150246016
+     },
+     "0.0": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": 2.4505103553449405,
+      "control_d_stoi": -0.0036482382431820668
+     },
+     "target_only": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": -2.227885791292824,
+      "control_d_stoi": -0.06339083487769254
+     }
+    },
+    "mediumroom-Room123": {
+     "stratum": "synthetic",
+     "rt60_stratum": "long",
+     "-5.0": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": 0.8539387395555422,
+      "control_d_stoi": -0.021798625838140382
+     },
+     "0.0": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": 2.5955711632316927,
+      "control_d_stoi": 0.002200225887910451
+     },
+     "target_only": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": -1.9818873798887815,
+      "control_d_stoi": -0.05999670661445079
+     }
+    },
+    "mediumroom-Room192": {
+     "stratum": "synthetic",
+     "rt60_stratum": "medium",
+     "-5.0": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": 0.1380936680261771,
+      "control_d_stoi": -0.031203226309636442
+     },
+     "0.0": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": 1.8184676476048043,
+      "control_d_stoi": -0.010761864593450588
+     },
+     "target_only": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": -1.5115857378858841,
+      "control_d_stoi": -0.07071122432626209
+     }
+    },
+    "smallroom-Room034": {
+     "stratum": "synthetic",
+     "rt60_stratum": "short",
+     "-5.0": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": -0.4824382133303484,
+      "control_d_stoi": -0.04073329618248218
+     },
+     "0.0": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": 1.3835845828563123,
+      "control_d_stoi": -0.021462393970017285
+     },
+     "target_only": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": -2.4214660312609926,
+      "control_d_stoi": -0.09554012921081516
+     }
+    },
+    "RVB2014_largeroom1": {
+     "stratum": "measured",
+     "rt60_stratum": "long",
+     "-5.0": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": -0.1807462027967703,
+      "control_d_stoi": -0.04398300446185665
+     },
+     "0.0": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": 1.0543335256153246,
+      "control_d_stoi": -0.0409811186082078
+     },
+     "target_only": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": -1.5920343648832838,
+      "control_d_stoi": -0.09731232841953405
+     }
+    },
+    "RWCP_cirline_e2a": {
+     "stratum": "measured",
+     "rt60_stratum": "short",
+     "-5.0": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": 0.936441500811705,
+      "control_d_stoi": -0.007966827878812213
+     },
+     "0.0": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": 2.5719356216674862,
+      "control_d_stoi": 0.007403341521729455
+     },
+     "target_only": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": -2.448003647740839,
+      "control_d_stoi": -0.04312971646329582
+     }
+    },
+    "RWCP_cirline_jr1": {
+     "stratum": "measured",
+     "rt60_stratum": "medium",
+     "-5.0": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": 0.9646444444370605,
+      "control_d_stoi": -0.014767383980769358
+     },
+     "0.0": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": 2.0458219714930723,
+      "control_d_stoi": -0.009669062062586001
+     },
+     "target_only": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": -0.5174976956115652,
+      "control_d_stoi": -0.061310855873349966
+     }
+    },
+    "RWCP_cirline_jr2": {
+     "stratum": "measured",
+     "rt60_stratum": "medium",
+     "-5.0": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": 0.8107444691228862,
+      "control_d_stoi": -0.017231716245915962
+     },
+     "0.0": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": 1.9503125832473436,
+      "control_d_stoi": -0.01720214144829961
+     },
+     "target_only": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": -0.800313029404489,
+      "control_d_stoi": -0.06744250514046693
+     }
+    },
+    "RWCP_cirline_ofc": {
+     "stratum": "measured",
+     "rt60_stratum": "long",
+     "-5.0": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": 0.7343403037609673,
+      "control_d_stoi": -0.01618139777929169
+     },
+     "0.0": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": 1.7067189198916024,
+      "control_d_stoi": -0.018359754779367198
+     },
+     "target_only": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": -0.4666868726280183,
+      "control_d_stoi": -0.06502647335318675
+     }
+    },
+    "air_binaural_meeting_0": {
+     "stratum": "measured",
+     "rt60_stratum": "short",
+     "-5.0": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": 1.1356371409162886,
+      "control_d_stoi": -7.134135463673918e-05
+     },
+     "0.0": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": 2.9085034799629437,
+      "control_d_stoi": 0.023921534893138304
+     },
+     "target_only": {
+      "sisdr_gain": 0.0,
+      "stoi_gain": 0.0,
+      "control_d_sisdr": -1.164122597178651,
+      "control_d_stoi": -0.031314834536365826
+     }
+    }
+   }
   },
   "dry": {
    "-5.0": {
@@ -373,6 +673,7 @@
   "R1b_voice_room_ci_lo_gt_0": false,
   "R1c_ge_10_of_16_voices": false,
   "C_consistency_each_snr_and_stratum": true,
+  "T_target_only_nonworsening": true,
   "D_dry_screen_both_snrs": true,
   "S2_quiet": true,
   "S3_other_rows": true,

@@ -12,17 +12,39 @@ ADVANCE requires all of:
     each 95% CI lower bound > 0; SSN >= 3.0; white >= 0
 Provenance: panel material hash == registered; control rows == Gen 19 same-seed hash;
 candidate rows == candidate hash == bench meta hash; the grid is complete and duplicate-free
-for both systems. The old 8-item VAL and 6-mixture bench -5 dB numbers are reported
+for both systems. Bench (revised 2026-11-04 ~22:05, Gen27 pre-launch review blocking 2):
+candidate and unprocessed rows must each equal the registered bench-v2 grid exactly
+(17 kind x SNR cells x 6 speaker/crop rows = 102), duplicates rejected first, and the
+S2/S3 summary is recomputed from those rows (and must equal the stored summary). The old 8-item VAL and 6-mixture bench -5 dB numbers are reported
 descriptively and no longer decide.
 
 Usage: python research/screen_v2/judge_v2.py --panel P.json --bench B.json --cand NAME --cand-sha SHA --seed 17 [--out f.json]
 """
-import argparse, hashlib, json, statistics
+import argparse, hashlib, json, math, statistics, sys
 from pathlib import Path
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
 R = HERE.parent
+sys.path.insert(0, str(R / "bench-n6"))
+from common import bootstrap_ci  # noqa: E402  (the bench's own CI routine, so recomputed summaries match)
+
+# Bench v2's registered grid (research/bench-n6/bench_v2.py build_crops_v2, n_per_cell 6):
+# crop index -> (kind, snr, speaker), speakers cycling globally over TEST_SPK_V2.
+BENCH_SPK = ["1988", "1993", "5895", "6241", "6295", "6313"]
+BENCH_N = 6
+
+
+def bench_grid():
+    g, i, ci = set(), 0, 0
+    for kind in ["crowd", "competing", "ssn", "white-heldout", "quiet"]:
+        for snr in ([999.0] if kind == "quiet" else [-5.0, 0.0, 5.0, 10.0]):
+            for _ in range(BENCH_N):
+                g.add((kind, snr, BENCH_SPK[i % len(BENCH_SPK)], ci)); i += 1; ci += 1
+    return g
+
+
+BENCH_GRID = bench_grid()
 REGISTERED_MATERIAL = "557ad44f3f874c25f6fe80c158844ce4a622f52db171f35c1f84464dbfb3eafb"
 TARGETS = ["84", "1462", "1673", "1919", "3081", "3536", "3576", "3853", "174", "251", "422", "652", "777", "1272", "2803", "2902"]
 GRID = {(t, c, m, s) for t in TARGETS for c in range(4) for m in range(4) for s in (-5.0, 0.0)}
@@ -45,6 +67,20 @@ def speaker_bootstrap(per_spk, draws=10000, seed=20261204):
     return float(np.percentile(m, 2.5)), float(np.percentile(m, 97.5))
 
 
+def recompute_bench_summary(cand_rows, unp_rows):
+    """S2/S3 inputs recomputed from validated rows with bench_v2's own rule
+    (candidate - unprocessed per crop, common.bootstrap_ci seed 13, 2000 reps)."""
+    base = {r["crop"]: r for r in unp_rows}
+    out = {}
+    for kind in ("crowd", "ssn", "white-heldout", "quiet"):
+        sel = [r for r in cand_rows if r["kind"] == kind]
+        e = {"sisdr": float(np.nanmean([r["sisdr"] for r in sel]))}
+        for k in ("sisdr", "stoi", "ace_electro_corr"):
+            e[f"d_{k}"] = bootstrap_ci([r[k] - base[r["crop"]][k] for r in sel])
+        out[kind] = e
+    return out
+
+
 def judge(panel_p, bench_p, cand, cand_sha, seed):
     P = json.loads(Path(panel_p).read_text())
     _need(P.get("material_sha256") == REGISTERED_MATERIAL, f"panel material {P.get('material_sha256')} != registered")
@@ -62,15 +98,16 @@ def judge(panel_p, bench_p, cand, cand_sha, seed):
     # bench coverage (Astra screen-v2 pre-launch review, blocking 3): bench v2, 6 items/cell,
     # complete duplicate-free candidate/unprocessed pairing with finite metrics
     _need(B["meta"].get("bench") == "v2" and B["meta"].get("n_per_cell") == 6, "bench is not v2 with n_per_cell=6")
-    bk = lambda r: (r["kind"], r["snr_db"], r["spk"], r["crop"])  # noqa: E731
+    # Exact registered grid for candidate AND unprocessed (Gen27 pre-launch review, blocking 2):
+    # duplicates rejected before any dict is built; every (kind, SNR, speaker, crop) present.
+    bk = lambda r: (r["kind"], float(r["snr_db"]), r["spk"], r["crop"])  # noqa: E731
     cand_rows = [r for r in B["rows"] if r["system"] == B["meta"]["candidate"]]
     unp_rows = [r for r in B["rows"] if r["system"] == "unproc"]
     ck_, uk_ = [bk(r) for r in cand_rows], [bk(r) for r in unp_rows]
-    _need(len(ck_) == len(set(ck_)) and set(ck_) == set(uk_) and len(ck_) > 0, "bench candidate/unprocessed grid incomplete or duplicated")
-    import math
-    _need(all(math.isfinite(r[m]) for r in cand_rows + unp_rows for m in ("sisdr", "stoi", "ace_electro_corr")), "bench has non-finite metrics")
-    for kind in ("crowd", "ssn", "white-heldout", "quiet"):
-        _need(sum(1 for k in ck_ if k[0] == kind) >= 6, f"bench has too few {kind} rows")
+    _need(len(ck_) == len(set(ck_)) == len(BENCH_GRID) and set(ck_) == BENCH_GRID, "bench candidate grid != registered bench-v2 grid")
+    _need(len(uk_) == len(set(uk_)) == len(BENCH_GRID) and set(uk_) == BENCH_GRID, "bench unprocessed grid != registered bench-v2 grid")
+    _need(all(isinstance(r[m], (int, float)) and math.isfinite(r[m]) for r in cand_rows + unp_rows
+              for m in ("sisdr", "stoi", "ace_electro_corr")), "bench has non-finite metrics")
     out = {}
     for snr in (-5.0, 0.0):
         ks = [k for k in GRID if k[3] == snr]
@@ -80,7 +117,14 @@ def judge(panel_p, bench_p, cand, cand_sha, seed):
         out[snr] = {"gain": statistics.fmean(d.values()), "stoi_gain": statistics.fmean(dt.values()),
                     "per_voice": per_spk, "voices_improved": sum(v > 0 for v in per_spk.values()),
                     "ci": speaker_bootstrap(per_spk)}
-    s = B["summary"][B["meta"]["candidate"]]
+    s = recompute_bench_summary(cand_rows, unp_rows)  # never trust the stored summary
+    stored = B["summary"][B["meta"]["candidate"]]
+    for kind, e in s.items():
+        for k, v in e.items():
+            sv = stored[kind][k]
+            same = all(math.isclose(v[x], sv[x], rel_tol=1e-9, abs_tol=1e-12) for x in ("mean", "ci_lo")) if isinstance(v, dict) \
+                else math.isclose(v, sv, rel_tol=1e-9, abs_tol=1e-12)
+            _need(same, f"bench stored summary {kind}/{k} != recomputed from rows")
     cr = s["crowd"]
     m5, z0 = out[-5.0], out[0.0]
     checks = {

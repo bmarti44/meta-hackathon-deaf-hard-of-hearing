@@ -14,8 +14,10 @@ Preprocessing, identical everywhere and fixed before any training:
      keeps the relative source levels within a room physical.
 The early (training-reference) RIR is the preprocessed RIR times
 early_window(): 1 up to direct arrival + 45 ms, a half-cosine taper over
-the final 5 ms, 0 from direct arrival + 50 ms on. Direct arrival is the
-index of the largest absolute sample.
+the final 5 ms, 0 from direct arrival + 50 ms on. Direct arrival:
+direct_index() (superseding rule: first sample within 20 dB of the peak,
+refined to the local max within 1 ms; the v1 argmax rule is kept as
+direct_index_peak for the versioned v1 evidence only).
 """
 from __future__ import annotations
 import hashlib, json
@@ -51,8 +53,28 @@ def truncate(h):
     return h
 
 
-def direct_index(h):
+ONSET_DB = -20.0          # direct-arrival onset threshold re max|h| (ISO 3382-1 onset convention)
+ONSET_REFINE = int(0.001 * FS)  # refine to the local max within 1 ms after the onset
+
+
+def direct_index_peak(h):
+    """Superseded v1 rule (2026-11-04 registration): largest absolute sample.
+    Wrong for multi-peak RIRs where a reflection exceeds the direct path."""
     return int(np.argmax(np.abs(h)))
+
+
+def direct_index(h):
+    """Direct arrival (superseding rule, Astra pre-launch review blocking 1).
+    onset = first sample with |h| >= 10**(ONSET_DB/20) * max|h| (-20 dB re
+    peak: the ISO 3382-1 impulse-response start convention; it sits above
+    measured noise floors and the image-method fractional-delay ripple, and
+    below any physically plausible direct path in this bank, see
+    audit_arrival.py). The arrival is then the largest |h| in
+    [onset, onset + 1 ms], so the index lands on the direct pulse's peak
+    rather than its first rising sample."""
+    a = np.abs(h)
+    onset = int(np.argmax(a >= 10 ** (ONSET_DB / 20) * a.max()))
+    return onset + int(np.argmax(a[onset:onset + ONSET_REFINE + 1]))
 
 
 def early_window(n, d):

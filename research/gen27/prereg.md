@@ -314,3 +314,261 @@ research/gen24/test_train13.py` → **27 passed** (8 min 14 s, CPU).
     refused.
 - test_judge_v3 (13): synthetic gate cases, INVALID cases, and the
   self-test integration.
+
+---
+
+# Superseding registration (2026-11-04 ~22:10 EST, before any training or candidate evaluation)
+
+> Claude Opus 5.5, per Astra's pre-launch review (`astra-prelaunch-review.md`:
+> 3 blocking, 5 non-blocking). Everything above is the original 21:55
+> registration, kept verbatim as the record. Where this section differs,
+> **this section governs**. The v1 evidence is kept under
+> `selftest/v1_peak_anchored/` (v1 manifest `0bc488e1…`, v1 panel `ed98320c…`,
+> v1 registered hashes, v1 self-test and spatial outputs).
+>
+> - Nothing has been trained.
+> - No candidate has been evaluated.
+> - Gen 24 still holds the GPU, so no MPS has been used.
+
+## S1. Direct arrival (blocking 1)
+
+**v1 defect.** v1 used direct arrival = argmax |h|. That is wrong when a
+reflection exceeds the direct path. Examples:
+- `smallroom/Room179/Room179-00007.wav`: 464 instead of 229 (14.7 ms late);
+- `mediumroom/Room192/Room192-00012.wav`: 293 instead of 208 (5.3 ms late).
+
+**Superseding rule** (`rirbank.direct_index`):
+- onset = the first sample with |h| ≥ 10^(−20/20) · max|h|, i.e. within
+  20 dB of the peak;
+- arrival = the largest |h| in [onset, onset + 1 ms] (16 samples).
+
+**Why −20 dB:** it is the ISO 3382-1 impulse-response start convention.
+- It sits above the measured noise floors and the image-method fractional-delay ripple.
+- It sits below every direct path in this bank: the lowest arrival amplitude is 0.58 of the peak.
+
+**Why the 1 ms refinement:** it moves the index from the first rising
+sample to the peak of the direct pulse.
+
+The v1 rule is kept only as `direct_index_peak`, for the v1 evidence.
+
+**Audit** (`audit_arrival.py` → `selftest/arrival_audit.json`, all 1,048
+manifest RIRs):
+
+| Measure | Result |
+|---|---|
+| RIRs whose arrival changes | 35 (33 by > 1 ms, 7 by > 5 ms; max 14.69 ms; p99 3.25 ms) |
+| Changed, by split | train 30, eval_synth 3 (Room034-00015 257→227, Room192-00005 221→176, Room192-00012 293→208), eval_measured 0 |
+| Lowest arrival amplitude | 0.576 of peak |
+| Largest energy before the onset | −17.1 dB re total RIR energy |
+| Threshold sensitivity | −14 dB and −26 dB onsets move no arrival by more than 1 ms (0 of 1,048) |
+
+**Tests** (`test_train14.py`):
+- synthetic multi-peak, spread-pulse and sub-threshold cases;
+- the two flagged files (peak 464/293 → arrival 229/208);
+- every manifest `direct_idx` equals the rule;
+- −14 dB / −26 dB insensitivity checked file by file.
+
+**What was regenerated:**
+- **RIR manifest** `f306700d0dce5aded749a5f48e6da6d6bc66a6bdce3d0e27677081a41b7c1711`.
+  - Same rule, seed, rooms, splits, strata, files and file hashes.
+  - direct_idx, RT60, DRR and C50 change only for those 35 RIRs. Max
+    |Δ| is 0.076 s, 5.3 dB and 3.1 dB respectively.
+  - The only room RT60 change above 5 ms is train smallroom-Room179,
+    0.363 → 0.350 s (still short).
+  - In the section 3 room table, only the train/short row changes:
+    median DRR / C50 go from −1.9 / 12.7 to −2.0 / 12.6 dB. All RT60
+    columns and every other row are unchanged at the printed precision.
+- **Reverberant panel material** `5f7d268a9d3753e8e4b4fe71f699fa624424188dc42f5730aa95e2a522e16459`
+  (6,912 items; the dry replay still equals `557ad44f…`).
+- **`registered_hashes.json`** `49fb96fd28ca1b4545fca5e2b8fda24390c914a7f1e818e5a56773f58a97b7d4`.
+- **Training references** use the manifest's direct_idx, so they change
+  with the manifest. The aug50 run identity includes the manifest sha.
+
+## S2. Completeness (blocking 2)
+
+**`research/screen_v2/judge_v2.py`** (revised; its self-test output is
+byte-identical to the registered `screen_v2/selftest/judge_selftest_s17.json`):
+- Candidate and unprocessed bench rows must each equal the registered
+  bench-v2 grid exactly: 17 kind × SNR cells, 102 (kind, SNR, speaker,
+  crop) rows, speakers cycling as in `build_crops_v2`.
+- Duplicates are rejected before any dict is built.
+- Metrics must be finite.
+- S2/S3 are recomputed from the validated rows with bench_v2's own
+  `bootstrap_ci`, and must equal the stored summary.
+
+**`judge_v3.py`:**
+- **Reverberant panel:**
+  - synthetic, measured and target-only room IDs must equal the
+    manifest's eval_synth / eval_measured IDs, with matching RT60 strata
+    and target-only room labels;
+  - the manifest file sha must equal the registered one.
+- **Dry panel:** duplicates are rejected before any dict is built.
+- **Spatial:**
+  - existing-bench rows must be exactly 4 registered scenes × (unproc,
+    gate_independent, gate_linked, candidate), with registered SNR,
+    target and noise azimuths;
+  - crossed rows must be exactly 4 crops × 4 azimuths × (unproc,
+    candidate), with registered scene metadata;
+  - duplicates are rejected first and metrics must be finite;
+  - summaries are recomputed from rows and must match the stored ones;
+  - candidate and control unprocessed scenes must be identical.
+- **Gate set:** it must equal the registered set.
+- **Candidate == control** is allowed only with `--selftest`.
+
+**Tests:** each of Astra's demonstrations is covered, among them:
+- all −5 dB bench rows deleted;
+- a bench row deleted or duplicated;
+- a tampered bench summary or a wrong speaker;
+- spatial duplicates, a wrong crop ID, wrong SNR or noise azimuth, empty
+  existing rows with summaries left in place, tampered summaries;
+- renamed synthetic or target-only rooms, a dropped target-only room, a
+  wrong stratum label.
+
+All of these give INVALID.
+
+## S3. Replication (blocking 3)
+
+`judge_v3.py --replicate` returns INVALID unless all of these hold:
+- seeds are exactly 17/18/19 and the **seed-17 screen verdict is ADVANCE**;
+- each seed's checks are exactly the registered gate set
+  (R1a/R1b/R1c, C, T, D, S2, S3, SP), all of type bool;
+- each seed carries the registered rev-material, manifest and dry hashes;
+- each control sha equals Gen 19's same-seed final, and candidate shas
+  are distinct and differ from controls;
+- voices are in TARGETS order and rooms in sorted manifest eval_synth order;
+- cells are finite 16 × 6, and the stored primary gain equals the cell mean.
+
+Malformed documents give INVALID, never RETAIN.
+
+Then the original rule applies:
+- three-seed mean ≥ +0.30 dB;
+- > 0 in ≥ 2/3 seeds;
+- two-way lower bound of the mean cells > 0;
+- every safeguard True in every seed.
+
+The replication interval is conditional on the three trained seeds.
+
+Astra's adversarial case is INVALID in tests: three documents with empty
+checks and positive 1 × 1 cells, which returned RETAIN in v1. So are the
+other cases: non-Boolean or missing keys, 1 × 1 cells, reversed order,
+wrong control, repeated candidate, seed-17 FAIL, an old manifest hash, a
+gain mismatch and a NaN cell.
+
+## S4. Adopted non-blocking items
+
+- **T (new gate, prospective):** mean SI-SDR gain ≥ 0 and mean STOI gain
+  ≥ 0 vs Gen 19 on reverberant target-only items, separately for the
+  synthetic-room and measured-room conditions.
+  - It joins the safeguards for screen and replication.
+  - Passing T does not establish non-harm against bypass.
+- **Room by room:** judge_v3 reports each of the 12 rooms. For each it
+  gives the per-SNR candidate gain, the Gen 19 ΔSI-SDR/ΔSTOI and the
+  target-only values. Differences are not attributed solely to RT60,
+  because RT60, geometry, point-source SSN and the limited positions are
+  confounded.
+- **1 s RIR cap (disclosed):** Astra's audit found at most about 0.11% of
+  the original RIR energy beyond the cap among the selected files.
+- **Mirrored spatial check:** redundant under channel-swap symmetry, not
+  vacuous. The dry, assumed-head bench cannot establish spatial
+  preservation in rooms.
+
+## S5. Launch prerequisite: MPS timing
+
+The 101–108 min figure is an **extrapolation, not an established upper
+bound**. Before launch, and only after Gen 24's process has exited and
+released the GPU, run with the registered code:
+
+```
+/tmp/gen9env/bin/python research/gen27/train14.py --loss sisdr --snr legacy --room aug50 --mode scratch \
+  --steps 150 --state-every 0 --val-every 0 --diag-every 0 --device mps --out /tmp/g27_timing_aug50.pt --log /tmp/g27_timing_aug50.json
+```
+
+followed by the same command with `--room dry` (out/log `_dry`).
+
+- **Time limit:** each run must take ≤ 60 s of wall time; stop it if it
+  goes over.
+- **s/step** = (logged elapsed_s at step 149 − at step 25) / 124.
+- **Projection** = 84.8 min × s/step(aug50) / s/step(dry). The direct
+  figure 24,000 × s/step(aug50) is reported beside it.
+- **Record:** both numbers go into the launch log.
+- **Timing outputs:** these are scratch files outside the repo. They are
+  never checkpoints of record.
+
+**Never substitute an interim checkpoint because time expires.** Only the
+24,000-step final is judged. A run that cannot finish is "not run".
+
+## S6. Gen 19 self-test, both versions (descriptive; provisional; metric degradation on simulated reverberant speech, not established intelligibility loss or harm to CI listeners)
+
+All values are Gen 19 seed-17 Δ vs the unprocessed mixture, scored
+against the direct + 50 ms reference.
+
+| Condition | v1 (peak-anchored) ΔSI-SDR / ΔSTOI | v2 (onset-rule) ΔSI-SDR / ΔSTOI |
+|---|---|---|
+| synthetic −5 dB | +0.3695 / −0.0293 | +0.3698 / −0.0293 |
+| synthetic 0 dB | +2.2199 / −0.0053 | +2.2195 / −0.0053 |
+| measured −5 dB | +0.7335 / −0.0167 | +0.7335 / −0.0167 |
+| measured 0 dB | +2.0396 / −0.0091 | +2.0396 / −0.0091 |
+| target-only, synthetic rooms | −2.1274 / −0.0671 (abs 8.92 dB) | −2.1173 / −0.0670 (abs 8.90 dB) |
+| target-only, measured rooms | −1.1648 / −0.0609 (abs 5.96 dB) | −1.1648 / −0.0609 (abs 5.96 dB) |
+| target-only, all 12 rooms | −1.6461 / −0.0640 (abs 7.44 dB) | −1.6410 / −0.0640 (abs 7.43 dB) |
+
+**Why the changes are small:** only 3 of the 96 held-out synthetic RIRs
+moved, and none of the measured ones.
+
+**Room-level changes > 0.0005 dB:**
+- smallroom-Room034: −5 dB −0.4810 → −0.4824; 0 dB +1.3872 → +1.3836.
+- mediumroom-Room192: −5 dB +0.1351 → +0.1381; 0 dB +1.8172 → +1.8185.
+
+**v2 room by room (Gen 19 ΔSI-SDR/ΔSTOI):**
+
+| Room | Stratum | −5 dB | 0 dB | Target-only |
+|---|---|---|---|---|
+| smallroom-Room034 | short | −0.48 / −0.0407 | +1.38 / −0.0215 | −2.42 / −0.0955 |
+| mediumroom-Room007 | short | +0.18 / −0.0342 | +2.45 / +0.0002 | −3.28 / −0.0595 |
+| mediumroom-Room038 | medium | +0.89 / −0.0245 | +2.62 / +0.0018 | −1.28 / −0.0528 |
+| mediumroom-Room192 | medium | +0.14 / −0.0312 | +1.82 / −0.0108 | −1.51 / −0.0707 |
+| mediumroom-Room046 | long | +0.64 / −0.0234 | +2.45 / −0.0036 | −2.23 / −0.0634 |
+| mediumroom-Room123 | long | +0.85 / −0.0218 | +2.60 / +0.0022 | −1.98 / −0.0600 |
+| RWCP_cirline_e2a | measured short | +0.94 / −0.0080 | +2.57 / +0.0074 | −2.45 / −0.0431 |
+| air_binaural_meeting_0 | measured short | +1.14 / −0.0001 | +2.91 / +0.0239 | −1.16 / −0.0313 |
+| RWCP_cirline_jr1 | measured medium | +0.96 / −0.0148 | +2.05 / −0.0097 | −0.52 / −0.0613 |
+| RWCP_cirline_jr2 | measured medium | +0.81 / −0.0172 | +1.95 / −0.0172 | −0.80 / −0.0674 |
+| RWCP_cirline_ofc | measured long | +0.73 / −0.0162 | +1.71 / −0.0184 | −0.47 / −0.0650 |
+| RVB2014_largeroom1 | measured long | −0.18 / −0.0440 | +1.05 / −0.0410 | −1.59 / −0.0973 |
+
+Measured-RIR convolution is still simulated material.
+
+**v2 self-test** (`selftest/judge_v3_selftest_s17.json`,
+`11b6a057…c865c`; run with `--selftest`):
+- primary +0.0000 dB, CI [0, 0], 0/16 voices;
+- C, T, D, S2, S3 and SP pass;
+- **FAIL on exactly R1a/R1b/R1c**.
+
+## S7. Hashes for this superseding registration (sha256)
+
+| File | sha256 |
+|---|---|
+| `research/gen27/rir_manifest.json` | `f306700d0dce5aded749a5f48e6da6d6bc66a6bdce3d0e27677081a41b7c1711` |
+| reverberant panel material (`panel_rev.py`) | `5f7d268a9d3753e8e4b4fe71f699fa624424188dc42f5730aa95e2a522e16459` |
+| `research/gen27/registered_hashes.json` | `49fb96fd28ca1b4545fca5e2b8fda24390c914a7f1e818e5a56773f58a97b7d4` |
+| `research/gen27/rirbank.py` | `14376aafb87c73eaed6482d07b3958834b86b51b96100b7698d8e7ea7cc0e7f1` |
+| `research/gen27/build_rir_bank.py` | `e46199fbc134edf2d1b4c416074dac4887dac211787a821b3611b3e21e7dade6` |
+| `research/gen27/audit_arrival.py` | `a41d2ae115a8e4fe0be8933381157f073dd3eb596268d65e789456f5217dcc95` |
+| `research/gen27/train14.py` | `9d39741c2e63aaa7773bd6e88165676a33ff207c034b215664a805b5c01567e7` |
+| `research/gen27/panel_rev.py` | `875cd1eed0b869f0fee4631d9adcf0e91e0b90e25e88769a3718cdcd07efebf6` |
+| `research/gen27/judge_v3.py` | `20ca53960ce6e2b1e26c601d4e32100eecdf880c355ec679c6decc9b218fa427` |
+| `research/screen_v2/judge_v2.py` | `f35c88d3d08cc4a7bea2f38cf95918ff11f28eed22b394cae3c25c84acf0dcac` |
+| `research/gen27/test_train14.py` | `af4bb6bc9c7432abd4d98c56a2dc19c3e420cfa148f31798b66fb8a33d8d29b5` |
+| `research/gen27/test_judge_v3.py` | `78b46670a076b1ea782b6918dd0ab11b8f91222ffdf1c46edf8ace129f8a4e38` |
+| `research/gen27/selftest/judge_v3_selftest_s17.json` | `11b6a0571c75b2b2abfaed5a4add19220220193406a6149d2cec87f18750865c` |
+| `research/gen27/selftest/arrival_audit.json` | `28562418f806d673c04d666fdc038dece1749aea6e95c9f6bcdbbeedb1a13988` |
+
+## S8. Tests at this registration
+
+`pytest research/gen27/test_train14.py research/gen27/test_judge_v3.py
+research/gen24/test_train13.py` → **68 passed** (2 min 36 s, CPU).
+- test_train14: 13 = the 10 original tests + 3 arrival-rule tests.
+- test_judge_v3: 51 = gates; INVALID cases for the reverberant panel, dry
+  panel, spatial bench, judge_v2 bench and replication; the target-only
+  gate; the real self-test and its guards.
+- test_train13: 4.
