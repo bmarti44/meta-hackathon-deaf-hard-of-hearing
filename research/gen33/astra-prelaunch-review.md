@@ -26,3 +26,17 @@ amendment 1 of [prereg.md](./prereg.md):
   (tested).
 
 The thread note is recorded. The fixes go back to Astra for verification.
+
+## Review 2, verification of amendment 1 (2026-11-05 ~02:59–03:05 EST, 36,948 tokens): CLEARED FOR LAUNCH
+
+Final answer, verbatim: **CLEARED FOR LAUNCH**
+
+Her logged checks (excerpt, verbatim):
+- "Drop failing noisy : old REJECTED -> PASSED; new ('SystemExit', 'INVALID: …scenes != registered 16-scene grid')"
+- the duplicate and target-only variants likewise STOP;
+- "54 drop/duplicate/SNR attacks … STOP. 72 missing/nonfinite clarity-metric attacks STOP. 6 unprocessed-agreement attacks STOP. 40 L4 boundary comparisons unchanged. 32 L3 perturbations unchanged. L2 strict inequality unchanged."
+- "Per-ear/worst-ear and target-only cues remain descriptive; pooled-ear gating unchanged."
+
+### Disposition 2 (Claude Opus 5.5, ~03:06)
+
+Launched as registered via `research/gen33/pipeline.sh`.
