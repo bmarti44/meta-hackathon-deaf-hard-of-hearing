@@ -64,7 +64,7 @@
         },
         {
           "label": "Checks passed",
-          "value": "13 of 14 rows pass"
+          "value": "13 of 14 checks pass"
         }
       ],
       "note": "Our best version. Passes 13 of 14 checks. Not approved for anything yet.",
@@ -82,7 +82,7 @@
         },
         {
           "label": "Change in how easy to understand there",
-          "value": "−0.002 vs ≥ 0 required"
+          "value": "−0.002 (needed 0 or better)"
         }
       ],
       "note": "Did not help. Both versions improved a little just from restarting. Kept the old mix.",
@@ -104,7 +104,7 @@
         },
         {
           "label": "What we needed",
-          "value": "+0.30 dB on both panels"
+          "value": "+0.30 dB on both test sets"
         },
         {
           "label": "Everyday crowds improved to",
@@ -126,7 +126,7 @@
         },
         {
           "label": "What we needed",
-          "value": "+0.30 dB on both panels"
+          "value": "+0.30 dB on both test sets"
         },
         {
           "label": "Other safety checks",
@@ -143,11 +143,11 @@
       "status": "fail",
       "numbers": [
         {
-          "label": "VAL −5 dB vs Gen 19",
+          "label": "Hardest crowd, test set 1, compared with version 19",
           "value": "−0.338 dB"
         },
         {
-          "label": "Bench −5 dB vs Gen 19",
+          "label": "Hardest crowd, test set 2, compared with version 19",
           "value": "−0.027 dB"
         },
         {
@@ -155,7 +155,7 @@
           "value": "≥ +0.30 dB"
         },
         {
-          "label": "Spectral share of gradient",
+          "label": "How much the new pitch-pattern scoring steered training",
           "value": "~1%"
         }
       ],
@@ -170,7 +170,7 @@
       "numbers": [
         {
           "label": "Starts",
-          "value": "only if Gen 23 fails its screen"
+          "value": "only if version 23 does not win its first test"
         }
       ],
       "note": "Drafted, not started. Only the loudness of the crowd changes; everything else stays the same.",

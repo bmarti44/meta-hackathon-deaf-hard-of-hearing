@@ -17,6 +17,7 @@ $$('a[data-repo]').forEach(a => {
 });
 if (!C.repo) $('#repo-link')?.remove();
 $$('a[data-hf]').forEach(a => { if (C.huggingface) { a.href = C.huggingface; a.target = '_blank'; a.rel = 'noopener'; } else a.replaceWith(...a.childNodes); });
+$$('a[data-hf-file]').forEach(a => { if (C.huggingface) { a.href = C.huggingface.replace(/\/$/, '') + '/resolve/main/' + a.dataset.hfFile; a.target = '_blank'; a.rel = 'noopener'; } else a.replaceWith(...a.childNodes); });
 
 // ---------- header / nav ----------
 const bar = $('#bar'), nav = $('#chapnav'), menu = $('#menu-btn');
@@ -199,9 +200,9 @@ tb.innerHTML = score.rows.map(r => {
   const st = r.status === 'INFO' ? 'pending' : r.status === 'PASS' ? 'advance' : 'fail';
   const word = r.status === 'INFO' ? 'for information' : r.status === 'PASS' ? 'pass' : 'miss';
   return `<tr class="${r.status === 'FAIL' ? 'fail' : r.status === 'INFO' ? 'info' : ''}" data-row="${ROW_IDS(r)}">
-    <td data-l="Check">${esc(PLAIN[r.id] || r.kpi)}${r.status === 'FAIL' ? ' <span class="hot">(the hardest crowd)</span>' : ''}<details class="researchers row"><summary>For researchers</summary><span class="small muted">${esc(r.kpi)}: ${esc(r.required)}${r.stretch ? `; stretch ${esc(r.stretch)} ${r.stretch_pass ? 'met' : 'not met'}` : ''}</span></details></td>
-    <td class="num" data-l="Result">${esc(r.actual)}</td><td class="small" data-l="Needs">${esc(NEED[r.id] || r.required)}</td>
-    <td data-l="Status"><span class="status" data-status="${st}" data-glyph="${GLYPH[st]}">${word}</span></td>
+    <td data-l="Check">${esc(PLAIN[r.id] || r.kpi)}${r.status === 'FAIL' ? ' <span class="hot">(the hardest crowd)</span>' : ''}<details class="researchers row"><summary>For researchers</summary><span class="small muted">${esc(r.kpi)}: result ${esc(r.actual)}, required ${esc(r.required)}${r.stretch ? `; stretch ${esc(r.stretch)} ${r.stretch_pass ? 'met' : 'not met'}` : ''}</span></details></td>
+    <td class="small muted" data-l="Needs">${esc(NEED[r.id] || r.required)}</td>
+    <td data-l="Status"><span class="st" data-status="${st}">${GLYPH[st]} ${word}</span></td>
     <td class="ai-only" hidden><button class="explain-btn" type="button" data-explain="${ROW_IDS(r)}" aria-label="Explain ${esc(r.kpi)}">Explain</button></td></tr>`;
 }).join('');
 $('#score-verdict').textContent = `${score.n_pass} of ${score.n_required} checks pass. Our verdict: not good enough yet, keep working.`;
@@ -234,8 +235,9 @@ else { const last = G[G.length - 1]; chip.classList.add('ok'); $('#live-text').t
   $('#tree').innerHTML = s + '</svg>';
   $('#tree-desc').textContent = 'Generation tree. ' + G.map(g => `${g.label}: ${WORD[g.status]} — ${g.change}.`).join(' ') + ` Trunk survivors: ${trunk.map(t => t.label).join(', ')}.`;
 })();
-$('#gen-cards').innerHTML = G.map(g => `<article class="gen" data-status="${g.status}" id="${g.id}" aria-labelledby="${g.id}-h">
-  <h3 id="${g.id}-h"><span>${esc(g.label)}</span><span class="status" data-status="${g.status}" data-glyph="${GLYPH[g.status]}">${WORD[g.status]}</span></h3>
+const FOLD = new Set(['gen16', 'gen17', 'gen18', 'gen20']);
+const cardHtml = g => `<article class="gen" data-status="${g.status}" id="${g.id}" aria-labelledby="${g.id}-h">
+  <h3 id="${g.id}-h"><span>${esc(g.label)}</span><span class="st" data-status="${g.status}">${GLYPH[g.status]} ${WORD[g.status]}</span></h3>
   <p class="change">${esc(g.change)}</p>
   ${g.eta ? `<p class="eta">◉ ${esc(g.eta)}</p>` : ''}
   <dl>${(g.numbers || []).map(n => `<dt>${esc(n.label)}</dt><dd>${esc(n.value)}</dd>`).join('')}</dl>
@@ -243,7 +245,8 @@ $('#gen-cards').innerHTML = G.map(g => `<article class="gen" data-status="${g.st
   <div class="acts">${g.link ? `<a href="${/^https?:/.test(g.link) ? esc(g.link) : esc(repoUrl(g.link) || '#')}" target="_blank" rel="noopener">read the full write-up</a>` : ''}
     <button class="explain-btn ai-only" hidden type="button" data-explain="${g.id}">Explain</button>
     <button class="explain-btn ai-only" hidden type="button" data-brief="${g.id}">Brief</button></div>
-  <div class="explain-slot"></div></article>`).join('');
+  <div class="explain-slot"></div></article>`;
+$('#gen-cards').innerHTML = G.filter(g => !FOLD.has(g.id)).map(cardHtml).join('') + `<details class="fold earlier"><summary>Earlier versions (16, 17, 18 and 20)</summary><div class="gen-cards">${G.filter(g => FOLD.has(g.id)).map(cardHtml).join('')}</div></details>`;
 
 // ---------- Gen 21 chart (per-seed −5 dB gains, VAL vs bench, two arms) ----------
 (function g21chart() {
@@ -286,6 +289,7 @@ $('#gen-cards').innerHTML = G.map(g => `<article class="gen" data-status="${g.st
 })();
 
 // ---------- Muse: health → show AI UI; Ask; Explain; Brief ----------
+{ const fab = $('#ask-fab'); if (fab) { let last = scrollY; const near = () => ['ask', 'meta-lab'].some(id => { const e = $('#' + id); if (!e) return false; const r = e.getBoundingClientRect(); return r.top < innerHeight && r.bottom > 0; }); addEventListener('scroll', () => { const up = scrollY < last - 2; last = scrollY; fab.classList.toggle('show', up && !near() && scrollY > innerHeight); }, { passive: true }); } }
 const health = await api.health();
 if (health) {
   $$('.ai-only').forEach(e => e.hidden = false);
@@ -315,7 +319,7 @@ if (health) {
     try {
       const r = await api.ask(q);
       steps.innerHTML = (r.steps || []).map(s => `<li>${esc(s.output || s.input || s.tool || '')}</li>`).join('');
-      out.innerHTML = renderAnswer(r.answer) + `<p class="small muted" style="margin:12px 0 0">Answered by ${esc(r.model || health.model)}. Based only on the research record.</p>`;
+      out.innerHTML = renderAnswer(r.answer) + `<p class="small muted" style="margin:12px 0 0">Answered by Muse (Meta). Based only on the research record.</p>`;
     } catch (err) { out.innerHTML = `<p class="err">${esc(err.message)}</p>`; }
     finally { th.hidden = true; btn.disabled = false; }
   }
@@ -324,12 +328,12 @@ if (health) {
     const isBrief = 'brief' in b.dataset, id = b.dataset.explain || b.dataset.brief;
     let slot = b.closest('tr') ? b.closest('tr').nextElementSibling : b.closest('.gen') ? $('.explain-slot', b.closest('.gen')) : b.closest('.kv').nextElementSibling;
     if (b.closest('tr')) {
-      if (!slot || !slot.classList.contains('explain-row')) { slot = document.createElement('tr'); slot.className = 'explain-row'; slot.innerHTML = `<td colspan="5"></td>`; b.closest('tr').after(slot); }
+      if (!slot || !slot.classList.contains('explain-row')) { slot = document.createElement('tr'); slot.className = 'explain-row'; slot.innerHTML = `<td colspan="4"></td>`; b.closest('tr').after(slot); }
       slot = slot.firstElementChild;
     }
     slot.innerHTML = `<div class="explain-out"><span class="thinking"><i aria-hidden="true"></i>Muse is writing${isBrief ? ' a brief' : ` for ${level === 'parent' ? 'a parent' : 'a researcher'}`}…</span></div>`;
     b.disabled = true;
-    try { const r = isBrief ? await api.brief(id) : await api.explain(id, level); slot.innerHTML = `<div class="explain-out">${renderAnswer(r.text)}<p class="small muted" style="margin:8px 0 0">${esc(r.model || health.model)} · ${isBrief ? 'generation brief' : 'for ' + level + 's'} · AI answers can contain mistakes.</p></div>`; }
+    try { const r = isBrief ? await api.brief(id) : await api.explain(id, level); slot.innerHTML = `<div class="explain-out">${renderAnswer(r.text)}<p class="small muted" style="margin:8px 0 0">Muse (Meta) · ${isBrief ? 'a short summary' : 'explained for ' + (level === 'parent' ? 'a parent' : 'a researcher')}</p></div>`; }
     catch (err) { slot.innerHTML = `<div class="explain-out err">${esc(err.message)}</div>`; }
     finally { b.disabled = false; }
   });

@@ -19,7 +19,7 @@ const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
 camera.position.set(0, 0, 9);
 
 const isSmall = innerWidth < 700;
-const N = isSmall ? 18000 : 24000;
+const N = isSmall ? 12000 : 24000;
 const crowd = new Float32Array(N * 3), voice = new Float32Array(N * 3), wall = new Float32Array(N * 3), seed = new Float32Array(N);
 let s = 20261117; const rnd = () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296;
 const env = x => { const t = x * 0.9 + 3; return (0.55 + 0.45 * Math.sin(t * 2.1)) * (0.6 + 0.4 * Math.sin(t * 0.7 + 1.3)); };
@@ -78,7 +78,7 @@ const mat = new THREE.ShaderMaterial({
       // the implant: 22 horizontal bands, about 8 lit at a time
       float band = floor(aSeed*22.0);
       float lit = step(0.63, fract(band*0.618 + floor(uTime*2.5)*0.37));
-      p = mix(p, vec3(aVoice.x, (band - 10.5)*0.42, 0.0), uBands);
+      p = mix(p, vec3(aVoice.x, (band - 10.5)*0.42 + (aSeed*22.0 - band - 0.5)*0.38, 0.0), uBands);
       vLit = mix(1.0, lit, uBands);
       // two ears: split into two lines; "separate" lets them drift apart, "linked" locks them
       float ear = step(0.5, aSeed)*2.0-1.0;
@@ -89,7 +89,7 @@ const mat = new THREE.ShaderMaterial({
       p.x *= uXS; p.y += uYOff;
       vec4 mv = modelViewMatrix * vec4(p,1.0);
       gl_Position = projectionMatrix * mv;
-      float size = mix(2.6, 2.2, c) * (1.0 + 0.9*uShake*(1.0-still)) * mix(1.0, 1.9, uWall) * mix(1.0, 0.7, uThin) * uPR * uScale;
+      float size = mix(1.0, 1.6, uBands) * mix(2.6, 2.2, c) * (1.0 + 0.9*uShake*(1.0-still)) * mix(1.0, 1.9, uWall) * mix(1.0, 1.0, uThin) * uPR * uScale;
       gl_PointSize = size * (12.0 / -mv.z);
       vClar = c; vSeed = aSeed; vDepth = -mv.z; vStill = still*uShake; vWall = uWall; vThin = uThin;
     }`,
@@ -105,8 +105,8 @@ const mat = new THREE.ShaderMaterial({
       col = mix(col, uSignal*0.6, vStill);
       float a = (0.55 + 0.35*vClar) * soft * uAlphaK;
       a *= mix(1.0, 0.18, vStill);
-      a *= 0.25 + 0.75*vLit;
-      a *= mix(1.0, 0.9, vThin);
+      a *= 0.35 + 1.6*vLit;
+      a *= mix(1.0, 1.0, vThin);
       a *= mix(1.0, 0.35 + 0.65*step(0.985, fract(vSeed*7.0)), vWall);
       a *= clamp(1.7 - vDepth*0.1, 0.3, 1.0);
       gl_FragColor = vec4(col, a);
@@ -151,7 +151,7 @@ function measure() {
   const beats = [[0, 0.1], [top(E.tests), 0.08], [top(E.music), 0.4], [top(E.crowd), 0.15], [top(E.dancing), 0.3],
     [top(E.model), 0.15], [top(E.model) + mh * 0.8, ml]];
   if (E.implant) beats.push([top(E.implant), ml]);
-  beats.push([top(E.wall), ml], [top(E.gens), ml], [top(E.attempts), ml], [top(E.graham), ml], [top(E.honest), 0.85], [document.body.scrollHeight, 0.85]);
+  beats.push([top(E.wall), ml], [top(E.gens), ml], [top(E.attempts), ml], [top(E.graham), ml], [top(E.honest), 0.8], [document.body.scrollHeight, 0.8]);
   const yy = y + h * 0.5;
   let cl = beats[0][1];
   for (let i = 0; i < beats.length - 1; i++) {
@@ -169,9 +169,10 @@ function measure() {
   T.bands = presence(E.impStage, 0.05);
   T.ears = presence(E.graham);
   T.drift = window.__ears === 'separate' ? 1 : window.__ears === 'linked' ? 0 : 0.5;
-  if (presence(E.graham) > 0 && window.__ears === 'none') T.clarity = Math.min(T.clarity, 0.25);   // no cleanup: fuzzier
+  if (presence(E.graham) > 0.3 && window.__ears === 'none') T.clarity = 0.3;   // no cleanup: fuzzier
   T.wall = pw > 0 && sliderClar != null ? pw * clamp01((0.32 - sliderClar) / 0.1) : 0;   // slams in only toward −5 dB
-  T.thin = clamp01((y - (top(E.wall) + (E.wall ? E.wall.offsetHeight : 0))) / h);
+  T.thin = clamp01((y - (top(E.wall) + (E.wall ? E.wall.offsetHeight : 0))) / h) * (1 - Math.max(presence(E.graham), presence(E.gens)));
+  if (presence(E.graham) > 0.3) T.clarity = Math.max(T.clarity, 0.75 * presence(E.graham));
   const afterModel = y + h * 0.5 > top(E.model);
   counterDb = bench && afterModel ? bench.summary_seed_mean.gen19.crowd.d_sisdr * clamp01((cl - 0.15) / Math.max(0.01, ml - 0.15)) : 0;
 }
@@ -189,7 +190,11 @@ document.addEventListener('visibilitychange', () => { running = !document.hidden
 
 function frame(now) {
   const t = (now - t0) / 1000; U.uTime.value = t;
-  for (const k in T) C[k] += (T[k] - C[k]) * (k === 'shake' ? 0.12 : 0.08);
+  // live inputs every frame (not only on scroll): the clip's sound level and the ear toggle
+  const lvl = window.__waveLevel; T.beat = Math.max(presence(E.music) * 0.25, presence(E.dancing) * (lvl > 0 ? lvl * 1.2 : 0.18));
+  T.drift = window.__ears === 'separate' ? 1 : window.__ears === 'linked' ? 0 : 0.5;
+  if (presence(E.graham) > 0.3 && window.__ears === 'none') T.clarity = 0.3;
+  for (const k in T) C[k] += (T[k] - C[k]) * (k === 'shake' ? 0.12 : k === 'beat' ? 0.35 : 0.08);
   let cl = C.clarity;
   if (E.gens && presence(E.gens) > 0) { gensPhase += 0.012; cl += Math.sin(gensPhase) * 0.12 * presence(E.gens); }  // nulls: a flat wobble
   U.uClarity.value = cl; U.uShake.value = C.shake; U.uWaver.value = C.waver; U.uBeat.value = C.beat;
@@ -198,6 +203,7 @@ function frame(now) {
   camera.position.x = Math.sin(t * 0.1) * 0.25 + (Math.random() - 0.5) * 0.12 * C.shake;
   camera.position.y = (Math.random() - 0.5) * 0.12 * C.shake;
   if (clarityEl) clarityEl.textContent = '+' + counterDb.toFixed(2) + ' dB';
+  if (presence(E.dancing, 0) > 0.92 && !(lvl > 0)) return;   // the video fills the screen: skip the draw
   renderer.render(scene, camera);
 }
 function loop() { if (!running || reduce) return; frame(performance.now()); requestAnimationFrame(loop); }
