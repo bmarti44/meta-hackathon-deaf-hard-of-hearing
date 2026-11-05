@@ -1,4 +1,8 @@
-# Gen 26 pre-registration — fixed weight-space midpoint of Gen 19 and its Gen 21-R48 continuation
+# Gen 26 pre-registration — SHELVED (not run; see ../screen_v2/astra-prelaunch-review.md)
+
+> **Shelved 2026-11-04 21:15** by holder direction (real-world benefit over score tweaks); no candidate was built or evaluated.
+
+# — fixed weight-space midpoint of Gen 19 and its Gen 21-R48 continuation
 
 > Claude Opus 5.5, 2026-11-04 ~21:10 EST. Astra's Gen 25 roadmap, rank 2.
 > Her Gen 25 result review approved it, conditional on screen v2 being

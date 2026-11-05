@@ -59,6 +59,18 @@ def judge(panel_p, bench_p, cand, cand_sha, seed):
         sysrows[name] = {key(r): r for r in rs}
     B = json.loads(Path(bench_p).read_text())
     _need(B["meta"]["checkpoint_sha256"] == cand_sha, "bench candidate hash != candidate")
+    # bench coverage (Astra screen-v2 pre-launch review, blocking 3): bench v2, 6 items/cell,
+    # complete duplicate-free candidate/unprocessed pairing with finite metrics
+    _need(B["meta"].get("bench") == "v2" and B["meta"].get("n_per_cell") == 6, "bench is not v2 with n_per_cell=6")
+    bk = lambda r: (r["kind"], r["snr_db"], r["spk"], r["crop"])  # noqa: E731
+    cand_rows = [r for r in B["rows"] if r["system"] == B["meta"]["candidate"]]
+    unp_rows = [r for r in B["rows"] if r["system"] == "unproc"]
+    ck_, uk_ = [bk(r) for r in cand_rows], [bk(r) for r in unp_rows]
+    _need(len(ck_) == len(set(ck_)) and set(ck_) == set(uk_) and len(ck_) > 0, "bench candidate/unprocessed grid incomplete or duplicated")
+    import math
+    _need(all(math.isfinite(r[m]) for r in cand_rows + unp_rows for m in ("sisdr", "stoi", "ace_electro_corr")), "bench has non-finite metrics")
+    for kind in ("crowd", "ssn", "white-heldout", "quiet"):
+        _need(sum(1 for k in ck_ if k[0] == kind) >= 6, f"bench has too few {kind} rows")
     out = {}
     for snr in (-5.0, 0.0):
         ks = [k for k in GRID if k[3] == snr]
@@ -78,8 +90,11 @@ def judge(panel_p, bench_p, cand, cand_sha, seed):
         "A4_m5_stoi_nonworsening": m5["stoi_gain"] >= 0,
         "S1_0db_safeguard": z0["gain"] >= -0.15 and z0["stoi_gain"] >= -0.003,
         "S2_quiet": s["quiet"]["sisdr"] >= 25 and s["quiet"]["d_stoi"]["mean"] >= -0.02,
-        "S3_other_rows": (cr["d_sisdr"]["mean"] >= 3.0 and cr["d_stoi"]["mean"] >= 0.03 and cr["d_ace_electro_corr"]["mean"] >= 0.05
-                          and min(cr["d_sisdr"]["ci_lo"], cr["d_stoi"]["ci_lo"], cr["d_ace_electro_corr"]["ci_lo"]) > 0
+        # NaN-safe: every bound individually finite and > 0 (Astra screen-v2 pre-launch review, blocking 2)
+        "S3_other_rows": (all(math.isfinite(x) for x in (cr["d_sisdr"]["mean"], cr["d_stoi"]["mean"], cr["d_ace_electro_corr"]["mean"],
+                                                          s["ssn"]["d_sisdr"]["mean"], s["white-heldout"]["d_sisdr"]["mean"]))
+                          and cr["d_sisdr"]["mean"] >= 3.0 and cr["d_stoi"]["mean"] >= 0.03 and cr["d_ace_electro_corr"]["mean"] >= 0.05
+                          and all(math.isfinite(x) and x > 0 for x in (cr["d_sisdr"]["ci_lo"], cr["d_stoi"]["ci_lo"], cr["d_ace_electro_corr"]["ci_lo"]))
                           and s["ssn"]["d_sisdr"]["mean"] >= 3.0 and s["white-heldout"]["d_sisdr"]["mean"] >= 0),
     }
     return {"panel": out, "ctrl_sha": ctrl_sha, "cand_sha": cand_sha}, checks, ("ADVANCE" if all(checks.values()) else "FAIL")
