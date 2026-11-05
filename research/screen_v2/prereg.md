@@ -37,6 +37,10 @@ voice-clustered panel judges future changes on many more voices.
   items. Seed 20261204.
 - **Material sha256:** `557ad44f3f874c25f6fe80c158844ce4a622f52db171f35c1f84464dbfb3eafb`.
 
+## Correction (2026-11-04 ~21:25, Astra agenda review, verbatim wording)
+
+> Screen v2 is training-disjoint from Gen19 and qualifying descendants, but was incorrectly described as unused in earlier research decisions. Ten targets were training speakers for Gen13–16; all sixteen targets and all four reserved speakers were training speakers for Gen17. Screen v2 is retained for development comparisons only. Fresh, audited speakers and recordings will replace the final-confirmation reserve.
+
 ## Rules (`research/screen_v2/judge_v2.py`), per seed, candidate − same-seed Gen 19 final
 
 **ADVANCE** requires all of:
