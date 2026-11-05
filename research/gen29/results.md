@@ -34,4 +34,6 @@
 - Three single-seed points do not establish a dose-response curve, and they do not show that a zero-cost dose exists.
 - No listener benefit is established.
 
-**Next:** decided with Astra and Muse; see the dispositions in the review files.
+**Next** (disposition in [astra-review-gen29.md](./astra-review-gen29.md)):
+- **Gen 30**, Astra's choice: one final dose halving, P = 0.0625 (84.375 / 5.625 / 10), with the same gates. Any failure ends the dose-only campaign, even if R1a passes.
+- **Gen 31**, Muse's choice: fine-tune Gen 19 on the room mix, then blend back toward Gen 19, with the blend weight fixed on a separate validation split. It is pre-registered while Gen 30 trains, and runs only if Gen 30 fails.
