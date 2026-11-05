@@ -73,6 +73,10 @@ def judge(rows_p):
             ok = False; why.append(f"unknown panel {p}"); continue
         kf, _, arms, _ = spec[p]
         k = tuple(r.get(f) for f in kf)
+        if r.get("seed") not in SEEDS or r.get("arm") not in arms:      # unregistered seed/arm groups are rejected
+            ok = False; why.append(f"unregistered group {p} {r.get('seed')} {r.get('arm')}")
+        if p == "P1" and r.get("cond") != ("target_only" if k[3] is None else "noisy"):   # labels must match the key
+            ok = False; why.append(f"P1 cond label inconsistent with snr for {k}")
         slot = idx.setdefault((p, r.get("seed"), r.get("arm")), {})
         if k in slot:
             ok = False; why.append(f"duplicate {p} {r.get('seed')} {r.get('arm')} {k}")
@@ -84,7 +88,7 @@ def judge(rows_p):
                 if set(got) != keys:
                     ok = False; why.append(f"{p} {s} {a}: key set != registered ({len(got)} vs {len(keys)})")
                 for k, r in got.items():
-                    need = req + (("lag_L", "lag_R") if p == "P1" and r.get("cond") == "target_only" else ())
+                    need = req + (("lag_L", "lag_R") if p == "P1" and k[3] is None else ())
                     if not all(_num(r.get(m)) for m in need):
                         ok = False; why.append(f"{p} {s} {a} {k}: missing or non-finite metric")
     prov = all(D["checkpoints"][str(s)]["sha256"] in RP.POLARITY and RP.POLARITY[D["checkpoints"][str(s)]["sha256"]] == D["polarity"][str(s)]
@@ -99,13 +103,13 @@ def judge(rows_p):
     g = lambda p, s, a: idx[(p, s, a)]
     mean = statistics.fmean
     # ---- research path ----
-    r1 = all(r[f"alpha_{e}"] > 0 for s in SEEDS for r in g("P1", s, "A2_repair").values() if r["cond"] == "target_only" for e in "LR")
+    r1 = all(r[f"alpha_{e}"] > 0 for s in SEEDS for k, r in g("P1", s, "A2_repair").items() if k[3] is None for e in "LR")
     r1 &= all(r["alpha"] > 0 for s in SEEDS for r in g("P3", s, "A2_repair").values())
     r1 &= all(r[f"alpha_{e}"] > 0 for s in SEEDS for r in g("P5", s, "A2_repair").values() for e in "LR")
     r2, r2d = True, {}
     for s in SEEDS:
         for st, e in itertools.product(SETTINGS, "LR"):
-            m = [mean(r[f"wave_err_{e}"] for r in g("P1", s, a).values() if r["cond"] == "target_only" and r["setting"] == st) for a in ("A1_sign", "A2_repair")]
+            m = [mean(r[f"wave_err_{e}"] for k, r in g("P1", s, a).items() if k[3] is None and k[1] == st) for a in ("A1_sign", "A2_repair")]
             r2d[f"P1|{s}|{st}|{e}"] = m; r2 &= m[1] < m[0]
         m = [mean(r["wave_err"] for r in g("P3", s, a).values()) for a in ("A1_sign", "A2_repair")]
         r2d[f"P3|{s}"] = m; r2 &= m[1] < m[0]
@@ -114,10 +118,10 @@ def judge(rows_p):
             r2d[f"P5|{s}|{lv}|{st}|{e}"] = m; r2 &= m[1] < m[0]
     r3, w3 = True, [0.0, 0.0]
     for s in SEEDS:
-        for p, ears, filt in (("P1", "LR", lambda r: r["cond"] == "noisy"), ("P2", None, lambda r: True), ("P4", "LR", lambda r: True)):
+        for p, ears, filt in (("P1", "LR", lambda k: k[3] is not None), ("P2", None, lambda k: True), ("P4", "LR", lambda k: True)):
             A0, A2 = g(p, s, "A0_existing"), g(p, s, "A2_repair")
             for k, r in A2.items():
-                if not filt(r):
+                if not filt(k):
                     continue
                 for e in (ears or [None]):
                     sfx = f"_{e}" if e else ""
@@ -137,7 +141,7 @@ def judge(rows_p):
             for k, r in A2.items():
                 cl = [c for c in ("clip", "clip_L", "clip_R") if c in r]
                 r5 &= all(r[c] <= A0[k][c] for c in cl)
-        r5 &= all(r[f"lag_{e}"] == 0 for r in g("P1", s, "A2_repair").values() if r["cond"] == "target_only" for e in "LR")
+        r5 &= all(r[f"lag_{e}"] == 0 for k, r in g("P1", s, "A2_repair").items() if k[3] is None for e in "LR")
         r5 &= all(r["lag"] == 0 for r in g("P3", s, "A2_repair").values())
         r5 &= all(r[f"lag_{e}"] == 0 for r in g("P5", s, "A2_repair").values() for e in "LR")
         A0, A2 = g("P6", s, "A0_existing"), g("P6", s, "A2_repair")

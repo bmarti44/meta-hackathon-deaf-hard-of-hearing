@@ -104,6 +104,17 @@ def test_judge_accepts_complete_and_refuses_astra_attacks(tmp_path):
     assert run(lambda d: d["rows"][5].pop(next(m for m in d["rows"][5] if m.startswith("sisdr") or m == "rms" or m == "alpha"))) == "INVESTIGATE"
     assert run(lambda d: d["rows"].__setitem__(9, {**d["rows"][9], "clip": True} if "clip" in d["rows"][9] else {**d["rows"][9], "clip_L": True})) == "INVESTIGATE"
     assert run(lambda d: d["checkpoints"]["18"].__setitem__("sha256", "0" * 64)) == "INVESTIGATE"
+    # Astra verification attacks: relabelled P1 target-only row hiding bad values; unregistered seed/arm groups
+    def relabel(d):
+        r = next(r for r in d["rows"] if r["panel"] == "P1" and r["arm"] == "A2_repair" and r["snr"] is None and r["seed"] == 19)
+        r.update({"cond": "noisy", "alpha_L": -1.0, "wave_err_L": 100.0, "lag_L": 80})
+    assert run(relabel) == "INVESTIGATE"
+    def bad_value_keep_label(d):                     # same bad values without relabelling are also caught by the rules
+        r = next(r for r in d["rows"] if r["panel"] == "P1" and r["arm"] == "A2_repair" and r["snr"] is None and r["seed"] == 19)
+        r.update({"alpha_L": -1.0, "lag_L": 80})
+    assert run(bad_value_keep_label) == "INVESTIGATE"
+    assert run(lambda d: d["rows"].append({**d["rows"][0], "seed": 20})) == "INVESTIGATE"
+    assert run(lambda d: d["rows"].append({**d["rows"][0], "arm": "A9_other", "sisdr_L": None})) == "INVESTIGATE"
     # rules extended to P3/P5/X3 waveform error, P4 per-ear scores, clip/lag everywhere
     def worse(panel, metric, val, arm):
         def f(d):

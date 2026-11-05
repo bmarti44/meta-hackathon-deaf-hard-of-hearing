@@ -129,14 +129,30 @@ Astra's first pre-launch review was **NOT CLEARED**, with four blocking items
 
 The hash table is updated below.
 
+## Pre-launch amendment 2 (2026-11-05 ~04:55, before any repaired output was scored)
+
+Astra's verification of amendment 1 was **NOT CLEARED**, with two blocking
+items. Fixes:
+1. **Gate applicability comes from the registered key.** A P1 item is
+   target-only exactly when its SNR is null. The `cond` label must match it,
+   and a mismatch is INVALID, so relabelling a target-only row as noisy can
+   no longer skip R1, R2 or R5.
+2. **Unregistered seed or arm groups are rejected** before completeness is
+   evaluated.
+
+Tested by her two attacks (a relabelled row with negative α, +100 dB error
+and an 80-sample lag; an extra seed; an extra arm with null metrics), and by
+the same bad values without relabelling. `test_gen35.py` is 7/7. The hash
+table is updated below.
+
 ## Source hashes (sha256)
 
 | File | sha256 |
 |---|---|
 | `research/gen35/repair.py` | `9b822da5635fdec44aa6bfb5622d937623148d52592e45656b7ce32b53c16ebb` |
 | `research/gen35/run_repair.py` | `62b29c39ffc58299279909cf5492d7a48d66bc8792506d8b75d1421724e8d6a9` |
-| `research/gen35/judge_repair.py` | `947f5e5f215284c757d93671f9bcd91c78c9410fd16b26f848955c6b7a90983d` |
-| `research/gen35/test_gen35.py` | `1277050b852527bf76bf9eb8cf3245bbaef9fa66d644000ea5ccd211dbc340e3` |
+| `research/gen35/judge_repair.py` | `faa85583a46c4a9566f356d87387c49b3b76b8c29ed64ed57910fde67f3be70f` |
+| `research/gen35/test_gen35.py` | `041187d552cdf4767ffebf7370ac4105a46cc799be9510826c50ab4501fa8ab9` |
 | `research/gen35/pipeline.sh` | `c2da453df248cacc5c6c82a6f4d26e9043fcc80be7bdb1d9f4cbc3ce714cad9a` |
 | `research/gen35/published/enhance.py` | `59b65cdaead7aca31d54fb73f1b1d2a7fcf6b3c1bb7feb07dcd42588d79611b5` |
 | `research/gen35/published/model_causal.py` | `e09ca1e0e8b761ed7116d5291e08c196e97243f5a111faca0fe68a15a5f8e1da` |
