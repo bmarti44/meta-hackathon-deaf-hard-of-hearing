@@ -82,7 +82,7 @@
     root.hidden = false; $("ml-fallback").remove(); {
       const hits = (c, k) => { const t = c[k] && c[k].transcript; if (t == null || /^\s*\[unintelligible\]\s*$/i.test(t)) return -1; return align(c.reference, t).hits; };
       let best = -1, bi = 0;
-      data.clips.forEach((c, i) => { const gain = hits(c, "gen19") - hits(c, "unproc"); const pref = (c.snr_db === 0 ? 1 : 0); const sc = gain * 10 + pref; if (gain > 0 && sc > best) { best = sc; bi = i; } });
+      data.clips.forEach((c, i) => { const after = hits(c, "gen19"), gain = after - hits(c, "unproc"); const sc = gain * 10 + after; if (gain > 0 && after > 0 && sc > best) { best = sc; bi = i; } });
       show(bi);
     }
     // styled play buttons instead of the native players

@@ -92,7 +92,7 @@ const mat = new THREE.ShaderMaterial({
       p.x *= uXS; p.y += uYOff;
       vec4 mv = modelViewMatrix * vec4(p,1.0);
       gl_Position = projectionMatrix * mv;
-      float size = mix(1.0, 1.6, uBands) * mix(2.6, 2.2, c) * (1.0 + 0.9*uShake*(1.0-still)) * mix(1.0, 1.9, uWall) * mix(1.0, 0.9, uThin) * mix(1.0, 1.5, uEars) * (1.0 + 0.6*uEars*(1.0-uEarsDrift)*uEarsClean) * uPR * uScale;
+      float size = mix(1.0, 1.6, uBands) * mix(2.6, 2.2, c) * (1.0 + 0.9*uShake*(1.0-still)) * mix(1.0, 1.9, uWall) * mix(1.0, 0.95, uThin) * mix(1.0, 1.5, uEars) * (1.0 + 0.6*uEars*(1.0-uEarsDrift)*uEarsClean) * uPR * uScale;
       gl_PointSize = size * (12.0 / -mv.z);
       vClar = c; vSeed = aSeed; vDepth = -mv.z; vStill = still*uShake; vWall = uWall; vThin = uThin; vLinked = uEars*(1.0-uEarsDrift)*uEarsClean;
     }`,
@@ -111,7 +111,7 @@ const mat = new THREE.ShaderMaterial({
       float a = (0.55 + 0.35*vClar) * soft * uAlphaK;
       a *= mix(1.0, 1.1, vStill);
       a *= 0.35 + 1.6*vLit;
-      a *= mix(1.0, 0.8, vThin);
+      a *= mix(1.0, 1.0, vThin);
       a *= mix(1.0, 0.35 + 0.65*step(0.985, fract(vSeed*7.0)), vWall);
       a *= clamp(1.7 - vDepth*0.1, 0.3, 1.0);
       gl_FragColor = vec4(col, a);
@@ -199,15 +199,16 @@ function frame(now) {
   T.drift = window.__ears === 'separate' ? 1 : 0;
   const pd = presence(E.dir, 0.05); if (pd > 0.2) T.clarity = window.__ears === 'none' ? 0.3 : 0.85;
   T.clean = window.__ears === 'none' ? 0 : 1;
-  const mf = window.__mlFuzz || 0; if (mf !== 0 && presence(E.meta) > 0.2) T.clarity = mf > 0 ? 0.1 : 0.8;
-  T.kick = Math.max(window.__kick || 0, C.kick * 0.82);          // short decaying pulse on each beat
+  const mf = window.__mlFuzz || 0; if (mf !== 0 && presence(E.meta) > 0.2) { T.clarity = mf > 0 ? 0.1 : 0.8; T.waver = Math.max(T.waver, mf > 0 ? 0.5 : 0); }
+  const pm = presence(E.music); const synth = pm > 0.2 ? (Math.sin(t * Math.PI * 4) > 0.9 ? 0.5 * pm : 0) : 0;   // a gentle 2 Hz pulse while the music line is on screen
+  T.kick = Math.max(window.__kick || 0, synth, C.kick * 0.82);          // short decaying pulse on each beat
   T.pulse = window.__musePulse ? 0.6 + 0.4 * Math.sin(t * 3.0) : 0;
   for (const k in T) C[k] += (T[k] - C[k]) * (k === 'shake' ? 0.12 : k === 'beat' ? 0.35 : k === 'kick' ? 0.9 : 0.08);
   let cl = C.clarity;
   if (E.gens && presence(E.gens) > 0) { gensPhase += 0.05; cl += Math.sin(gensPhase) * 0.3 * presence(E.gens); }  // nulls: a flat wobble
   U.uClarity.value = cl; U.uShake.value = C.shake; U.uWaver.value = C.waver; U.uBeat.value = C.beat;
   U.uBands.value = C.bands; U.uEars.value = C.ears; U.uEarsDrift.value = C.drift; U.uEarsClean.value = C.clean; U.uKick.value = C.kick; U.uPulse.value = C.pulse;
-  U.uAlphaK.value = baseAlpha * (1 + 1.2 * C.ears * C.clean * (1 - C.drift)) * (1 + 0.5 * C.wall) * (isSmall ? 1 + 0.5 * C.thin : 1); U.uWall.value = C.wall; U.uThin.value = C.thin;
+  U.uAlphaK.value = baseAlpha * (1 + 1.2 * C.ears * C.clean * (1 - C.drift)) * (1 + 0.5 * C.wall) * (isSmall ? 1 + 0.5 * C.thin : 1) * (1 + 0.8 * presence(E.music)) * ((window.__mlFuzz || 0) > 0 && presence(E.meta) > 0.2 ? 1.8 : 1); U.uWall.value = C.wall; U.uThin.value = C.thin;
   camera.position.z = 9 - 0.6 * cl - 4.5 * C.wall * C.wall;
   camera.position.x = Math.sin(t * 0.1) * 0.25 + (Math.random() - 0.5) * 0.12 * C.shake;
   camera.position.y = (Math.random() - 0.5) * 0.12 * C.shake;

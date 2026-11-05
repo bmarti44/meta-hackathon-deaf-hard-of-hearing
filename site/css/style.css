@@ -689,3 +689,43 @@ details.fold.fold-phone{border:0;margin:0}
 #born h2,#born p,#born em,#tests h2,#tests p,#music h2,.hero-text h1,.hero-text p{text-shadow:0 0 14px #090b10,0 0 4px #090b10,0 0 4px #090b10}
 .chapter .panel::before,.story-panel::before{background:radial-gradient(75% 75% at 45% 50%,rgba(9,11,16,.95),rgba(9,11,16,.8) 60%,rgba(9,11,16,0) 100%)}
 .imp-lab,.imp-lab b,.imp-x{color:var(--bone)!important;text-shadow:0 0 10px #090b10,0 0 3px #090b10,0 0 3px #090b10}
+/* ===== round 9 (stabilization) ===== */
+@media (max-width:760px){.imp-group-side,.imp-listen-head,.slider-box,#snr-chart,.legend,.ratio,.answer-text,.explain-out,.imp-transcript{background:rgba(9,11,16,.8)!important;padding:10px}.imp-cap,.cap,.photo figcaption{background:rgba(9,11,16,.8);padding:6px 8px}}
+#wall .big.bone,#wall .big{color:var(--bone);text-shadow:0 0 16px #090b10,0 0 5px #090b10,0 0 5px #090b10}
+.ladder li.here b::after{content:" (we are here)";font-family:var(--sans);font-size:14px;color:var(--signal);font-weight:500;letter-spacing:0}
+#music{min-height:60vh}
+@media (max-width:760px){#music{min-height:0;padding-top:16vh;padding-bottom:10vh}}
+.tree-list{list-style:none;padding:0;margin:20px 0 0;border-top:1px solid var(--rule)}
+.tree-list li{padding:10px 0;border-bottom:1px solid var(--rule);font-size:15px}
+.tree-list li b{font-family:var(--serif);font-size:17px;margin-right:8px}
+.tree-list .tl-change{display:block;color:var(--dim);font-size:14px;margin-top:2px}
+.tree-list li[data-status="baseline"]{border-left:3px solid var(--signal);padding-left:10px}
+.tree-list li[data-status="running"]{border-left:3px solid var(--amber);padding-left:10px}
+@media (max-width:760px){.tree{overflow:visible}.tree svg{display:none}}
+.nav-status{display:none}
+header.bar.compact nav.chapters .nav-status{display:inline-flex;color:var(--signal);font-family:var(--sans);border-bottom:1px solid var(--rule);margin-bottom:6px}
+.live-chip span.t{max-width:none}
+code.mono,#ml-research code{word-break:break-all;overflow-wrap:anywhere}
+.hero-ask label,.slider-box label{min-height:44px;display:flex;align-items:center}
+@media (max-width:760px){#born{padding-top:30vh;padding-bottom:10vh}}
+#born{min-height:88vh}
+/* contrast under the reviewer's method: real backings where text sits on the wave */
+.imp-steps,.imp-how,.imp-tracks,.imp-head,.imp-listen-head,.imp-group-side,.imp-more,.video-ctl.below,details.researchers[open],#short .cols3,#honest .cols3,.cols2,.figures-line,.checks,.ladder,.log{background:rgba(9,11,16,.82)}
+.imp-steps,.imp-how,.imp-tracks,.imp-head,.imp-listen-head,.imp-group-side,.video-ctl.below,details.researchers[open]{padding:10px 12px}
+.imp-state,.imp-title,.imp-now,.imp-key,.imp-meta,th,th.num,.researchers p,.researchers li,.explain-btn,.vbtn,#v-note,.vnote{color:var(--bone)!important}
+.gen{background:rgba(9,11,16,.72)}
+.gen-cards{background:none}
+#wall .grid.g2>div:first-child{background:rgba(9,11,16,.86)!important;padding:12px 14px}
+.table-wrap{background:rgba(9,11,16,.9)!important}
+.table-wrap th,.table-wrap td{color:var(--bone)}
+#short .cols3,#honest .cols3,.cols2,.ladder,.log{background:none}
+.ratio{background:rgba(9,11,16,.9)!important;padding:8px}
+.ratio span,.ratio .mono{color:var(--bone)}
+#wall .big{text-shadow:0 0 18px #090b10,0 0 6px #090b10,0 0 6px #090b10,0 0 6px #090b10}
+#wall .big{background:rgba(9,11,16,.86);display:inline-block;padding:4px 14px 8px;margin-left:-14px}
+#wall .grid.g2>div:last-child{background:rgba(9,11,16,.86);padding:12px}
+.slider-box,.legend,#snr-chart,.table-wrap,.ratio{background:rgba(9,11,16,.92)!important}
+.ratio-row span,.ratio-row .mono{background:rgba(9,11,16,.92)}
+figcaption.cap,.photo figcaption,.spread-cap,.spread-quote{background:rgba(9,11,16,.86);padding:6px 8px;display:inline-block}
+.imp-steps,.imp-how,.imp-tracks,.imp-head,.imp-listen-head,.imp-group-side,.imp-fig figcaption,.imp-cap,.checks li,.figures-line,#scorecard .lede,details.researchers[open],.col p,.col h3,.gen,.ladder li>div,.log li>div,.kv-line,#dir-read,.answer-text,.explain-out,.steps li,.chips,.ask-form,.hero-ask{background:rgba(9,11,16,.9)!important}
+.col p,.col h3{padding:2px 6px}
