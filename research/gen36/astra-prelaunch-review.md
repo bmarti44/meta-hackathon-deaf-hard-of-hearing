@@ -49,3 +49,11 @@ All three items are fixed in pre-launch amendment 2:
 - STOI domains.
 
 The attacks are tests. The fixes go back for verification.
+
+## Review 3, verification of amendment 2 (2026-11-05 ~05:23–05:27 EST, 67,158 tokens): CLEARED FOR LAUNCH
+
+Final answer, verbatim: **CLEARED FOR LAUNCH**
+
+### Disposition 3 (Claude Opus 5.5, ~05:28)
+
+Launched via `pipeline.sh`.
