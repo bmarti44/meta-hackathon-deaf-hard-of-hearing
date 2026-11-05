@@ -95,6 +95,7 @@ const CONTEXT = `PROJECT: "Before the Implant" (beforetheimplant.com), a hackath
 const RULES = `Rules you must follow:
 - Every number you give must come from a tool result or the context above. Never invent numbers, dates, ages or personal details about Graham or his family.
 - Focus only on what the result MEANS, explained like the reader is five: short sentences, everyday words. Explain directly; avoid cute analogies (bikes, video games, building blocks, homework, training wheels). Be really clear.
+- Never describe an error or a loss as "small" or "tiny"; give the number and say plainly whether it is better or worse. Say "the voice came through 1.2 dB cleaner", not "made how clean the voice is better by +1.19 dB". Round to one decimal place for dB.
 - Do NOT add caveat lists or "what it does not mean" sections, and do not tack on reminders about testing, real listeners, promotion or the scorecard verdict; a fixed footnote about verifying on the Nucleus 6 is added after your answer automatically. Just never claim it already helps a real listener or beats the Nucleus 6.
 - Never add care, medical or audiologist caveats of any kind (a fixed footnote is added automatically). If someone asks about a specific person's own hearing care, answer only what the research shows. Do not use disclaimers, legal language or the phrase "medical advice".
 - Always write full, friendly sentences; never shorthand fragments. Never mention file names, paths or internal labels.
@@ -114,13 +115,13 @@ Final answer: under 170 words of Markdown, in full, friendly sentences (no short
   input: `Question: ${q}`, max: 520, tools: true,
 });
 
-function explainPrompt(item, kind, level) {
+function explainPrompt(item, kind, level, label = "") {
   const who = level === "researcher"
     ? "Write for a speech/hearing researcher: precise, terse, with the exact numbers and what would change the verdict. Under 120 words."
     : "Write for a parent of a child with cochlear implants: explain it like they are five: warm, very plain words, no jargon (explain any term you must use in a few words), under 90 words. Say clearly what it means. Nothing about what it does not mean.";
   return {
     instructions: `You explain one item from a cochlear-implant noise-reduction research project.\n\n${CONTEXT}\n\n${RULES}\n${who}`,
-    input: `Explain this ${kind}:\n${JSON.stringify(item)}`, max: 360, tools: false,
+    input: `${label ? `On the site this ${kind} is called "${label}". Use that same name when you refer to it, not any internal name.\n` : ""}Explain this ${kind}:\n${JSON.stringify(item)}`, max: 360, tools: false,
   };
 }
 
@@ -296,7 +297,8 @@ export const handler = async (event) => {
     const id = String(qs.row || "").trim(), level = qs.level === "researcher" ? "researcher" : "parent";
     const item = ROWS.get(id) || GENS.get(id);
     if (!item) return json(400, { error: "Unknown scorecard row or generation." });
-    p = explainPrompt(item, ROWS.has(id) ? "scorecard row" : "research generation", level); kind = "explain";
+    const label = String(qs.context || "").replace(/[^\p{L}\p{N} ,.'()%+\-−:/]/gu, "").slice(0, 120).trim();
+    p = explainPrompt(item, ROWS.has(id) ? "scorecard check" : "research generation", level, label); kind = "explain";
   } else if (path.endsWith("/brief")) {
     const g = GENS.get(String(qs.gen || "").trim());
     if (!g) return json(400, { error: "Unknown generation." });
