@@ -359,6 +359,21 @@
       "note": "The closest yet. Asking the program to stay close to version 19 worked: speech with no echo stayed as clean, and every real recorded room got a little better. But the help in echoey rooms came out just under our bar, and the direction cues got slightly worse when the crowd was quieter, so by our rules it did not pass.",
       "link": "research/gen32/results.md",
       "aim": "room"
+    },
+    {
+      "id": "gen33",
+      "label": "Version 33",
+      "aim": "room",
+      "change": "No new training: version 32, but both ears share one cleanup plan, so the program treats the left and right sides the same way",
+      "status": "pending",
+      "numbers": [
+        {
+          "label": "Why",
+          "value": "Every echoey-room version made the which-side clues slightly worse when each ear was cleaned on its own"
+        }
+      ],
+      "note": "A quick check that runs in about two minutes once it has been reviewed. It cannot turn version 32 into a pass; it only tells us whether sharing helps the which-side clues.",
+      "link": "research/gen33/prereg.md"
     }
   ]
 }
