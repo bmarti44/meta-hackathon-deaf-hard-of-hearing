@@ -112,7 +112,7 @@ const mat = new THREE.ShaderMaterial({
       a *= mix(1.0, 1.1, vStill);
       a *= 0.35 + 1.6*vLit;
       a *= mix(1.0, 1.0, vThin);
-      a *= mix(1.0, 0.45, vLinked);
+      a *= mix(1.0, 0.9, vLinked);
       a *= mix(1.0, 0.35 + 0.65*step(0.985, fract(vSeed*7.0)), vWall);
       a *= clamp(1.7 - vDepth*0.1, 0.3, 1.0);
       gl_FragColor = vec4(col, a);
@@ -209,7 +209,7 @@ function frame(now) {
   if (E.gens && presence(E.gens) > 0) { gensPhase += 0.05; cl += Math.sin(gensPhase) * 0.3 * presence(E.gens); }  // nulls: a flat wobble
   U.uClarity.value = cl; U.uShake.value = C.shake; U.uWaver.value = C.waver; U.uBeat.value = C.beat;
   U.uBands.value = C.bands; U.uEars.value = C.ears; U.uEarsDrift.value = C.drift; U.uEarsClean.value = C.clean; U.uKick.value = C.kick; U.uPulse.value = C.pulse;
-  U.uAlphaK.value = baseAlpha * 1 * (1 + 0.5 * C.wall) * (isSmall ? 1 + 0.5 * C.thin : 1) * (1 + 0.8 * presence(E.music)) * ((window.__mlFuzz || 0) > 0 && presence(E.meta) > 0.2 ? 1.8 : 1); U.uWall.value = C.wall; U.uThin.value = C.thin;
+  U.uAlphaK.value = baseAlpha * 1 * (1 + 0.5 * C.wall) * (isSmall ? 1 + 0.5 * C.thin : 1) * (1 + 0.3 * presence(E.music)) * ((window.__mlFuzz || 0) > 0 && presence(E.meta) > 0.2 ? 1.8 : 1); U.uWall.value = C.wall; U.uThin.value = C.thin;
   camera.position.z = 9 - 0.6 * cl - 4.5 * C.wall * C.wall;
   camera.position.x = Math.sin(t * 0.1) * 0.25 + (Math.random() - 0.5) * 0.12 * C.shake;
   camera.position.y = (Math.random() - 0.5) * 0.12 * C.shake;

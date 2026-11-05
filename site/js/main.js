@@ -135,7 +135,7 @@ const SERIES = [
   { k: 'oracle_noncausal', label: 'a version that cheats by hearing the future', color: 'var(--bone)', w: 1.5, dash: '5 4' }
 ];
 function lineChart(hostId, { xs, series, xl, yl, req, reqLabel, ymin, ymax, xfmt = String, ytick = 2, ariaLabel }) {
-  const phone = innerWidth < 760;
+  const phone = innerWidth < 1000;
   const W = phone ? 360 : 560, H = phone ? 260 : 320, m = { l: 44, r: 16, t: 16, b: 44 };
   const x = v => m.l + (v - xs[0]) / (xs[xs.length - 1] - xs[0]) * (W - m.l - m.r);
   const y = v => m.t + (1 - (v - ymin) / (ymax - ymin)) * (H - m.t - m.b);
@@ -149,13 +149,13 @@ function lineChart(hostId, { xs, series, xl, yl, req, reqLabel, ymin, ymax, xfmt
   series.forEach(s => {
     const d = s.ys.map((v, i) => `${i ? 'L' : 'M'}${x(xs[i]).toFixed(1)},${y(v).toFixed(1)}`).join('');
     g += `<path d="${d}" fill="none" stroke="${s.color}" stroke-width="${s.w}" ${s.dash ? `stroke-dasharray="${s.dash}"` : ''} stroke-linejoin="round"/>`;
-    s.ys.forEach((v, i) => g += `<circle data-s="${esc(s.label)}" data-x="${xs[i]}" data-y="${v}" cx="${x(xs[i])}" cy="${y(v)}" r="4" fill="var(--bg)" stroke="${s.color}" stroke-width="2"><title>${esc(s.label)} · ${xfmt(xs[i])}: ${fmt(v)}</title></circle>`);
+    s.ys.forEach((v, i) => g += `<circle data-s="${esc(s.label)}" data-x="${xs[i]}" data-y="${v}" cx="${x(xs[i])}" cy="${y(v)}" r="4" fill="var(--bg)" stroke="${s.color}" stroke-width="2"><title>${esc(s.label)} at ${xfmt(xs[i])}: ${fmt(v)}</title></circle>`);
     if (s.direct) g += `<text class="lbl" x="${x(xs[xs.length - 1]) - 6}" y="${y(s.ys[s.ys.length - 1]) - 19}" text-anchor="end" fill="${s.color}">${esc(s.direct)}</text>`;
   });
   g += `<g id="${hostId}-marker"></g></svg><div class="tip" role="status"></div>`;
   const host = $('#' + hostId); host.innerHTML = g;
   const tip = $('.tip', host);
-  host.addEventListener('pointerover', e => { const c = e.target.closest('circle'); if (!c) return; tip.textContent = `${c.dataset.s} · ${xfmt(+c.dataset.x)}: ${fmt(+c.dataset.y)}`; const r = host.getBoundingClientRect(), b = c.getBoundingClientRect(); tip.style.left = (b.left - r.left + b.width / 2) + 'px'; tip.style.top = (b.top - r.top) + 'px'; tip.classList.add('on'); });
+  host.addEventListener('pointerover', e => { const c = e.target.closest('circle'); if (!c) return; tip.textContent = `${c.dataset.s} at ${xfmt(+c.dataset.x)}: ${fmt(+c.dataset.y)}`; const r = host.getBoundingClientRect(), b = c.getBoundingClientRect(); tip.style.left = (b.left - r.left + b.width / 2) + 'px'; tip.style.top = (b.top - r.top) + 'px'; tip.classList.add('on'); });
   host.addEventListener('pointerout', () => tip.classList.remove('on'));
   return { x, y, yAxis: H - m.b };
 }
@@ -191,14 +191,14 @@ if (!reduce) {
 sl.addEventListener('input', () => { window.__fray = (10 - +sl.value) / 15; });
 
 // ---------- scorecard ----------
-const NEED = { crowd_sisdr: 'needs at least +3.0 dB cleaner', crowd_stoi: 'needs at least +0.03 more understandable', crowd_ace: 'needs at least +0.05 closer electrode pattern', crowd_m5: 'needs at least +1.5 dB cleaner', crowd_0: 'needs at least +1.5 dB cleaner', crowd_m5_stoi: 'must not get less understandable', crowd_every_seed: 'must help in all three runs', crowd_vs_gate: 'must beat the simple filter', ssn: 'needs at least +3.0 dB cleaner', white: 'must not get worse', quiet_abs: 'must stay very clean (25 dB or better)', quiet_stoi: 'must stay understandable', ild: 'must be closer than with no cleanup', itd: 'must be at least as close as with no cleanup', ild_distortion: 'no requirement' };
+const NEED = { crowd_sisdr: 'needs at least +3.0 dB cleaner', crowd_stoi: 'needs at least +0.03 more understandable', crowd_ace: 'the implant pulses must come out at least 0.05 closer to the clean voice', crowd_m5: 'needs at least +1.5 dB cleaner', crowd_0: 'needs at least +1.5 dB cleaner', crowd_m5_stoi: 'must not get less understandable', crowd_every_seed: 'must help in all three runs', crowd_vs_gate: 'must beat the simple filter', ssn: 'needs at least +3.0 dB cleaner', white: 'must not get worse', quiet_abs: 'must stay very clean (25 dB or better)', quiet_stoi: 'must stay understandable', ild: 'must be closer than with no cleanup', itd: 'must be at least as close as with no cleanup', ild_distortion: 'no requirement' };
 const UNIT = { crowd_sisdr: ' dB', crowd_m5: ' dB', crowd_0: ' dB', ssn: ' dB', white: ' dB', quiet_abs: ' dB', ild: ' dB', itd: ' samples', crowd_stoi: ' points', crowd_ace: ' points', crowd_m5_stoi: ' points', quiet_stoi: ' points', crowd_vs_gate: ' dB', ild_distortion: ' dB' };
 const RESULT = r => { const v = r.actual; if (/^\[/.test(v)) return v.replace(/[\[\]]/g, '').split(',').map(x => '+' + x.trim()).join(', ') + ' dB'; const n = parseFloat(v); if (isNaN(n)) return v; const sign = /^(crowd_|ssn|white)/.test(r.id) && n > 0 && !/abs|vs_gate/.test(r.id) ? '+' : ''; return sign + v + (UNIT[r.id] || ''); };
 const PLAIN = { crowd_sisdr: 'Crowd: how clean the voice is', crowd_stoi: 'Crowd: how understandable it is', crowd_ace: 'Crowd: what the electrodes would receive',
   crowd_m5: 'Crowd louder than the voice (−5 dB)', crowd_0: 'Crowd as loud as the voice (0 dB)', crowd_m5_stoi: 'Never harder to understand in the loudest crowd',
-  crowd_every_seed: 'Helps in all three training runs', crowd_vs_gate: 'Better than the simple filter that already exists', ssn: 'Steady hum (speech-shaped noise)',
-  white: 'A hiss it never trained on (white noise)', quiet_abs: 'Quiet speech left alone: still clean', quiet_stoi: 'Quiet speech left alone: still understandable',
-  ild: 'Which-side clue: loudness difference', itd: 'Which-side clue: timing difference', ild_distortion: 'Which-side clue vs the mixture (for information only)' };
+  crowd_every_seed: 'Helps in all three training runs', crowd_vs_gate: 'Better than the simple filter that already exists', ssn: 'A steady hum',
+  white: 'A hiss it never trained on', quiet_abs: 'Quiet speech left alone: still clean', quiet_stoi: 'Quiet speech left alone: still understandable',
+  ild: 'Which-side clue: loudness difference', itd: 'Which-side clue: timing difference', ild_distortion: 'Which-side clue, measured another way (for information only)' };
 const ROW_IDS = r => r.id || r.kpi.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
 let level = 'parent';
 const tb = $('#score-table tbody');
@@ -256,7 +256,7 @@ setTimeout(fitNav, 0);
     if (pend) s += `<path class="pend" d="M${prevX},${yT} C${prevX + step * .4},${yT} ${x - step * .3},${yT + 50} ${x},${yT + 56}"/>`;
     const ny = dead ? yT - 62 : (run || pend) ? yT + 56 : yT;
     s += `<circle class="node ${g.status}" cx="${x}" cy="${ny}" r="${g.status === 'baseline' ? 11 : 7}"/>`;
-    s += `<text x="${x}" y="${dead ? yT - 104 : ny + 30}" text-anchor="middle">${esc(g.label)}</text>${dead ? '' : `<text class="dim" x="${x}" y="${ny + 45}" text-anchor="middle">${WORD[g.status]}</text>`}`;
+    s += `<text x="${x}" y="${dead ? yT - 104 - (i % 2) * 16 : ny + 30}" text-anchor="middle">${esc(g.label)}</text>${dead ? '' : `<text class="dim" x="${x}" y="${ny + 45}" text-anchor="middle">${WORD[g.status]}</text>`}`;
   });
   $('#tree').innerHTML = s + '</svg>';
   $('#tree-desc').textContent = 'The versions, in order. ' + G.map(g => `${g.label}, ${WORD[g.status]}: ${g.change}.`).join(' ') + ` The versions we kept building on: ${trunk.map(t => t.label).join(', ')}.`;
@@ -285,18 +285,18 @@ $('#gen-cards').innerHTML = G.filter(g => !FOLD.has(g.id)).map(cardHtml).join(''
   for (let v = -0.6; v <= 0.61; v += 0.3) s += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(v)}" y2="${y(v)}"/>`;
   s += `</g><g class="axis"><line x1="${m.l}" x2="${W - m.r}" y1="${y(0)}" y2="${y(0)}" stroke="var(--dim)"/>`;
   for (let v = -0.6; v <= 0.61; v += 0.3) s += `<text x="${m.l - 8}" y="${y(v) + 4}" text-anchor="end">${v.toFixed(1)}</text>`;
-  s += `<text transform="translate(12 ${(m.t + H - m.b) / 2}) rotate(-90)" text-anchor="middle">how much cleaner, crowd louder than voice (dB)</text></g>`;
+  s += `<text transform="translate(12 ${(m.t + H - m.b) / 2}) rotate(-90)" text-anchor="middle">how much cleaner (dB)</text></g>`;
   s += `<line class="req" x1="${m.l}" x2="${W - m.r}" y1="${y(0.3)}" y2="${y(0.3)}"/><text class="req-l" x="${W - m.r}" y="${y(0.3) - 6}" text-anchor="end">needed: +0.30 on both</text>`;
   groups.forEach((g, i) => {
     const x0 = m.l + i * gw + gw * 0.15;
-    arms.forEach((a, j) => { const v = g21.per_seed[g.sd][a.k][g.p + '_gain_m5'][0]; const top = Math.min(y(v), y(0)), h = Math.abs(y(v) - y(0)); s += `<rect x="${x0 + j * (bw + 2)}" y="${top}" width="${bw}" height="${Math.max(h, 1)}" fill="${a.color}" rx="2"><title>seed ${g.sd} · ${g.p.toUpperCase()} · ${a.label}: ${fmt(v)} dB</title></rect>`; });
-    s += `<text class="axis" x="${x0 + bw}" y="${H - 28}" text-anchor="middle" style="fill:var(--dim);font-family:var(--mono);font-size:11px">${g.p === 'val' ? 'set 1' : 'set 2'}</text>`;
-    if (g.p === 'val') s += `<text x="${x0 + gw * 0.85}" y="${H - 12}" text-anchor="middle" style="fill:var(--bone);font-family:var(--mono);font-size:11px">run ${g.sd}</text>`;
+    arms.forEach((a, j) => { const v = g21.per_seed[g.sd][a.k][g.p + '_gain_m5'][0]; const top = Math.min(y(v), y(0)), h = Math.abs(y(v) - y(0)); s += `<rect x="${x0 + j * (bw + 2)}" y="${top}" width="${bw}" height="${Math.max(h, 1)}" fill="${a.color}" rx="2"><title>training run ${g.sd}, ${g.p === 'val' ? 'test 1' : 'test 2'}, ${a.label}: ${fmt(v)} dB</title></rect>`; });
+    s += `<text class="axis" x="${x0 + bw}" y="${H - 28}" text-anchor="middle" style="fill:var(--dim);font-family:var(--mono);font-size:11px">${g.p === 'val' ? 'test 1' : 'test 2'}</text>`;
+    if (g.p === 'val') s += `<text x="${x0 + gw * 0.85}" y="${H - 12}" text-anchor="middle" style="fill:var(--bone);font-family:var(--mono);font-size:11px">training run ${seeds.indexOf(g.sd) + 1}</text>`;
   });
   $('#g21-chart').innerHTML = s + '</svg>';
   $('#g21-legend').innerHTML = arms.map(a => `<span><i style="background:${a.color}"></i>${a.label}</span>`).join('') + `<span><i class="dash" style="color:var(--hot)"></i>what we needed: +0.30</span>`;
   const mg = g21.arms;
-  $('#g21-table').innerHTML = `<table><thead><tr><th scope="col">Training run</th><th scope="col">Test set</th>${arms.map(a => `<th scope="col" class="num">${a.label}</th>`).join('')}</tr></thead><tbody>${groups.map(g => `<tr><td>${g.sd}</td><td>${g.p === 'val' ? 'set 1' : 'set 2'}</td>${arms.map(a => `<td class="num">${fmt(g21.per_seed[g.sd][a.k][g.p + '_gain_m5'][0])}</td>`).join('')}</tr>`).join('')}<tr><td><b>average</b></td><td>set 1</td><td class="num"><b>${fmt(mg.s48.mean_gains.val_gain_m5[0])}</b></td><td class="num"><b>${fmt(mg.r48.mean_gains.val_gain_m5[0])}</b></td></tr><tr><td><b>average</b></td><td>set 2</td><td class="num"><b>${fmt(mg.s48.mean_gains.bench_gain_m5[0])}</b></td><td class="num"><b>${fmt(mg.r48.mean_gains.bench_gain_m5[0])}</b></td></tr><tr><td colspan="2">good enough (at least +0.30 on both)?</td><td>${mg.s48.qualifies ? 'yes' : 'no'}</td><td>${mg.r48.qualifies ? 'yes' : 'no'}</td></tr></tbody></table>`;
+  $('#g21-table').innerHTML = `<table><thead><tr><th scope="col">Training run</th><th scope="col">Test set</th>${arms.map(a => `<th scope="col" class="num">${a.label}</th>`).join('')}</tr></thead><tbody>${groups.map(g => `<tr><td>training run ${seeds.indexOf(g.sd) + 1}</td><td>${g.p === 'val' ? 'test 1' : 'test 2'}</td>${arms.map(a => `<td class="num">${fmt(g21.per_seed[g.sd][a.k][g.p + '_gain_m5'][0])}</td>`).join('')}</tr>`).join('')}<tr><td><b>average</b></td><td>test 1</td><td class="num"><b>${fmt(mg.s48.mean_gains.val_gain_m5[0])}</b></td><td class="num"><b>${fmt(mg.r48.mean_gains.val_gain_m5[0])}</b></td></tr><tr><td><b>average</b></td><td>test 2</td><td class="num"><b>${fmt(mg.s48.mean_gains.bench_gain_m5[0])}</b></td><td class="num"><b>${fmt(mg.r48.mean_gains.bench_gain_m5[0])}</b></td></tr><tr><td colspan="2">good enough (at least +0.30 on both)?</td><td>${mg.s48.qualifies ? 'yes' : 'no'}</td><td>${mg.r48.qualifies ? 'yes' : 'no'}</td></tr></tbody></table>`;
 })();
 
 // ---------- VAL trajectory chart ----------
@@ -306,7 +306,7 @@ $('#gen-cards').innerHTML = G.filter(g => !FOLD.has(g.id)).map(cardHtml).join(''
   const keys = Object.keys(traj.series);
   const xs = traj.series.gen19.filter(e => e.step > 0).map(e => e.step);
   lineChart('val-chart', {
-    xs, xl: 'training progress (thousands of steps)', yl: 'how much cleaner, crowd louder than voice (dB)', ymin: -0.8, ymax: 1.2, ytick: 0.4, xfmt: v => (v / 1000) + 'k',
+    xs, xl: 'training progress (thousands of steps)', yl: 'how much cleaner (dB)', ymin: -0.8, ymax: 1.2, ytick: 0.4, xfmt: v => (v / 1000) + 'k',
     ariaLabel: 'Line chart: how much cleaner the hardest crowd got as training went on, for versions 19 and 22; table follows',
     series: keys.map(k => ({ k, label: names[k] || k, color: cols[k] || 'var(--dim)', w: 2, ys: traj.series[k].filter(e => e.step > 0).map(e => e.m5), direct: null }))
   });
@@ -362,7 +362,7 @@ if (health) {
     window.__musePulse = 1; slot.innerHTML = `<div class="explain-out"><span class="thinking"><i aria-hidden="true"></i>Muse is writing${isBrief ? ' a brief' : ` for ${level === 'parent' ? 'a parent' : 'a researcher'}`}…</span></div>`;
     b.disabled = true;
     const ctx = (b.closest('tr') ? b.closest('tr').querySelector('td') : b.closest('.kv-line') || b.closest('.gen')) ; const label = ctx ? (ctx.querySelector('h3 span, b') || ctx).textContent.trim().slice(0, 120) : '';
-    try { const r = isBrief ? await api.brief(id) : await api.explain(id, level, label); slot.innerHTML = `<div class="explain-out">${renderAnswer(r.text)}<p class="small muted" style="margin:8px 0 0">Muse (Meta) · ${isBrief ? 'a short summary' : 'explained for ' + (level === 'parent' ? 'a parent' : 'a researcher')}</p></div>`; }
+    try { const r = isBrief ? await api.brief(id) : await api.explain(id, level, label); slot.innerHTML = `<div class="explain-out">${renderAnswer(r.text)}<p class="small muted" style="margin:8px 0 0">Explained by Muse (Meta) for ${level === 'parent' ? 'a parent' : 'a researcher'}</p></div>`; }
     catch (err) { slot.innerHTML = `<div class="explain-out err">${esc(err.message)}</div>`; }
     finally { b.disabled = false; window.__musePulse = 0; }
   });
@@ -370,6 +370,6 @@ if (health) {
   chip.classList.add('off');
 }
 // text equivalent of the wave state (aria-live)
-{ const ws = $('#wave-state'); if (ws) { let lastTxt = '', lastAt = 0, lastSec = ''; setInterval(() => { const st = window.__waveState; if (!st) return; const c = st.C; const secEl = document.elementFromPoint(innerWidth / 2, innerHeight / 2); const sec = secEl ? (secEl.closest('section') || {}).id || '' : ''; if (sec === lastSec || performance.now() - lastAt < 4000) return; let txt = c.shake > 0.5 ? 'The line is shaking hard, with a calm centre.' : c.wall > 0.5 ? 'The line has hit a wall.' : c.bands > 0.5 ? 'The line has split into 22 bands.' : c.ears > 0.5 ? (c.clean < 0.5 ? 'The line is fuzzy: no cleanup.' : c.drift > 0.5 ? 'Two lines, drifting apart.' : 'The two lines have become one.') : (window.__mlFuzz > 0) ? 'The line has gone fuzzy: the recording before cleanup.' : (window.__mlFuzz < 0) ? 'The line is clearer: the recording after cleanup.' : (c.kick > 0.3 || c.beat > 0.3) ? 'A rhythm is running through the line.' : (c.waver > 0.3 && c.clarity > 0.3) ? 'The line wobbles but does not change: those versions did not help.' : c.clarity > 0.75 ? 'The line is mostly clear.' : c.clarity > 0.6 ? 'The line is clear.' : c.clarity > 0.3 ? 'The line is clearing up.' : 'The line is fuzzy, like a crowd.'; if (txt !== lastTxt) { lastTxt = txt; lastSec = sec; lastAt = performance.now(); ws.textContent = txt; } }, 1000); } }
+{ const ws = $('#wave-state'); if (ws) { let lastTxt = '', lastAt = 0, lastSec = ''; setInterval(() => { const st = window.__waveState; if (!st) return; const c = st.C; let txt = c.shake > 0.5 ? 'The line is shaking hard, with a calm centre.' : c.wall > 0.25 ? 'The line has hit a wall.' : c.bands > 0.5 ? 'The line has split into 22 bands.' : c.ears > 0.5 ? (c.clean < 0.5 ? 'The line is fuzzy: no cleanup.' : c.drift > 0.5 ? 'Two lines, drifting apart.' : 'The two lines have become one.') : (window.__mlFuzz > 0) ? 'The line has gone fuzzy: the recording before cleanup.' : (window.__mlFuzz < 0) ? 'The line is clearer: the recording after cleanup.' : (c.kick > 0.3 || c.beat > 0.3) ? 'A rhythm is running through the line.' : (c.waver > 0.3 && c.clarity > 0.3) ? 'The line wobbles but does not change: those versions did not help.' : c.clarity > 0.75 ? 'The line is mostly clear.' : c.clarity > 0.6 ? 'The line is clear.' : c.clarity > 0.3 ? 'The line is clearing up.' : 'The line is fuzzy, like a crowd.'; if (txt === lastTxt || performance.now() - lastAt < 2500) return; lastTxt = txt; lastAt = performance.now(); ws.textContent = txt; }, 500); } }
 // phones: implant listen groups 2 and 3 fold until their heading is tapped
 { if (innerWidth < 760) $$('#implant .imp-group + .imp-group h4').forEach(h4 => { h4.style.cursor = 'pointer'; h4.setAttribute('role', 'button'); h4.setAttribute('tabindex', '0'); h4.setAttribute('aria-expanded', 'false'); const t = () => { const g = h4.closest('.imp-group'); g.classList.toggle('open'); h4.setAttribute('aria-expanded', g.classList.contains('open')); }; h4.addEventListener('click', t); h4.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); t(); } }); }); }

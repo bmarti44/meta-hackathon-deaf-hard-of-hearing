@@ -173,7 +173,7 @@
       <div class="grid g2">
         <div>
           <h3 class="sub first">Why a hearing device cannot wait</h3>
-          <p>Most powerful noise-removal programs work like an editor: they listen to a whole sentence, then clean it up. That is great for recordings and useless for live hearing. If Graham's friend says something, he needs to hear it now, not after the sentence ends. Our model cleans the sound while it is still arriving, which is exactly what a hearing device would need.</p>
+          <p>Most powerful noise-removal programs work like an editor: they listen to a whole sentence, then clean it up. That works for recordings, but it is no use for hearing live. If Graham's friend says something, he needs to hear it now, not after the sentence ends. Our model cleans the sound while it is still arriving, which is exactly what a hearing device would need.</p>
           <h3 class="sub">Why it is fast</h3>
           <p>Your brain expects what you see and what you hear to line up. If sound arrives late, lips stop matching words and your own voice starts to sound strange. So a hearing device only gets a tiny slice of time to do its work. Our model needs about 6 thousandths of a second (5.88 ms) of sound before it can answer. That is roughly 20 times quicker than a blink.</p>
           <h3 class="sub">How it works</h3>
@@ -184,7 +184,7 @@
             <li>It is small on purpose: about 600,000 numbers. A single phone photo holds millions. Small enough that we can imagine it running on a phone or a hearing processor someday, though we have not timed it on one yet.</li>
           </ul>
           <h3 class="sub">How we know it never cheats</h3>
-          <p>After every training run we play it two recordings that start the same and then go different ways. If the model ever peeked ahead, its output for the shared beginning would change. It never does, down to the very last bit.</p>
+          <p>After every training run we play it two recordings that start the same and then go different ways. If the model ever peeked ahead, its output for the shared beginning would change. It never has: the outputs match exactly, down to the last digit.</p>
           <details class="researchers"><summary>For researchers</summary><p class="small muted">Strictly causal waveform Conv-TasNet-style enhancer, 602,510 parameters, 5.88 ms algorithmic latency (excluding compute), about 1.02 s receptive field; exact causality re-verified on final weights (suffix invariance: outputs identical for the first <var>P</var> samples of two inputs that share them).</p></details>
           <p class="figures-line">Inside the program are about <span data-model="params">602,510</span> numbers. It needs <span data-model="latency">5.88</span> thousandths of a second before it answers, never peeks into the future, and showed a difference of exactly <span data-model="prefix">0.0</span> in the no-cheating test.</p>
                 </div>
@@ -333,7 +333,7 @@
       <div class="imp-how-cols">
         <p>The voices come from LibriSpeech, a free collection of volunteers reading books aloud. Nothing from Graham or his family is used here. The reader in these clips, and the people in the crowd around her, were never used to teach the model, so it is hearing all of them for the first time. The crowd is ten snippets of other readers talking at once, set to be as loud as her or a little louder.</p>
         <p>The squeeze into 8 of 22 slices is the same one this research uses to score the model, and the moving picture above is drawn from those same numbers. A real implant is more complicated. Its electric signal spreads a little inside the ear, an audiologist tunes how loud each slice feels, and every ear and every brain is different.</p>
-        <p>The cleaned-up clips show what the implant would be given if this model worked in front of it. They are an experiment on the sound itself, not a promise that Graham, or anyone, would understand more.</p>
+        <p>The cleaned-up clips show what the implant would be given if this model worked in front of it.</p>
       </div>
       <details class="imp-res">
         <summary>For researchers</summary>
@@ -350,7 +350,7 @@
 <section class="chapter" id="wall" aria-labelledby="h-wall" data-gl="wall">
   <div class="wrap">
     <div class="panel rv">
-      <p class="big num bone" aria-hidden="true">−5 dB <small>when the crowd is louder than the voice, the program stops helping enough.</small></p>
+      <p class="big num bone" aria-hidden="true">−5 dB<small>when the crowd is louder than the voice, the program stops helping enough.</small></p>
       <h2 id="h-wall" class="sr-only">When the crowd is louder than the voice, the program stops helping enough.</h2>
       <div class="grid g2">
         <div>
@@ -479,7 +479,7 @@
 <section id="ask" class="solid-bg" aria-labelledby="h-ask">
   <div class="wrap narrow">
     <h2 id="h-ask">Ask anything about this project, in your own words</h2>
-    <p class="lede">Muse, an AI model from Meta, has read everything we wrote down: the plans, the results, the checks and the reviews. It decides what to look up, looks it up, and shows you each step. It follows the same rules as this page: computer tests only, and no promises about any listener.</p>
+    <p class="lede">Muse, an AI model from Meta, has read everything we wrote down: the plans, the results, the checks and the reviews. It decides what to look up, looks it up, and shows you each step. It follows the same rules as this page: computer tests only.</p>
     <div class="ai-only" id="ask-ui" hidden>
       <form class="ask-form" id="ask-form">
         <label for="q" class="sr-only">Your question</label>
@@ -533,7 +533,7 @@
     </div>
     <p class="small muted" id="ml-fallback">Loading the recordings…</p>
 
-    <p class="small muted">This is a test of a computer, not of a person. It tells us whether the cleaned voice is easier for a machine to follow. It cannot tell us what Graham or anyone with an implant would hear.</p>
+    <p class="small muted">This is a test of a computer, not of a person. It tells us whether the cleaned voice is easier for a machine to follow.</p>
     <details class="researchers"><summary>For researchers</summary><p class="small muted">Recordings: LibriSpeech, Panayotov et al. 2015, CC BY 4.0. The crowd is mixed from other LibriSpeech readers.</p><div class="small muted" id="ml-research"></div></details>
   </div>
 </section>
@@ -668,7 +668,7 @@
     <ul class="plain small" id="sources">
       <li><a data-repo="SUBMISSION.md">SUBMISSION.md</a>, the judges' summary, treated as canonical wording here.</li>
       <li><a data-repo="STATUS.md">STATUS.md</a>, the running log, newest first.</li>
-      <li><a data-repo="research/gen19/results.md">Gen 19 results</a> · <a data-repo="research/gen21/results.md">Gen 21 results</a> · <a data-repo="research/gen22/results.md">Gen 22 results</a> · <a data-repo="research/gen23/prereg.md">Gen 23 pre-registration</a> · <a data-repo="research/gen24/results.md">Gen 24 results</a></li>
+      <li><a data-repo="research/gen19/results.md">Gen 19 results</a>, <a data-repo="research/gen21/results.md">Gen 21 results</a>, <a data-repo="research/gen22/results.md">Gen 22 results</a>, <a data-repo="research/gen23/prereg.md">Gen 23 pre-registration</a>, <a data-repo="research/gen24/results.md">Gen 24 results</a></li>
       <li><a data-repo="research/bench-n6/KPI.md">KPI contract</a> and <a data-repo="research/bench-n6/kpi_scorecard.py">scorecard script</a>.</li>
     </ul>
     <h3 style="margin-top:32px">Downloads</h3>

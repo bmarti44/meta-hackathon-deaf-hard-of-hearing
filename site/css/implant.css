@@ -71,8 +71,6 @@
 .imp-res{margin:6px 0 0;border-top:1px solid var(--rule)}
 .imp-res summary{cursor:pointer;list-style:none;font-family:var(--sans);font-size:13px;letter-spacing:0;color:var(--dim);padding:12px 0}
 .imp-res summary::-webkit-details-marker{display:none}
-.imp-res summary::before{content:"+";display:inline-block;width:1.4em;color:var(--signal)}
-.imp-res[open] summary::before{content:"\2212"}
 .imp-res summary:hover{color:var(--bone)}
 .imp-res summary:focus-visible{outline:2px solid var(--amber);outline-offset:2px;border-radius:0}
 .imp-res p{font-family:var(--mono);font-size:12px;line-height:1.7;color:var(--dim);margin:0 0 14px;max-width:72em}
