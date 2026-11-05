@@ -118,7 +118,7 @@
       </figure>
       <div class="panel rv">
         <h2 id="h-crowd">Music and talking in a crowd are still the hardest thing.</h2>
-        <p class="lede">Graham was born with deep hearing loss in both ears. He hears with two cochlear implants. Nothing on this site has ever been used by him. His dad, who built this project, has normal hearing.</p>
+        <p class="lede">Graham was born with deep hearing loss in both ears. He hears with two cochlear implants. His dad, who built this project, has normal hearing.</p>
         <details class="researchers"><summary>For researchers</summary><p class="small muted">Bilateral sensorineural severe-to-profound hearing loss; bilateral Cochlear Nucleus 6 processors.</p></details>
         <p>Crowds are where cochlear-implant users struggle most. A dance class on a lawn, a birthday table, a playground: many voices at once, and the one you need is no louder than the rest. That is the one situation our program still cannot handle well enough, and it is the only thing this research is about.</p>
         <p>A cochlear implant delivers sound as electrical pulses on a short row of electrodes. In a quiet room, implants work really well. In a room full of other voices, the thing a listener needs most, one voice standing apart from many, is exactly what the signal makes hardest to recover.</p>
@@ -186,7 +186,7 @@
           <h3 class="sub">How we know it never cheats</h3>
           <p>After every training run we play it two recordings that start the same and then go different ways. If the model ever peeked ahead, its output for the shared beginning would change. It never does, down to the very last bit.</p>
           <details class="researchers"><summary>For researchers</summary><p class="small muted">Strictly causal waveform Conv-TasNet-style enhancer, 602,510 parameters, 5.88 ms algorithmic latency (excluding compute), about 1.02 s receptive field; exact causality re-verified on final weights (suffix invariance: outputs identical for the first <var>P</var> samples of two inputs that share them).</p></details>
-          <p class="figures-line">In numbers: about <span data-model="params">602,510</span> numbers inside the program, <span data-model="latency">5.88</span> thousandths of a second before it answers, zero peeks into the future, and a difference of exactly <span data-model="prefix">0.0</span> in the no-cheating test.</p>
+          <p class="figures-line">Inside the program are about <span data-model="params">602,510</span> numbers. It needs <span data-model="latency">5.88</span> thousandths of a second before it answers, never peeks into the future, and showed a difference of exactly <span data-model="prefix">0.0</span> in the no-cheating test.</p>
                 </div>
         <div>
           <h3>How quick is that?</h3>
@@ -371,7 +371,7 @@
           <h3 class="sub">Is +1.5 just a made-up number?</h3>
           <p>Partly, and on purpose. We set it ourselves before running any tests, so we could not move the goalposts after seeing results. It is half of our overall +3 dB goal, and +3 dB is in the range that lab noise-reduction systems have reached in published studies with cochlear-implant listeners (those studies used a different measure, so it's a rough guide). Missing by 0.3 dB is a small gap. It means this model is not yet strong enough in the hardest rooms to earn a listening test.</p>
           <h3 class="sub">Why did we miss?</h3>
-          <p>At −5 dB, the crowd is made of other voices that sound a lot like the one you want. The model has one microphone, cannot hear the future (it has to answer within 6 thousandths of a second), and is tiny on purpose so it could one day run on a hearing device. A "cheating" version that hears the future and already knows the answer gets about +12 dB here, so there is room to improve. More training and two different scoring changes did not close the gap. Next, we train on far more hard examples, and after that we give the model two ears so it can use direction as a clue.</p>
+          <p>At −5 dB, the crowd is made of other voices that sound a lot like the one you want. The model has one microphone, cannot hear the future (it has to answer within 6 thousandths of a second), and is tiny on purpose so it could one day run on a hearing device. A "cheating" version that hears the future and already knows the answer gets about +12 dB here, so there is room to improve. <span data-gen-wall-sentence>Training longer, two scoring changes, more hard crowds and blending saved versions did not close the gap. Now we are teaching it echoey rooms, then two ears.</span></p>
           <p class="small muted">Drag the slider to see how it does as the crowd gets louder.</p>
           <details class="researchers"><summary>For researchers</summary><p class="small muted">Metric: ΔSI-SDR vs unprocessed, three-seed mean, bench v2 crowd condition, n = 6 crops per cell. Rule: crowd ΔSI-SDR ≥ +1.5 dB at both −5 dB and 0 dB. Gen 19: +1.19 dB at −5 dB (FAIL), +4.65 dB at 0 dB (PASS); overall crowd +3.51 dB; non-causal oracle +11.94 dB at −5 dB.</p></details>
           
@@ -442,7 +442,7 @@
 <!-- ===== GENERATIONS ===== -->
 <section id="generations" class="solid-bg" aria-labelledby="h-gen">
   <div class="wrap">
-    <p class="small muted mono" style="margin:0 0 10px">updated <span id="gen-updated"></span></p>
+    <p class="small muted" style="margin:0 0 10px"><span id="gen-updated"></span></p>
     <h2 id="h-gen">How we improve it, one change at a time</h2>
     <p class="lede">Each new version changes exactly one thing. We write down what we expect before we train it, train it three separate times, and let a script, not a person, decide whether it passed. A second AI from a different company checks the result before we move on. The versions that failed stay on the tree, so you can see them.</p><details class="researchers"><summary>For researchers</summary><p class="small muted">Pre-registered generations with one change each, fixed budgets, final-checkpoint-only judgment, 3-seed seed-mean KPIs, independent Codex Astra (xhigh) review between generations. Failures are filed as "null for this policy".</p></details>
     <div class="tree" id="tree" role="img" aria-describedby="tree-desc"></div>
@@ -542,7 +542,7 @@
 <section id="graham" class="solid-bg" aria-labelledby="h-graham">
   <div class="wrap">
     <h2 id="h-graham">What could this mean for Graham?</h2>
-    <p class="lede">Nothing on this page has been tried with Graham's implants, or with any listener. What follows is what the computer tests say, and what it could look like if every step below were passed.</p>
+    <p class="lede">What follows is what the computer tests say, and what it could look like if every step below were passed.</p>
 
     <div class="cols2">
       <div class="col rv">
@@ -550,7 +550,7 @@
         <p>A tiny program would sit between the microphone and the implant. Every 6 thousandths of a second, it guesses which part of the sound is the voice and turns the rest down, using only sound that has already happened. It is small enough to imagine on a phone or inside a processor someday, though we have not timed it on one yet.</p>
         <p><strong>What the computer tests say.</strong> In everyday crowd noise it cuts the leftover noise to less than half. When the crowd is as loud as the voice, to about a third. The pulses an implant would send also look more like the clean voice. Speech that is already quiet is left alone. In the hardest case, when the crowd is louder than the voice, it only cuts the noise by about a quarter, short of our goal. That is the one check it still fails.</p><details class="researchers"><summary>For researchers</summary><p class="small muted">Gen 19, 3-seed mean: crowd ΔSI-SDR +3.51 dB; +4.65 dB at 0 dB; ΔACE electrodogram correlation +0.072; quiet SI-SDR 36 dB; −5 dB +1.19 dB vs +1.5 required.</p></details>
         <p class="kv-line">When the crowd is louder than the voice, the voice comes through <b class="hot">1.19 dB</b> cleaner, short of our goal of 1.5. <button class="explain-btn ai-only" hidden type="button" data-explain="crowd_m5">Explain</button></p>
-        <p class="kv-line">The pattern of pulses an implant would send comes out <b>a little closer</b> to the clean voice (0.072 on a 0-to-1 scale). <button class="explain-btn ai-only" hidden type="button" data-explain="crowd_ace">Explain</button></p>
+        <p class="kv-line">The pattern of pulses an implant would send comes out <b>a little closer</b> to the clean voice: 0.072 closer, on a scale where 1 would be a perfect match. <button class="explain-btn ai-only" hidden type="button" data-explain="crowd_ace">Explain</button></p>
         <div class="explain-slot"></div>
         <p><strong>What it could look like.</strong> A birthday party, a cafeteria, a family dinner: the chatter turned down a little, the voice he is facing coming through clearer, quiet speech untouched. It could one day run on a phone or a clip-on gadget that sends sound to his processors, or inside a future processor. Each of those would need the maker of the implant, audiologists and regulators to agree, and none of it has a date.</p>
       </div>
@@ -608,8 +608,6 @@
   <details class="fold" id="limits"><summary>What this does not show</summary>
     
     <ul class="plain">
-      <li><strong>We are not promising it helps anyone hear better.</strong> Everything is from computer tests. Even a hearing person listening to a simulation cannot tell you what an implant user would hear.</li>
-      <li><strong>No version has earned a real listening test yet.</strong> That needs all 14 checks passed, a repeat on brand-new voices, and then an audiologist in charge.</li>
       <li><strong>Two of our own checks are still blank:</strong> how natural quiet speech sounds, and whether the program runs fast enough on an ordinary processor.</li>
       <li><strong>On hissing noise it had never heard, one score got slightly worse</strong> in all three training runs, even though the main hiss check passed.</li>
       <li><strong>The which-side checks come from one training run in four pretend rooms,</strong> and in the hardest room the louder-ear clue got worse. Nothing here shows better direction hearing.</li>
@@ -625,7 +623,7 @@
       <li><div><b>A mistake we made: A quick test run once overwrote a finished version's file</b><p>Now test runs have to save somewhere else, and every saved version is scored so none can be quietly swapped.</p></div></li>
       <li><div><b>Something we corrected: A training run was cut off and replayed</b><p>A computer session ended halfway through. We restarted the run and checked it reproduced the original exactly before using it.</p></div></li>
       <li><div><b>Something we corrected: The checker caught a flattering summary</b><p>Most of one version's improvement came from one of the two test voices. We corrected the write-up and kept the warning in.</p></div></li>
-      <li><div><b>A precaution: Part of version 23 runs on a slower chip on purpose</b><p>The faster chip gave slightly different answers each time, which would make the result impossible to reproduce. The slower chip gives the same answer every time.</p></div></li>
+      <li><div><b>We ran part of version 23 on a slower chip on purpose</b><p>The faster chip gave slightly different answers each time, which would make the result impossible to reproduce. The slower chip gives the same answer every time.</p></div></li>
       <li><div><b>The model is free to download</b><p>Try the model yourself: it is free to download on <a data-hf>Hugging Face</a>. It is a research model from computer tests, not a hearing product.</p></div></li>
       <li><div><b>About this site: Every number comes from one script</b><p>A script reads the saved results and produces the files behind this page, so nothing is typed in by hand. The version cards are read from one small file that is updated as results land.</p></div></li>
       <li><div><b>About this site: Muse, Meta's AI model, powers Ask and Explain</b><p>Your question goes to a small server that lets Muse look through everything we wrote down and show its steps. If that server is unreachable, those features hide themselves.</p></div></li>

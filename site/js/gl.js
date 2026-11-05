@@ -92,7 +92,7 @@ const mat = new THREE.ShaderMaterial({
       p.x *= uXS; p.y += uYOff;
       vec4 mv = modelViewMatrix * vec4(p,1.0);
       gl_Position = projectionMatrix * mv;
-      float size = mix(1.0, 1.6, uBands) * mix(2.6, 2.2, c) * (1.0 + 0.9*uShake*(1.0-still)) * mix(1.0, 1.9, uWall) * mix(1.0, 0.95, uThin) * mix(1.0, 1.5, uEars) * (1.0 + 0.6*uEars*(1.0-uEarsDrift)*uEarsClean) * uPR * uScale;
+      float size = mix(1.0, 1.6, uBands) * mix(2.6, 2.2, c) * (1.0 + 0.9*uShake*(1.0-still)) * mix(1.0, 1.9, uWall) * mix(1.0, 0.95, uThin) * mix(1.0, 1.5, uEars) * (1.0 + 0.2*uEars*(1.0-uEarsDrift)*uEarsClean) * uPR * uScale;
       gl_PointSize = size * (12.0 / -mv.z);
       vClar = c; vSeed = aSeed; vDepth = -mv.z; vStill = still*uShake; vWall = uWall; vThin = uThin; vLinked = uEars*(1.0-uEarsDrift)*uEarsClean;
     }`,
@@ -171,7 +171,7 @@ function measure() {
   T.shake = presence(E.born, 0.25);
   T.waver = Math.max(presence(E.tests), 0.35 * presence(E.gens));
   const lvl = window.__waveLevel;
-  T.beat = Math.max(presence(E.music) * 0.5, presence(E.dancing) * (lvl > 0 ? lvl * 1.2 : 0.18));
+  T.beat = Math.max(presence(E.music) * 0.9, presence(E.dancing) * (lvl > 0 ? lvl * 1.2 : 0.18));
   T.bands = presence(E.impStage, 0.05);
   T.ears = presence(E.dir, 0.05);
   T.drift = window.__ears === 'separate' ? 1 : 0;
@@ -208,7 +208,7 @@ function frame(now) {
   if (E.gens && presence(E.gens) > 0) { gensPhase += 0.05; cl += Math.sin(gensPhase) * 0.3 * presence(E.gens); }  // nulls: a flat wobble
   U.uClarity.value = cl; U.uShake.value = C.shake; U.uWaver.value = C.waver; U.uBeat.value = C.beat;
   U.uBands.value = C.bands; U.uEars.value = C.ears; U.uEarsDrift.value = C.drift; U.uEarsClean.value = C.clean; U.uKick.value = C.kick; U.uPulse.value = C.pulse;
-  U.uAlphaK.value = baseAlpha * (1 + 1.2 * C.ears * C.clean * (1 - C.drift)) * (1 + 0.5 * C.wall) * (isSmall ? 1 + 0.5 * C.thin : 1) * (1 + 0.8 * presence(E.music)) * ((window.__mlFuzz || 0) > 0 && presence(E.meta) > 0.2 ? 1.8 : 1); U.uWall.value = C.wall; U.uThin.value = C.thin;
+  U.uAlphaK.value = baseAlpha * (1 + 0.3 * C.ears * C.clean * (1 - C.drift)) * (1 + 0.5 * C.wall) * (isSmall ? 1 + 0.5 * C.thin : 1) * (1 + 0.8 * presence(E.music)) * ((window.__mlFuzz || 0) > 0 && presence(E.meta) > 0.2 ? 1.8 : 1); U.uWall.value = C.wall; U.uThin.value = C.thin;
   camera.position.z = 9 - 0.6 * cl - 4.5 * C.wall * C.wall;
   camera.position.x = Math.sin(t * 0.1) * 0.25 + (Math.random() - 0.5) * 0.12 * C.shake;
   camera.position.y = (Math.random() - 0.5) * 0.12 * C.shake;

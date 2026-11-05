@@ -729,3 +729,21 @@ code.mono,#ml-research code{word-break:break-all;overflow-wrap:anywhere}
 figcaption.cap,.photo figcaption,.spread-cap,.spread-quote{background:rgba(9,11,16,.86);padding:6px 8px;display:inline-block}
 .imp-steps,.imp-how,.imp-tracks,.imp-head,.imp-listen-head,.imp-group-side,.imp-fig figcaption,.imp-cap,.checks li,.figures-line,#scorecard .lede,details.researchers[open],.col p,.col h3,.gen,.ladder li>div,.log li>div,.kv-line,#dir-read,.answer-text,.explain-out,.steps li,.chips,.ask-form,.hero-ask{background:rgba(9,11,16,.9)!important}
 .col p,.col h3{padding:2px 6px}
+/* ===== round 10 ===== */
+header.bar:not(.compact) nav.chapters a.nav-status{display:none}
+@media (max-width:760px){#snr-chart,.gen,.gen-cards{background:none!important}#dancing .spread-video{max-width:72vw;margin-inline:auto}.hero-ask{display:none}}
+.col p,.col h3,.gen,.chips,.ask-form,.hero-ask,.kv-line,#dir-read,.steps li{background:none!important}
+.col,.gen,.ask-form,.chips,.kv-line,#dir-read,.steps{position:relative}
+.col::before,.gen::before,.ask-form::before,.chips::before,.kv-line::before,#dir-read::before,.steps::before{content:"";position:absolute;inset:-24px;background:radial-gradient(closest-side,rgba(9,11,16,.92) 70%,transparent);z-index:-1;pointer-events:none}
+@media (max-width:760px){.gen::before,.col::before{inset:-16px -12px}}
+details.researchers>summary,#dir-modes button{color:var(--bone)!important;font-size:14px}
+details.researchers>summary{background:rgba(9,11,16,.86);padding:0 8px}
+#dir-modes{background:rgba(9,11,16,.86);padding:4px 8px}
+#snr-read{min-height:5lh}
+@media (max-width:760px){#snr-read{min-height:6lh}}
+.wave-key{font-size:16px;color:var(--bone);font-family:var(--sans);letter-spacing:0}
+.imp-lab,.imp-lab-hi,.imp-lab-lo{font-size:14px!important}
+@media (max-width:760px){#dir-demo svg text{font-size:22px}}
+.st,.gen .note,.gen dt,.gen .acts a,.gen-cards details.fold>summary{background:rgba(9,11,16,.9);padding:0 4px}
+.st[data-status="fail"],.st[data-status="null"]{color:#ffa08c}
+#attempts .table-wrap,#wall .table-wrap,.table-wrap td,.table-wrap th{background:rgba(9,11,16,.94)!important;color:var(--bone)!important}

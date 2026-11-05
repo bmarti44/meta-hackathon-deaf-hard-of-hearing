@@ -231,6 +231,20 @@
    ],
    "note": "The first change that clearly helped in echoey rooms, but it got a little worse on dry sound, so by our own rules it did not pass. Next we try a smaller dose of rooms.",
    "link": "research/gen27/results.md"
+  },
+  {
+   "id": "gen28",
+   "label": "Version 28",
+   "change": "A smaller dose of rooms: about a quarter of the noisy practice sounds now echo, instead of half",
+   "status": "running",
+   "numbers": [
+    {
+     "label": "Why",
+     "value": "Keep the room gains from version 27 without losing ground on dry sound"
+    }
+   ],
+   "note": "Training now, with the result due around half past midnight.",
+   "link": "research/gen28/prereg.md"
   }
  ]
 }
