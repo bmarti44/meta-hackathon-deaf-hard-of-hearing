@@ -251,6 +251,22 @@ Disclosures:
     baseline, and no listener benefit is established.
   - **Next:** Gen 29 halves the dose again (12.5%).
 
+- **Gen 29, a quarter of the room dose** (update 2026-11-05 01:10;
+  [research/gen29/results.md](./research/gen29/results.md)), in Astra's
+  wording:
+  - **Result:** Gen 29 reduced room augmentation to one quarter of
+    Gen 27's dose and improved synthetic-room SI-SDR by 0.370 dB versus
+    Gen 19 in one training seed (95% voice-and-room bootstrap CI
+    0.163–0.627), while reducing but not eliminating dry-speech losses.
+  - **Verdict:** it failed the registered dry-preservation and mirrored
+    ILD/ITD gates despite passing the other checks. Gen 19 remains the
+    baseline, and no listener benefit is established.
+  - **Next:**
+    - Gen 30 is one final dose halving (6.25%). Any failure ends the
+      dose-only campaign.
+    - Gen 31 would then fine-tune Gen 19 on the room mix and blend the
+      weights back toward Gen 19 (Muse's choice).
+
 ## Limits (stated plainly)
 
 Offline bench results cannot establish superiority over the N6's

@@ -263,15 +263,33 @@
       "id": "gen29",
       "label": "Version 29",
       "change": "An even smaller dose of rooms: about one in nine noisy practice sounds echo",
+      "status": "fail",
+      "numbers": [
+        {
+          "label": "Crowded speech in rooms it never heard, compared with version 19",
+          "value": "+0.37 dB (15 of 16 voices better)"
+        },
+        {
+          "label": "Speech with no room echo (dry)",
+          "value": "−0.02 to −0.13 dB worse (about a quarter of version 27's loss)"
+        }
+      ],
+      "note": "Fewer echoey practice sounds again kept most of the room gain and shrank the loss on dry sound, but a small loss is still there, so by our rules it did not pass. Next: one last, smaller dose.",
+      "link": "research/gen29/results.md"
+    },
+    {
+      "id": "gen30",
+      "label": "Version 30",
+      "change": "The last and smallest dose of rooms: about one in eighteen noisy practice sounds echo",
       "status": "running",
       "numbers": [
         {
           "label": "Why",
-          "value": "Find a dose that keeps the room gain with no loss on dry sound"
+          "value": "See if an even smaller dose keeps enough room gain with no loss on dry sound"
         }
       ],
-      "note": "Training now, with the result due around one in the morning.",
-      "link": "research/gen29/prereg.md"
+      "note": "Training now. If this one does not pass, we stop changing the dose and try a different way to teach the program about rooms. We will add the result when it finishes.",
+      "link": "research/gen30/prereg.md"
     }
   ]
 }
