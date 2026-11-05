@@ -75,20 +75,6 @@
         <label for="hq">Ask Muse, Meta's AI model, anything about this record</label>
         <div class="hero-ask-row"><input id="hq" type="text" placeholder="Why does it struggle when the crowd is louder than the voice?" autocomplete="off" maxlength="400"><button type="submit">Ask</button></div>
       </form>
-      <!-- Film slot: assets/video/before-the-implant.mp4 (+ -poster.jpg, .en.vtt). Hidden until the file exists; see main.js film(). -->
-      <figure class="film" id="film" hidden>
-        <div class="video-box">
-          <video id="film-video" playsinline preload="none" poster="assets/video/before-the-implant-poster.jpg" width="1280" height="720">
-            <track kind="captions" src="assets/video/before-the-implant.en.vtt" srclang="en" label="English captions" default>
-          </video>
-        </div>
-        <div class="video-ctl below">
-          <button type="button" class="vbtn" id="film-play" aria-pressed="false">Play the film</button>
-          <button type="button" class="vbtn" id="film-sound" aria-pressed="false">Sound: off</button>
-          <span class="vnote mono">Captions on.</span>
-        </div>
-        <figcaption class="small muted" style="margin-top:8px">A short film about this project.</figcaption>
-      </figure>
     </div>
   </div>
   <p class="scroll-hint" aria-hidden="true"><span class="ln"></span>Scroll · it starts with a jackhammer</p>

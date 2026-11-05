@@ -77,19 +77,6 @@ $$('[data-bench="white_estoi"]').forEach(e => e.textContent = fmt(bench.summary_
   new IntersectionObserver(es => { if (es[0].isIntersecting) { if (!rm) { attach(); v.play().catch(() => {}); } } else if (!v.paused) v.pause(); }, { threshold: 0.4 }).observe(v);
 })();
 
-// ---------- hero film slot: shown only if the file exists ----------
-(async function film() {
-  const box = $('#film'); if (!box) return;
-  try {
-    const r = await fetch('assets/video/before-the-implant.mp4', { method: 'HEAD' });
-    if (!r.ok) return;
-    const v = $('video', box); const s = document.createElement('source'); s.src = 'assets/video/before-the-implant.mp4'; s.type = 'video/mp4'; v.insertBefore(s, v.firstChild);
-    box.hidden = false;
-    const p = $('#film-play'); p.addEventListener('click', () => { v.preload = 'auto'; v.paused ? v.play().catch(() => {}) : v.pause(); });
-    v.addEventListener('play', () => { p.textContent = 'Pause'; p.setAttribute('aria-pressed', 'true'); }); v.addEventListener('pause', () => { p.textContent = 'Play the film'; p.setAttribute('aria-pressed', 'false'); });
-    const m = $('#film-sound'); m.addEventListener('click', () => { v.muted = !v.muted; m.textContent = v.muted ? 'Sound: off' : 'Sound: on'; m.setAttribute('aria-pressed', !v.muted); });
-  } catch (_) { /* no film yet */ }
-})();
 
 // ---------- "What this could mean": direction illustration (idea only, not data) ----------
 (function direction() {
