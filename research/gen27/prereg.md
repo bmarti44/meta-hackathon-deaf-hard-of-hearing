@@ -590,3 +590,32 @@ Pipeline: `research/gen27/pipeline.sh`, sha256 `52fd6029537539738ce3f6ed270e906b
 reverberant panel → dry panel → bench v2 → spatial (candidate; control =
 the registered self-test file) → `judge_v3`, each step gated on its exit
 status. PIPELINE DONE means "evaluated", not "advanced".
+
+
+## S10. Fixes after Astra's verification review (2026-11-04 ~22:25 EST, before training)
+
+Astra's verification (22:14) found two remaining blocking validation gaps,
+both in the judge. Training code and data are unaffected.
+
+1. **SP: doctored existing baselines could pass.**
+   - `spatial_gates` now requires the existing-bench baseline rows
+     (`unproc`, `gate_independent`, `gate_linked`) to be identical between
+     the candidate and control documents, across all metrics.
+   - Test: `test_spatial_doctored_existing_baseline_rejected`, with the
+     summaries kept consistent as in her attack. It asserts the specific
+     "baseline" error.
+2. **Replication trusted the seed-17 ADVANCE label.**
+   - R1a, R1b and R1c are recomputed from each seed's stored cells and CI
+     and must equal the stored labels.
+   - Each verdict must equal `ADVANCE` if and only if all of its gates
+     are true.
+   - All of seed 17's gates must be true.
+   - Test: `test_replication_contradictory_seed17_rejected`. The fixture
+     now carries consistent `voices_improved` and `primary_ci`.
+
+53/53 judge tests pass. The full Gen 19 self-test still FAILs on R1a–c
+only.
+
+Re-registered hashes (sha256):
+- `research/gen27/judge_v3.py`: `faa38995052d38de526fbc868baed6dab577bc0598c1c045dcb956023ba4beb7`
+- `research/gen27/test_judge_v3.py`: `9964d7128b42ca2b424fce1466ba78843678f6fdb806b58784610ad19ba0d403`

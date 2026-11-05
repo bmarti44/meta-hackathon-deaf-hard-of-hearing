@@ -275,7 +275,8 @@ def _seed_doc(seed, ctrl, gain=0.5, verdict="ADVANCE"):
     return {"seed": seed, "verdict": verdict, "checks": checks,
             "report": {"rev_material_sha256": "RM", "rir_manifest_sha256": "MS", "dry_material_sha256": J.judge_v2.REGISTERED_MATERIAL,
                        "ctrl_sha": ctrl, "cand_sha": f"cand{seed}",
-                       "rev": {"voices": list(J.TARGETS), "rooms": sorted(SYN), "cell": cell.tolist(), "primary_gain": float(cell.mean())}}}
+                       "rev": {"voices": list(J.TARGETS), "rooms": sorted(SYN), "cell": cell.tolist(), "primary_gain": float(cell.mean()),
+                               "voices_improved": int((cell.mean(1) > 0).sum()), "primary_ci": [gain - 0.1, gain + 0.1]}}}
 
 
 def _rep(docs, man, g19):
@@ -357,3 +358,49 @@ def test_selftest_guards():
         _real()                                        # candidate == control without --selftest
     with pytest.raises(J.Invalid):
         _real(selftest=True, reg_manifest="0bc488e1ccbe8e90b23b070ca05eec269981671ad83bc64f31d7672daade272b")  # v1 manifest
+
+
+# --- Astra verification review (2026-11-04 ~22:15): two further adversarial cases ---
+def test_spatial_doctored_existing_baseline_rejected():
+    import copy, json
+    from pathlib import Path
+    sel = Path(__file__).resolve().parent / "selftest"
+    SG = json.loads((sel / "spatial_gen19_s17.json").read_text())
+    SC = copy.deepcopy(SG)
+    SC["meta"]["candidate"] = SC["existing"]["meta"]["candidate"] = "cand"
+    for r in SC["existing"]["rows"] + SC["crossed_rows"]:
+        if r["system"] == SG["meta"]["candidate"]:
+            r["system"] = "cand"
+    SC["existing"]["summary"]["cand"] = SC["existing"]["summary"].pop(SG["meta"]["candidate"])
+    for r in SC["existing"]["rows"]:
+        if r["system"] == "unproc":
+            r["ild_target_err_db"] += 1.0
+    # keep the stored summaries consistent with the doctored rows (Astra's attack updated them too)
+    import statistics
+    for sysname, summ in SC["existing"]["summary"].items():
+        for m in summ:
+            vals = [r[m] for r in SC["existing"]["rows"] if r["system"] == sysname and m in r]
+            if vals:
+                summ[m] = statistics.fmean(vals)
+    import judge_v3 as J
+    sha = SG["meta"]["checkpoint_sha256"]
+    SC["meta"]["checkpoint_sha256"] = SC["existing"]["meta"]["checkpoint_sha256"] = "c" * 64
+    import pytest
+    with pytest.raises(J.Invalid, match="baseline"):
+        J.spatial_gates(SC, SG, "c" * 64, sha)
+
+
+def test_replication_contradictory_seed17_rejected():
+    import json, copy
+    from pathlib import Path
+    import judge_v3 as J
+    sel = Path(__file__).resolve().parent / "selftest"
+    base = json.loads((sel / "judge_v3_selftest_s17.json").read_text())
+    docs = []
+    for s in (17, 18, 19):
+        d = copy.deepcopy(base); d["seed"] = s; d["verdict"] = "ADVANCE"
+        d["checks"] = {k: True for k in d["checks"]}
+        docs.append(d)
+    import pytest
+    with pytest.raises(J.Invalid):
+        J.replicate(docs)

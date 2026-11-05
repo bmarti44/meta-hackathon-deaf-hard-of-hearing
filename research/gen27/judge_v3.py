@@ -310,6 +310,14 @@ def spatial_gates(SC, SG, cand_sha, ctrl_sha):
     _validate_existing(SG, gn)
     existing_ok = s[cn]["ild_target_err_db"] < s["unproc"]["ild_target_err_db"] and s[cn]["itd_err_samples"] <= s["unproc"]["itd_err_samples"]
     c, g = _validate_crossed(SC, cn), _validate_crossed(SG, gn)
+    # Astra verification review: existing-bench baselines must agree exactly between candidate and
+    # control documents (same scenes, same baseline systems), so a doctored baseline cannot pass SP.
+    ec = {(r["crop"], r["system"]): r for r in SC["existing"]["rows"] if r["system"] in SP_EXISTING_BASE}
+    eg = {(r["crop"], r["system"]): r for r in SG["existing"]["rows"] if r["system"] in SP_EXISTING_BASE}
+    _need(set(ec) == set(eg), "spatial existing baseline scenes differ between candidate and control")
+    for k in ec:
+        _need(all(ec[k][m] == eg[k][m] for m in SP_METS + ("ild_distortion_db",)),
+              f"spatial existing baseline {k} differs between candidate and control")
     # the same scenes in both documents: unprocessed rows must agree exactly
     for i in range(4):
         for az in SP_AZ:
@@ -391,6 +399,16 @@ def _replicate(docs, manifest, reg_rev, reg_manifest, gen19_dir):
         _need(cell.shape == (16, 6) and np.isfinite(cell).all(), f"seed {s}: cells are not 16 x 6 finite")
         _need(math.isclose(float(cell.mean()), rep["rev"]["primary_gain"], rel_tol=1e-9, abs_tol=1e-12),
               f"seed {s}: stored primary gain != cell mean")
+        # Astra verification review: gate labels and verdict must be consistent with the evidence
+        voice = cell.mean(1)
+        _need(rep["rev"]["voices_improved"] == int((voice > 0).sum()), f"seed {s}: voices_improved != cells")
+        ci_lo = rep["rev"]["primary_ci"][0]
+        want = {"R1a_rev_gain_ge_0.30": bool(math.isfinite(cell.mean()) and cell.mean() >= 0.30),
+                "R1b_voice_room_ci_lo_gt_0": bool(isinstance(ci_lo, (int, float)) and math.isfinite(ci_lo) and ci_lo > 0),
+                "R1c_ge_10_of_16_voices": bool(int((voice > 0).sum()) >= 10)}
+        _need(all(chk[k] is want[k] for k in want), f"seed {s}: R1 gate labels contradict the stored cells/CI")
+        _need(j["verdict"] == ("ADVANCE" if all(chk.values()) else "FAIL"), f"seed {s}: verdict contradicts its gates")
+    _need(all(J[17]["checks"].values()), "seed-17 gates did not all pass: replication not authorised")
     _need(len(cand_shas) == 3, "candidate hashes are not distinct across seeds")
     cells = np.array([J[s]["report"]["rev"]["cell"] for s in (17, 18, 19)], dtype=float)
     mean_cell = cells.mean(0)
