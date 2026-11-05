@@ -81,28 +81,41 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
   cut clipping severity but not frequency and did not lift −5 dB, so
   the hypothesis is neither falsified nor established.
 
-## Current state (2026-11-04 18:40 — VERIFY, may be stale)
+## Current state (2026-11-04 22:22 — VERIFY, may be stale)
 
-- **Gen 23 COMPLETE: seed-17 screen FAIL.** −5 dB gains vs Gen19 s17
-  were VAL −0.338 and bench −0.027. The STOI and white rows also fail.
-  `verify_provenance.py --gen 23` PASSES.
-  - Results in `research/gen23/results.md`; the spectral term was ~1% of
-    the gradient.
-  - Muse's review is filed: `research/gen23/muse-review-gen23-screen.md`.
-  - Astra's review is running (`/tmp/astra_g23_screen.out`). File it
-    verbatim plus disposition as `research/gen23/astra-review-gen23-screen.md`
-    BEFORE launching Gen 24.
-- **Gen 24 REGISTERED** (`research/gen24/prereg.md`, 18:50).
-  - Run 1 was stopped at step ~100 by holder decision: 0.7 s/step on a
-    shared machine. Logs are in `research/gen24/aborted_run1/`; not
-    judged.
-  - **Restart after deployment** with `/tmp/gen24_s17_pipeline.sh` (log
-    `/tmp/gen24_s17_pipeline.log`). It runs train → bench → dev → judge →
-    provenance, each gated. Delete `/tmp/gen24_s17_pipeline.log` and
-    `/tmp/gen24_hard60_s17.log` first.
-  - Then file `research/gen24/results.md`, reviews (Astra + Muse) and
-    disposition.
-- Gen 22 is complete (FAIL); details are in `research/gen22/results.md`.
+- **Gen 27 (room augmentation) is TRAINING.** Launched 22:19 via
+  `research/gen27/pipeline.sh`.
+  - Logs: pipeline `/tmp/gen27_s17_pipeline.log`, trainer
+    `/tmp/gen27_aug50_s17.log`.
+  - Training ends around 23:40, then the reverberant panel, dry panel,
+    bench and spatial checks run, and `judge_v3` writes
+    `research/gen27/screen_s17.json`.
+  - Astra CLEARED it after 3 review passes:
+    `research/gen27/astra-prelaunch-review.md` and
+    `astra-verification-reviews.md`.
+  - Registration: `research/gen27/prereg.md`. The original text is kept,
+    with superseding sections S1–S10.
+  - If the trainer dies, rerun `pipeline.sh`; it resumes from
+    `weights/aug50_seed20261117_state_latest.pt`.
+  - When it finishes:
+    - file the verdict with Astra and Muse reviews (Muse via the Lambda
+      direct-invoke `review` mode);
+    - write `research/gen27/results.md`;
+    - update `site/data/generations.json` (gen27);
+    - add a dated update to SUBMISSION, and update STATUS/HANDOFF.
+- **Verdicts filed tonight:** Gen 24 FAIL with regressions; Gen 25 FAIL
+  (small broad gains); Gen 26 shelved unrun.
+- **Agenda** (holder redirect to real-world benefit; Astra's order):
+  rooms (Gen 27) → real recordings → two-input linked gain → ACE envelope
+  auxiliary.
+- **Provisional finding:** Gen 19 shows metric degradation on simulated
+  reverberant speech (`research/gen27/gen19-rooms-provisional.md`; v2
+  numbers in prereg S6).
+- **Screen v2** (`research/screen_v2/`) is development-only. All its
+  voices were Gen 17 training speakers, so a fresh audited confirmation
+  set is still needed.
+- **RIR audio** is at `/tmp/rirs/RIRS_NOISES` (OpenSLR 28, Apache-2.0,
+  sha in prereg). The manifest is committed.
 
 ## Demo site (beforetheimplant.com) — LIVE since 18:32 (added 2026-11-04 ~18:20)
 
