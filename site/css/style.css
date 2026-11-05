@@ -659,7 +659,6 @@ details.fold.fold-phone{border:0;margin:0}
 #meta-lab .ml-list button,#meta-lab .ml-what,#meta-lab .ml-how{text-shadow:0 0 6px #090b10,0 0 2px #090b10}
 #meta-lab .ml-list{background:rgba(9,11,16,.82);padding:6px}
 /* real (non-pseudo) backings on text containers, same colour as the page so they read as paper, not boxes */
-.story-panel,.chapter .panel,#wall .grid.g2>div:first-child,.col,.checks li,.figures-line,#short .lede,#generations .lede,#scorecard .lede,.tree-hint,details.researchers>summary,.ladder li>div,.log li>div,.imp-steps li,.imp-group,.imp-how,#dir-read,.gen,.kv-line,.spread-text,.quote,.fold>summary,.files li,.dl-lead{background-color:rgba(9,11,16,.7)}
 .story-panel,.chapter .panel{padding:14px 16px;margin:-14px -16px}
 #wall .grid.g2>div:first-child{padding:12px 14px}
 .col{padding-left:10px;padding-right:10px}
@@ -715,7 +714,6 @@ code.mono,#ml-research code{word-break:break-all;overflow-wrap:anywhere}
 .imp-state,.imp-title,.imp-now,.imp-key,.imp-meta,th,th.num,.researchers p,.researchers li,.explain-btn,.vbtn,#v-note,.vnote{color:var(--bone)!important}
 .gen{background:rgba(9,11,16,.72)}
 .gen-cards{background:none}
-#wall .grid.g2>div:first-child{background:rgba(9,11,16,.86)!important;padding:12px 14px}
 .table-wrap{background:rgba(9,11,16,.9)!important}
 .table-wrap th,.table-wrap td{color:var(--bone)}
 #short .cols3,#honest .cols3,.cols2,.ladder,.log{background:none}
@@ -723,12 +721,10 @@ code.mono,#ml-research code{word-break:break-all;overflow-wrap:anywhere}
 .ratio span,.ratio .mono{color:var(--bone)}
 #wall .big{text-shadow:0 0 18px #090b10,0 0 6px #090b10,0 0 6px #090b10,0 0 6px #090b10}
 #wall .big{background:rgba(9,11,16,.86);display:inline-block;padding:4px 14px 8px;margin-left:-14px}
-#wall .grid.g2>div:last-child{background:rgba(9,11,16,.86);padding:12px}
 .slider-box,.legend,#snr-chart,.table-wrap,.ratio{background:rgba(9,11,16,.92)!important}
 .ratio-row span,.ratio-row .mono{background:rgba(9,11,16,.92)}
 figcaption.cap,.photo figcaption,.spread-cap,.spread-quote{background:rgba(9,11,16,.86);padding:6px 8px;display:inline-block}
 .imp-steps,.imp-how,.imp-tracks,.imp-head,.imp-listen-head,.imp-group-side,.imp-fig figcaption,.imp-cap,.checks li,.figures-line,#scorecard .lede,details.researchers[open],.col p,.col h3,.gen,.ladder li>div,.log li>div,.kv-line,#dir-read,.answer-text,.explain-out,.steps li,.chips,.ask-form,.hero-ask{background:rgba(9,11,16,.9)!important}
-.col p,.col h3{padding:2px 6px}
 /* ===== round 10 ===== */
 header.bar:not(.compact) nav.chapters a.nav-status{display:none}
 @media (max-width:760px){#snr-chart,.gen,.gen-cards{background:none!important}#dancing .spread-video{max-width:72vw;margin-inline:auto}.hero-ask{display:none}}
@@ -744,6 +740,30 @@ details.researchers>summary{background:rgba(9,11,16,.86);padding:0 8px}
 .wave-key{font-size:16px;color:var(--bone);font-family:var(--sans);letter-spacing:0}
 .imp-lab,.imp-lab-hi,.imp-lab-lo{font-size:14px!important}
 @media (max-width:760px){#dir-demo svg text{font-size:22px}}
-.st,.gen .note,.gen dt,.gen .acts a,.gen-cards details.fold>summary{background:rgba(9,11,16,.9);padding:0 4px}
 .st[data-status="fail"],.st[data-status="null"]{color:#ffa08c}
 #attempts .table-wrap,#wall .table-wrap,.table-wrap td,.table-wrap th{background:rgba(9,11,16,.94)!important;color:var(--bone)!important}
+
+/* ===== round 11: one backing recipe ===== */
+.backing,.chapter .panel,.story-panel,.col,.gen,.ask-form,.chips,.kv-line,#dir-read,.steps,#wall .grid.g2>div:first-child,#wall .grid.g2>div:last-child,.ladder li>div,.log li>div,.imp-group-side,.imp-steps,.imp-how{position:relative;background:none!important}
+.chapter .panel::before,.story-panel::before,.col::before,.gen::before,.ask-form::before,.chips::before,.kv-line::before,#dir-read::before,.steps::before,#wall .grid.g2>div:first-child::before,#wall .grid.g2>div:last-child::before,.ladder li>div::before,.log li>div::before,.imp-group-side::before,.imp-steps::before,.imp-how::before{content:"";position:absolute;inset:-24px;background:radial-gradient(closest-side,rgba(9,11,16,.92) 70%,transparent);z-index:-1;pointer-events:none}
+#music .story-panel::before{content:none}
+#snr-chart,.table-wrap,.ratio,.legend,.slider-box{background:rgba(9,11,16,.92)!important}
+.st,.gen dt,.gen .note,.gen .acts a{background:none!important;padding:0}
+.st[data-status="shelved"]{color:var(--dim)}
+.tree .node.shelved{fill:var(--bg);stroke:var(--dim);stroke-dasharray:3 3}
+.tree-list li[data-status="shelved"]{border-left:3px dashed var(--dim);padding-left:10px}
+.gen dl{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)}
+.gen dd{overflow-wrap:anywhere;text-align:left}
+header.bar.solid{background:rgba(9,11,16,.98)}
+.chart .axis text,.chart .lbl,.chart .req-l{font-size:13px}
+@media (max-width:420px){.live-chip{display:inline-flex}.live-chip span.t{display:none}.live-chip::after{content:attr(data-short);font-size:11px;color:var(--dim);white-space:nowrap}}
+@media (max-width:760px){.imp-group:not(:first-of-type) .imp-tracks{display:none}.imp-group:not(:first-of-type).open .imp-tracks{display:block}}
+/* round 11 fixes */
+#wall .grid.g2>div:last-child{position:sticky!important;top:calc(var(--head-h) + 16px);align-self:start}
+.slider-box,.legend,.ratio{background:none!important}
+.chapter .panel::before,.story-panel::before,.col::before,.gen::before,.ask-form::before,.chips::before,.kv-line::before,#dir-read::before,.steps::before,#wall .grid.g2>div:first-child::before,#wall .grid.g2>div:last-child::before,.ladder li>div::before,.log li>div::before,.imp-group-side::before,.imp-steps::before,.imp-how::before{inset:-48px;background:radial-gradient(closest-side,rgba(9,11,16,.92) 86%,transparent)}
+@media (max-width:760px){.imp-group:not(:first-of-type) .imp-tracks{display:block}.imp-group + .imp-group .imp-tracks{display:none}.imp-group + .imp-group.open .imp-tracks{display:block}}
+/* round 11: let the wave through around the wall, versions and honesty blocks */
+#wall .grid.g2>div:first-child::before,#wall .grid.g2>div:last-child::before{inset:-16px;background:radial-gradient(closest-side,rgba(9,11,16,.86) 72%,transparent)}
+.col::before,.gen::before{inset:-20px;background:radial-gradient(closest-side,rgba(9,11,16,.86) 74%,transparent)}
+#implant .imp-group h4[role=button]{min-height:44px;display:flex;align-items:center}

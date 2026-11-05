@@ -31,7 +31,7 @@
   function show(i) {
     const c = data.clips[i];
     document.querySelectorAll("#ml-list button").forEach((b, k) => b.setAttribute("aria-pressed", String(k === i)));
-    $("ml-ref").textContent = c.reference;
+    $("ml-ref").textContent = c.reference.charAt(0).toUpperCase() + c.reference.slice(1).replace(/\bi'm\b/g, "I'm").replace(/\bi\b/g, "I").replace(/\b(english|french|spanish|german)\b/gi, w => w[0].toUpperCase() + w.slice(1).toLowerCase());
     for (const [side, key] of [["before", "unproc"], ["after", "gen19"]]) {
       const a = $(`ml-a-${side}`); a.pause(); a.src = c[key].audio;
       const t = c[key].transcript;
@@ -51,7 +51,7 @@
     $("ml-list").innerHTML = d.clips.map((c, i) =>
       `<li><button type="button" aria-pressed="false" data-i="${i}">` +
       `<span class="ml-what">“${esc(c.reference.split(" ").slice(0, 6).join(" "))}…”</span>` +
-      `<span class="ml-how">${c.seconds} s · ${loud(c.snr_db)}</span></button></li>`).join("");
+      `<span class="ml-how">${c.seconds} seconds, ${loud(c.snr_db)}</span></button></li>`).join("");
     $("ml-list").addEventListener("click", e => { const b = e.target.closest("button[data-i]"); if (b) show(+b.dataset.i); });
 
     const s = d.summary, rows = Object.entries(s).filter(([k]) => /dB$/.test(k));
@@ -82,7 +82,8 @@
     root.hidden = false; $("ml-fallback").remove(); {
       const hits = (c, k) => { const t = c[k] && c[k].transcript; if (t == null || /^\s*\[unintelligible\]\s*$/i.test(t)) return -1; return align(c.reference, t).hits; };
       let best = -1, bi = 0;
-      data.clips.forEach((c, i) => { const after = hits(c, "gen19"), gain = after - hits(c, "unproc"); const sc = gain * 10 + after; if (gain > 0 && after > 0 && sc > best) { best = sc; bi = i; } });
+      data.clips.forEach((c, i) => { const after = hits(c, "gen19"), before = hits(c, "unproc"), gain = after - before; const sc = gain * 10 + after; if (gain > 0 && after > 0 && sc > best) { best = sc; bi = i; } });
+      if (best < 0 && data.clips.length > 4) bi = 4;
       show(bi);
     }
     // styled play buttons instead of the native players

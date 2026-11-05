@@ -6,8 +6,8 @@ const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const fmt = (v, d = 2, sign = true) => (sign && v > 0 ? '+' : '') + Number(v).toFixed(d);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-const GLYPH = { baseline: '', advance: '', null: '', fail: '', running: '', pending: '' };
-const WORD = { baseline: 'our best so far', advance: 'kept', null: 'did not help', fail: 'did not help', running: 'training now', pending: 'up next' };
+const GLYPH = { baseline: '', advance: '', null: '', fail: '', running: '', pending: '', shelved: '' };
+const WORD = { baseline: 'our best so far', advance: 'kept', null: 'did not help', fail: 'did not help', running: 'training now', pending: 'up next', shelved: 'set aside' };
 
 // ---------- brand / repo (one place: js/config.js) ----------
 document.title = `${C.brand}: helping kids with cochlear implants hear one voice in a crowd`;
@@ -150,14 +150,14 @@ function lineChart(hostId, { xs, series, xl, yl, req, reqLabel, ymin, ymax, xfmt
     const d = s.ys.map((v, i) => `${i ? 'L' : 'M'}${x(xs[i]).toFixed(1)},${y(v).toFixed(1)}`).join('');
     g += `<path d="${d}" fill="none" stroke="${s.color}" stroke-width="${s.w}" ${s.dash ? `stroke-dasharray="${s.dash}"` : ''} stroke-linejoin="round"/>`;
     s.ys.forEach((v, i) => g += `<circle data-s="${esc(s.label)}" data-x="${xs[i]}" data-y="${v}" cx="${x(xs[i])}" cy="${y(v)}" r="4" fill="var(--bg)" stroke="${s.color}" stroke-width="2"><title>${esc(s.label)} · ${xfmt(xs[i])}: ${fmt(v)}</title></circle>`);
-    if (s.direct) g += `<text class="lbl" x="${x(xs[xs.length - 1]) - 6}" y="${y(s.ys[s.ys.length - 1]) - 9}" text-anchor="end" fill="${s.color}">${esc(s.direct)}</text>`;
+    if (s.direct) g += `<text class="lbl" x="${x(xs[xs.length - 1]) - 6}" y="${y(s.ys[s.ys.length - 1]) - 19}" text-anchor="end" fill="${s.color}">${esc(s.direct)}</text>`;
   });
   g += `<g id="${hostId}-marker"></g></svg><div class="tip" role="status"></div>`;
   const host = $('#' + hostId); host.innerHTML = g;
   const tip = $('.tip', host);
   host.addEventListener('pointerover', e => { const c = e.target.closest('circle'); if (!c) return; tip.textContent = `${c.dataset.s} · ${xfmt(+c.dataset.x)}: ${fmt(+c.dataset.y)}`; const r = host.getBoundingClientRect(), b = c.getBoundingClientRect(); tip.style.left = (b.left - r.left + b.width / 2) + 'px'; tip.style.top = (b.top - r.top) + 'px'; tip.classList.add('on'); });
   host.addEventListener('pointerout', () => tip.classList.remove('on'));
-  return { x, y };
+  return { x, y, yAxis: H - m.b };
 }
 const snrScale = lineChart('snr-chart', {
   xs: SNRS, xl: 'how loud the crowd is (dB; lower is harder)', yl: 'how much cleaner (dB)', ymin: -1, ymax: 13, ytick: 2, req: 1.5, reqLabel: 'our goal for the two hardest: +1.5',
@@ -170,13 +170,13 @@ $('#snr-table').innerHTML = `<table><thead><tr><th scope="col">Crowd loudness</t
 const sl = $('#snr'), interp = (k, v) => { const i = SNRS.findIndex(s => s >= v); if (i <= 0) return sys[k][String(SNRS[Math.max(i, 0)])]; const a = SNRS[i - 1], b = SNRS[i], t = (v - a) / (b - a); return sys[k][String(a)] * (1 - t) + sys[k][String(b)] * t; };
 function slide() {
   const v = +sl.value, g = interp('gen19', v);
-  $('#snr-v').textContent = (v > 0 ? '+' : '') + v + ' dB';
+  $('#snr-v').textContent = (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v) + ' dB';
   $('#snr-g').textContent = fmt(g) + ' dB'; $('#snr-gate').textContent = fmt(interp('causal_gate', v)) + ' dB'; $('#snr-or').textContent = fmt(interp('oracle_noncausal', v)) + ' dB';
   const vd = $('#snr-verdict');
-  if (v === -5) { vd.textContent = 'misses our goal of +1.5'; vd.className = 'hot'; }
-  else if (v === 0) { vd.textContent = 'meets our goal of +1.5'; vd.className = ''; }
-  else { vd.textContent = 'no goal set here'; vd.className = 'muted'; }
-  $('#snr-chart-marker').innerHTML = `<line x1="${snrScale.x(v)}" x2="${snrScale.x(v)}" y1="16" y2="280" stroke="${v === -5 ? 'var(--hot)' : 'var(--signal)'}" stroke-width="1.5" opacity=".8"/>`;
+  if (v === -5) { vd.textContent = 'That misses our goal of +1.5.'; vd.className = 'hot'; }
+  else if (v === 0) { vd.textContent = 'That meets our goal of +1.5.'; vd.className = ''; }
+  else { vd.textContent = 'We set no goal here.'; vd.className = 'muted'; }
+  $('#snr-chart-marker').innerHTML = `<line x1="${snrScale.x(v)}" x2="${snrScale.x(v)}" y1="16" y2="${snrScale.yAxis}" stroke="${v === -5 ? 'var(--hot)' : 'var(--signal)'}" stroke-width="1.5" opacity=".8"/>`;
   window.__fray = (10 - v) / 15;
 }
 sl.addEventListener('input', slide); slide();
@@ -192,7 +192,7 @@ sl.addEventListener('input', () => { window.__fray = (10 - +sl.value) / 15; });
 
 // ---------- scorecard ----------
 const NEED = { crowd_sisdr: 'needs at least +3.0 dB cleaner', crowd_stoi: 'needs at least +0.03 more understandable', crowd_ace: 'needs at least +0.05 closer electrode pattern', crowd_m5: 'needs at least +1.5 dB cleaner', crowd_0: 'needs at least +1.5 dB cleaner', crowd_m5_stoi: 'must not get less understandable', crowd_every_seed: 'must help in all three runs', crowd_vs_gate: 'must beat the simple filter', ssn: 'needs at least +3.0 dB cleaner', white: 'must not get worse', quiet_abs: 'must stay very clean (25 dB or better)', quiet_stoi: 'must stay understandable', ild: 'must be closer than with no cleanup', itd: 'must be at least as close as with no cleanup', ild_distortion: 'no requirement' };
-const UNIT = { crowd_sisdr: ' dB', crowd_m5: ' dB', crowd_0: ' dB', ssn: ' dB', white: ' dB', quiet_abs: ' dB', ild: ' dB', itd: ' samples' };
+const UNIT = { crowd_sisdr: ' dB', crowd_m5: ' dB', crowd_0: ' dB', ssn: ' dB', white: ' dB', quiet_abs: ' dB', ild: ' dB', itd: ' samples', crowd_stoi: ' points', crowd_ace: ' points', crowd_m5_stoi: ' points', quiet_stoi: ' points', crowd_vs_gate: ' dB', ild_distortion: ' dB' };
 const RESULT = r => { const v = r.actual; if (/^\[/.test(v)) return v.replace(/[\[\]]/g, '').split(',').map(x => '+' + x.trim()).join(', ') + ' dB'; const n = parseFloat(v); if (isNaN(n)) return v; const sign = /^(crowd_|ssn|white)/.test(r.id) && n > 0 && !/abs|vs_gate/.test(r.id) ? '+' : ''; return sign + v + (UNIT[r.id] || ''); };
 const PLAIN = { crowd_sisdr: 'Crowd: how clean the voice is', crowd_stoi: 'Crowd: how understandable it is', crowd_ace: 'Crowd: what the electrodes would receive',
   crowd_m5: 'Crowd louder than the voice (−5 dB)', crowd_0: 'Crowd as loud as the voice (0 dB)', crowd_m5_stoi: 'Never harder to understand in the loudest crowd',
@@ -238,7 +238,7 @@ const G = gens.generations;
 }
 const live = G.find(g => g.status === 'running');
 const chip = $('#live-chip');
-if (live) { chip.classList.remove('ok', 'off'); $('#live-text').textContent = `Training ${live.label.toLowerCase()} now`; }
+if (live) { chip.classList.remove('ok', 'off'); $('#live-text').textContent = `Training ${live.label.toLowerCase()} now`; $('#live-chip').dataset.short = `Training ${live.label.toLowerCase()}`; }
 else { const last = G[G.length - 1]; chip.classList.add('ok'); const short = (last.change || '').split(':')[0].toLowerCase(); $('#live-text').textContent = last.status === 'pending' ? `Next: ${last.label.toLowerCase()}${short && short.length < 28 ? ' (' + short + ')' : ''}` : `${last.label}: ${WORD[last.status]}`; }
 setTimeout(fitNav, 0);
 (function tree() {
@@ -250,7 +250,7 @@ setTimeout(fitNav, 0);
   s += `<path class="trunk" d="${G.map((g, i) => `${i ? 'L' : 'M'}${step * (i + 1)},${yT}`).join('')}"/>`;
   G.forEach((g, i) => {
     const x = step * (i + 1), prevX = step * i;
-    const dead = g.status === 'null' || g.status === 'fail', run = g.status === 'running', pend = g.status === 'pending';
+    const dead = g.status === 'null' || g.status === 'fail', run = g.status === 'running', pend = g.status === 'pending' || g.status === 'shelved';
     if (dead) s += `<path class="dead" d="M${prevX},${yT} C${prevX + step * .4},${yT} ${x - step * .3},${yT - 55} ${x},${yT - 62}"/><line class="x" x1="${x - 6}" y1="${yT - 68}" x2="${x + 6}" y2="${yT - 56}"/><line class="x" x1="${x + 6}" y1="${yT - 68}" x2="${x - 6}" y2="${yT - 56}"/>`;
     if (run) s += `<path class="live" d="M${prevX},${yT} C${prevX + step * .4},${yT} ${x - step * .3},${yT + 50} ${x},${yT + 56}"/><circle class="running-ring" cx="${x}" cy="${yT + 56}" r="9"/>`;
     if (pend) s += `<path class="pend" d="M${prevX},${yT} C${prevX + step * .4},${yT} ${x - step * .3},${yT + 50} ${x},${yT + 56}"/>`;
@@ -370,4 +370,6 @@ if (health) {
   chip.classList.add('off');
 }
 // text equivalent of the wave state (aria-live)
-{ const ws = $('#wave-state'); if (ws) { let lastTxt = ''; setInterval(() => { const st = window.__waveState; if (!st) return; const c = st.C; let txt = c.shake > 0.5 ? 'The line is shaking hard, with a calm centre.' : c.wall > 0.5 ? 'The line has hit a wall.' : c.bands > 0.5 ? 'The line has split into 22 bands.' : c.ears > 0.5 ? (c.clean < 0.5 ? 'The line is fuzzy: no cleanup.' : c.drift > 0.5 ? 'Two lines, drifting apart.' : 'The two lines have become one.') : (window.__mlFuzz > 0) ? 'The line has gone fuzzy: the recording before cleanup.' : (window.__mlFuzz < 0) ? 'The line is clearer: the recording after cleanup.' : c.kick > 0.3 ? 'The line is dancing to the beat.' : c.beat > 0.3 ? 'A rhythm is running through the line.' : (c.waver > 0.3 && c.clarity > 0.3) ? 'The line wobbles but does not change: those versions did not help.' : c.clarity > 0.75 ? 'The line is mostly clear.' : c.clarity > 0.6 ? 'The line is clear.' : c.clarity > 0.3 ? 'The line is clearing up.' : 'The line is fuzzy, like a crowd.'; if (txt !== lastTxt) { lastTxt = txt; ws.textContent = txt; } }, 1500); } }
+{ const ws = $('#wave-state'); if (ws) { let lastTxt = '', lastAt = 0, lastSec = ''; setInterval(() => { const st = window.__waveState; if (!st) return; const c = st.C; const secEl = document.elementFromPoint(innerWidth / 2, innerHeight / 2); const sec = secEl ? (secEl.closest('section') || {}).id || '' : ''; if (sec === lastSec || performance.now() - lastAt < 4000) return; let txt = c.shake > 0.5 ? 'The line is shaking hard, with a calm centre.' : c.wall > 0.5 ? 'The line has hit a wall.' : c.bands > 0.5 ? 'The line has split into 22 bands.' : c.ears > 0.5 ? (c.clean < 0.5 ? 'The line is fuzzy: no cleanup.' : c.drift > 0.5 ? 'Two lines, drifting apart.' : 'The two lines have become one.') : (window.__mlFuzz > 0) ? 'The line has gone fuzzy: the recording before cleanup.' : (window.__mlFuzz < 0) ? 'The line is clearer: the recording after cleanup.' : (c.kick > 0.3 || c.beat > 0.3) ? 'A rhythm is running through the line.' : (c.waver > 0.3 && c.clarity > 0.3) ? 'The line wobbles but does not change: those versions did not help.' : c.clarity > 0.75 ? 'The line is mostly clear.' : c.clarity > 0.6 ? 'The line is clear.' : c.clarity > 0.3 ? 'The line is clearing up.' : 'The line is fuzzy, like a crowd.'; if (txt !== lastTxt) { lastTxt = txt; lastSec = sec; lastAt = performance.now(); ws.textContent = txt; } }, 1000); } }
+// phones: implant listen groups 2 and 3 fold until their heading is tapped
+{ if (innerWidth < 760) $$('#implant .imp-group + .imp-group h4').forEach(h4 => { h4.style.cursor = 'pointer'; h4.setAttribute('role', 'button'); h4.setAttribute('tabindex', '0'); h4.setAttribute('aria-expanded', 'false'); const t = () => { const g = h4.closest('.imp-group'); g.classList.toggle('open'); h4.setAttribute('aria-expanded', g.classList.contains('open')); }; h4.addEventListener('click', t); h4.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); t(); } }); }); }
