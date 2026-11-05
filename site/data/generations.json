@@ -316,6 +316,20 @@
       ],
       "note": "The short lesson in echoey rooms made speech with no echo a little clearer in one way and a little less clear in another. Our rule needs every measure to be at least as good as version 19, and even the gentlest mix missed by a hair, so by our rules there was nothing to test further.",
       "link": "research/gen31/results.md"
+    },
+    {
+      "id": "gen32",
+      "label": "Version 32",
+      "change": "The same short lesson in echoey rooms, but this time the program is also told to keep sounding exactly like version 19 on speech with no echo",
+      "status": "pending",
+      "numbers": [
+        {
+          "label": "Why",
+          "value": "Keep the help in echoey rooms without changing what already works"
+        }
+      ],
+      "note": "Being checked before it trains. We will add the result when it finishes.",
+      "link": "research/gen32/prereg.md"
     }
   ]
 }
