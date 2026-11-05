@@ -1,0 +1,130 @@
+{
+ "checks": {
+  "A1_provenance": true,
+  "A2_recording_overlap_excluded_by_provenance": true,
+  "A3_complete_grid": true,
+  "A7_material_hash_reproduces": true,
+  "A4_channel_delay": true,
+  "A5_bypass_identity": true,
+  "A6_duplicate_baseline_zero_difference": true,
+  "A7_finite_and_registered_checkpoints": true
+ },
+ "verdict": "VALID ASSET",
+ "a4_rows": [
+  {
+   "talker": 1,
+   "az": -60,
+   "ild_db": 2.9263854647077325,
+   "lag_samples": 8,
+   "ok": true
+  },
+  {
+   "talker": 1,
+   "az": -30,
+   "ild_db": 3.3417136536541543,
+   "lag_samples": 4,
+   "ok": true
+  },
+  {
+   "talker": 1,
+   "az": 30,
+   "ild_db": -1.3520523827863689,
+   "lag_samples": -4,
+   "ok": true
+  },
+  {
+   "talker": 1,
+   "az": 60,
+   "ild_db": -1.255896633014903,
+   "lag_samples": -8,
+   "ok": true
+  },
+  {
+   "talker": 2,
+   "az": -60,
+   "ild_db": 3.4660836569779856,
+   "lag_samples": 8,
+   "ok": true
+  },
+  {
+   "talker": 2,
+   "az": -30,
+   "ild_db": 2.62344522133441,
+   "lag_samples": 4,
+   "ok": true
+  },
+  {
+   "talker": 2,
+   "az": 30,
+   "ild_db": -0.24405530429471342,
+   "lag_samples": -4,
+   "ok": true
+  },
+  {
+   "talker": 2,
+   "az": 60,
+   "ild_db": -2.0325619394411625,
+   "lag_samples": -9,
+   "ok": true
+  },
+  {
+   "talker": 3,
+   "az": -60,
+   "ild_db": 3.025820577145451,
+   "lag_samples": 8,
+   "ok": true
+  },
+  {
+   "talker": 3,
+   "az": -30,
+   "ild_db": 2.7409907578263164,
+   "lag_samples": 4,
+   "ok": true
+  },
+  {
+   "talker": 3,
+   "az": 30,
+   "ild_db": -0.7665119832149716,
+   "lag_samples": -4,
+   "ok": true
+  },
+  {
+   "talker": 3,
+   "az": 60,
+   "ild_db": -1.0580681179351363,
+   "lag_samples": -8,
+   "ok": true
+  },
+  {
+   "talker": 4,
+   "az": -60,
+   "ild_db": 2.9175166288564593,
+   "lag_samples": 8,
+   "ok": true
+  },
+  {
+   "talker": 4,
+   "az": -30,
+   "ild_db": 3.396023582383006,
+   "lag_samples": 4,
+   "ok": true
+  },
+  {
+   "talker": 4,
+   "az": 30,
+   "ild_db": -1.6565226763009249,
+   "lag_samples": -4,
+   "ok": true
+  },
+  {
+   "talker": 4,
+   "az": 60,
+   "ild_db": -1.5299531346920245,
+   "lag_samples": -8,
+   "ok": true
+  }
+ ],
+ "notes": {
+  "speaker_identity": "unresolved"
+ }
+}
