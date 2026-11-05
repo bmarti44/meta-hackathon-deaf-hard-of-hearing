@@ -8,6 +8,25 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+GEN 27–29 ROOM DOSES FAIL; GEN 30 (FINAL DOSE) TRAINING; GEN 31 (WISE-FT)
+REGISTERED (2026-11-05 01:30, Claude Opus 5.5).
+
+**Room-dose line** (seed 17, judge_v3 vs Gen 19):
+- Gen 27 / 28 / 29 room gain: +0.514 / +0.459 / +0.370.
+- Dry 0 dB cost: −0.49 / −0.32 / −0.13 dB.
+- D and SP fail every time.
+- Gen 29 is filed with Astra + Muse. They split: Astra wants a final dose step, Muse wants WiSE-FT. Disposition: both, in order.
+
+**Gen 30** (P = 0.0625) launched 01:05; Astra cleared it. Any failure ends
+the dose-only campaign.
+
+**Gen 31** (fine-tune Gen 19 on rooms, then blend back, with α chosen on
+fresh test-clean voices) is registered. It runs only if Gen 30 fails.
+
+**Site:** round 13 is deployed and under review (round 12 scored 84.6).
+
+---
+
 GEN 24 FAIL, GEN 25 FAIL, REFOCUS ON REAL ROOMS (2026-11-04 22:08,
 Claude Opus 5.5).
 

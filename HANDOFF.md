@@ -81,41 +81,31 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
   cut clipping severity but not frequency and did not lift −5 dB, so
   the hypothesis is neither falsified nor established.
 
-## Current state (2026-11-04 22:22 — VERIFY, may be stale)
+## Current state (2026-11-05 01:30 — VERIFY, may be stale)
 
-- **Gen 27 (room augmentation) is TRAINING.** Launched 22:19 via
-  `research/gen27/pipeline.sh`.
-  - Logs: pipeline `/tmp/gen27_s17_pipeline.log`, trainer
-    `/tmp/gen27_aug50_s17.log`.
-  - Training ends around 23:40, then the reverberant panel, dry panel,
-    bench and spatial checks run, and `judge_v3` writes
-    `research/gen27/screen_s17.json`.
-  - Astra CLEARED it after 3 review passes:
-    `research/gen27/astra-prelaunch-review.md` and
-    `astra-verification-reviews.md`.
-  - Registration: `research/gen27/prereg.md`. The original text is kept,
-    with superseding sections S1–S10.
-  - If the trainer dies, rerun `pipeline.sh`; it resumes from
-    `weights/aug50_seed20261117_state_latest.pt`.
-  - When it finishes:
-    - file the verdict with Astra and Muse reviews (Muse via the Lambda
-      direct-invoke `review` mode);
-    - write `research/gen27/results.md`;
-    - update `site/data/generations.json` (gen27);
-    - add a dated update to SUBMISSION, and update STATUS/HANDOFF.
-- **Verdicts filed tonight:** Gen 24 FAIL with regressions; Gen 25 FAIL
-  (small broad gains); Gen 26 shelved unrun.
-- **Agenda** (holder redirect to real-world benefit; Astra's order):
-  rooms (Gen 27) → real recordings → two-input linked gain → ACE envelope
-  auxiliary.
-- **Provisional finding:** Gen 19 shows metric degradation on simulated
-  reverberant speech (`research/gen27/gen19-rooms-provisional.md`; v2
-  numbers in prereg S6).
-- **Screen v2** (`research/screen_v2/`) is development-only. All its
-  voices were Gen 17 training speakers, so a fresh audited confirmation
-  set is still needed.
-- **RIR audio** is at `/tmp/rirs/RIRS_NOISES` (OpenSLR 28, Apache-2.0,
-  sha in prereg). The manifest is committed.
+- **Room line so far (seed 17, judge_v3 vs Gen 19; all FAIL):**
+  - Gen 27, aug50: room gain +0.514.
+  - Gen 28, aug25: +0.459.
+  - Gen 29, aug125: +0.370 (CI +0.163..+0.627, 15/16).
+  - Each kept a room gain but lost a little on dry speech: at dry 0 dB, −0.49 / −0.32 / −0.13 dB. SP also fails (mirrored ITD one bin; ILD worse at 0–10 dB).
+  - All are filed with Astra + Muse reviews: `research/gen27..29/`.
+- **Gen 30 is TRAINING** (final dose step, P = 0.0625, aug0625). It launched 01:05 via `research/gen30/pipeline.sh`. Astra cleared it.
+  - Logs: `/tmp/gen30_s17_pipeline.log` and `/tmp/gen30_aug0625_s17.log`.
+  - The verdict is due ~01:50.
+  - **Registered boundary: any Gen 30 failure ends the dose-only campaign.**
+  - If the trainer dies, rerun the pipeline; it resumes from the state file.
+- **Gen 31 is registered, not run** (WiSE-FT, Muse's choice; `research/gen31/prereg.md`). It runs ONLY if Gen 30 fails:
+  - fine-tune Gen 19 on aug50 for 8k steps from its 24k RNG handoff;
+  - blend weights at α = 0.1..1;
+  - choose α\* on a fresh LibriSpeech test-clean dry VAL panel (prefix rule, no dry loss);
+  - run judge_v3 once.
+  - Muse CLEARED it; Astra's pre-launch review was in progress at 01:30 (`/tmp/astra_g31_prelaunch.out`).
+  - The test-clean audio is at `/tmp/gen31dl/LibriSpeech/test-clean`; re-download it if /tmp is wiped (md5 in the prereg).
+- **Reserved, untouched voices:**
+  - screen-v2's 4 dev-clean voices;
+  - 24 test-clean voices (list in `research/gen31/val_testclean.py`).
+- **Screen v2 and the rev panel are development-only** (their voices were Gen 13–17 training speakers). Any ADVANCE still needs seeds 18/19 and then a fresh confirmation.
+- **Site:** the review loop is on round 13 (round 12 scored 84.6). Fable is the site agent; a fresh Opus reviewer scores each round. Deploy with `deploy/deploy_site.sh`. The Muse explain route now uses the site's own row names.
 
 ## Demo site (beforetheimplant.com) — LIVE since 18:32 (added 2026-11-04 ~18:20)
 
@@ -201,28 +191,18 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
 
 ## Next actions (in order)
 
-1. **When `/tmp/gen23_s17_pipeline.log` says PIPELINE DONE**:
-   - run `research/gen23/verify_provenance.py --gen 23 --seed 17`
-     (it must PASS);
-   - read `research/gen23/screen_s17.json` and write
-     `research/gen23/results.md`;
-   - replace SUBMISSION's `[GEN 23 STATUS — updated at completion]`;
-   - prepend STATUS and update this file;
-   - commit the final weights, train log, bench, dev and screen JSON
-     (not `*_step*.pt` / `*_state_*.pt`) and push.
-2. Run Astra's xhigh review of the Gen 23 result and file it verbatim
-   with a disposition.
-   - If Gen 23 FAILs and she agrees, register Gen 24: dated header,
-     source hashes, MPS smoke. Launch `/tmp/gen24_s17_pipeline.sh`.
-     Its result will likely land after 20:00, so it is filed later and
-     never judged from an interim checkpoint.
-   - If Gen 23 ADVANCEs, seeds 18/19 replication comes next.
-3. If Gen 23 is not judged by 19:40, mark the placeholder "screen
-   pending at submission", then commit and push.
-4. By 20:00: final commit and push. `git status` should show only
-   intentionally-untracked files: interim `*_step*.pt`,
-   `*_state_*.pt`, `*_val_partial.json`, aborted-run ckpts, local
-   audio, and the pre-existing `bench_v2_gen17_control10.json`.
+1. **When `/tmp/gen30_s17_pipeline.log` says PIPELINE DONE:**
+   - read `research/gen30/screen_s17.json` and write `results.md`, in the same format as Gen 29;
+   - run the Astra + Muse result reviews (same prompt; Muse via the Lambda `review` mode, with any registration text inline because Muse has no file access);
+   - file them verbatim with a disposition;
+   - update `site/data/generations.json` (gen30), SUBMISSION's dated update, STATUS and this file;
+   - commit the final weights and log (`git add -f`), plus the screen, panel, spatial and bench JSONs. Never commit `*_step*.pt` or `*_state_*.pt`.
+2. **If Gen 30 FAILs:**
+   - the dose campaign is over;
+   - once Astra has cleared Gen 31 (file `research/gen31/astra-prelaunch-review.md` and Muse's), launch `research/gen31/pipeline.sh`.
+   - Exit 3 / "NO CANDIDATE" means Gen 31 FAIL, with no screen run.
+3. **If Gen 30 ADVANCEs:** run seeds 18/19 (same pipeline, new seed), then a fresh confirmation. Gen 31 is deferred.
+4. **Site:** apply the round-13 reviewer fixes through Fable (stabilisation process: reviewer scripts plus the regression checklist), deploy, and re-review until every category is ≥ 90.
 
 ## Key files map
 
