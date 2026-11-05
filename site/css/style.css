@@ -666,3 +666,26 @@ details.fold.fold-phone{border:0;margin:0}
 .hot,.hot-em,#snr-verdict.hot,.kv-line.hot,.st[data-status="fail"],.st[data-status="null"]{color:#ff8a73}
 #wall .big{color:#ff7a60}
 .imp-lab,.imp-now,.imp-num{color:#c6c0b4!important}
+/* ===== round 8 ===== */
+.live-chip .dot{display:none}
+.live-chip{padding-left:0}
+.col{background:none!important}
+.col::before{content:none}
+.cols3,.cols2{position:relative}
+.cols3::before,.cols2::before{content:"";position:absolute;inset:-16px -24px;background:radial-gradient(80% 80% at 50% 50%,rgba(9,11,16,.85),rgba(9,11,16,.6) 60%,rgba(9,11,16,0) 100%);z-index:-1;pointer-events:none}
+.story-panel,.chapter .panel{background:none;padding:0;margin:0}
+.chapter .panel::before,.story-panel::before{background:radial-gradient(75% 75% at 45% 50%,rgba(9,11,16,.92),rgba(9,11,16,.75) 60%,rgba(9,11,16,0) 100%);inset:-40px -56px}
+.vnote,#v-note,.hero-ask label,.toggle button,.ml-how,.ml-what,.small,.gen dt,.gen dd{font-size:14px}
+.vnote,#v-note,.hero-ask label{color:var(--bone)}
+#meta-lab .ml-miss{color:#ff8a73!important;text-decoration-color:#ff8a73!important}
+.imp-meta{font-family:var(--sans)!important;letter-spacing:0!important;font-size:14px!important}
+.imp-num,.imp-n{display:none!important}
+@media (max-width:760px){
+  .story-panel,.chapter .panel,#wall .grid.g2>div:first-child,.col,.checks li,.figures-line,#short .lede,#generations .lede,#scorecard .lede,.tree-hint,details.researchers>summary,.ladder li>div,.log li>div,.imp-steps li,.imp-group,.imp-how,#dir-read,.gen,.kv-line,.spread-text,.quote,.fold>summary,.files li,.dl-lead,.slider-box,.legend,.table-wrap,.ratio,.chart,.answer-text,.explain-out,#meta-lab .ml-list,.gen-cards{background:none!important}
+  .ladder li>div::before,.log li>div::before,#dir-read::before,.imp-steps li::before,.imp-group::before,.imp-how::before,.imp-listen-head::before,.imp-head::before,.imp-fig figcaption::before,#graham .col::before,#graham .dir-wrap::before,#graham .ladder::before,.slider-read::before,.chart::before,#wall .grid.g2>div:first-child>h3::before,#wall .grid.g2>div:first-child>p::before,#wall .grid.g2>div:first-child>ul::before,#wall .grid.g2>div:first-child>details::before{content:none!important}
+  main,main p,main li,main h1,main h2,main h3,main h4,main span,main b,main a,main summary,main dt,main dd,main td,main th,main label,main button,main figcaption,main small{text-shadow:0 0 12px #090b10,0 0 3px #090b10,0 0 3px #090b10}
+  .hero-text::before,.chapter .panel::before,.story-panel::before{background:radial-gradient(80% 70% at 50% 50%,rgba(9,11,16,.6),rgba(9,11,16,.35) 60%,rgba(9,11,16,0) 100%)}
+}
+#born h2,#born p,#born em,#tests h2,#tests p,#music h2,.hero-text h1,.hero-text p{text-shadow:0 0 14px #090b10,0 0 4px #090b10,0 0 4px #090b10}
+.chapter .panel::before,.story-panel::before{background:radial-gradient(75% 75% at 45% 50%,rgba(9,11,16,.95),rgba(9,11,16,.8) 60%,rgba(9,11,16,0) 100%)}
+.imp-lab,.imp-lab b,.imp-x{color:var(--bone)!important;text-shadow:0 0 10px #090b10,0 0 3px #090b10,0 0 3px #090b10}

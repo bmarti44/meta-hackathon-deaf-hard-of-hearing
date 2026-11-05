@@ -49,7 +49,7 @@
   fetch("data/meta/listen.json", { cache: "no-cache" }).then(r => r.ok ? r.json() : Promise.reject(r.status)).then(d => {
     data = d;
     $("ml-list").innerHTML = d.clips.map((c, i) =>
-      `<li><button type="button" aria-pressed="false" data-i="${i}"><span class="ml-n">${String(i + 1).padStart(2, "0")}</span>` +
+      `<li><button type="button" aria-pressed="false" data-i="${i}">` +
       `<span class="ml-what">“${esc(c.reference.split(" ").slice(0, 6).join(" "))}…”</span>` +
       `<span class="ml-how">${c.seconds} s · ${loud(c.snr_db)}</span></button></li>`).join("");
     $("ml-list").addEventListener("click", e => { const b = e.target.closest("button[data-i]"); if (b) show(+b.dataset.i); });

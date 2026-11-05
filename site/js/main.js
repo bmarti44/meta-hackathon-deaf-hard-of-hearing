@@ -123,7 +123,7 @@ $$('[data-bench="white_estoi"]').forEach(e => e.textContent = fmt(bench.summary_
 
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 // implant chapter: show the 3 most important clips by default
-{ const tracks = $$('#implant .imp-track'); if (tracks.length === 8) { const keep = new Set([1, 4, 7]); const hid = tracks.filter((t, i) => !keep.has(i)); hid.forEach(t => t.hidden = true); const b = document.createElement('button'); b.type = 'button'; b.className = 'explain-btn imp-more'; b.textContent = `Show all ${tracks.length} clips`; b.addEventListener('click', () => { const open = hid[0].hidden; hid.forEach(t => t.hidden = !open); b.textContent = open ? 'Show fewer clips' : `Show all ${tracks.length} clips`; }); const groups = $$('#implant .imp-group'); (groups[groups.length - 1] || tracks[0].parentElement).after(b); } }
+{ const tracks = $$('#implant .imp-track'); if (tracks.length === 8) { const keep = new Set([3, 4, 6, 7]); const hid = tracks.filter((t, i) => !keep.has(i)); hid.forEach(t => t.hidden = true); const b = document.createElement('button'); b.type = 'button'; b.className = 'explain-btn imp-more'; b.textContent = `Show all ${tracks.length} clips`; b.addEventListener('click', () => { const open = hid[0].hidden; hid.forEach(t => t.hidden = !open); b.textContent = open ? 'Show fewer clips' : `Show all ${tracks.length} clips`; }); const groups = $$('#implant .imp-group'); (groups[groups.length - 1] || tracks[0].parentElement).after(b); } }
 
 // ---------- SNR chart + slider ----------
 const SNRS = bench.snrs, sys = bench.systems;
@@ -227,13 +227,13 @@ $('#gen-updated').textContent = gens.updated;
   $$('#null-count').forEach(e => e.textContent = WORDS[after19.length] || String(after19.length));
   $$('[data-gen-sentence]').forEach(e => e.textContent = `${after19.length ? WORDS[after19.length][0].toUpperCase() + WORDS[after19.length].slice(1) + ' later version' + (after19.length === 1 ? '' : 's') + ' tried to fix that and did not help' : 'No later version has fixed it yet'}${running.length ? ', and version ' + running.map(num).join(' and ') + ' is being tested right now' : ''}.`);
   $$('[data-gen-nulls-after19]').forEach(e => e.textContent = after19.length ? 'versions ' + list(after19.map(num)) : 'no later version');
-  $$('[data-gen-next-sentence]').forEach(e => { const pend = G.filter(g => g.status === 'pending'); e.textContent = pend.length ? `Version ${pend.map(num).join(' and ')} is drafted but does not count until the version being tested has its result and its review.` : 'A new version does not count until the one before it has its result and its review.'; });
+  $$('[data-gen-next-sentence]').forEach(e => { const pend = G.filter(g => g.status === 'pending'); const run = G.filter(g => g.status === 'running'); e.textContent = pend.length ? (run.length ? `Version ${pend.map(num).join(' and ')} is drafted but does not count until version ${run.map(num).join(' and ')} has its result and its review.` : `Version ${pend.map(num).join(' and ')} is drafted and being checked before it trains. It does not count until it has run and been reviewed.`) : 'A new version does not count until the one before it has its result and its review.'; });
   $$('[data-gen-nulls-all]').forEach(e => e.textContent = 'Versions ' + list(allNull.map(num)) + ' did not help, and they');
 }
 const live = G.find(g => g.status === 'running');
 const chip = $('#live-chip');
 if (live) { chip.classList.remove('ok', 'off'); $('#live-text').textContent = `Testing ${live.label.toLowerCase()} now`; }
-else { const last = G[G.length - 1]; chip.classList.add('ok'); $('#live-text').textContent = `${last.label}: ${WORD[last.status]}`; }
+else { const last = G[G.length - 1]; chip.classList.add('ok'); const short = (last.change || '').split(':')[0].toLowerCase(); $('#live-text').textContent = last.status === 'pending' ? `Next: ${last.label.toLowerCase()}${short && short.length < 28 ? ' (' + short + ')' : ''}` : `${last.label}: ${WORD[last.status]}`; }
 (function tree() {
   const W = 1000, step = W / (G.length + 1), yT = 110, H = 200;
   let s = `<svg viewBox="0 0 ${W} ${H}">`;
@@ -251,13 +251,13 @@ else { const last = G[G.length - 1]; chip.classList.add('ok'); $('#live-text').t
     s += `<text x="${x}" y="${dead ? yT - 84 : ny + 30}" text-anchor="middle">${esc(g.label)}</text><text class="dim" x="${x}" y="${dead ? yT - 70 + 4 : ny + 45}" text-anchor="middle">${GLYPH[g.status]} ${WORD[g.status]}</text>`;
   });
   $('#tree').innerHTML = s + '</svg>';
-  $('#tree-desc').textContent = 'Generation tree. ' + G.map(g => `${g.label}: ${WORD[g.status]} — ${g.change}.`).join(' ') + ` Trunk survivors: ${trunk.map(t => t.label).join(', ')}.`;
+  $('#tree-desc').textContent = 'The versions, in order. ' + G.map(g => `${g.label}, ${WORD[g.status]}: ${g.change}.`).join(' ') + ` The versions we kept building on: ${trunk.map(t => t.label).join(', ')}.`;
 })();
 const FOLD = new Set(['gen16', 'gen17', 'gen18', 'gen20']);
 const cardHtml = g => `<article class="gen" data-status="${g.status}" id="${g.id}" aria-labelledby="${g.id}-h">
   <h3 id="${g.id}-h"><span>${esc(g.label)}</span><span class="st" data-status="${g.status}">${GLYPH[g.status]} ${WORD[g.status]}</span></h3>
   <p class="change">${esc(g.change)}</p>
-  ${g.eta ? `<p class="eta">◉ ${esc(g.eta)}</p>` : ''}
+  ${g.eta ? `<p class="eta">${esc(g.eta)}</p>` : ''}
   <dl>${(g.numbers || []).map(n => `<dt>${esc(n.label)}</dt><dd>${esc(n.value)}</dd>`).join('')}</dl>
   ${g.note ? `<p class="note">${esc(g.note)}</p>` : ''}
   <div class="acts">${g.link ? `<a href="${/^https?:/.test(g.link) ? esc(g.link) : esc(repoUrl(g.link) || '#')}" target="_blank" rel="noopener">read the full write-up</a>` : ''}
@@ -361,3 +361,5 @@ if (health) {
 } else if (!live) {
   chip.classList.add('off');
 }
+// text equivalent of the wave state (aria-live)
+{ const ws = $('#wave-state'); if (ws) { let lastTxt = ''; setInterval(() => { const st = window.__waveState; if (!st) return; const c = st.C; let txt = c.shake > 0.5 ? 'The line is shaking hard, with a calm centre.' : c.wall > 0.5 ? 'The line has hit a wall.' : c.bands > 0.5 ? 'The line has split into 22 bands.' : c.ears > 0.5 ? (c.clean < 0.5 ? 'The line is fuzzy: no cleanup.' : c.drift > 0.5 ? 'Two lines, drifting apart.' : 'Two lines, locked together.') : c.clarity > 0.6 ? 'The line is clear.' : c.clarity > 0.3 ? 'The line is clearing up.' : 'The line is fuzzy, like a crowd.'; if (txt !== lastTxt) { lastTxt = txt; ws.textContent = txt; } }, 1500); } }

@@ -1,203 +1,228 @@
 {
-  "_howto": "Edit this file only to update the site. status is one of: baseline | null | running | pending | advance | fail. 'numbers' is a list of {label, value}. 'link' is a repo-relative path (joined with SITE_CONFIG.repo) or a full URL. Set 'eta' on a running generation to show it. Every number here must come from a filed results/prereg file.",
-  "updated": "2026-11-04 18:10 EST",
-  "generations": [
+ "_howto": "Edit this file only to update the site. status is one of: baseline | null | running | pending | advance | fail. 'numbers' is a list of {label, value}. 'link' is a repo-relative path (joined with SITE_CONFIG.repo) or a full URL. Set 'eta' on a running generation to show it. Every number here must come from a filed results/prereg file.",
+ "updated": "2026-11-04 18:10 EST",
+ "generations": [
+  {
+   "id": "gen16",
+   "label": "Version 16",
+   "change": "We scored training on three things at once instead of one",
+   "status": "null",
+   "numbers": [
     {
-      "id": "gen16",
-      "label": "Version 16",
-      "change": "We scored training on three things at once instead of one",
-      "status": "null",
-      "numbers": [
-        {
-          "label": "Cleaner than version 15 by",
-          "value": "+0.93 dB"
-        },
-        {
-          "label": "Change in how easy to understand",
-          "value": "−0.033"
-        }
-      ],
-      "note": "Did not help. One try only, so it does not prove the idea can never work.",
-      "link": "STATUS.md"
+     "label": "Cleaner than version 15 by",
+     "value": "+0.93 dB"
     },
     {
-      "id": "gen17",
-      "label": "Version 17",
-      "change": "We gave it 26 voices to learn from instead of 10 (and changed a few other things at the same time)",
-      "status": "advance",
-      "numbers": [
-        {
-          "label": "Cleaner in crowds by",
-          "value": "+0.26 dB"
-        }
-      ],
-      "note": "Sloppier than later versions: several things changed at once.",
-      "link": "SUBMISSION.md"
-    },
-    {
-      "id": "gen18",
-      "label": "Version 18",
-      "change": "We gave it 251 voices to learn from instead of 26",
-      "status": "advance",
-      "numbers": [
-        {
-          "label": "What it did",
-          "value": "roughly neutral"
-        }
-      ],
-      "note": "Kept: version 19 learns from these 251 voices.",
-      "link": "SUBMISSION.md"
-    },
-    {
-      "id": "gen19",
-      "label": "Version 19",
-      "change": "We trained it four times longer",
-      "status": "baseline",
-      "numbers": [
-        {
-          "label": "Cleaner in everyday crowds by",
-          "value": "+3.51 dB"
-        },
-        {
-          "label": "Cleaner when the crowd is louder than the voice",
-          "value": "+1.19 dB vs +1.5 required"
-        },
-        {
-          "label": "Checks passed",
-          "value": "13 of 14 checks pass"
-        }
-      ],
-      "note": "Our best version. Passes 13 of 14 checks. Not approved for anything yet.",
-      "link": "research/gen19/results.md"
-    },
-    {
-      "id": "gen20",
-      "label": "Version 20",
-      "change": "We showed it bigger crowds more often during training",
-      "status": "null",
-      "numbers": [
-        {
-          "label": "Extra help in the hardest crowd",
-          "value": "+0.02 dB vs +0.30 required"
-        },
-        {
-          "label": "Change in how easy to understand there",
-          "value": "−0.002 (needed 0 or better)"
-        }
-      ],
-      "note": "Did not help. Both versions improved a little just from restarting. Kept the old mix.",
-      "link": "STATUS.md"
-    },
-    {
-      "id": "gen21",
-      "label": "Version 21",
-      "change": "We trained it twice as long, two different ways, three runs each",
-      "status": "null",
-      "numbers": [
-        {
-          "label": "Way 1, hardest crowd (two test sets)",
-          "value": "+0.14 / −0.24 dB"
-        },
-        {
-          "label": "Way 2, hardest crowd (two test sets)",
-          "value": "+0.12 / −0.10 dB"
-        },
-        {
-          "label": "What we needed",
-          "value": "+0.30 dB on both test sets"
-        },
-        {
-          "label": "Everyday crowds improved to",
-          "value": "+3.79 / +3.67 dB"
-        }
-      ],
-      "note": "Did not help. Training longer makes easy crowds better, not the hardest one.",
-      "link": "research/gen21/results.md"
-    },
-    {
-      "id": "gen22",
-      "label": "Version 22",
-      "change": "We changed how training is scored so near-perfect quiet examples stop drowning out the hard ones",
-      "status": "null",
-      "numbers": [
-        {
-          "label": "Hardest crowd (two test sets)",
-          "value": "+0.149 / −0.010 dB"
-        },
-        {
-          "label": "What we needed",
-          "value": "+0.30 dB on both test sets"
-        },
-        {
-          "label": "Other safety checks",
-          "value": "5 of 5 pass"
-        }
-      ],
-      "note": "Did not help. The hardest crowd barely moved. We dropped the change.",
-      "link": "research/gen22/results.md"
-    },
-    {
-      "id": "gen23",
-      "label": "Version 23",
-      "change": "We added a second way of scoring training that listens to the shape of the sound, not just the waveform",
-      "status": "fail",
-      "numbers": [
-        {
-          "label": "Hardest crowd, test set 1, compared with version 19",
-          "value": "−0.338 dB"
-        },
-        {
-          "label": "Hardest crowd, test set 2, compared with version 19",
-          "value": "−0.027 dB"
-        },
-        {
-          "label": "Required (both)",
-          "value": "≥ +0.30 dB"
-        },
-        {
-          "label": "How much the new pitch-pattern scoring steered training",
-          "value": "~1%"
-        }
-      ],
-      "note": "Did not help. The plan and the passing score were written down before it started, and it did not reach them.",
-      "link": "research/gen23/results.md"
-    },
-    {
-      "id": "gen24",
-      "label": "Version 24",
-      "change": "We train on far more of the hardest crowds (40% of examples instead of 17%)",
-      "status": "running",
-      "numbers": [
-        {
-          "label": "Starts",
-          "value": "only if version 23 does not win its first test"
-        }
-      ],
-      "note": "Being tested right now. Only the loudness of the crowd during training changes; everything else stays the same.",
-      "link": "research/gen24/prereg.md",
-      "eta": "training now"
-    },
-    {
-      "id": "gen25",
-      "label": "Version 25",
-      "change": "No training at all: we averaged the model's last 9 saved snapshots into one",
-      "status": "fail",
-      "numbers": [
-        {
-          "label": "Hardest crowd, test set 1, compared with version 19",
-          "value": "+0.17 dB"
-        },
-        {
-          "label": "Hardest crowd, test set 2, compared with version 19",
-          "value": "+0.03 dB"
-        },
-        {
-          "label": "Needed on both",
-          "value": "+0.30 dB"
-        }
-      ],
-      "note": "A small improvement almost everywhere, but nowhere near enough in the hardest crowd. Not kept.",
-      "link": "research/gen25/results.md"
+     "label": "Change in how easy to understand",
+     "value": "−0.033"
     }
-  ]
+   ],
+   "note": "Did not help. One try only, so it does not prove the idea can never work.",
+   "link": "STATUS.md"
+  },
+  {
+   "id": "gen17",
+   "label": "Version 17",
+   "change": "We gave it 26 voices to learn from instead of 10 (and changed a few other things at the same time)",
+   "status": "advance",
+   "numbers": [
+    {
+     "label": "Cleaner in crowds by",
+     "value": "+0.26 dB"
+    }
+   ],
+   "note": "Sloppier than later versions: several things changed at once.",
+   "link": "SUBMISSION.md"
+  },
+  {
+   "id": "gen18",
+   "label": "Version 18",
+   "change": "We gave it 251 voices to learn from instead of 26",
+   "status": "advance",
+   "numbers": [
+    {
+     "label": "What it did",
+     "value": "roughly neutral"
+    }
+   ],
+   "note": "Kept: version 19 learns from these 251 voices.",
+   "link": "SUBMISSION.md"
+  },
+  {
+   "id": "gen19",
+   "label": "Version 19",
+   "change": "We trained it four times longer",
+   "status": "baseline",
+   "numbers": [
+    {
+     "label": "Cleaner in everyday crowds by",
+     "value": "+3.51 dB"
+    },
+    {
+     "label": "Cleaner when the crowd is louder than the voice",
+     "value": "+1.19 dB vs +1.5 required"
+    },
+    {
+     "label": "Checks passed",
+     "value": "13 of 14 checks pass"
+    }
+   ],
+   "note": "Our best version. Passes 13 of 14 checks. Not approved for anything yet.",
+   "link": "research/gen19/results.md"
+  },
+  {
+   "id": "gen20",
+   "label": "Version 20",
+   "change": "We showed it bigger crowds more often during training",
+   "status": "null",
+   "numbers": [
+    {
+     "label": "Extra help in the hardest crowd",
+     "value": "+0.02 dB vs +0.30 required"
+    },
+    {
+     "label": "Change in how easy to understand there",
+     "value": "−0.002 (needed 0 or better)"
+    }
+   ],
+   "note": "Did not help. Both versions improved a little just from restarting. Kept the old mix.",
+   "link": "STATUS.md"
+  },
+  {
+   "id": "gen21",
+   "label": "Version 21",
+   "change": "We trained it twice as long, two different ways, three runs each",
+   "status": "null",
+   "numbers": [
+    {
+     "label": "Way 1, hardest crowd (two test sets)",
+     "value": "+0.14 / −0.24 dB"
+    },
+    {
+     "label": "Way 2, hardest crowd (two test sets)",
+     "value": "+0.12 / −0.10 dB"
+    },
+    {
+     "label": "What we needed",
+     "value": "+0.30 dB on both test sets"
+    },
+    {
+     "label": "Everyday crowds improved to",
+     "value": "+3.79 / +3.67 dB"
+    }
+   ],
+   "note": "Did not help. Training longer makes easy crowds better, not the hardest one.",
+   "link": "research/gen21/results.md"
+  },
+  {
+   "id": "gen22",
+   "label": "Version 22",
+   "change": "We changed how training is scored so near-perfect quiet examples stop drowning out the hard ones",
+   "status": "null",
+   "numbers": [
+    {
+     "label": "Hardest crowd (two test sets)",
+     "value": "+0.149 / −0.010 dB"
+    },
+    {
+     "label": "What we needed",
+     "value": "+0.30 dB on both test sets"
+    },
+    {
+     "label": "Other safety checks",
+     "value": "5 of 5 pass"
+    }
+   ],
+   "note": "Did not help. The hardest crowd barely moved. We dropped the change.",
+   "link": "research/gen22/results.md"
+  },
+  {
+   "id": "gen23",
+   "label": "Version 23",
+   "change": "We added a second way of scoring training that listens to the shape of the sound, not just the waveform",
+   "status": "fail",
+   "numbers": [
+    {
+     "label": "Hardest crowd, test set 1, compared with version 19",
+     "value": "−0.338 dB"
+    },
+    {
+     "label": "Hardest crowd, test set 2, compared with version 19",
+     "value": "−0.027 dB"
+    },
+    {
+     "label": "Required (both)",
+     "value": "≥ +0.30 dB"
+    },
+    {
+     "label": "How much the new pitch-pattern scoring steered training",
+     "value": "~1%"
+    }
+   ],
+   "note": "Did not help. The plan and the passing score were written down before it started, and it did not reach them.",
+   "link": "research/gen23/results.md"
+  },
+  {
+   "id": "gen24",
+   "label": "Version 24",
+   "change": "We train on far more of the hardest crowds (40% of examples instead of 17%)",
+   "status": "fail",
+   "numbers": [
+    {
+     "label": "Hardest crowd, test set 1, compared with version 19",
+     "value": "−0.21 dB"
+    },
+    {
+     "label": "Hardest crowd, test set 2, compared with version 19",
+     "value": "−0.02 dB"
+    },
+    {
+     "label": "Crowd as loud as the voice, test set 1",
+     "value": "−0.30 dB (worse)"
+    },
+    {
+     "label": "Needed on both",
+     "value": "+0.30 dB"
+    }
+   ],
+   "note": "We trained on many more very noisy examples. It did not help in the hardest crowd and made the easier crowd worse. Not kept.",
+   "link": "research/gen24/results.md"
+  },
+  {
+   "id": "gen25",
+   "label": "Version 25",
+   "change": "No training at all: we averaged the model's last 9 saved snapshots into one",
+   "status": "fail",
+   "numbers": [
+    {
+     "label": "Hardest crowd, test set 1, compared with version 19",
+     "value": "+0.17 dB"
+    },
+    {
+     "label": "Hardest crowd, test set 2, compared with version 19",
+     "value": "+0.03 dB"
+    },
+    {
+     "label": "Needed on both",
+     "value": "+0.30 dB"
+    }
+   ],
+   "note": "A small improvement almost everywhere, but nowhere near enough in the hardest crowd. Not kept.",
+   "link": "research/gen25/results.md"
+  },
+  {
+   "id": "gen27",
+   "label": "Version 27",
+   "change": "Teaching the program real rooms: half of the noisy practice sounds now echo the way a cafeteria or classroom does",
+   "status": "pending",
+   "numbers": [
+    {
+     "label": "Why",
+     "value": "In echoey rooms, version 19 helps much less"
+    }
+   ],
+   "note": "Being checked by an independent reviewer before training starts.",
+   "link": "research/gen27/prereg.md"
+  }
+ ]
 }

@@ -59,9 +59,10 @@
 <section id="hero" aria-labelledby="h-hero">
   <div class="wrap">
     <div class="hero-text">
-      <h1 id="h-hero">Before anything reaches the implant, <em>it has to pass the tests.</em></h1>
+      <h1 id="h-hero">Before anything reaches Graham's implant, <em>it has to pass our tests.</em></h1>
       <p class="lede">A small computer program that tries to pull one voice out of a noisy crowd, for people who hear through cochlear implants. We test it only on a computer, against rules we wrote down before each try. It passes 13 of our 14 checks, and this site is mostly about the one check it still fails.</p>
       <p class="scroll-hint" aria-hidden="true"><span class="ln"></span>Keep scrolling for Graham's story</p>
+      <p class="wave-state sr-only" id="wave-state" aria-live="polite"></p>
       <p class="wave-key">The fuzzier the line behind this page, the harder it is to hear one voice. Watch it clear up (or not) as you read.</p>
       <div class="ctas">
         <a class="btn" href="#short">The short version</a>
@@ -117,7 +118,7 @@
       </figure>
       <div class="panel rv">
         <h2 id="h-crowd">Music and talking in a crowd are still the hardest thing.</h2>
-        <p class="lede">Graham was born with deep hearing loss in both ears. He hears with two cochlear implants, Cochlear Nucleus 6 processors; that is what he uses, and nothing on this site has ever been used by him. His dad, who built this project, has normal hearing.</p>
+        <p class="lede">Graham was born with deep hearing loss in both ears. He hears with two cochlear implants. Nothing on this site has ever been used by him. His dad, who built this project, has normal hearing.</p>
         <details class="researchers"><summary>For researchers</summary><p class="small muted">Bilateral sensorineural severe-to-profound hearing loss; bilateral Cochlear Nucleus 6 processors.</p></details>
         <p>Crowds are where cochlear-implant users struggle most. A dance class on a lawn, a birthday table, a playground: many voices at once, and the one you need is no louder than the rest. That is the one situation our program still cannot handle well enough, and it is the only thing this research is about.</p>
         <p>A cochlear implant delivers sound as electrical pulses on a short row of electrodes. In a quiet room, implants work really well. In a room full of other voices, the thing a listener needs most, one voice standing apart from many, is exactly what the signal makes hardest to recover.</p>
@@ -227,17 +228,14 @@
 
     <ol class="imp-steps">
       <li>
-        <span class="imp-num" aria-hidden="true">01</span>
         <h3>22 slices of pitch</h3>
         <p>The implant splits every sound into 22 slices of pitch, like 22 piano keys running from low to high. Each slice has its own tiny contact on the wire inside the ear. Low sounds go deep into the ear's spiral and high sounds stay near the opening, which is the same way a hearing ear sorts sound.</p>
       </li>
       <li>
-        <span class="imp-num" aria-hidden="true">02</span>
         <h3>Only about 8 at once</h3>
         <p>Many times every second, the implant checks which slices are loudest, and only those get to play. Implants like Graham's commonly play about 8 of the 22 at a time, and an audiologist sets the exact number for each person. Think of a piano where only 8 keys can sound at once: the tune comes through, but a lot of it goes missing.</p>
       </li>
       <li>
-        <span class="imp-num" aria-hidden="true">03</span>
         <h3>What gets lost</h3>
         <p>Inside each slice, all the fine detail is blended into one thing: how loud that slice is. That detail is what lets you hear a voice rise and fall, the warmth or scratchiness that makes someone sound like themselves, and the notes in a song. The rhythm of talking and the shape of words still come through surprisingly well. In a crowd, other voices compete for the same 8 keys, and the loudest ones are not always the voice you want.</p>
       </li>
@@ -258,13 +256,13 @@
         <ol class="imp-tracks">
           <li class="imp-track">
             <button type="button" class="imp-play" data-src="assets/audio/implant/01-voice.mp3" data-sig="clean" aria-pressed="false" aria-describedby="imp-c1">
-              <span class="imp-n">01</span><span class="imp-title">Her voice, as recorded</span><span class="imp-state" aria-hidden="true">Listen</span>
+              <span class="imp-title">Her voice, as recorded</span><span class="imp-state" aria-hidden="true">Listen</span>
             </button>
             <p class="imp-cap" id="imp-c1">[A woman reads the sentence, close and clear.]</p>
           </li>
           <li class="imp-track">
             <button type="button" class="imp-play" data-src="assets/audio/implant/02-voice-ci.mp3" data-sig="clean" aria-pressed="false" aria-describedby="imp-c2">
-              <span class="imp-n">02</span><span class="imp-title">Her voice, squeezed into 8 of 22 slices</span><span class="imp-state" aria-hidden="true">Listen</span>
+              <span class="imp-title">Her voice, squeezed into 8 of 22 slices</span><span class="imp-state" aria-hidden="true">Listen</span>
             </button>
             <p class="imp-cap" id="imp-c2">[The same sentence rebuilt from slices of hissing noise. It sounds whispery and buzzy. The rhythm of the words is there, but the rise and fall of her voice is gone.]</p>
           </li>
@@ -280,21 +278,21 @@
         <ol class="imp-tracks">
           <li class="imp-track">
             <button type="button" class="imp-play" data-src="assets/audio/implant/03-crowd-0db.mp3" data-sig="mix_0db" aria-pressed="false" aria-describedby="imp-c3">
-              <span class="imp-n">03</span><span class="imp-title">Her voice in a crowd</span><span class="imp-state" aria-hidden="true">Listen</span>
+              <span class="imp-title">Her voice in a crowd</span><span class="imp-state" aria-hidden="true">Listen</span>
             </button>
             <p class="imp-cap" id="imp-c3">[Her voice inside the chatter of a crowd that is just as loud as she is.]</p>
           </li>
           <li class="imp-track">
             <button type="button" class="imp-play" data-src="assets/audio/implant/04-crowd-0db-ci.mp3" data-sig="mix_0db" aria-pressed="false" aria-describedby="imp-c4">
-              <span class="imp-n">04</span><span class="imp-title">The crowd, squeezed into 8 of 22 slices</span><span class="imp-state" aria-hidden="true">Listen</span>
+              <span class="imp-title">The crowd, squeezed into 8 of 22 slices</span><span class="imp-state" aria-hidden="true">Listen</span>
             </button>
             <p class="imp-cap" id="imp-c4">[Her voice and the crowd rebuilt from the same slices of hissing noise. This is the hard case, because the crowd takes many of the 8 keys.]</p>
           </li>
           <li class="imp-track">
             <button type="button" class="imp-play" data-src="assets/audio/implant/05-cleaned-0db-ci.mp3" data-sig="enh_0db" aria-pressed="false" aria-describedby="imp-c5">
-              <span class="imp-n">05</span><span class="imp-title">Cleaned up by the computer model first, then squeezed</span><span class="imp-state" aria-hidden="true">Listen</span>
+              <span class="imp-title">Cleaned up by the program first, then squeezed</span><span class="imp-state" aria-hidden="true">Listen</span>
             </button>
-            <p class="imp-cap" id="imp-c5">[The model in this project takes away much of the crowd before the squeeze. On the score this research uses, this clip came out cleaner.]</p>
+            <p class="imp-cap" id="imp-c5">[Our program takes away much of the crowd before the squeeze. Our tests scored this clip as cleaner.]</p>
           </li>
         </ol>
       </div>
@@ -308,19 +306,19 @@
         <ol class="imp-tracks">
           <li class="imp-track">
             <button type="button" class="imp-play" data-src="assets/audio/implant/06-crowd-m5db.mp3" data-sig="mix_m5db" aria-pressed="false" aria-describedby="imp-c6">
-              <span class="imp-n">06</span><span class="imp-title">Her voice in a louder crowd</span><span class="imp-state" aria-hidden="true">Listen</span>
+              <span class="imp-title">Her voice in a louder crowd</span><span class="imp-state" aria-hidden="true">Listen</span>
             </button>
             <p class="imp-cap" id="imp-c6">[Her voice under the same crowd chatter, which is now louder than she is.]</p>
           </li>
           <li class="imp-track">
             <button type="button" class="imp-play" data-src="assets/audio/implant/07-crowd-m5db-ci.mp3" data-sig="mix_m5db" aria-pressed="false" aria-describedby="imp-c7">
-              <span class="imp-n">07</span><span class="imp-title">The louder crowd, squeezed into 8 of 22 slices</span><span class="imp-state" aria-hidden="true">Listen</span>
+              <span class="imp-title">The louder crowd, squeezed into 8 of 22 slices</span><span class="imp-state" aria-hidden="true">Listen</span>
             </button>
             <p class="imp-cap" id="imp-c7">[Her voice and the louder crowd rebuilt from slices of hissing noise. With the crowd louder than her, it wins even more of the 8 keys.]</p>
           </li>
           <li class="imp-track">
             <button type="button" class="imp-play" data-src="assets/audio/implant/08-cleaned-m5db-ci.mp3" data-sig="enh_m5db" aria-pressed="false" aria-describedby="imp-c8">
-              <span class="imp-n">08</span><span class="imp-title">Cleaned up by the computer model first, then squeezed</span><span class="imp-state" aria-hidden="true">Listen</span>
+              <span class="imp-title">Cleaned up by the program first, then squeezed</span><span class="imp-state" aria-hidden="true">Listen</span>
             </button>
             <p class="imp-cap" id="imp-c8">[Here the model barely helps. On this clip it made almost no difference, and that is the wall the rest of this site is about.]</p>
           </li>
@@ -357,14 +355,14 @@
       <div class="grid g2">
         <div>
           <h3 class="sub">What the numbers mean</h3>
-          <p>Engineers measure how clean a sound is in decibels (dB). Decibels count doublings rather than steps: every 3 dB of improvement cuts the leftover noise, compared with the voice, in half, and 6 dB cuts it to a quarter.</p>
+          <p>Engineers measure how clean a sound is in decibels (dB). Each 3 dB step means the leftover noise, compared with the voice, is cut in half; 6 dB means it is cut to a quarter, and so on.</p>
           <ul class="plain">
             <li>In everyday crowd noise, the model cuts the leftover noise to less than half (+3.51 dB).</li>
             <li>When the crowd is as loud as the voice (0 dB), it cuts it to about a third (+4.65 dB).</li>
             <li>When the crowd is louder than the voice (−5 dB, about three times the voice's energy), it only cuts it by about a quarter (+1.19 dB). Afterwards the crowd is still more than twice as strong as the voice. Our goal there was +1.5 dB, which would have cut it by about 30%.</li>
           </ul>
           <div class="ratio" role="img" aria-label="Crowd energy relative to the voice, before and after cleanup: at minus 5 dB 3.2 times becomes 2.4 times, goal 2.2 times; at 0 dB 1 times becomes 0.34 times.">
-            <div class="ratio-row"><span class="mono">−5 dB</span><i style="--w:100%"></i><span>3.2× crowd</span></div>
+            <div class="ratio-row"><span class="mono">−5 dB</span><i style="--w:100%"></i><span>3.2 times the voice</span></div>
             <div class="ratio-row"><span class="mono">after</span><i style="--w:75%" class="sig"></i><span>2.4×</span></div>
             <div class="ratio-row"><span class="mono">goal</span><i style="--w:69%" class="goal"></i><span>2.2×</span></div>
             <div class="ratio-row gap"><span class="mono">0 dB</span><i style="--w:31%"></i><span>1×</span></div>
@@ -449,7 +447,7 @@
     <p class="lede">Each new version changes exactly one thing. We write down what we expect before we train it, train it three separate times, and let a script, not a person, decide whether it passed. A second AI from a different company checks the result before we move on. The versions that failed stay on the tree, so you can see them.</p><details class="researchers"><summary>For researchers</summary><p class="small muted">Pre-registered generations with one change each, fixed budgets, final-checkpoint-only judgment, 3-seed seed-mean KPIs, independent Codex Astra (xhigh) review between generations. Failures are filed as "null for this policy".</p></details>
     <div class="tree" id="tree" role="img" aria-describedby="tree-desc"></div>
     <p id="tree-desc" class="sr-only"></p>
-    <p class="tree-hint" aria-hidden="true">← scroll the tree sideways →</p>
+    <p class="tree-hint" aria-hidden="true">Scroll sideways to see every version</p>
     <div class="gen-cards" id="gen-cards"></div>
   </div>
 </section>
@@ -457,7 +455,7 @@
 <!-- ===== BREAKING THE WALL ===== -->
 <section id="attempts" class="solid-bg" aria-labelledby="h-att">
   <div class="wrap">
-    <h2 id="h-att">Three tries at the hardest crowd, none of them worked</h2>
+    <h2 id="h-att">Two of those tries, up close</h2>
     <div class="grid g2">
       <div class="rv">
         <h3>Version 21: training longer did not help</h3>
@@ -506,7 +504,7 @@
 <section id="meta-lab" class="solid-bg" aria-labelledby="h-metalab">
   <div class="wrap">
     <h2 id="h-metalab">Can a computer understand the voice better after our cleanup?</h2>
-    <p class="lede">In the hardest recordings, where the crowd is louder than the voice, the cleaned audio sometimes confused Muse more than the raw one. That is the same situation the rest of this page is about: the one check our program still fails. Four of the six clips show "0 of N words right" both before and after, because Muse could not follow the voice in those crowds at all.</p>
+    <p class="lede">In the hardest recordings, where the crowd is louder than the voice, the cleaned audio sometimes confused Muse more than the raw one. That is the same situation the rest of this page is about: the one check our program still fails. Four of the six clips show zero words right both before and after, because Muse could not follow the voice in those crowds at all.</p>
     <p class="lede">We took a person reading a book out loud and buried their voice in a crowd of other people talking. Then we cleaned it up with our model. Meta's Muse model listened to both and wrote down what it heard. Pick a recording to hear it and see what Muse wrote.</p>
 
     <div class="ml" id="ml" hidden>
@@ -546,7 +544,7 @@
 <section id="graham" class="solid-bg" aria-labelledby="h-graham">
   <div class="wrap">
     <h2 id="h-graham">What could this mean for Graham?</h2>
-    <p class="lede">Nothing on this page has been tried with Graham's implants, or with any listener. His Nucleus 6 processors are what he uses, and we have never compared our program with them. What follows is what the computer tests say, and what it could look like if every step below were passed.</p>
+    <p class="lede">Nothing on this page has been tried with Graham's implants, or with any listener. What follows is what the computer tests say, and what it could look like if every step below were passed.</p>
 
     <div class="cols2">
       <div class="col rv">
@@ -554,7 +552,7 @@
         <p>A tiny program would sit between the microphone and the implant. Every 6 thousandths of a second, it guesses which part of the sound is the voice and turns the rest down, using only sound that has already happened. It is small enough to imagine on a phone or inside a processor someday, though we have not timed it on one yet.</p>
         <p><strong>What the computer tests say.</strong> In everyday crowd noise it cuts the leftover noise to less than half. When the crowd is as loud as the voice, to about a third. The pulses an implant would send also look more like the clean voice. Speech that is already quiet is left alone. In the hardest case, when the crowd is louder than the voice, it only cuts the noise by about a quarter, short of our goal. That is the one check it still fails.</p><details class="researchers"><summary>For researchers</summary><p class="small muted">Gen 19, 3-seed mean: crowd ΔSI-SDR +3.51 dB; +4.65 dB at 0 dB; ΔACE electrodogram correlation +0.072; quiet SI-SDR 36 dB; −5 dB +1.19 dB vs +1.5 required.</p></details>
         <p class="kv-line">When the crowd is louder than the voice, the voice comes through <b class="hot">1.19 dB</b> cleaner, short of our goal of 1.5. <button class="explain-btn ai-only" hidden type="button" data-explain="crowd_m5">Explain</button></p>
-        <p class="kv-line">The pulses an implant would send match the clean voice <b>0.072 points</b> better, on a scale where 1 is a perfect match. <button class="explain-btn ai-only" hidden type="button" data-explain="crowd_ace">Explain</button></p>
+        <p class="kv-line">The pattern of pulses an implant would send comes out <b>a little closer</b> to the clean voice (0.072 on a 0-to-1 scale). <button class="explain-btn ai-only" hidden type="button" data-explain="crowd_ace">Explain</button></p>
         <div class="explain-slot"></div>
         <p><strong>What it could look like.</strong> A birthday party, a cafeteria, a family dinner: the chatter turned down a little, the voice he is facing coming through clearer, quiet speech untouched. It could one day run on a phone or a clip-on gadget that sends sound to his processors, or inside a future processor. Each of those would need the maker of the implant, audiologists and regulators to agree, and none of it has a date.</p>
       </div>
@@ -608,12 +606,11 @@
       <div class="col rv"><h3>We replay interrupted runs exactly</h3><p>One training run was cut off halfway when a computer session ended. We restarted it from the beginning and checked that it reproduced the original, number for number, before its result counted.</p></div>
       <div class="col rv"><h3>Someone else checks the sums</h3><p>A second AI, Codex Astra, made by a different company, recomputes every result from the raw data between versions. Its reviews are published word for word, including the ones that made us fix things before launch.</p>
         <blockquote class="quote">"Nothing here implies a directional-hearing benefit."<cite>from our project summary, after the independent review of version 19</cite></blockquote></div>
-      <div class="col rv"><h3>Failures stay on the record</h3><p><span data-gen-nulls-all>The versions that did not help</span> are on the tree with their numbers. Not helping once does not prove an idea can never work, and the record says so.</p></div>
+      <div class="col rv"><h3>Failures stay on the record</h3><p><span data-gen-nulls-all>The versions that did not help</span> are on the tree with their numbers. An idea that did not help once might still work another way, so we say that too.</p></div>
     </div></details>
   <details class="fold" id="limits"><summary>What this does not show</summary>
     
     <ul class="plain">
-      <li><strong>We never tested the Nucleus 6's own noise cleanup.</strong> Nothing here says our program is better than what Graham's processors already do.</li>
       <li><strong>We are not promising it helps anyone hear better.</strong> Everything is from computer tests. Even a hearing person listening to a simulation cannot tell you what an implant user would hear.</li>
       <li><strong>No version has earned a real listening test yet.</strong> That needs all 14 checks passed, a repeat on brand-new voices, and then an audiologist in charge.</li>
       <li><strong>Two of our own checks are still blank:</strong> how natural quiet speech sounds, and whether the program runs fast enough on an ordinary processor.</li>
@@ -705,7 +702,7 @@
     <nav aria-label="Footer">
       <a href="#short">The short version</a><a href="#wall">The hardest crowd</a><a href="#scorecard">The 14 checks</a><a href="#generations">Versions</a><a href="#ask">Ask a question</a><a href="#honest">Honesty</a><a href="#limits">What it does not show</a><a href="#made">How it was made</a><a href="#methods">How the tests work</a><a data-repo="" id="repo-link">Repository</a><a data-hf id="hf-link">Try the model on Hugging Face</a>
     </nav>
-    <p class="disc"><strong data-brand-name>Before the Implant</strong> is a public record of computer-only experiments. Graham's Nucleus 6 processors were never compared against it, and nothing here has been tried with any listener yet. The implant sound clips are a rough computer imitation, not what Graham actually hears.</p>
+    <p class="disc"><strong data-brand-name>Before the Implant</strong> is a public record of computer-only experiments. Nothing here has been tried with any listener yet. The implant sound clips are a rough computer imitation, not what Graham actually hears.</p>
     <p class="disc small">Research loop run mostly by Muse Wonder Full, Meta's AI model (versions 0 to 21, including the model on this page), then by Claude (Anthropic) for the final experiments, under Graham's dad's direction, and checked by Codex Astra. Ask and Explain are powered by Muse, Meta's AI model, via Meta's API. Fonts: Fraunces, Archivo, IBM Plex Mono. three.js r170, MIT.</p>
   </div>
 </footer>

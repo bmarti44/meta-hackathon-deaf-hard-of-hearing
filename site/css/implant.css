@@ -102,3 +102,5 @@
 
 /* round 4: sits on the wave like the other sections */
 section#implant,.imp{background:rgba(9,11,16,.3)!important}
+
+.imp-num,.imp-n{display:none!important}

@@ -162,7 +162,7 @@
   function showing(btn, playing) {
     nowEl.textContent = '';
     nowEl.append(playing ? 'Playing ' : 'Showing ');
-    const b = document.createElement('b'); b.textContent = String(btn.querySelector('.imp-n').textContent); nowEl.append(b, ' ', titleOf(btn));
+    nowEl.append(titleOf(btn));
     if (!playing) nowEl.append(', replaying without sound');
   }
   function reset(btn) {
