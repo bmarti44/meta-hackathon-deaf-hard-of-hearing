@@ -302,6 +302,19 @@ Disclosures:
   - **Next:** Gen 33 tests linked two-ear processing on Gen 32's frozen
     weights, aimed at the recurring direction-cue cost.
 
+- **Gen 33, linked two-ear processing (feasibility)** (update 2026-11-05
+  03:20; [research/gen33/results.md](./research/gen33/results.md)), in
+  Astra's wording:
+  - **Result:** Gen 33's shared-mask test on frozen Gen 32 weights reduced
+    mixture-cue distortion on the four-scene simulated bench, but failed
+    all four registered feasibility checks.
+  - **Verdict:** this rejects that specific wrapper. Gen 19 remains the
+    baseline, and no improvement in speech understanding or directional
+    hearing for cochlear-implant users is established.
+  - **Next:** both reviewers recommend stopping work on synthetic gates
+    and first building a frozen real-recording evaluation (BRUDEX, recorded
+    bilateral hearing-aid-microphone speech in reverberation).
+
 ## Limits (stated plainly)
 
 Offline bench results cannot establish superiority over the N6's

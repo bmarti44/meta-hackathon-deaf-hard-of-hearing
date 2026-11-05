@@ -10,7 +10,7 @@
 - **L1:** original SP. Mirrored ILD is +0.096 dB vs Gen 19 and mirrored ITD +0.125 samples.
 - **L2:** crossed mean target-ILD error is 5.523 dB linked vs 5.492 dB independent Gen 32. That is higher, not lower.
 - **L3:** linked is worse than Gen 19 in some subsets: ILD at +5 and +10 dB, and ITD at 0 dB.
-- **L4:** per-ear clarity is below a control in 18 of 40 comparisons.
+- **L4:** 18 of 40 subset-level criteria fail. Each criterion pools both ears; these are not 18 failing ears or 18 independent observations (Astra).
 
 **What linking did, by SNR** (crossed scenes; left and right mirror subsets
 are identical by symmetry):
@@ -31,14 +31,15 @@ are identical by symmetry):
 - **Target-only scenes:** with no crowd, linked target-ILD error is 0.21 dB vs 0.18 independent Gen 32, and ITD error is 0 for all systems.
 - **Worst ear per scene:** linked loses 0.87 dB SI-SDR vs independent Gen 32 in noisy scenes.
 
-**Reading** (16 crossed scenes, one seed, an assumed head model; descriptive beyond the registered rule):
-- **This wrapper:** a shared mask helps the direction cue in hard noise (−5 / 0 dB) and hurts it, and each ear's clarity, in easier noise (+5 / +10 dB).
-- **What the measures say:**
-  - It keeps the *mixture's* cues (low ILD distortion).
-  - The registered measure rewards matching the *clean voice's* cues.
-  - The two measures disagree about which behaviour is better for a listener, and these data cannot settle that.
-- **No change after the result:** the decision rule forbids any tuning of the pooling or of SNR-dependent linking on these 16 scenes. Any such idea needs its own registration and fresh scenes.
-- No localisation or speech benefit is established. Nucleus 6 two-ear synchronisation is unverified.
+**Reading** (wording per Astra's review):
+- **The supported conclusion is narrow.** This frozen-weight, mean-encoding shared-mask wrapper failed its feasibility requirements.
+  - It reduced mixture-ILD distortion on the four-scene existing bench.
+  - It slightly increased mean target-ILD error.
+  - It brought substantial worst-ear SI-SDR losses.
+- **What it does not reject:** trained bilateral processing, shared acoustic gains, or linking in general. A shared learned-basis mask also guarantees no acoustic cue preservation.
+- **The SNR pattern is descriptive.** Each SNR uses different speech and noise content, and mirrored scenes are redundant under this symmetric head model. It does not show that linking helps whenever noise is hard and hurts whenever it is easy.
+- **Attributing linkage effects:** they should be read from linked vs *independent Gen 32*. Comparisons with Gen 19 also contain the weight change. Where the table says per-ear SI-SDR declined, that is SI-SDR, not "clarity"; STOI can move differently.
+- No improvement in speech understanding or directional hearing is established. Nucleus 6 two-ear synchronisation is unverified.
 
 **Artifacts committed:**
 - the four stereo-runner documents: Gen 19 / Gen 32 independent, Gen 32 / Gen 19 linked;
