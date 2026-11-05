@@ -239,6 +239,18 @@ Disclosures:
   - **Next:** Gen 28 halves the reverberant training share, to try to
     keep the room gains without the dry cost.
 
+- **Gen 28, half the room dose** (update 2026-11-05 00:15;
+  [research/gen28/results.md](./research/gen28/results.md)), in Astra's
+  wording:
+  - **Result:** Gen 28 halved the room-augmentation probability and
+    improved synthetic-room SI-SDR by 0.459 dB versus Gen 19 in one
+    training seed, while reducing but not eliminating the dry-speech
+    losses seen in Gen 27.
+  - **Verdict:** it failed the registered dry-preservation and spatial
+    ITD gates despite passing the other checks. Gen 19 remains the
+    baseline, and no listener benefit is established.
+  - **Next:** Gen 29 halves the dose again (12.5%).
+
 ## Limits (stated plainly)
 
 Offline bench results cannot establish superiority over the N6's
