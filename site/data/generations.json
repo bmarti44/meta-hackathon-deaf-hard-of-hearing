@@ -303,19 +303,19 @@
       "id": "gen31",
       "label": "Version 31",
       "change": "A different way to teach rooms: start from version 19, give it a short lesson in echoey rooms, then mix the old and new versions together",
-      "status": "running",
+      "status": "fail",
       "numbers": [
         {
-          "label": "Why",
-          "value": "Keep the help in echoey rooms without any loss in rooms with no echo"
+          "label": "Mixes tried",
+          "value": "10, from a little of the new version to all of it"
         },
         {
-          "label": "How the mix is chosen",
-          "value": "On 16 new voices the program has never heard, picking the strongest mix that is not worse than version 19"
+          "label": "Mixes that were not worse than version 19 on speech with no echo, on 16 new voices",
+          "value": "None (the closest missed by 0.00003 on a 0-to-1 scale)"
         }
       ],
-      "note": "Training now. We will add the result when it finishes.",
-      "link": "research/gen31/prereg.md"
+      "note": "The short lesson in echoey rooms made speech with no echo a little clearer in one way and a little less clear in another. Our rule needs every measure to be at least as good as version 19, and even the gentlest mix missed by a hair, so by our rules there was nothing to test further.",
+      "link": "research/gen31/results.md"
     }
   ]
 }
