@@ -113,7 +113,7 @@ const mat = new THREE.ShaderMaterial({
       a *= mix(1.0, 1.1, vStill);
       a *= 0.35 + 1.6*vLit;
       a *= mix(1.0, 1.0, vThin);
-      a *= mix(1.0, 0.8, vLinked);
+      a *= mix(1.0, 1.4, vLinked);
       a *= mix(1.0, 0.35 + 0.65*step(0.985, fract(vSeed*7.0)), vWall);
       a *= clamp(1.7 - vDepth*0.1, 0.3, 1.0);
       gl_FragColor = vec4(col, a);
@@ -138,7 +138,7 @@ const modelLevel = () => bench ? show(bench.summary_seed_mean.gen19.crowd.d_sisd
 
 const $ = id => document.getElementById(id);
 const els = () => ({ born: $('born'), tests: $('tests'), music: $('music'), crowd: $('crowd'), dancing: $('dancing'),
-  model: $('model'), implant: $('implant'), dir: document.querySelector('.dir-wrap'), sliderBox: document.querySelector('.slider-box'), meta: $('meta-lab'), impStage: document.querySelector('#imp-stage') || document.querySelector('#implant .imp-steps'), wall: $('wall'), gens: $('generations'), attempts: $('attempts'), graham: $('graham'), honest: $('honest') });
+  model: $('model'), implant: $('implant'), dir: document.querySelector('.dir-wrap'), failRow: document.querySelector('#score-table tr.fail'), sliderBox: document.querySelector('.slider-box'), meta: $('meta-lab'), impStage: document.querySelector('#imp-stage') || document.querySelector('#implant .imp-steps'), wall: $('wall'), gens: $('generations'), attempts: $('attempts'), graham: $('graham'), honest: $('honest') });
 let E = els();
 const clamp01 = v => Math.min(1, Math.max(0, v));
 const baseAlpha = U.uAlphaK.value;
@@ -178,6 +178,8 @@ function measure() {
   T.ears = presence(E.dir, 0.05);
   T.drift = window.__ears === 'separate' ? 1 : 0;
   T.wall = pw > 0 && sliderClar != null ? Math.min(pw, presence(E.sliderBox, 0.05)) * clamp01((0.32 - sliderClar) / 0.1) : 0;   // slams in only toward −5 dB, only while the slider is on screen
+  const pf = presence(E.failRow, 0.05); if (pf > 0.3 && sliderClar != null) { T.wall = Math.max(T.wall, 0.25 * pf); T.clarity = Math.min(T.clarity, sliderClarity(-5)); }
+  T.waver = Math.max(T.waver, 0.35 * presence(E.attempts));
   T.thin = clamp01((y - (top(E.wall) + (E.wall ? E.wall.offsetHeight : 0))) / h) * (1 - Math.min(1, 3 * Math.max(presence(E.dir, 0.05), presence(E.gens))));
   const afterModel = y + h * 0.5 > top(E.model);
   counterDb = bench && afterModel ? bench.summary_seed_mean.gen19.crowd.d_sisdr * clamp01((cl - 0.15) / Math.max(0.01, ml - 0.15)) : 0;

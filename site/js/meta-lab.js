@@ -38,7 +38,7 @@
       if (t == null) { $(`ml-t-${side}`).textContent = "(This one did not get through to Muse, so there is nothing to show.)"; $(`ml-s-${side}`).textContent = ""; continue; }
       const none = /^\s*\[unintelligible\]\s*$/i.test(t);
       const al = align(c.reference, none ? "" : t);
-      $(`ml-t-${side}`).innerHTML = none ? "<em>Muse said it could not make out any words.</em>" : (al.html || "<em>(nothing)</em>");
+      $(`ml-t-${side}`).innerHTML = none ? "<em>Muse said it could not make out any words.</em>" : ((al.html || "<em>(nothing)</em>").replace(/\bi'm\b/g, "I'm").replace(/\bi\b/g, "I"));
       $(`ml-s-${side}`).innerHTML = `Muse got <b>${al.hits}</b> of ${al.total} words right.`;
     }
   }
@@ -82,7 +82,7 @@
     root.hidden = false; $("ml-fallback").remove(); {
       const hits = (c, k) => { const t = c[k] && c[k].transcript; if (t == null || /^\s*\[unintelligible\]\s*$/i.test(t)) return -1; return align(c.reference, t).hits; };
       let best = -1, bi = 0;
-      data.clips.forEach((c, i) => { const after = hits(c, "gen19"), before = hits(c, "unproc"), gain = after - before; const sc = gain * 10 + after; if (gain > 0 && after > 0 && sc > best) { best = sc; bi = i; } });
+      data.clips.forEach((c, i) => { const after = hits(c, "gen19"), before = hits(c, "unproc"), gain = after - before; const sc = gain * 10 + after + (c.snr_db === 0 ? 100 : 0); if (gain > 0 && after > 0 && sc > best) { best = sc; bi = i; } });
       if (best < 0 && data.clips.length > 4) bi = 4;
       show(bi);
     }
