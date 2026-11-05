@@ -70,12 +70,23 @@ function search(q) {
   return scored.map(([, d]) => ({ file: d.file, heading: d.heading, text: d.text.slice(0, 1100) }));
 }
 
+function plainName(f) {
+  const m = String(f).match(/gen(\d+)\/(results|prereg|astra[^/]*|muse[^/]*)\.md$/);
+  if (m) return m[2] === "results" ? `version ${+m[1]}'s results` : m[2] === "prereg" ? `version ${+m[1]}'s plan` : `a review of version ${+m[1]}`;
+  if (/SUBMISSION\.md$/.test(f)) return "the project summary";
+  if (/KPI\.md$/.test(f)) return "how the 14 checks work";
+  if (/GOAL\.md$/.test(f)) return "why this project exists";
+  if (/code-audit|review/.test(f)) return "an independent review";
+  return "a project note";
+}
+
 function runTool(name, args) {
   if (name === "list_generations") return { step: "Read the list of every version we tried", data: K.generations };
   if (name === "get_scorecard") return { step: "Read the 14 checks and how the model did on each", data: K.scorecard };
   if (name === "search_record") {
     const q = String(args.query || "").slice(0, 120), r = search(q);
-    return { step: `Read ${r.length} ${r.length === 1 ? "note" : "notes"} from the project diary`, data: r };
+    const names = [...new Set(r.map(x => plainName(x.file)))];
+    return { step: `Read ${names.join(", ")}`, data: r };
   }
   return { step: null, data: { error: "unknown tool" } };
 }
@@ -83,12 +94,13 @@ function runTool(name, args) {
 const CONTEXT = `PROJECT: "Before the Implant" (beforetheimplant.com), a hackathon research entry.\n${K.facts}\n\nSTORY: ${K.story}\n\nCURRENT VERDICT: ${K.scorecard.verdict}.`;
 const RULES = `Rules you must follow:
 - Every number you give must come from a tool result or the context above. Never invent numbers, dates, ages or personal details about Graham or his family.
-- Focus only on what the result MEANS, explained like the reader is five: short sentences, everyday words, one simple picture or comparison if it helps. Be really clear.
+- Focus only on what the result MEANS, explained like the reader is five: short sentences, everyday words. Explain directly; avoid cute analogies (bikes, video games, building blocks, homework, training wheels). Be really clear.
 - Do NOT add caveat lists or "what it does not mean" sections, and do not tack on reminders about testing, real listeners, promotion or the scorecard verdict; a fixed footnote about verifying on the Nucleus 6 is added after your answer automatically. Just never claim it already helps a real listener or beats the Nucleus 6.
-- Only if someone directly asks for advice about their own or their child's hearing care, mention in a short clause that their audiologist can help with that; otherwise never add referral lines. Do not use disclaimers, legal language or the phrase "medical advice".
+- Never mention audiologists, doctors or clinical teams unless the question explicitly asks about a specific person's own hearing care or treatment. Do not use disclaimers, legal language or the phrase "medical advice".
 - Always write full, friendly sentences; never shorthand fragments. Never mention file names, paths or internal labels.
 - Failures and nulls are part of the result: report them plainly.
-- Write in simple, everyday words anyone can follow, unless asked for researcher detail. No em dashes.`;
+- Write in simple, everyday words anyone can follow, unless asked for researcher detail. No em dashes.
+- Never use these technical words unless the reader asks for researcher detail; use the plain version instead: "parameters" -> "about 600,000 numbers"; "causal" -> "uses only sound that has already happened"; "oracle" or "non-causal" -> "a version that cheats by hearing the future"; "loss" or "loss function" -> "how the model is scored while it learns"; "SI-SDR" -> "how clean the voice is"; "STOI" -> "how easy the speech is to understand"; "seed" -> "training run"; "bench" or "in-silico" -> "computer tests"; "Gen 22" -> "version 22"; "ms" -> "thousandths of a second". Say "dB" only with a plain explanation (every 3 dB cuts the leftover noise in half).`;
 
 const askPrompt = q => ({
   instructions: `You answer questions about a cochlear-implant noise-reduction research project, using tools that read its committed research record.\n\n${CONTEXT}\n\n${RULES}
