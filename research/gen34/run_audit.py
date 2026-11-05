@@ -28,11 +28,13 @@ def summarize(rows):
             for snr in P.SNRS + (None,):
                 ks = [k for k in by[cand] if k[1] == s and k[3] == snr]
                 d = {}
-                for met in ("sisdr", "stoi"):
+                for met in ("sisdr", "stoi", "wave_err"):
                     dl = [by[cand][k][f"{met}_L"] - by[ref][k][f"{met}_L"] for k in ks]
                     dr = [by[cand][k][f"{met}_R"] - by[ref][k][f"{met}_R"] for k in ks]
-                    d[met] = m(dl + dr); d[f"{met}_worst_ear"] = m(min(a, b) for a, b in zip(dl, dr))
-                for met in ("ild_target_err_db", "itd_err_samples"):
+                    worse = max if met == "wave_err" else min   # waveform error: higher is worse
+                    d[met] = m(dl + dr); d[f"{met}_left_ear"] = m(dl); d[f"{met}_right_ear"] = m(dr)
+                    d[f"{met}_worst_ear"] = m(worse(a, b) for a, b in zip(dl, dr))
+                for met in ("ild_target_err_db", "ild_mixture_dist_db", "itd_err_samples"):
                     d[met] = m(by[cand][k][met] - by[ref][k][met] for k in ks)
                 out[f"{cand}-{ref}|{s}|{'target_only' if snr is None else f'{snr:+.0f}'}"] = d
     return out

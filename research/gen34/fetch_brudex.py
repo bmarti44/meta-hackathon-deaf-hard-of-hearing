@@ -25,9 +25,16 @@ class HTTPRangeFile(io.RawIOBase):
 
     def __init__(self, url, block=1 << 20):
         self.url, self.block, self.pos, self.cache = url, block, 0, {}
-        req = urllib.request.Request(url, method="HEAD")
-        with urllib.request.urlopen(req, timeout=120) as r:
-            self.size = int(r.headers["Content-Length"])
+        for attempt in range(6):  # Zenodo occasionally answers 504; retry the size probe too
+            try:
+                req = urllib.request.Request(url, method="HEAD")
+                with urllib.request.urlopen(req, timeout=120) as r:
+                    self.size = int(r.headers["Content-Length"])
+                break
+            except Exception:
+                if attempt == 5:
+                    raise
+                time.sleep(2 ** attempt)
         self.bytes_fetched = 0
 
     def seekable(self): return True
@@ -86,7 +93,19 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--list"); ap.add_argument("--archive"); ap.add_argument("--pattern", action="append", default=[])
     ap.add_argument("--out", default=str(OUT))
+    ap.add_argument("--manifest", default="manifest.json", help="manifest file name inside --out (one per parallel fetch; merge with --merge)")
+    ap.add_argument("--merge", action="store_true", help="merge every manifest*.json in --out into manifest.json after checking each file's sha256")
     a = ap.parse_args()
+    if a.merge:
+        out = Path(a.out); merged = {"source": "BRUDEX doi:10.5281/zenodo.8340195 (MIT)", "files": {}}
+        for mp in sorted(out.glob("manifest*.json")):
+            for k, v in json.loads(mp.read_text())["files"].items():
+                assert hashlib.sha256((out / k).read_bytes()).hexdigest() == v["sha256"], f"sha256 mismatch {k}"
+                assert merged["files"].get(k, v) == v, f"conflicting entries for {k}"
+                merged["files"][k] = v
+        (out / "manifest.json").write_text(json.dumps(merged, indent=1, sort_keys=True))
+        print(f"merged {len(merged['files'])} files")
+        return
     if a.list:
         z, f = open_zip(a.list)
         for i in z.infolist():
@@ -97,7 +116,7 @@ def main():
     z, f = open_zip(a.archive)
     members = [i for i in z.infolist() if any(fnmatch.fnmatch(Path(i.filename).name, p) for p in a.pattern)]
     assert members, "no members matched"
-    man_p = out / "manifest.json"
+    man_p = out / a.manifest
     man = json.loads(man_p.read_text()) if man_p.exists() else {"source": "BRUDEX doi:10.5281/zenodo.8340195 (MIT)", "files": {}}
     t0 = time.time()
     for k, i in enumerate(members):

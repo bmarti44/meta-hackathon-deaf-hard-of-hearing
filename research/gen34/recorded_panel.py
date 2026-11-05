@@ -13,8 +13,8 @@ talker plus the recorded babble (played from four corner loudspeakers) of the sa
 from summed bilateral energy over the scoring window with ONE noise multiplier shared by both ears, so interaural
 level and time differences are preserved. 48 kHz -> 16 kHz (resample_poly 1:3). Each stereo input is scaled by one
 gain to RMS 0.14 (the published enhance.py convention), also shared by both ears.
-Scoring window: from 1 s to the end of the short recording (BRUDEX short files are <= 10 s; Astra's 11 s spec assumed
-longer files, see prereg). Reference for each ear = that ear's recorded isolated talker (reverberant): this tests
+Scoring window: from 1 s to the end of each file (BRUDEX short files are <= 10 s and vary, e.g. SPK1 7.65 s; Astra's
+11 s spec assumed longer files, see prereg). Reference for each ear = that ear's recorded isolated talker (reverberant): this tests
 noise removal and speech preservation, NOT dereverberation.
 
 Systems: bypass; Gen19 seed 17 independent per ear; Gen32 alpha=0.7 independent per ear (both frozen).
@@ -107,7 +107,13 @@ def build():
     return items, h.hexdigest(), meta
 
 
-def metrics(rL, rR, oL, oR):
+METRICS = ("sisdr_L", "sisdr_R", "stoi_L", "stoi_R", "wave_err_L", "wave_err_R",
+           "ild_target_err_db", "ild_mixture_dist_db", "itd_err_samples")
+
+
+def metrics(rL, rR, oL, oR, mL, mR):
+    """Per-ear SI-SDR/STOI and gain-sensitive waveform error vs each ear's recorded isolated talker; target-ILD error
+    (output vs isolated talker) and mixture-ILD distortion (output vs input mixture); ITD error. Window: 1 s to end."""
     from pystoi import stoi
     from spatial import ild_per_band, itd_samples
     w = slice(T0, None)
@@ -115,8 +121,11 @@ def metrics(rL, rR, oL, oR):
     for e, r, o in (("L", rL, oL), ("R", rR, oR)):
         out[f"sisdr_{e}"] = _si_sdr_np(r[w], o[w])
         out[f"stoi_{e}"] = float(stoi(r[w].astype(np.float64), o[w].astype(np.float64), FS, extended=False))
-    ild_t = ild_per_band(rL[w], rR[w])
-    out["ild_target_err_db"] = float(np.mean(np.abs(ild_per_band(oL[w], oR[w]) - ild_t)))
+        r64, o64 = r[w].astype(np.float64), o[w].astype(np.float64)
+        out[f"wave_err_{e}"] = float(10 * np.log10((np.sum((o64 - r64) ** 2) + 1e-20) / (np.sum(r64 ** 2) + 1e-20)))
+    ild_t, ild_o = ild_per_band(rL[w], rR[w]), ild_per_band(oL[w], oR[w])
+    out["ild_target_err_db"] = float(np.mean(np.abs(ild_o - ild_t)))
+    out["ild_mixture_dist_db"] = float(np.mean(np.abs(ild_o - ild_per_band(mL[w], mR[w]))))
     out["itd_err_samples"] = float(abs(itd_samples(oL[w], oR[w]) - itd_samples(rL[w], rR[w])))
     return out
 
@@ -130,7 +139,7 @@ def run_system(items, name, ckpt=None):
         oL, oR = fn(it["mL"].copy(), it["mR"].copy())
         oL, oR = np.asarray(oL, dtype=np.float32), np.asarray(oR, dtype=np.float32)
         rec = {"system": name, **{k: it[k] for k in ("talker", "setting", "az", "snr", "cond")}}
-        rec.update(metrics(it["rL"], it["rR"], oL, oR))
+        rec.update(metrics(it["rL"], it["rR"], oL, oR, it["mL"], it["mR"]))
         if ckpt is None:
             rec["bypass_identical"] = bool(np.array_equal(oL, it["mL"]) and np.array_equal(oR, it["mR"]))
         rows.append(rec)

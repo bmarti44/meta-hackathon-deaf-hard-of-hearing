@@ -4,15 +4,16 @@ Model scores never decide whether the asset is accepted; they are reported descr
 Checks (all must pass):
  A1 provenance: every needed BRUDEX file is in the fetch manifest, its sha256 on disk matches, and the licence file
     on disk is MIT; the source is doi 10.5281/zenodo.8340195.
- A2 speaker-overlap audit: research/gen34/speaker_audit.json exists, names its basis, and records no overlap between
-    the BRUDEX talkers and any speaker used to train or tune Gen19/Gen32 (LibriSpeech train-clean-100 / dev-clean).
+ A2 recording overlap excluded by documented provenance: speaker_audit.json cites the BRUDEX paper's sources (SQAM and
+    VCTK, not LibriSpeech) and records recording_overlap false; speaker identity is recorded (unresolved), not inferred.
  A3 complete grid: for every system, exactly the 192 noisy + 48 target-only items, unique, with registered metadata.
  A4 channel/delay: for every target-only item in the 'low' setting, the broadband level difference and the
     cross-correlation lag of the recorded left/right reference both point to the loudspeaker's side (negative
     azimuth = left louder and earlier).
  A5 bypass identity: every bypass output equals its input exactly.
  A6 duplicate-baseline zero difference: two independent Gen19 runs give identical rows.
- A7 every metric finite; checkpoint hashes match the registered Gen19 and Gen32 files; material hash reproduces.
+ A7 every prescribed metric (recorded_panel.METRICS) present, numeric and finite in every row; checkpoint hashes match
+    the registered Gen19 and Gen32 files; material hash reproduces. Malformed audits return INVALID.
 """
 from __future__ import annotations
 import argparse, hashlib, json, math, sys
@@ -45,7 +46,11 @@ def judge(audit_p, rebuild=True):
     checks["A1_provenance"] = bool(ok)
     au_p = HERE / "speaker_audit.json"
     au = json.loads(au_p.read_text()) if au_p.exists() else {}
-    checks["A2_speaker_overlap_audit"] = bool(au.get("overlap") is False and au.get("basis"))
+    # documented corpus provenance; recording overlap must be excluded; speaker identity is recorded, not inferred
+    checks["A2_recording_overlap_excluded_by_provenance"] = bool(
+        au.get("recording_overlap") is False and "SQAM and VCTK" in au.get("provenance", "")
+        and au.get("speaker_identity") in ("unresolved", "excluded"))
+    notes["speaker_identity"] = au.get("speaker_identity")
     grid = {(t, s, az, snr) for t in P.TALKERS for s in P.SETTINGS for az in P.AZ for snr in P.SNRS + (None,)}
     by = {}
     ok = True
@@ -74,19 +79,30 @@ def judge(audit_p, rebuild=True):
         checks["A7_material_hash_reproduces"] = mh == A["material_sha256"]
     checks["A4_channel_delay"] = bool(ok and len(a4) == 16)
     checks["A5_bypass_identity"] = all(r.get("bypass_identical") is True for r in by.get("bypass", {}).values())
-    checks["A6_duplicate_baseline_zero_difference"] = all(by["gen19"][k] == {**by["gen19_repeat"][k], "system": "gen19"} for k in grid)
-    fin = all(math.isfinite(v) for r in A["rows"] for v in r.values() if isinstance(v, float))
+    checks["A6_duplicate_baseline_zero_difference"] = bool(
+        "gen19" in by and "gen19_repeat" in by and set(by["gen19"]) == set(by["gen19_repeat"]) == grid
+        and all(by["gen19"][k] == {**by["gen19_repeat"][k], "system": "gen19"} for k in grid))
+    fin = all(all(isinstance(r.get(mt), (int, float)) and not isinstance(r.get(mt), bool) and math.isfinite(r[mt])
+                  for mt in P.METRICS) for r in A["rows"])
     ck = all(A["checkpoints"][k]["sha256"] == REG[k] for k in REG)
     checks["A7_finite_and_registered_checkpoints"] = bool(fin and ck)
     verdict = "VALID ASSET" if all(checks.values()) else "INVALID"
-    return {"checks": checks, "verdict": verdict, "a4_rows": a4}
+    return {"checks": checks, "verdict": verdict, "a4_rows": a4, "notes": notes}
+
+
+def judge_safe(audit_p, rebuild=True):
+    """Malformed or unreadable audits return INVALID, never an exception (Astra pre-launch blocking 3)."""
+    try:
+        return judge(audit_p, rebuild)
+    except Exception as e:  # noqa: BLE001
+        return {"checks": {"well_formed": False}, "verdict": "INVALID", "error": f"{type(e).__name__}: {e}"}
 
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("--audit", required=True); ap.add_argument("--out", required=True)
     a = ap.parse_args()
     assert not Path(a.out).exists(), f"REFUSED: {a.out} exists"
-    doc = judge(a.audit)
+    doc = judge_safe(a.audit)
     Path(a.out).write_text(json.dumps(doc, indent=1))
     print(json.dumps(doc["checks"]), doc["verdict"])
 

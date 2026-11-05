@@ -50,7 +50,8 @@ checked; each file's sha256 in the fetch manifest):
 **Deviation from Astra's text (stated before running):** she specified
 "process the first 11 seconds and score seconds 1–11". BRUDEX's short
 files are ≤ 10 s; full-length files are in a 59 GB archive. So the whole
-10 s file is processed and seconds 1–10 are scored.
+file is processed and **1 s to end of file** is scored; lengths vary,
+e.g. SPK1 ends at 7.65 s (Astra).
 
 **Systems:**
 - bypass;
@@ -103,17 +104,55 @@ rooms (Astra).
 
 Run: `research/gen34/pipeline.sh` (after the fetch completes).
 
+## Pre-launch amendment 1 (2026-11-05 ~03:50, before any model was run on the recordings)
+
+Astra's first pre-launch review was **NOT CLEARED**, with three blocking
+items ([astra-prelaunch-review.md](./astra-prelaunch-review.md)). Fixes:
+
+1. **A2 basis.** It is replaced by documented corpus provenance.
+   - The BRUDEX paper (§3) states the talkers are "two female and two male
+     English speech signals … from the SQAM and VCTK corpus". The quote was
+     verified from the paper PDF.
+   - Neither corpus is LibriSpeech, so **recording overlap is excluded**.
+   - **Speaker identity is recorded as unresolved**, because whether a talker
+     is also a LibriVox reader cannot be verified. That is a limitation, not
+     a pass.
+   - A2 now checks `recording_overlap: false`, the cited provenance, and a
+     recorded identity status. The bandwidth measurement is kept as
+     supporting evidence only.
+2. **Missing readouts.** These are added:
+   - **mixture-ILD distortion** (output vs input mixture);
+   - **gain-sensitive waveform error** per ear (10·log10 of error energy over
+     reference energy) for every item, target-only included;
+   - **each-ear cell summaries** (left, right and worst ear, where worst
+     means the higher waveform error).
+3. **Judge completeness.**
+   - A7 now requires every prescribed metric (`recorded_panel.METRICS`, 9
+     fields) to be present, numeric (not boolean) and finite in every row.
+   - A6 handles missing systems.
+   - `judge_safe` returns INVALID for any malformed or unreadable audit
+     instead of raising.
+   - Tested by deleting each metric in turn, replacing one with a boolean,
+     removing the Gen 19 rows, and feeding unparsable JSON.
+
+Also:
+- The fetcher retries the size probe (Zenodo answered one 504).
+- Parallel fetches write separate manifests, which are merged with a
+  sha256 re-check.
+
+Tests: `test_gen34.py`, 3/3 passing. The hash table is updated below.
+
 ## Source hashes (sha256)
 
 | File | sha256 |
 |---|---|
-| `research/gen34/fetch_brudex.py` | `859c9e118fdf4c68d4c7ed5122b71c78d70ee3033713653e491511b6021c3af5` |
-| `research/gen34/recorded_panel.py` | `d36b5a5a7f2933bc62968e84857bc703b0bc72dd2ee8a13d471b256615447167` |
-| `research/gen34/run_audit.py` | `94c5376f6817a6de9f187713ba22b2d9ff65c20aa78eb005a24567a976ba910f` |
-| `research/gen34/judge_recorded_v1.py` | `7ec28c2c9ab696e0a1aa44ff3bfb85e2281f335d967b3f8106dfc20a0278e55e` |
-| `research/gen34/test_gen34.py` | `2d3eb1c6ef5de78896fa82065185ce61c22eef71a847c1d53042a60b2ea876a9` |
+| `research/gen34/fetch_brudex.py` | `470a79b497a5f08ea62d1b2339e7fa8da1a18781b96ccc3b99693ca03e9f9f4e` |
+| `research/gen34/recorded_panel.py` | `f07b279a6d48850b78b8bf0a30017c513e67aef8453683de6195926e78556f29` |
+| `research/gen34/run_audit.py` | `dba6cd66e416d54d46a88c6426e609a2171b2b67723e2d7a7f91f6dbb4f6d231` |
+| `research/gen34/judge_recorded_v1.py` | `bfa9443b09bcf3072d3c55504a49b5319322e9220948da508e144af16c63368e` |
+| `research/gen34/test_gen34.py` | `db87a4fbb03a02ecdfb6bec82e34779557bf639bef201ac3136379cee1c09e9a` |
 | `research/gen34/pipeline.sh` | `9603e319f284288e75ba9e95dbd07c8392a6e93d651cf67e18c584a11c623b10` |
-| `research/gen34/speaker_audit.json` | `90f9ecaabe48251afdb4d83940ffc62f777287a6f234422468d2088b788e3a7e` |
+| `research/gen34/speaker_audit.json` | `385e466bbe2b806b8ff8135fdf18a3d834583dbe190a698fb72bd3486c90a830` |
 | `research/gen33/linked.py` | `9351c9f5eaf054a4252a639fd869107d27bae9da6dab508e2965c71866ab8acd` |
 | `research/gen24/train13.py` | `5ad336fc891dac7ceff79a63a78393a8d1a5166b88bee92c734f9841aafdce08` |
 | `research/bench-n6/spatial.py` | `1bd0e32b073fdbf228f518269953469e7e0b5c7c0ddef4c980a5af3509a68834` |
