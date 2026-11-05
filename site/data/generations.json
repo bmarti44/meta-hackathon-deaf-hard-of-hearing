@@ -320,7 +320,7 @@
     {
       "id": "gen32",
       "label": "Version 32",
-      "change": "The same short lesson in echoey rooms, but this time the program is also told to keep sounding exactly like version 19 on speech with no echo",
+      "change": "The same short lesson in echoey rooms, but this time the program is also told to stay as close as it can to version 19 on speech with no echo",
       "status": "pending",
       "numbers": [
         {
