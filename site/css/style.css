@@ -465,3 +465,6 @@ section#implant{padding-top:clamp(40px,5vw,64px)!important}
 @media (max-width:900px){#music{min-height:70vh}#born{min-height:85vh}}
 section.solid-bg{background:rgba(9,11,16,.42)}
 section.solid-bg .wrap::before{background:radial-gradient(70% 70% at 50% 50%,rgba(9,11,16,.78),rgba(9,11,16,.5) 60%,rgba(9,11,16,0))}
+
+/* dad's photo + 'Why this exists' now follows Graham's clip (owner order) */
+.after-dance{margin-top:clamp(32px,5vw,64px)}
