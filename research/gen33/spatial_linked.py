@@ -28,11 +28,8 @@ import linked  # noqa: E402
 TR = slice(256, -256)
 
 
-def _sisdr(ref, est):
-    ref = ref.astype(np.float64); est = est.astype(np.float64)
-    a = np.dot(est, ref) / (np.dot(ref, ref) + 1e-12)
-    s = a * ref; e = est - s
-    return float(10 * np.log10((np.dot(s, s) + 1e-12) / (np.dot(e, e) + 1e-12)))
+sys.path.insert(0, str(R / "gen24"))
+from train13 import _si_sdr_np as _sisdr  # noqa: E402  the established implementation (mean-removed; Astra pre-launch blocking 2)
 
 
 def _stoi(ref, est):

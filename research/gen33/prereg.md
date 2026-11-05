@@ -99,15 +99,34 @@ mono R1a and D failures of Gen 32 are unchanged.
 
 Run: `research/gen33/pipeline.sh` (about 2 min, CPU).
 
+## Pre-launch amendment 1 (2026-11-05 ~03:15, before any linked output)
+
+Astra's first pre-launch review was **NOT CLEARED**, with two blocking items
+([astra-prelaunch-review.md](./astra-prelaunch-review.md)). Muse CLEARED it
+([muse-prelaunch-review.md](./muse-prelaunch-review.md)). Fixes:
+
+1. **Grid validation in `judge_link.py`.**
+   - Candidate and both controls must each have the complete, unique 16-scene grid, for crossed rows and for both extra conditions.
+   - SNR metadata must match, and every metric must be finite and present.
+   - Noisy subsets must have exactly 2 scenes and target-only directions 8.
+   - Unprocessed rows must agree exactly across documents and with the registered control.
+   - Any violation stops with INVALID; it never changes a verdict. Tested by dropping a noisy row, dropping a target-only row and duplicating a row.
+2. **Per-ear SI-SDR** now uses the project's established, mean-removed implementation (`research/gen24/train13._si_sdr_np`), tested for identity.
+3. **Descriptive additions** (not gating; Muse notes 1 and 4): each ear's difference separately, the per-scene worst-ear mean, and target-only ILD/ITD errors per system. The target-only cue errors are descriptive only; L1–L4 are unchanged.
+4. **Threads:** legacy reproduction is exact under the default thread setting, which the pipeline uses. Astra observed tiny differences with one forced thread, so the thread count is left at its default and is not changed.
+
+Tests: `test_gen33.py`, 6/6 passing. The hash table is updated below.
+
 ## Source hashes (sha256)
 
 | File | sha256 |
 |---|---|
 | `research/gen33/linked.py` | `9351c9f5eaf054a4252a639fd869107d27bae9da6dab508e2965c71866ab8acd` |
-| `research/gen33/spatial_linked.py` | `0f423f3a01b88db2bfec86a027a45fc215ec20e641fbbacac548b41787731d60` |
-| `research/gen33/judge_link.py` | `5741968dfdb28a8ca38868d1b3096df2fac6ed62c135c591b8e65a6887511606` |
-| `research/gen33/test_gen33.py` | `77c3c4fc263a3fae3d1cb9b7b3bed22ceb409440b642031b44c42ae0caff516b` |
+| `research/gen33/spatial_linked.py` | `6bf9823771d53d1f03b67538302819fa363fdc63f901b88785d4032f78a03a67` |
+| `research/gen33/judge_link.py` | `f6bf89ea1af655e5cc2b4a59aada383e0bf081c57c273e9ee6a5eb3ce66eaa49` |
+| `research/gen33/test_gen33.py` | `e0a9ea020940aba678b12946a51efb44fa0da39a1b8bea4393a25a0014dadeeb` |
 | `research/gen33/pipeline.sh` | `fd01f4c3a5a1c54610e748bfda687158a2fc78427da86812c0edd0a01e8bc730` |
+| `research/gen24/train13.py` | `5ad336fc891dac7ceff79a63a78393a8d1a5166b88bee92c734f9841aafdce08` |
 | `research/gen15/model_causal.py` | `c357bc178448631c0349d80876636ae7d1e0b46d90abf057115c44799507a674` |
 | `research/gen27/judge_v3.py` | `faa38995052d38de526fbc868baed6dab577bc0598c1c045dcb956023ba4beb7` |
 | `research/bench-n6/spatial.py` | `1bd0e32b073fdbf228f518269953469e7e0b5c7c0ddef4c980a5af3509a68834` |

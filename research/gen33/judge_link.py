@@ -28,14 +28,38 @@ def _load_judge_v3():
     m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
 
 
+GRID = {(i, az) for i in range(4) for az in (-60.0, -30.0, 30.0, 60.0)}
+SNR_OF_CROP = {0: -5.0, 1: 0.0, 2: 5.0, 3: 10.0}
+
+
+def _need(cond, msg):
+    if not cond:
+        raise SystemExit(f"INVALID: {msg}")
+
+
+def _keyed(rows, what):
+    """Complete, unique 16-scene grid with registered metadata and finite metrics (Astra pre-launch blocking 1)."""
+    ks = [(r["crop"], r["target_az"]) for r in rows]
+    _need(len(ks) == len(set(ks)), f"{what}: duplicate scenes")
+    _need(set(ks) == GRID, f"{what}: scenes != registered 16-scene grid")
+    for r in rows:
+        _need(r["snr_db"] == SNR_OF_CROP[r["crop"]], f"{what}: SNR metadata != registered")
+        _need(all(math.isfinite(v) for k, v in r.items() if isinstance(v, float)), f"{what}: non-finite metric")
+    return {(r["crop"], r["target_az"]): r for r in rows}
+
+
 def _crossed(doc):
     n = doc["meta"]["candidate"]
-    return {(r["crop"], r["target_az"]): r for r in doc["crossed_rows"] if r["system"] == n}
+    return _keyed([r for r in doc["crossed_rows"] if r["system"] == n], f"crossed {n}")
 
 
 def _extra(doc, cond):
     n = doc["meta"]["candidate"]
-    return {(r["crop"], r["target_az"]): r for r in doc["extra_rows"] if r["system"] == n and r["cond"] == cond}
+    rows = [r for r in doc["extra_rows"] if r["system"] == n and r["cond"] == cond]
+    out = _keyed(rows, f"extra {cond} {n}")
+    need = ("sisdr_L", "sisdr_R", "stoi_L", "stoi_R") + (("ild_target_err_db", "itd_err_samples") if cond == "target_only" else ())
+    _need(all(all(m in r for m in need) for r in out.values()), f"extra {cond} {n}: missing metrics")
+    return out
 
 
 def _mean(xs):
@@ -50,7 +74,11 @@ def compare(cand, ctrls, snr_of):
     subsets = {f"noisy|{snr:+.0f}|{d}": ("noisy", [k for k in cand["noisy"] if snr_of[k[0]] == snr and f(k[1])])
                for snr in SNRS for d, f in DIRS.items()}
     subsets.update({f"target_only|{d}": ("target_only", [k for k in cand["target_only"] if f(k[1])]) for d, f in DIRS.items()})
+    for sname, (cond, ks) in subsets.items():
+        _need(len(ks) == (2 if cond == "noisy" else 8), f"subset {sname} has {len(ks)} scenes")
     for cname, ctrl in ctrls.items():
+        for c in ("noisy", "target_only"):
+            _need(set(ctrl[c]) == set(cand[c]) == GRID, f"{cname} {c} grid != candidate grid")
         for sname, (cond, ks) in subsets.items():
             for m in ("sisdr", "stoi"):
                 diffs = [cand[cond][k][f"{m}_{e}"] - ctrl[cond][k][f"{m}_{e}"] for k in ks for e in ("L", "R")]
@@ -69,7 +97,14 @@ def judge(linked_p, g32_p, g19_p, g19_ctrl_p, g19_linked_p=None):
     rep, sp = J.spatial_gates(LK, G19C, LK["meta"]["checkpoint_sha256"], G19C["meta"]["checkpoint_sha256"])
     L1 = sp["SP_spatial_existing_and_no_worsening"]
     lk, g32, g19 = _crossed(LK), _crossed(G32), _crossed(G19)
-    assert set(lk) == set(g32) == set(g19) and len(lk) == 16
+    ctrl_un = _keyed([r for r in G19C["crossed_rows"] if r["system"] == "unproc"], "crossed unproc (registered control)")
+    for D in (LK, G32, G19):
+        un = _keyed([r for r in D["crossed_rows"] if r["system"] == "unproc"], "crossed unproc")
+        _need(all(un[k] == ctrl_un[k] for k in GRID), "unprocessed crossed scenes differ between documents")
+        for c in ("noisy", "target_only"):
+            ue = _keyed([r for r in D["extra_rows"] if r["system"] == "unproc" and r["cond"] == c], f"extra unproc {c}")
+            ref = _keyed([r for r in LK["extra_rows"] if r["system"] == "unproc" and r["cond"] == c], f"extra unproc {c} (linked doc)")
+            _need(all(ue[k] == ref[k] for k in GRID), f"unprocessed extra {c} rows differ between documents")
     snr_of = {k[0]: lk[k]["snr_db"] for k in lk}
     ild_lk, ild_32 = _mean(r["ild_target_err_db"] for r in lk.values()), _mean(r["ild_target_err_db"] for r in g32.values())
     L2 = ild_lk < ild_32
@@ -87,12 +122,24 @@ def judge(linked_p, g32_p, g19_p, g19_ctrl_p, g19_linked_p=None):
              "gen19_indep": {c: _extra(G19, c) for c in ("noisy", "target_only")}}
     l4 = compare(cand, ctrls, snr_of)
     L4 = all(v >= 0 for v in l4.values())
+    # descriptive only (Muse pre-launch notes 1 and 4): each ear separately, worst ear, and target-only cue errors
+    desc = {}
+    for cname, ctrl in ctrls.items():
+        for c in ("noisy", "target_only"):
+            for m in ("sisdr", "stoi"):
+                dl = [cand[c][k][f"{m}_L"] - ctrl[c][k][f"{m}_L"] for k in GRID]
+                dr = [cand[c][k][f"{m}_R"] - ctrl[c][k][f"{m}_R"] for k in GRID]
+                desc[f"{cname}|{c}|{m}"] = {"left_ear": _mean(dl), "right_ear": _mean(dr),
+                                             "worst_ear_per_scene_mean": _mean(min(a, b) for a, b in zip(dl, dr))}
+    for nm, ex in (("linked", cand["target_only"]), ("gen32_indep", ctrls["gen32_indep"]["target_only"]),
+                   ("gen19_indep", ctrls["gen19_indep"]["target_only"])):
+        desc[f"target_only_cues|{nm}"] = {m: _mean(ex[k][m] for k in GRID) for m in ("ild_target_err_db", "itd_err_samples")}
     checks = {"L1_original_SP": L1, "L2_mean_ILD_below_independent_gen32": L2,
               "L3_no_ILD_ITD_worsening_vs_gen19_any_subset": L3, "L4_per_ear_sisdr_stoi_nonnegative_vs_both": L4}
     doc = {"checks": checks, "verdict": "LINKAGE FEASIBILITY PASSED" if all(checks.values()) else "REJECTED",
            "sp_report": rep, "crossed_mean_ild": {"linked": ild_lk, "gen32_indep": ild_32,
                                                    "gen19_indep": _mean(r["ild_target_err_db"] for r in g19.values())},
-           "L3": l3, "L4": l4,
+           "L3": l3, "L4": l4, "descriptive": desc,
            "shas": {"gen32": G32["meta"]["checkpoint_sha256"], "gen19": G19["meta"]["checkpoint_sha256"]}}
     if g19_linked_p:  # descriptive only: linkage applied to the accepted baseline
         GL = json.loads(Path(g19_linked_p).read_text())

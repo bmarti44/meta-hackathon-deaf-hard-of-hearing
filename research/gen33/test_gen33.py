@@ -53,3 +53,31 @@ def test_judge_rejects_fake_linked(tmp_path):
     assert doc["checks"]["L2_mean_ILD_below_independent_gen32"] is False and doc["verdict"] == "REJECTED"
     assert len(doc["L3"]) == 16 and len(doc["L4"]) == 40
     assert all(v == 0.0 for k, v in doc["L4"].items() if k.startswith("gen32_indep"))
+
+
+def test_judge_refuses_incomplete_or_duplicate_grids(tmp_path):
+    """Astra pre-launch blocking 1: a missing or duplicated row must stop the judge, never change its verdict."""
+    import spatial_linked as S
+    spec = importlib.util.spec_from_file_location("judge_link_t2", HERE / "judge_link.py")
+    J = importlib.util.module_from_spec(spec); spec.loader.exec_module(J)
+    g32 = S.run(CK["gen32"], "independent", "wiseftpd"); g19 = S.run(CK["gen19"], "independent", "gen19")
+    base = copy.deepcopy(g32); base["meta"]["mode"] = "linked"
+    ctrl = REPO / "research/gen27/selftest/spatial_gen19_s17.json"
+    (tmp_path / "g32.json").write_text(json.dumps(g32)); (tmp_path / "g19.json").write_text(json.dumps(g19))
+    def drop(d, cond):
+        i = next(j for j, r in enumerate(d["extra_rows"]) if r["system"] == "wiseftpd" and r["cond"] == cond); d["extra_rows"].pop(i); return d
+    def dup(d, cond):
+        r = next(r for r in d["extra_rows"] if r["system"] == "wiseftpd" and r["cond"] == cond); d["extra_rows"].append(dict(r)); return d
+    for mk in (lambda d: drop(d, "noisy"), lambda d: drop(d, "target_only"), lambda d: dup(d, "noisy")):
+        (tmp_path / "lk.json").write_text(json.dumps(mk(copy.deepcopy(base))))
+        with pytest.raises(SystemExit, match="INVALID"):
+            J.judge(tmp_path / "lk.json", tmp_path / "g32.json", tmp_path / "g19.json", ctrl)
+
+
+def test_sisdr_is_the_established_implementation():
+    import spatial_linked as S
+    sys.path.insert(0, str(REPO / "research/gen24"))
+    import train13
+    import numpy as np
+    rng = np.random.default_rng(0); x = rng.normal(size=8000) + 0.5; y = x + 0.01 * rng.normal(size=8000)
+    assert S._sisdr is train13._si_sdr_np and S._sisdr(x, y) == train13._si_sdr_np(x, y)
