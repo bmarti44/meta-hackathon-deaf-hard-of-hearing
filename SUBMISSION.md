@@ -328,6 +328,19 @@ Disclosures:
   - **Next:** Gen 35, a frozen output-path repair audit, before any change
     to the published Hugging Face model.
 
+- **Gen 35, output-path repair audit** (update 2026-11-05 05:20;
+  [research/gen35/results.md](./research/gen35/results.md)), in Astra's
+  wording:
+  - **Result:** Gen 35's frozen output-path repair audit returned
+    INVESTIGATE. Polarity correction and decoder-bias removal reduced
+    waveform error, but the candidate failed registered STOI, ITD and
+    clipping checks.
+  - **Verdict:** no model was promoted and no repair was published.
+    Improved cochlear-implant speech understanding, preserved directional
+    hearing and clinical safety remain unestablished.
+  - **Next:** Gen 36, a registered output-contract repair with a
+    peak-safe output stage, judged on fresh material.
+
 ## Limits (stated plainly)
 
 Offline bench results cannot establish superiority over the N6's
