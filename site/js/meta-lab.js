@@ -39,7 +39,7 @@
       const none = /^\s*\[unintelligible\]\s*$/i.test(t);
       const al = align(c.reference, none ? "" : t);
       $(`ml-t-${side}`).innerHTML = none ? "<em>Muse said it could not make out any words.</em>" : (al.html || "<em>(nothing)</em>");
-      $(`ml-s-${side}`).innerHTML = `<b class="ml-big">${al.hits}</b> <span class="ml-of">of ${al.total} words right</span>`;
+      $(`ml-s-${side}`).innerHTML = `Muse got <b>${al.hits}</b> of ${al.total} words right.`;
     }
   }
 

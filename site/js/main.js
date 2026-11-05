@@ -24,7 +24,10 @@ $$('a[data-hf-file]').forEach(a => { if (C.huggingface) { a.href = C.huggingface
 // ---------- header / nav ----------
 const bar = $('#bar'), nav = $('#chapnav'), menu = $('#menu-btn');
 addEventListener('scroll', () => bar.classList.toggle('solid', scrollY > 40), { passive: true });
-menu.addEventListener('click', () => { const o = nav.classList.toggle('open'); menu.setAttribute('aria-expanded', o); });
+const setMenu = o => { nav.classList.toggle('open', o); menu.setAttribute('aria-expanded', o); menu.textContent = o ? 'Close' : 'Menu'; };
+menu.addEventListener('click', () => setMenu(!nav.classList.contains('open')));
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && nav.classList.contains('open')) { setMenu(false); menu.focus(); } });
+document.addEventListener('click', e => { if (nav.classList.contains('open') && !bar.contains(e.target)) setMenu(false); });
 // Nav fit: show the inline chapter links only when every item fits on one line; otherwise the Menu button.
 function fitNav() {
   if (!nav.querySelector('.nav-status')) { const st = document.createElement('a'); st.className = 'nav-status'; st.href = '#generations'; nav.prepend(st); }
@@ -114,7 +117,7 @@ $$('[data-bench="white_estoi"]').forEach(e => e.textContent = fmt(bench.summary_
     // perceived direction arrow from the child toward where the voice seems to be
     const ang = Math.atan2(perceived[1] - cy, perceived[0] - cx), ax = cx + Math.cos(ang) * 60, ay = cy + Math.sin(ang) * 60;
     s += `<line x1="${cx}" y1="${cy}" x2="${ax}" y2="${ay}" stroke="${mode === 'separate' ? 'var(--hot)' : 'var(--ok)'}" stroke-width="3" stroke-linecap="round"/>`;
-    if (mode === 'separate') s += `<circle cx="${perceived[0]}" cy="${perceived[1]}" r="14" fill="none" stroke="var(--hot)" stroke-width="2" stroke-dasharray="4 3"/><text x="${perceived[0]}" y="${perceived[1] - 22}" text-anchor="middle" class="lbl" fill="var(--hot)">seems to be here</text>`;
+    if (mode === 'separate') s += `<circle cx="${perceived[0]}" cy="${perceived[1]}" r="14" fill="none" stroke="var(--hot)" stroke-width="2" stroke-dasharray="4 3"/><text x="${perceived[0]}" y="${perceived[1] + 36}" text-anchor="middle" class="lbl" fill="var(--hot)">seems to be here</text>`;
     s += `</svg>`;
     host.innerHTML = s;
     $('#dir-read').textContent = { none: 'No cleanup: the chatter is as loud as the voice, but the louder-ear clue is intact.', separate: 'Each ear separately: the voice is clearer, but if the two sides turn sound down by different amounts the louder-ear clue blurs, and the voice can seem to come from nearer the middle.', linked: 'Both ears agreeing (our planned next step): one shared decision about how much to turn down, so the voice is clearer and still sounds like it comes from the left.' }[mode]; window.__ears = mode;
@@ -193,12 +196,12 @@ sl.addEventListener('input', () => { window.__fray = (10 - +sl.value) / 15; });
 // ---------- scorecard ----------
 const NEED = { crowd_sisdr: 'needs at least +3.0 dB cleaner', crowd_stoi: 'needs at least +0.03 more understandable', crowd_ace: 'the implant pulses must come out at least 0.05 closer to the clean voice', crowd_m5: 'needs at least +1.5 dB cleaner', crowd_0: 'needs at least +1.5 dB cleaner', crowd_m5_stoi: 'must not get less understandable', crowd_every_seed: 'must help in all three runs', crowd_vs_gate: 'must beat the simple filter', ssn: 'needs at least +3.0 dB cleaner', white: 'must not get worse', quiet_abs: 'must stay very clean (25 dB or better)', quiet_stoi: 'must stay understandable', ild: 'must be closer than with no cleanup', itd: 'must be at least as close as with no cleanup', ild_distortion: 'no requirement' };
 const UNIT = { crowd_sisdr: ' dB', crowd_m5: ' dB', crowd_0: ' dB', ssn: ' dB', white: ' dB', quiet_abs: ' dB', ild: ' dB', itd: ' samples', crowd_stoi: ' points', crowd_ace: ' points', crowd_m5_stoi: ' points', quiet_stoi: ' points', crowd_vs_gate: ' dB', ild_distortion: ' dB' };
-const RESULT = r => { const v = String(r.actual); if (r.id === 'itd') return 'timing off by ' + v + ' steps of 1/16,000 of a second'; if (r.id === 'crowd_every_seed') return v.replace(/[\[\]]/g, '').split(',').map(x => '+' + x.trim() + ' dB').join(', '); const n = parseFloat(v); if (isNaN(n)) return v; const neg = n < 0 ? '−' : ''; const abs = v.replace(/^-/, ''); if (UNIT[r.id] === ' points') return neg + abs + ' on a 0-to-1 scale'; const sign = /^(crowd_|ssn|white)/.test(r.id) && n > 0 && !/abs|vs_gate/.test(r.id) ? '+' : ''; return sign + neg + abs + (UNIT[r.id] || ''); };
+const RESULT = r => { const v = String(r.actual); if (r.id === 'itd') return 'the timing was off by about a quarter of a thousandth of a second'; if (r.id === 'crowd_every_seed') return v.replace(/[\[\]]/g, '').split(',').map(x => '+' + x.trim() + ' dB').join(', '); const n = parseFloat(v); if (isNaN(n)) return v; const neg = n < 0 ? '−' : ''; const abs = v.replace(/^-/, ''); if (UNIT[r.id] === ' points') return neg + abs + ' on a 0-to-1 scale'; const sign = /^(crowd_|ssn|white)/.test(r.id) && n > 0 && !/abs|vs_gate/.test(r.id) ? '+' : ''; return sign + neg + abs + (UNIT[r.id] || ''); };
 const PLAIN = { crowd_sisdr: 'Crowd: how clean the voice is', crowd_stoi: 'Crowd: how understandable it is', crowd_ace: 'Crowd: what the electrodes would receive',
   crowd_m5: 'Crowd louder than the voice (−5 dB)', crowd_0: 'Crowd as loud as the voice (0 dB)', crowd_m5_stoi: 'Never harder to understand in the loudest crowd',
   crowd_every_seed: 'Helps in all three training runs', crowd_vs_gate: 'Better than the simple filter that already exists', ssn: 'A steady hum',
   white: 'A hiss it never trained on', quiet_abs: 'Quiet speech left alone: still clean', quiet_stoi: 'Quiet speech left alone: still understandable',
-  ild: 'Which-side clue: loudness difference', itd: 'Which-side clue: timing difference', ild_distortion: 'Which-side clue, measured another way (for information only)' };
+  ild: 'Which-side clue: loudness difference', itd: 'Which-side clue: timing difference', ild_distortion: 'A second look at the which-side clue, just for information' };
 const ROW_IDS = r => r.id || r.kpi.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
 let level = 'parent';
 const tb = $('#score-table tbody');
@@ -224,12 +227,12 @@ $('#level-toggle').addEventListener('click', e => { const b = e.target.closest('
 const G = gens.generations;
 { const d = new Date(String(gens.updated).replace(' EST', '').replace(' ', 'T')); $('#gen-updated').textContent = isNaN(d) ? gens.updated : 'Last updated ' + d.getDate() + ' ' + d.toLocaleString('en-GB', { month: 'long' }); }
 {
-  const WORDS = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
+  const WORDS = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty']; const W = n => WORDS[n] || String(n);
   const num = g => +g.id.replace('gen', ''), isNull = g => g.status === 'null' || g.status === 'fail';
   const list = a => a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1];
   const after19 = G.filter(g => isNull(g) && num(g) > 19), allNull = G.filter(isNull), running = G.filter(g => g.status === 'running');
-  $$('#null-count').forEach(e => e.textContent = WORDS[after19.length] || String(after19.length));
-  $$('[data-gen-sentence]').forEach(e => e.textContent = `${after19.length ? WORDS[after19.length][0].toUpperCase() + WORDS[after19.length].slice(1) + ' later version' + (after19.length === 1 ? '' : 's') + ' tried to fix that and did not help' : 'No later version has fixed it yet'}${running.length ? ', and version ' + running.map(num).join(' and ') + ' is training right now' : ''}.`);
+  $$('#null-count').forEach(e => e.textContent = W(after19.length));
+  $$('[data-gen-sentence]').forEach(e => e.textContent = `${after19.length ? W(after19.length)[0].toUpperCase() + W(after19.length).slice(1) + ' later version' + (after19.length === 1 ? '' : 's') + ' tried to fix that and did not help' : 'No later version has fixed it yet'}${running.length ? ', and version ' + running.map(num).join(' and ') + ' is training right now' : ''}.`);
   $$('[data-gen-nulls-after19]').forEach(e => e.textContent = after19.length ? 'versions ' + list(after19.map(num)) : 'no later version');
   $$('[data-gen-next-sentence]').forEach(e => { const pend = G.filter(g => g.status === 'pending'); const run = G.filter(g => g.status === 'running'); e.textContent = pend.length ? (run.length ? `Version ${pend.map(num).join(' and ')} is drafted but does not count until version ${run.map(num).join(' and ')} has its result and its review.` : `Version ${pend.map(num).join(' and ')} is drafted and being checked before it trains. It does not count until it has run and been reviewed.`) : 'A new version does not count until the one before it has its result and its review.'; });
   $$('[data-gen-wall-sentence]').forEach(e => { const run = G.filter(g => g.status === 'running'), pend = G.filter(g => g.status === 'pending'); const nx = run[0] || pend[0]; e.textContent = 'Training longer, two scoring changes, more hard crowds and blending saved versions did not close the gap.' + (nx ? ` Now we are teaching it echoey rooms (version ${num(nx)}), then two ears.` : ' Next we give it two ears.'); });
@@ -242,21 +245,21 @@ if (live) { chip.classList.remove('ok', 'off'); $('#live-text').textContent = `T
 else { const last = G[G.length - 1]; chip.classList.add('ok'); const short = (last.change || '').split(':')[0].toLowerCase(); $('#live-text').textContent = last.status === 'pending' ? `Next: ${last.label.toLowerCase()}${short && short.length < 28 ? ' (' + short + ')' : ''}` : `${last.label}: ${WORD[last.status]}`; }
 setTimeout(fitNav, 0);
 (function tree() {
-  if (innerWidth < 760) { $('#tree').innerHTML = `<ol class="tree-list">${G.map(g => `<li data-status="${g.status}"><b>${esc(g.label)}</b> <span class="st" data-status="${g.status}">${WORD[g.status]}</span><span class="tl-change">${esc(g.change)}</span></li>`).join('')}</ol>`; $('#tree-desc').textContent = 'The versions, in order. ' + G.map(g => `${g.label}, ${WORD[g.status]}: ${g.change}.`).join(' '); return; }
+  if (innerWidth < 760) { $('#tree').innerHTML = `<ol class="tree-list">${G.map(g => `<li data-status="${g.status}"><b>${esc(g.label)}</b> <span class="st" data-status="${g.status}">${WORD[g.status]}</span></li>`).join('')}</ol>`; $('#tree-desc').textContent = 'The versions, in order. ' + G.map(g => `${g.label}, ${WORD[g.status]}: ${g.change}.`).join(' '); return; }
   const W = 1000, step = W / (G.length + 1), yT = 110, H = 200;
   let s = `<svg viewBox="0 0 ${W} ${H}">`;
   // trunk through survivors (baseline/advance); dead branches hang off the trunk and end in ×
   const trunk = G.filter(g => g.status === 'baseline' || g.status === 'advance');
   s += `<path class="trunk" d="${G.map((g, i) => `${i ? 'L' : 'M'}${step * (i + 1)},${yT}`).join('')}"/>`;
   G.forEach((g, i) => {
-    const x = step * (i + 1), prevX = step * i;
+    const x = step * (i + 1), prevX = step * Math.max(1, i);
     const dead = g.status === 'null' || g.status === 'fail', run = g.status === 'running', pend = g.status === 'pending' || g.status === 'shelved';
     if (dead) s += `<path class="dead" d="M${prevX},${yT} C${prevX + step * .4},${yT} ${x - step * .3},${yT - 55} ${x},${yT - 62}"/><line class="x" x1="${x - 6}" y1="${yT - 68}" x2="${x + 6}" y2="${yT - 56}"/><line class="x" x1="${x + 6}" y1="${yT - 68}" x2="${x - 6}" y2="${yT - 56}"/>`;
     if (run) s += `<path class="live" d="M${prevX},${yT} C${prevX + step * .4},${yT} ${x - step * .3},${yT + 50} ${x},${yT + 56}"/><circle class="running-ring" cx="${x}" cy="${yT + 56}" r="9"/>`;
     if (pend) s += `<path class="pend" d="M${prevX},${yT} C${prevX + step * .4},${yT} ${x - step * .3},${yT + 50} ${x},${yT + 56}"/>`;
     const ny = dead ? yT - 62 : (run || pend) ? yT + 56 : yT;
     s += `<circle class="node ${g.status}" cx="${x}" cy="${ny}" r="${g.status === 'baseline' ? 11 : 7}"/>`;
-    s += `<text x="${x}" y="${dead ? yT - 104 - (i % 2) * 16 : ny + 30}" text-anchor="middle">${esc(g.label)}</text>${dead ? '' : `<text class="dim" x="${x}" y="${ny + 45}" text-anchor="middle">${WORD[g.status]}</text>`}`;
+    s += `<text x="${x}" y="${dead ? yT - 104 - (i % 2) * 16 : ny + 30 + (i % 2) * 28}" text-anchor="middle">${esc(g.label).replace('Version ', 'v')}</text>${dead ? '' : `<text class="dim" x="${x}" y="${ny + 45 + (i % 2) * 28}" text-anchor="middle">${WORD[g.status]}</text>`}`;
   });
   $('#tree').innerHTML = s + '</svg>';
   $('#tree-desc').textContent = 'The versions, in order. ' + G.map(g => `${g.label}, ${WORD[g.status]}: ${g.change}.`).join(' ') + ` The versions we kept building on: ${trunk.map(t => t.label).join(', ')}.`;
@@ -359,7 +362,7 @@ if (health) {
       const r = await api.ask(q);
       steps.innerHTML = (r.steps || []).map(s => `<li>${esc(s.output || s.input || s.tool || '')}</li>`).join('');
       out.innerHTML = renderAnswer(r.answer) + `<p class="small muted" style="margin:12px 0 0">Answered by Muse (Meta). Based only on the research record.</p>`;
-    } catch (err) { out.innerHTML = `<p class="err">${esc(err.message)}</p>`; }
+    } catch (err) { out.innerHTML = `<p class="err">${esc(err.message)} <button type="button" class="explain-btn retry">Try again</button></p>`; out.querySelector('.retry').addEventListener('click', () => ask(q)); }
     finally { th.hidden = true; btn.disabled = false; window.__musePulse = 0; }
   }
   document.addEventListener('click', async e => {
@@ -372,13 +375,13 @@ if (health) {
     }
     window.__musePulse = 1; slot.innerHTML = `<div class="explain-out"><span class="thinking"><i aria-hidden="true"></i>Muse is writing${isBrief ? ' a brief' : ` for ${level === 'parent' ? 'a parent' : 'a researcher'}`}… <span class="elapsed">0 s</span></span></div>`; const t0 = Date.now(); const tick = setInterval(() => { const el = slot.querySelector('.elapsed'); if (!el) { clearInterval(tick); return; } el.textContent = Math.round((Date.now() - t0) / 1000) + ' s'; }, 1000);
     b.disabled = true;
-    const ctx = b.closest('tr') ? b.closest('tr').querySelector('td') : b.closest('.kv-line') || (b.closest('.gen') && b.closest('.gen').querySelector('h3 span, .change')); const label = ctx ? ctx.cloneNode(true).textContent.replace(/\s*(Show|Hide)?\s*notes for researchers[\s\S]*$/i, '').replace(/\bExplain\b/g, '').replace(/\s+/g, ' ').trim().slice(0, 160) : '';
+    const ctx = b.closest('tr') ? b.closest('tr').querySelector('td') : b.closest('.kv-line') || (b.closest('.gen') && b.closest('.gen').querySelector('h3 span, .change')); const label = b.dataset.name ? b.dataset.name : ctx ? ctx.cloneNode(true).textContent.replace(/\s*(Show|Hide)?\s*notes for researchers[\s\S]*$/i, '').replace(/\bExplain\b/g, '').replace(/\s+/g, ' ').trim().slice(0, 160) : '';
     try { const r = isBrief ? await api.brief(id) : await api.explain(id, level, label); slot.innerHTML = `<div class="explain-out">${renderAnswer(r.text)}<p class="small muted" style="margin:8px 0 0">Explained by Muse (Meta) for ${level === 'parent' ? 'a parent' : 'a researcher'}</p></div>`; }
-    catch (err) { slot.innerHTML = `<div class="explain-out err">${esc(err.message)}</div>`; }
+    catch (err) { slot.innerHTML = `<div class="explain-out err">${esc(err.message)} <button type="button" class="explain-btn retry">Try again</button></div>`; slot.querySelector('.retry').addEventListener('click', () => b.click()); }
     finally { b.disabled = false; window.__musePulse = 0; }
   });
 } else if (!live) {
   chip.classList.add('off');
 }
 // text equivalent of the wave state (aria-live)
-{ const ws = $('#wave-state'); if (ws) { let lastTxt = '', lastAt = 0, lastSec = ''; setInterval(() => { const st = window.__waveState; if (!st) return; const c = st.C; let txt = c.shake > 0.5 ? 'The line is shaking hard, with a calm centre.' : c.wall > 0.25 ? 'The line has hit a wall.' : c.bands > 0.5 ? 'The line has split into 22 bands.' : c.ears > 0.5 ? (c.clean < 0.5 ? 'The line is fuzzy: no cleanup.' : c.drift > 0.5 ? 'Two lines, drifting apart.' : 'The two lines have become one.') : (window.__mlFuzz > 0) ? 'The line has gone fuzzy: the recording before cleanup.' : (window.__mlFuzz < 0) ? 'The line is clearer: the recording after cleanup.' : (c.waver > 0.5 && c.beat < 0.3) ? 'The line wavers, unsure.' : (c.kick > 0.3 || c.beat > 0.3 || (window.__dancePlaying && st.T.beat > 0.1)) ? 'A rhythm is running through the line.' : (c.waver > 0.3 && c.clarity > 0.3) ? 'The line wobbles but does not change: those versions did not help.' : c.clarity > 0.75 ? 'The line is mostly clear.' : c.clarity > 0.6 ? 'The line is clear.' : c.clarity > 0.3 ? 'The line is clearing up.' : 'The line is fuzzy, like a crowd.'; if (txt === lastTxt || performance.now() - lastAt < 2500) return; lastTxt = txt; lastAt = performance.now(); ws.textContent = txt; }, 500); } }
+{ const ws = $('#wave-state'); if (ws) { let lastTxt = '', lastAt = 0, lastSec = '', lastKey = -1; setInterval(() => { const st = window.__waveState; if (!st) return; const c = st.C; const secEl = document.elementFromPoint(innerWidth / 2, innerHeight / 2); const sec = secEl ? ((secEl.closest('section') || {}).id || '') : ''; const key = Math.round(c.clarity * 10) / 10; if (sec === lastSec && Math.abs(key - lastKey) < 0.1 && !window.__mlFuzz && c.ears < 0.5) return; let txt = c.shake > 0.5 ? 'The line is shaking hard, with a calm centre.' : c.wall > 0.25 ? 'The line has hit a wall.' : c.bands > 0.5 ? 'The line has split into 22 bands.' : c.ears > 0.5 ? (c.clean < 0.5 ? 'The line is fuzzy: no cleanup.' : c.drift > 0.5 ? 'Two lines, drifting apart.' : 'The two lines have become one.') : (window.__mlFuzz > 0) ? 'The line has gone fuzzy: the recording before cleanup.' : (window.__mlFuzz < 0) ? 'The line is clearer: the recording after cleanup.' : (c.waver > 0.5 && c.beat < 0.3) ? 'The line wavers, unsure.' : (c.kick > 0.3 || c.beat > 0.3 || (window.__dancePlaying && st.T.beat > 0.1)) ? 'A rhythm is running through the line.' : (c.waver > 0.3 && c.clarity > 0.3) ? 'The line wobbles but does not change: those versions did not help.' : c.clarity > 0.75 ? 'The line is mostly clear.' : c.clarity > 0.6 ? 'The line is clear.' : c.clarity > 0.3 ? 'The line is clearing up.' : 'The line is fuzzy, like a crowd.'; if (sec === 'tests') txt = 'The line wavers, unsure.'; if (txt === lastTxt || performance.now() - lastAt < 2500) return; lastTxt = txt; lastSec = sec; lastKey = key; lastAt = performance.now(); ws.textContent = txt; }, 500); } }

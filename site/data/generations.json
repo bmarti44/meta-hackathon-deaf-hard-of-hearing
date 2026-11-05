@@ -165,7 +165,7 @@
     {
       "id": "gen24",
       "label": "Version 24",
-      "change": "We train on far more of the hardest crowds (40% of examples instead of 17%)",
+      "change": "More practice with the hardest crowds: about two in five practice sounds are very noisy, instead of about one in six",
       "status": "fail",
       "numbers": [
         {

@@ -687,7 +687,6 @@ details.fold.fold-phone{border:0;margin:0}
 .chapter .panel::before,.story-panel::before{background:radial-gradient(75% 75% at 45% 50%,rgba(9,11,16,.95),rgba(9,11,16,.8) 60%,rgba(9,11,16,0) 100%)}
 .imp-lab,.imp-lab b,.imp-x{color:var(--bone)!important;text-shadow:0 0 10px #090b10,0 0 3px #090b10,0 0 3px #090b10}
 /* ===== round 9 (stabilization) ===== */
-@media (max-width:760px){.imp-group-side,.imp-listen-head,.slider-box,#snr-chart,.legend,.ratio,.answer-text,.explain-out,.imp-transcript{background:rgba(9,11,16,.8)!important;padding:10px}.imp-cap,.cap,.photo figcaption{background:rgba(9,11,16,.8);padding:6px 8px}}
 #wall .big.bone,#wall .big{color:var(--bone);text-shadow:0 0 16px #090b10,0 0 5px #090b10,0 0 5px #090b10}
 .ladder li.here b::after{content:" (we are here)";font-family:var(--sans);font-size:14px;color:var(--signal);font-weight:500;letter-spacing:0}
 #music{min-height:60vh}
@@ -707,8 +706,7 @@ code.mono,#ml-research code{word-break:break-all;overflow-wrap:anywhere}
 @media (max-width:760px){#born{padding-top:30vh;padding-bottom:10vh}}
 #born{min-height:88vh}
 /* contrast under the reviewer's method: real backings where text sits on the wave */
-.imp-steps,.imp-how,.imp-tracks,.imp-head,.imp-listen-head,.imp-group-side,.imp-more,.video-ctl.below,details.researchers[open],#short .cols3,#honest .cols3,.cols2,.figures-line,.checks,.ladder,.log{background:rgba(9,11,16,.82)}
-.imp-steps,.imp-how,.imp-tracks,.imp-head,.imp-listen-head,.imp-group-side,.video-ctl.below,details.researchers[open]{padding:10px 12px}
+.video-ctl.below,details.researchers[open]{padding:10px 12px}
 .imp-state,.imp-title,.imp-now,.imp-key,.imp-meta,th,th.num,.researchers p,.researchers li,.explain-btn,.vbtn,#v-note,.vnote{color:var(--bone)!important}
 .gen{background:rgba(9,11,16,.72)}
 .gen-cards{background:none}
@@ -722,7 +720,7 @@ code.mono,#ml-research code{word-break:break-all;overflow-wrap:anywhere}
 .slider-box,.legend,#snr-chart,.table-wrap,.ratio{background:rgba(9,11,16,.92)!important}
 .ratio-row span,.ratio-row .mono{background:rgba(9,11,16,.92)}
 figcaption.cap,.photo figcaption,.spread-cap,.spread-quote{background:rgba(9,11,16,.86);padding:6px 8px;display:inline-block}
-.imp-steps,.imp-how,.imp-tracks,.imp-head,.imp-listen-head,.imp-group-side,.imp-fig figcaption,.imp-cap,.checks li,.figures-line,#scorecard .lede,details.researchers[open],.col p,.col h3,.gen,.ladder li>div,.log li>div,.kv-line,#dir-read,.answer-text,.explain-out,.steps li,.chips,.ask-form,.hero-ask{background:rgba(9,11,16,.9)!important}
+.checks li,.figures-line,#scorecard .lede,details.researchers[open],.answer-text,.explain-out{background:rgba(9,11,16,.9)!important}
 /* ===== round 10 ===== */
 header.bar:not(.compact) nav.chapters a.nav-status{display:none}
 @media (max-width:760px){#snr-chart,.gen,.gen-cards{background:none!important}#dancing .spread-video{max-width:72vw;margin-inline:auto}.hero-ask{display:none}}
@@ -751,7 +749,7 @@ details.researchers>summary{background:rgba(9,11,16,.86);padding:0 8px}
 .tree .node.shelved{fill:var(--bg);stroke:var(--dim);stroke-dasharray:3 3}
 .gen dl{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)}
 .gen dd{overflow-wrap:anywhere;text-align:left}
-header.bar.solid{background:rgba(9,11,16,.98)}
+header.bar.solid{background:#090b10}
 .chart .axis text,.chart .lbl,.chart .req-l{font-size:13px}
 /* round 11 fixes */
 #wall .grid.g2>div:last-child{position:sticky!important;top:calc(var(--head-h) + 16px);align-self:start}
@@ -778,7 +776,7 @@ summary{align-items:baseline}
 .dir-wrap>div:first-child{position:relative}
 .dir-wrap>div:first-child::before{content:"";position:absolute;inset:-24px;background:radial-gradient(closest-side,rgba(9,11,16,.92) 86%,transparent);z-index:-1;pointer-events:none}
 @media (max-width:760px){
-  .chapter .panel::before,.story-panel::before,.col::before,.ask-form::before,.chips::before,.kv-line::before,#dir-read::before,.steps::before,.ladder li>div::before,.log li>div::before,.imp-group-side::before,.imp-steps::before,.imp-how::before,#model .grid.g2>div:last-child::before,#wall .grid.g2>div:first-child::before,.dir-wrap>div:first-child::before,#wall .big::before{content:"";position:absolute;inset:-24px -12px;background:linear-gradient(transparent,rgba(9,11,16,.9) 24px,rgba(9,11,16,.9) calc(100% - 24px),transparent);z-index:-1;pointer-events:none}
+  .chapter .panel::before,.story-panel::before,.col::before,.ask-form::before,.chips::before,.kv-line::before,#dir-read::before,.steps::before,.ladder li>div::before,.log li>div::before,#model .grid.g2>div:last-child::before,#wall .grid.g2>div:first-child::before,.dir-wrap>div:first-child::before,#wall .big::before{content:"";position:absolute;inset:-24px -12px;background:linear-gradient(transparent,rgba(9,11,16,.9) 24px,rgba(9,11,16,.9) calc(100% - 24px),transparent);z-index:-1;pointer-events:none}
   #music .story-panel::before{content:none}
   .gen *,#wall .grid.g2>div:last-child *{text-shadow:0 0 12px #090b10,0 0 3px #090b10,0 0 3px #090b10}
   .legend,.slider-box label{background:rgba(9,11,16,.9)}
@@ -802,3 +800,29 @@ details:not([open])>*:not(summary){display:none}
 #meta-lab .ml-miss{color:#ffa08c!important;text-decoration-color:#ffa08c!important}
 @media (min-width:761px) and (max-width:1100px){#born .story-panel::before{inset:-72px -56px;background:radial-gradient(closest-side,rgba(9,11,16,.94) 84%,transparent)}}
 #music .story-panel{position:relative}#music .story-panel::before{content:"";position:absolute;inset:-40px -48px;background:radial-gradient(closest-side,rgba(9,11,16,.8) 60%,transparent);z-index:-1;pointer-events:none}
+
+/* ===== round 16 ===== */
+.imp-group-side,.imp-transcript,.imp-steps,.imp-how,.imp-tracks,.imp-head{position:relative;background:none!important}
+.imp-group-side::before,.imp-transcript::before,.imp-steps::before,.imp-how::before,.imp-tracks::before,.imp-head::before{content:"";position:absolute;inset:-16px;background:radial-gradient(closest-side,rgba(9,11,16,.9) 70%,transparent);z-index:-1;pointer-events:none}
+.dir-wrap>div:first-child::before{background:radial-gradient(closest-side,rgba(9,11,16,.92) 70%,transparent)}
+#gen-updated,[data-gen-next-line],#graham>.wrap>.lede,.gen .st,.ml-miss{position:relative}
+#gen-updated,[data-gen-next-line],#graham>.wrap>.lede{background:rgba(9,11,16,.86);padding:2px 6px}
+.st[data-status="fail"],.st[data-status="null"],.gen .st{color:#ff8a73}
+#meta-lab .ml-miss{color:#ffa08c!important}
+@media (min-width:761px) and (max-width:1100px){#born .story-panel::before{inset:-72px -56px -120px}}
+.cols3.prose{display:block;border-top:1px solid var(--rule)}
+.cols3.prose .col{padding:18px 0 22px;border-bottom:1px solid var(--rule)}
+.cols3.prose .col h3{display:inline;font-size:19px;margin-right:8px}
+.cols3.prose .col p{display:inline}
+.cols3.prose::before{content:none}
+.ladder .pct{font-family:var(--sans);font-size:14px;color:var(--bone)}
+.ml-big{font-family:inherit;font-size:inherit;font-weight:600}
+.explain-btn.retry{margin-left:10px}
+@media (max-width:760px){.tree-list .tl-change{display:none}}
+/* round 16: last contrast touches */
+.vbtn,.vbtn-sound{color:var(--bone)!important;border-bottom-color:var(--bone)}
+.video-ctl.below{background:rgba(9,11,16,.9)}
+.st[data-status="running"]{color:#ffd27a}
+.gen .acts a,.gen .acts a:visited{color:var(--bone)}
+#snr-table-cap,#meta-lab .ml-score,#meta-lab .ml-score b{color:var(--bone)!important}
+#snr-table-cap{background:rgba(9,11,16,.9);padding:6px 8px;display:inline-block}
