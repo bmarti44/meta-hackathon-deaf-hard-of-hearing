@@ -14,7 +14,7 @@
         },
         {
           "label": "Change in how easy to understand",
-          "value": "−0.033 points (a little harder)"
+          "value": "A little harder to understand"
         }
       ],
       "note": "Did not help. One try only, so it does not prove the idea can never work.",
@@ -345,7 +345,7 @@
         },
         {
           "label": "Mixes that were not worse than version 19 on speech with no echo, on 16 new voices",
-          "value": "None (the closest missed by 0.00003 on a 0-to-1 scale)"
+          "value": "None (the closest missed by a tiny amount)"
         }
       ],
       "note": "The short lesson in echoey rooms made speech with no echo a little clearer in one way and a little less clear in another. Our rule needs every measure to be at least as good as version 19, and even the gentlest mix missed by a hair, so by our rules there was nothing to test further.",
