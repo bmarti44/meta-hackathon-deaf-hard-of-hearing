@@ -39,9 +39,13 @@ only, with no VAL or screen material (`calibrate_coef.py` →
   Gen 19 on dry input.
 - At 100, that drift would cost 0.61 loss units, about 0.6 dB of the SI-SDR
   objective (mean −SI-SDR −10.1 dB).
-- So the term is the same order as the main loss: neither negligible nor
-  dominating. This answers Muse's "uncalibrated" concern without choosing
-  the value from any result.
+- So the penalty's numerical scale is the same order as the main loss.
+  This establishes scale only. It does not show gradient balance or
+  non-dominance, and it predicts no particular improvement (Astra,
+  pre-launch).
+- The value was not chosen from any result.
+- Dry items are dry noisy (45%) plus dry quiet (10%) of aug50, about 55%.
+  The check saw 432 of 800 items (54%) (Muse, pre-launch).
 
 **Everything else is Gen 31 exactly:**
 - Gen 19 seed-17 parent (`80000b64…`, enforced);
@@ -100,6 +104,14 @@ There is no coefficient, checkpoint, grid or margin rescue.
 - If a candidate exists, R1a ≥ +0.30 is uncertain.
 
 Run: `research/gen32/pipeline.sh`.
+
+## Pre-launch amendment (2026-11-05 ~02:25, before any run)
+
+Astra CLEARED Gen 32 ([astra-prelaunch-review.md](./astra-prelaunch-review.md)):
+all 21 hashes match, 5 read-only tests pass, no leakage. Muse also CLEARED
+it ([muse-prelaunch-review.md](./muse-prelaunch-review.md)).
+- Their wording notes are applied above (scale check; dry share).
+- Nothing else changed, and the code hashes below are unchanged.
 
 ## Source hashes (sha256)
 
