@@ -1,0 +1,8 @@
+{
+ "research/gen19/weights/causal_seed20261117.pt": "80000b64c413ebb878f08695d8744ead8ecf9b183de57cb21acae6157470f367",
+ "research/gen21/weights/r48_seed20261117.pt": "32c6898bead130551fb02c5353e1e5025734b5b774d80d5baf3dbddb3048841d",
+ "research/gen19/weights/causal_seed20261118.pt": "ef098dfd429f20dcf7c199b6a534795c232a372a66af65e473fb5b6325a30916",
+ "research/gen21/weights/r48_seed20261118.pt": "1f913d560d3ed2a1a0c681ecec4569f79ca4400357d197daf0dd892c5590ed2f",
+ "research/gen19/weights/causal_seed20261119.pt": "89837737be430645441d577c44f277e2fee6b76ffb6865f613e8d72ae6fdcb32",
+ "research/gen21/weights/r48_seed20261119.pt": "e883592c4402be3dc0511feb124877db79b2870636695167a147e9bdf9115d5a"
+}
