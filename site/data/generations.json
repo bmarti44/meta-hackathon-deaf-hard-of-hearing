@@ -19,7 +19,8 @@
       ],
       "note": "Did not help. One try only, so it does not prove the idea can never work.",
       "link": "STATUS.md",
-      "aim": "crowd"
+      "aim": "crowd",
+      "trains": true
     },
     {
       "id": "gen17",
@@ -34,7 +35,8 @@
       ],
       "note": "Sloppier than later versions: several things changed at once.",
       "link": "SUBMISSION.md",
-      "aim": "crowd"
+      "aim": "crowd",
+      "trains": true
     },
     {
       "id": "gen18",
@@ -49,7 +51,8 @@
       ],
       "note": "Kept: version 19 learns from these 251 voices.",
       "link": "SUBMISSION.md",
-      "aim": "crowd"
+      "aim": "crowd",
+      "trains": true
     },
     {
       "id": "gen19",
@@ -72,7 +75,8 @@
       ],
       "note": "Our best version. Passes 13 of 14 checks.",
       "link": "research/gen19/results.md",
-      "aim": "crowd"
+      "aim": "crowd",
+      "trains": true
     },
     {
       "id": "gen20",
@@ -91,7 +95,8 @@
       ],
       "note": "Did not help. Both versions improved a little just from restarting. Kept the old mix.",
       "link": "STATUS.md",
-      "aim": "crowd"
+      "aim": "crowd",
+      "trains": true
     },
     {
       "id": "gen21",
@@ -118,7 +123,8 @@
       ],
       "note": "Did not help. Training longer makes easy crowds better, not the hardest one.",
       "link": "research/gen21/results.md",
-      "aim": "crowd"
+      "aim": "crowd",
+      "trains": true
     },
     {
       "id": "gen22",
@@ -141,7 +147,8 @@
       ],
       "note": "Did not help. The hardest crowd barely moved. We dropped the change.",
       "link": "research/gen22/results.md",
-      "aim": "crowd"
+      "aim": "crowd",
+      "trains": true
     },
     {
       "id": "gen23",
@@ -168,7 +175,8 @@
       ],
       "note": "Did not help. The plan and the passing score were written down before it started, and it did not reach them.",
       "link": "research/gen23/results.md",
-      "aim": "crowd"
+      "aim": "crowd",
+      "trains": true
     },
     {
       "id": "gen24",
@@ -195,7 +203,8 @@
       ],
       "note": "We trained on many more very noisy examples. It did not help in the hardest crowd and made the easier crowd worse. Not kept.",
       "link": "research/gen24/results.md",
-      "aim": "crowd"
+      "aim": "crowd",
+      "trains": true
     },
     {
       "id": "gen25",
@@ -218,7 +227,8 @@
       ],
       "note": "A small improvement almost everywhere, but nowhere near enough in the hardest crowd. Not kept.",
       "link": "research/gen25/results.md",
-      "aim": "crowd"
+      "aim": "crowd",
+      "trains": true
     },
     {
       "id": "gen26",
@@ -228,7 +238,8 @@
       "numbers": [],
       "note": "Set aside before it ran. It was a way to nudge the score, not a way to help someone hear in a real room, so we moved on to real rooms instead.",
       "link": "research/gen26/prereg.md",
-      "aim": "crowd"
+      "aim": "crowd",
+      "trains": true
     },
     {
       "id": "gen27",
@@ -251,7 +262,9 @@
       ],
       "note": "The first change that clearly helped in echoey rooms. But speech in rooms with no echo came through a little less clean, so by our own rules it did not pass. Next, fewer echoey practice sounds.",
       "link": "research/gen27/results.md",
-      "aim": "room"
+      "aim": "room",
+      "trains": true,
+      "short": "half the practice sounds echo"
     },
     {
       "id": "gen28",
@@ -270,7 +283,9 @@
       ],
       "note": "With half as many echoey practice sounds, most of the help in echoey rooms stayed, and the loss in rooms with no echo was cut in half. It did not go away, so by our rules it did not pass. Next, half as many again.",
       "link": "research/gen28/results.md",
-      "aim": "room"
+      "aim": "room",
+      "trains": true,
+      "short": "a quarter of the practice sounds echo"
     },
     {
       "id": "gen29",
@@ -289,7 +304,9 @@
       ],
       "note": "Most of the help in echoey rooms stayed again, and the loss in rooms with no echo got smaller still. A small loss is still there, so by our rules it did not pass. Next, one last try with even fewer.",
       "link": "research/gen29/results.md",
-      "aim": "room"
+      "aim": "room",
+      "trains": true,
+      "short": "one in nine practice sounds echo"
     },
     {
       "id": "gen30",
@@ -312,7 +329,9 @@
       ],
       "note": "The loss in rooms with no echo got smaller again, and the direction cues were no longer hurt. But a small loss is still there, and the help in real recorded rooms almost disappeared, so by our rules it did not pass. That ends the tries with fewer echoey practice sounds.",
       "link": "research/gen30/results.md",
-      "aim": "room"
+      "aim": "room",
+      "trains": true,
+      "short": "one in eighteen practice sounds echo"
     },
     {
       "id": "gen31",
@@ -331,7 +350,9 @@
       ],
       "note": "The short lesson in echoey rooms made speech with no echo a little clearer in one way and a little less clear in another. Our rule needs every measure to be at least as good as version 19, and even the gentlest mix missed by a hair, so by our rules there was nothing to test further.",
       "link": "research/gen31/results.md",
-      "aim": "room"
+      "aim": "room",
+      "trains": true,
+      "short": "a short room lesson, mixed with version 19"
     },
     {
       "id": "gen32",
@@ -358,7 +379,9 @@
       ],
       "note": "The closest yet. Asking the program to stay close to version 19 worked: speech with no echo stayed as clean, and every real recorded room got a little better. But the help in echoey rooms came out just under our bar, and the direction cues got slightly worse when the crowd was quieter, so by our rules it did not pass.",
       "link": "research/gen32/results.md",
-      "aim": "room"
+      "aim": "room",
+      "trains": true,
+      "short": "a room lesson that stays close to version 19"
     },
     {
       "id": "gen33",
@@ -381,7 +404,9 @@
         }
       ],
       "note": "Sharing one cleanup plan between the ears helped the which-side clue when the crowd was loud, but hurt it, and each ear's clearness, when the crowd was quieter. Our rule needs no loss anywhere, so this way of sharing did not pass.",
-      "link": "research/gen33/results.md"
+      "link": "research/gen33/results.md",
+      "trains": false,
+      "short": "both ears share one cleanup plan"
     }
   ]
 }
