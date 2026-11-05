@@ -26,3 +26,8 @@ site/assets/video/
 site/assets/audio/implant/
 # generated LibriSpeech demo audio (research/meta/listen_wer.py): deploy-only
 site/assets/audio/
+
+# interim checkpoints and resumable states stay local (project rule)
+research/gen*/weights/*_step[0-9]*.pt
+research/gen*/weights/*_state_*.pt
+research/gen*/weights/*_val_partial.json
