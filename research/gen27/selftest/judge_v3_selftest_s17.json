@@ -1,0 +1,382 @@
+{
+ "seed": 17,
+ "report": {
+  "seed": 17,
+  "cand": "selftest",
+  "cand_sha": "80000b64c413ebb878f08695d8744ead8ecf9b183de57cb21acae6157470f367",
+  "ctrl_sha": "80000b64c413ebb878f08695d8744ead8ecf9b183de57cb21acae6157470f367",
+  "rev": {
+   "primary_gain": 0.0,
+   "primary_ci": [
+    0.0,
+    0.0
+   ],
+   "per_voice": {
+    "84": 0.0,
+    "1462": 0.0,
+    "1673": 0.0,
+    "1919": 0.0,
+    "3081": 0.0,
+    "3536": 0.0,
+    "3576": 0.0,
+    "3853": 0.0,
+    "174": 0.0,
+    "251": 0.0,
+    "422": 0.0,
+    "652": 0.0,
+    "777": 0.0,
+    "1272": 0.0,
+    "2803": 0.0,
+    "2902": 0.0
+   },
+   "voices_improved": 0,
+   "per_room": {
+    "mediumroom-Room007": 0.0,
+    "mediumroom-Room038": 0.0,
+    "mediumroom-Room046": 0.0,
+    "mediumroom-Room123": 0.0,
+    "mediumroom-Room192": 0.0,
+    "smallroom-Room034": 0.0
+   },
+   "rooms": [
+    "mediumroom-Room007",
+    "mediumroom-Room038",
+    "mediumroom-Room046",
+    "mediumroom-Room123",
+    "mediumroom-Room192",
+    "smallroom-Room034"
+   ],
+   "cell": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "consistency": {
+    "synthetic|-5.0": {
+     "sisdr": 0.0,
+     "stoi": 0.0
+    },
+    "synthetic|0.0": {
+     "sisdr": 0.0,
+     "stoi": 0.0
+    },
+    "measured|-5.0": {
+     "sisdr": 0.0,
+     "stoi": 0.0
+    },
+    "measured|0.0": {
+     "sisdr": 0.0,
+     "stoi": 0.0
+    }
+   },
+   "target_only_sisdr_gain": 0.0,
+   "target_only_stoi_gain": 0.0,
+   "target_only_cand_abs_sisdr": 7.442593109730122
+  },
+  "dry": {
+   "-5.0": {
+    "sisdr_gain": 0.0,
+    "stoi_gain": 0.0,
+    "sisdr_lo": 0.0,
+    "stoi_lo": 0.0
+   },
+   "0.0": {
+    "sisdr_gain": 0.0,
+    "stoi_gain": 0.0,
+    "sisdr_lo": 0.0,
+    "stoi_lo": 0.0
+   }
+  },
+  "dry_v2_descriptive": {
+   "-5.0": {
+    "gain": 0.0,
+    "stoi_gain": 0.0,
+    "voices_improved": 0,
+    "ci": [
+     0.0,
+     0.0
+    ]
+   },
+   "0.0": {
+    "gain": 0.0,
+    "stoi_gain": 0.0,
+    "voices_improved": 0,
+    "ci": [
+     0.0,
+     0.0
+    ]
+   }
+  },
+  "bench_by_snr": {
+   "competing|-5.0": {
+    "n": 6,
+    "d_sisdr": -1.3010626153028106,
+    "d_stoi": -0.03294752584091506
+   },
+   "competing|0.0": {
+    "n": 6,
+    "d_sisdr": 1.0602167741390576,
+    "d_stoi": -0.014505908698572156
+   },
+   "competing|5.0": {
+    "n": 6,
+    "d_sisdr": 3.041908275356779,
+    "d_stoi": 0.03027123623677554
+   },
+   "competing|10.0": {
+    "n": 6,
+    "d_sisdr": 3.3637696186351094,
+    "d_stoi": 0.025438802675722
+   },
+   "crowd|-5.0": {
+    "n": 6,
+    "d_sisdr": 1.0603924011953694,
+    "d_stoi": 0.00731935684115211
+   },
+   "crowd|0.0": {
+    "n": 6,
+    "d_sisdr": 4.583214987545251,
+    "d_stoi": 0.0355689241935924
+   },
+   "crowd|5.0": {
+    "n": 6,
+    "d_sisdr": 4.65652590245456,
+    "d_stoi": 0.06727908087960864
+   },
+   "crowd|10.0": {
+    "n": 6,
+    "d_sisdr": 3.4879114649009053,
+    "d_stoi": 0.028073963921042926
+   },
+   "quiet|999.0": {
+    "n": 6,
+    "d_sisdr": -110.78562699212569,
+    "d_stoi": -0.003918779020342489
+   },
+   "ssn|-5.0": {
+    "n": 6,
+    "d_sisdr": 8.026283563178918,
+    "d_stoi": 0.06561789257367946
+   },
+   "ssn|0.0": {
+    "n": 6,
+    "d_sisdr": 7.502985252160851,
+    "d_stoi": 0.09436756105892546
+   },
+   "ssn|5.0": {
+    "n": 6,
+    "d_sisdr": 5.894507822933746,
+    "d_stoi": 0.07093515131796974
+   },
+   "ssn|10.0": {
+    "n": 6,
+    "d_sisdr": 4.313801000354924,
+    "d_stoi": 0.04517328336934745
+   },
+   "white-heldout|-5.0": {
+    "n": 6,
+    "d_sisdr": -2.9854611892295995,
+    "d_stoi": -0.011836801170697945
+   },
+   "white-heldout|0.0": {
+    "n": 6,
+    "d_sisdr": 1.1485524320319749,
+    "d_stoi": 0.023329747659570983
+   },
+   "white-heldout|5.0": {
+    "n": 6,
+    "d_sisdr": 1.9102568567586342,
+    "d_stoi": 0.016678013749702292
+   },
+   "white-heldout|10.0": {
+    "n": 6,
+    "d_sisdr": 0.7113004005997157,
+    "d_stoi": 0.0009707924984784603
+   }
+  },
+  "spatial": {
+   "existing": {
+    "cand": {
+     "ild_target_err_db": 5.469447596041791,
+     "itd_err_samples": 4.0
+    },
+    "unproc": {
+     "ild_target_err_db": 5.96418786812648,
+     "itd_err_samples": 5.75
+    }
+   },
+   "hard_snr_-5": {
+    "ild_target_err_db": {
+     "cand": 8.792926331778826,
+     "gen19": 8.792926331778826,
+     "worsening": 0.0
+    },
+    "itd_err_samples": {
+     "cand": 12.0,
+     "gen19": 12.0,
+     "worsening": 0.0
+    }
+   },
+   "mirror_left_targets": {
+    "ild_target_err_db": {
+     "cand": 5.426580210200757,
+     "gen19": 5.426580210200757,
+     "worsening": 0.0
+    },
+    "itd_err_samples": {
+     "cand": 3.0,
+     "gen19": 3.0,
+     "worsening": 0.0
+    }
+   },
+   "mirror_right_targets": {
+    "ild_target_err_db": {
+     "cand": 5.426580210200757,
+     "gen19": 5.426580210200757,
+     "worsening": 0.0
+    },
+    "itd_err_samples": {
+     "cand": 3.0,
+     "gen19": 3.0,
+     "worsening": 0.0
+    }
+   }
+  }
+ },
+ "checks": {
+  "R1a_rev_gain_ge_0.30": false,
+  "R1b_voice_room_ci_lo_gt_0": false,
+  "R1c_ge_10_of_16_voices": false,
+  "C_consistency_each_snr_and_stratum": true,
+  "D_dry_screen_both_snrs": true,
+  "S2_quiet": true,
+  "S3_other_rows": true,
+  "SP_spatial_existing_and_no_worsening": true
+ },
+ "verdict": "FAIL"
+}
