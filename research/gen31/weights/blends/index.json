@@ -1,0 +1,60 @@
+{
+ "base": "research/gen19/weights/causal_seed20261117.pt",
+ "base_sha256": "80000b64c413ebb878f08695d8744ead8ecf9b183de57cb21acae6157470f367",
+ "ft": "research/gen31/weights/ft_aug50_seed20261117.pt",
+ "ft_sha256": "4d356359a0362d3bdfef717789c0c5cc142fcb14c4c7a94137230d28f7f6994e",
+ "grid": [
+  0.1,
+  0.2,
+  0.3,
+  0.4,
+  0.5,
+  0.6,
+  0.7,
+  0.8,
+  0.9,
+  1.0
+ ],
+ "blends": {
+  "0.1": {
+   "path": "research/gen31/weights/blends/blend_a010.pt",
+   "sha256": "5929cd6be4ec38c159623002694f1df2e9b3e49340f28c46d84827b2e0bfba66"
+  },
+  "0.2": {
+   "path": "research/gen31/weights/blends/blend_a020.pt",
+   "sha256": "e788b1472f7c517b0248922fb4a3c0864bfcab52df95eb9d7a2f9d372532a345"
+  },
+  "0.3": {
+   "path": "research/gen31/weights/blends/blend_a030.pt",
+   "sha256": "f27e69d3b1547c043fe43250f9e29c28d2dda5100bd311070fc9560af1bdbe56"
+  },
+  "0.4": {
+   "path": "research/gen31/weights/blends/blend_a040.pt",
+   "sha256": "f785c6be1b0fb83aa32bc9d29c79f7e3bdf7487f64a8c2826c2cb91f06c61f32"
+  },
+  "0.5": {
+   "path": "research/gen31/weights/blends/blend_a050.pt",
+   "sha256": "98bd0133fa778e059d899bb18bee2d437e58ea6465838e4ea09373759c2f6daf"
+  },
+  "0.6": {
+   "path": "research/gen31/weights/blends/blend_a060.pt",
+   "sha256": "2455c2a786904a0e509689e50f04e551152eac48e220044b39977094d367a6f0"
+  },
+  "0.7": {
+   "path": "research/gen31/weights/blends/blend_a070.pt",
+   "sha256": "8b60bea80b3996eae4245b19049c15786bb9eaa6fd7a311007ad2c59fa0d828b"
+  },
+  "0.8": {
+   "path": "research/gen31/weights/blends/blend_a080.pt",
+   "sha256": "c0d99cc41af57852c25e119333a990457505bc1238ea770fbee163c45723158b"
+  },
+  "0.9": {
+   "path": "research/gen31/weights/blends/blend_a090.pt",
+   "sha256": "cf3ba988d045860db3c648a0c72e8e70052c06062b38ac652291e924baabf4c8"
+  },
+  "1.0": {
+   "path": "research/gen31/weights/blends/blend_a100.pt",
+   "sha256": "c2a84f5250f6b5899c628a078fff0b99dd16b5e0262079bbe24b0135a642b6e7"
+  }
+ }
+}
