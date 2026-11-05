@@ -297,7 +297,8 @@ export const handler = async (event) => {
     const id = String(qs.row || "").trim(), level = qs.level === "researcher" ? "researcher" : "parent";
     const item = ROWS.get(id) || GENS.get(id);
     if (!item) return json(400, { error: "Unknown scorecard row or generation." });
-    const label = String(qs.context || "").replace(/[^\p{L}\p{N} ,.'()%+\-−:/]/gu, "").slice(0, 120).trim();
+    const raw = String(qs.context || "").replace(/[^\p{L}\p{N} ,.'()%+\-−:/]/gu, "").slice(0, 120).trim();
+    const label = /\p{L}{4,}/u.test(raw) ? raw : "";  // ignore labels that are only a number and a unit
     p = explainPrompt(item, ROWS.has(id) ? "scorecard check" : "research generation", level, label); kind = "explain";
   } else if (path.endsWith("/brief")) {
     const g = GENS.get(String(qs.gen || "").trim());

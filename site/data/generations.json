@@ -226,7 +226,7 @@
       "status": "fail",
       "numbers": [
         {
-          "label": "Crowded speech in rooms it never heard, compared with version 19",
+          "label": "Crowded speech in echoey rooms it never heard, compared with version 19",
           "value": "+0.51 dB (15 of 16 voices better)"
         },
         {
@@ -234,61 +234,61 @@
           "value": "+2.05 dB better than version 19"
         },
         {
-          "label": "Speech with no room echo (dry)",
+          "label": "Speech in a room with no echo",
           "value": "−0.23 to −0.49 dB worse"
         }
       ],
-      "note": "The first change that clearly helped in echoey rooms, but it got a little worse on dry sound, so by our own rules it did not pass. Next we try a smaller dose of rooms.",
+      "note": "The first change that clearly helped in echoey rooms. But speech in rooms with no echo came through a little less clean, so by our own rules it did not pass. Next, fewer echoey practice sounds.",
       "link": "research/gen27/results.md"
     },
     {
       "id": "gen28",
       "label": "Version 28",
-      "change": "A smaller dose of rooms: about a quarter of the noisy practice sounds now echo, instead of half",
+      "change": "Fewer echoey practice sounds: about a quarter of the noisy practice sounds now echo, instead of half",
       "status": "fail",
       "numbers": [
         {
-          "label": "Crowded speech in rooms it never heard, compared with version 19",
+          "label": "Crowded speech in echoey rooms it never heard, compared with version 19",
           "value": "+0.46 dB (15 of 16 voices better)"
         },
         {
-          "label": "Speech with no room echo (dry)",
+          "label": "Speech in a room with no echo",
           "value": "−0.12 to −0.32 dB worse (about half of version 27's loss)"
         }
       ],
-      "note": "Half as many echoey practice sounds kept most of the room gain and halved the loss on dry sound, but did not remove it, so by our rules it did not pass. Next: half again.",
+      "note": "With half as many echoey practice sounds, most of the help in echoey rooms stayed, and the loss in rooms with no echo was cut in half. It did not go away, so by our rules it did not pass. Next, half as many again.",
       "link": "research/gen28/results.md"
     },
     {
       "id": "gen29",
       "label": "Version 29",
-      "change": "An even smaller dose of rooms: about one in nine noisy practice sounds echo",
+      "change": "Fewer echoey practice sounds again: about one in nine noisy practice sounds echo",
       "status": "fail",
       "numbers": [
         {
-          "label": "Crowded speech in rooms it never heard, compared with version 19",
+          "label": "Crowded speech in echoey rooms it never heard, compared with version 19",
           "value": "+0.37 dB (15 of 16 voices better)"
         },
         {
-          "label": "Speech with no room echo (dry)",
+          "label": "Speech in a room with no echo",
           "value": "−0.02 to −0.13 dB worse (about a quarter of version 27's loss)"
         }
       ],
-      "note": "Fewer echoey practice sounds again kept most of the room gain and shrank the loss on dry sound, but a small loss is still there, so by our rules it did not pass. Next: one last, smaller dose.",
+      "note": "Most of the help in echoey rooms stayed again, and the loss in rooms with no echo got smaller still. A small loss is still there, so by our rules it did not pass. Next, one last try with even fewer.",
       "link": "research/gen29/results.md"
     },
     {
       "id": "gen30",
       "label": "Version 30",
-      "change": "The last and smallest dose of rooms: about one in eighteen noisy practice sounds echo",
+      "change": "The last try with fewer echoey practice sounds: about one in eighteen noisy practice sounds echo",
       "status": "running",
       "numbers": [
         {
           "label": "Why",
-          "value": "See if an even smaller dose keeps enough room gain with no loss on dry sound"
+          "value": "See if it can still help in echoey rooms without any loss in rooms with no echo"
         }
       ],
-      "note": "Training now. If this one does not pass, we stop changing the dose and try a different way to teach the program about rooms. We will add the result when it finishes.",
+      "note": "Training now. If this one does not pass, we stop cutting back the echoey practice sounds and try a different way to teach the program about rooms. We will add the result when it finishes.",
       "link": "research/gen30/prereg.md"
     }
   ]
