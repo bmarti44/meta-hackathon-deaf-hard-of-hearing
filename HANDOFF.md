@@ -81,31 +81,22 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
   cut clipping severity but not frequency and did not lift −5 dB, so
   the hypothesis is neither falsified nor established.
 
-## Current state (2026-11-05 01:30 — VERIFY, may be stale)
+## Current state (2026-11-05 02:30 — VERIFY, may be stale)
 
-- **Room line so far (seed 17, judge_v3 vs Gen 19; all FAIL):**
-  - Gen 27, aug50: room gain +0.514.
-  - Gen 28, aug25: +0.459.
-  - Gen 29, aug125: +0.370 (CI +0.163..+0.627, 15/16).
-  - Each kept a room gain but lost a little on dry speech: at dry 0 dB, −0.49 / −0.32 / −0.13 dB. SP also fails (mirrored ITD one bin; ILD worse at 0–10 dB).
-  - All are filed with Astra + Muse reviews: `research/gen27..29/`.
-- **Gen 30 is TRAINING** (final dose step, P = 0.0625, aug0625). It launched 01:05 via `research/gen30/pipeline.sh`. Astra cleared it.
-  - Logs: `/tmp/gen30_s17_pipeline.log` and `/tmp/gen30_aug0625_s17.log`.
-  - The verdict is due ~01:50.
-  - **Registered boundary: any Gen 30 failure ends the dose-only campaign.**
-  - If the trainer dies, rerun the pipeline; it resumes from the state file.
-- **Gen 31 is registered, not run** (WiSE-FT, Muse's choice; `research/gen31/prereg.md`). It runs ONLY if Gen 30 fails:
-  - fine-tune Gen 19 on aug50 for 8k steps from its 24k RNG handoff;
-  - blend weights at α = 0.1..1;
-  - choose α\* on a fresh LibriSpeech test-clean dry VAL panel (prefix rule, no dry loss);
-  - run judge_v3 once.
-  - Muse CLEARED it; Astra's pre-launch review was in progress at 01:30 (`/tmp/astra_g31_prelaunch.out`).
-  - The test-clean audio is at `/tmp/gen31dl/LibriSpeech/test-clean`; re-download it if /tmp is wiped (md5 in the prereg).
-- **Reserved, untouched voices:**
-  - screen-v2's 4 dev-clean voices;
-  - 24 test-clean voices (list in `research/gen31/val_testclean.py`).
-- **Screen v2 and the rev panel are development-only** (their voices were Gen 13–17 training speakers). Any ADVANCE still needs seeds 18/19 and then a fresh confirmation.
-- **Site:** the review loop is on round 13 (round 12 scored 84.6). Fable is the site agent; a fresh Opus reviewer scores each round. Deploy with `deploy/deploy_site.sh`. The Muse explain route now uses the site's own row names.
+- **Room line (seed 17, judge_v3 vs Gen 19), all FAIL:**
+  - Gen 27–30 scratch room doses (P = 0.5 → 0.0625): room gain +0.51 → +0.31; dry 0 dB cost −0.49 → −0.06; D failed every time.
+  - Gen 30's failure ended the dose-only campaign (registered boundary).
+  - Gen 31 (WiSE-FT: fine-tune Gen 19 on aug50, blend back, α on fresh test-clean voices) gave **NO CANDIDATE**: α = 0.1 missed only on −5 dB STOI −0.00003.
+  - All are filed with Astra + Muse reviews.
+- **Margins:** the reviewers split (Muse wants NI margins; Astra finds none justifiable a priori). The disposition **keeps zero-margin** D and the VAL rule; see `research/gen31/astra-review-gen31.md`.
+- **Gen 32 is TRAINING** (launched 02:15; both reviewers cleared it): Gen 31's procedure plus `--preserve-dry 100`, a relative-MSE penalty vs frozen Gen 19 outputs on dry items.
+  - Logs: `/tmp/gen32_s17_pipeline.log` and `/tmp/gen32_ft_s17.log`.
+  - The verdict is due ~02:37.
+  - Exit "NO CANDIDATE" = FAIL with no screen run.
+- **Reserved, untouched voices:** screen-v2's 4 dev-clean voices and 24 test-clean voices. The test-clean VAL panel (16 voices) is development material since Gen 31.
+- **Before any seed-18/19 replication of a WiSE-FT line:** add the Gen 19 seed-18/19 parent hashes to `GEN19_SHA` in train18/train19.
+- **Site:** round 15 scored 86.1 (Trust 92, Perf 91; Meta 80 because of Explain bugs, now fixed server-side but not yet deployed). Fable is on round-16 fixes.
+  - **Deploy only when Fable is idle:** `deploy/deploy_site.sh` uploads the working tree.
 
 ## Demo site (beforetheimplant.com) — LIVE since 18:32 (added 2026-11-04 ~18:20)
 
@@ -191,18 +182,19 @@ Repo: `bmarti44/meta-hackathon-deaf-hard-of-hearing`.
 
 ## Next actions (in order)
 
-1. **When `/tmp/gen30_s17_pipeline.log` says PIPELINE DONE:**
-   - read `research/gen30/screen_s17.json` and write `results.md`, in the same format as Gen 29;
-   - run the Astra + Muse result reviews (same prompt; Muse via the Lambda `review` mode, with any registration text inline because Muse has no file access);
-   - file them verbatim with a disposition;
-   - update `site/data/generations.json` (gen30), SUBMISSION's dated update, STATUS and this file;
-   - commit the final weights and log (`git add -f`), plus the screen, panel, spatial and bench JSONs. Never commit `*_step*.pt` or `*_state_*.pt`.
-2. **If Gen 30 FAILs:**
-   - the dose campaign is over;
-   - once Astra has cleared Gen 31 (file `research/gen31/astra-prelaunch-review.md` and Muse's), launch `research/gen31/pipeline.sh`.
-   - Exit 3 / "NO CANDIDATE" means Gen 31 FAIL, with no screen run.
-3. **If Gen 30 ADVANCEs:** run seeds 18/19 (same pipeline, new seed), then a fresh confirmation. Gen 31 is deferred.
-4. **Site:** apply the round-13 reviewer fixes through Fable (stabilisation process: reviewer scripts plus the regression checklist), deploy, and re-review until every category is ≥ 90.
+1. **When `/tmp/gen32_s17_pipeline.log` says PIPELINE DONE:**
+   - write `research/gen32/results.md`, in the Gen 31 format;
+   - run the Astra + Muse reviews (Muse inline, effort medium, under 700 words, or it returns empty);
+   - file them with a disposition;
+   - update `site/data/generations.json` and SUBMISSION, plus STATUS and this file;
+   - commit the FT final weights and log (`git add -f`), the blend index, the selection JSON and, if screened, the screen JSONs.
+2. **If Gen 32 fails:** ask both reviewers for the next step. Candidates from their earlier rankings:
+   - better measured-room training coverage;
+   - a deployable dry-bypass/gating design (which could truly satisfy zero-margin D);
+   - two-input linked gain;
+   - an ACE envelope auxiliary.
+   Plus Astra's standing item: a frozen actual-room-recording evaluation.
+3. **Site:** when Fable reports round 16, commit, deploy (that also ships the Lambda fixes) and run review round 17 with a fresh Opus reviewer (brief: `scratchpad/site_review_r14_prompt.txt`, updated). Repeat until every category is ≥ 90.
 
 ## Key files map
 

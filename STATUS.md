@@ -8,6 +8,31 @@ gates, and loop rules stay in `GOAL.md`.
 
 ## Current direction
 
+GEN 30 FAIL (DOSE CAMPAIGN ENDS); GEN 31 WISE-FT NO CANDIDATE; GEN 32
+(FINE-TUNE WITH DRY-OUTPUT PRESERVATION) TRAINING (2026-11-05 02:30,
+Claude Opus 5.5).
+
+**Gen 30** (P = 0.0625):
+- room gain +0.308;
+- SP passed for the first time;
+- D failed on negative dry means, and S3 failed on white noise.
+This ended the dose-only campaign.
+
+**Gen 31** (WiSE-FT) gave NO CANDIDATE. The first blend missed the
+zero-loss dry rule by −0.00003 STOI. The fine-tune improved dry −5 dB
+SI-SDR but cost 0 dB SI-SDR.
+
+**Margins:** the reviewers split. The disposition keeps zero-margin rules.
+
+**Gen 32** = Gen 31 plus a dry-output-preservation term (COEF 100, scale
+checked on training batches only). Both reviewers cleared it, and it
+launched at 02:15.
+
+**Site:** round 15 scored 86.1. The Muse Explain fixes are made on the
+server but not yet deployed, and round 16 is with Fable.
+
+---
+
 GEN 27–29 ROOM DOSES FAIL; GEN 30 (FINAL DOSE) TRAINING; GEN 31 (WISE-FT)
 REGISTERED (2026-11-05 01:30, Claude Opus 5.5).
 
