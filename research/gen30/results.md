@@ -37,11 +37,12 @@ mirrored subsets improve ILD by 0.04 dB with ITD tied (3.0 vs 3.0
 samples).
 
 **Reading** (this seed and these panels only):
-- The dose line ends where the reviewers expected:
-  - room gain is just above its bar (+0.308 vs +0.30, lower bound +0.101);
-  - measured-room gains have nearly vanished (+0.06 / +0.08), and four of six measured rooms are slightly negative in SI-SDR at −5 dB;
-  - the dry cost at 0 dB is about half of Gen 29's, but its interval still excludes zero.
-- Four single-seed points are descriptive. They do not establish a curve.
+- What the last dose step showed:
+  - The +0.308 dB primary is **synthetic-room** gain, just above its bar (lower bound +0.101).
+  - Measured-room gains are small (+0.06 / +0.08), and they are carried by RVB2014_largeroom1. The other five measured rooms average −0.013 / −0.007 dB at −5 / 0 dB (descriptive, not a gate).
+  - The dry cost at 0 dB is about half of Gen 29's, but its interval still excludes zero. Dry −5 dB reversed slightly from Gen 29 (−0.018 → −0.032), and S3 is not monotonic.
+  - T passes relative to Gen 19, but target-only output is still below unprocessed: about −0.57 / −0.54 dB SI-SDR and −0.024 / −0.036 STOI (synthetic / measured).
+- Four single-seed points describe a trade-off on this seed and these reused development panels. They establish neither an unavoidable trade-off nor a safe dose, and the bootstrap omits training-seed variability. (Astra's corrections, adopted.)
 - No listener benefit is established.
 
 **Next:** Gen 31, already running (registered; Astra and Muse cleared it):

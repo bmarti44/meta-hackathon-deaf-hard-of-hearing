@@ -267,6 +267,17 @@ Disclosures:
     - Gen 31 would then fine-tune Gen 19 on the room mix and blend the
       weights back toward Gen 19 (Muse's choice).
 
+- **Gen 30, the final dose step** (update 2026-11-05 02:00;
+  [research/gen30/results.md](./research/gen30/results.md)), in Astra's
+  wording:
+  - **Result:** Gen 30 reduced reverberant training examples to 5.6% and
+    improved synthetic-room SI-SDR by 0.308 dB versus Gen 19 in one
+    training seed (95% voice-and-room bootstrap CI 0.101–0.554).
+  - **Verdict:** it failed the dry-preservation and held-out white-noise
+    checks despite passing the spatial checks. This ends the dose-only
+    campaign and triggers the registered Gen 31 experiment. Gen 19 remains
+    the baseline, and no listener benefit is established.
+
 ## Limits (stated plainly)
 
 Offline bench results cannot establish superiority over the N6's
