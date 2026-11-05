@@ -51,7 +51,7 @@ interface is mono, so it makes no claim about two-ear direction.
   - Archive md5 `fb5a50374b501bb3bac4815ee91d3135` (OpenSLR); sha256 `d09c181b…`.
   - 8 targets (the 4 lowest-numbered F and M speakers) and 12 crowd voices (the next 6 F and 6 M).
   - The speaker lists are disjoint from every earlier list (asserted).
-  - Material sha256 `4271a2d627063a2cb2ddadf9d625a65f26cd10367777a833df0417445715aed0`.
+  - Material sha256 `4271a2d6…` (superseded by amendment 1).
 - **Encoding:** every output is **written and decoded** at 16 / 44.1 / 48 kHz, in WAV PCM_16, WAV FLOAT and FLAC PCM_16, and **scored as decoded**.
 - **F1, noisy:** 8 targets × 2 utterances × SNR −5 / 0 / +5 / +10 = 64 items.
 - **F2, target-only:** the 16 crops at input RMS 0.035 and 0.14, plus a labelled **overload** level (peak 1.5 × full scale).
@@ -111,17 +111,61 @@ level-vs-headroom trade-off made visible on purpose.
 
 Run: `research/gen36/pipeline.sh`.
 
+## Pre-launch amendment 1 (2026-11-05 ~06:20, before any candidate output was scored)
+
+Astra's first pre-launch review was **NOT CLEARED**, with five blocking items
+([astra-prelaunch-review.md](./astra-prelaunch-review.md)). Fixes:
+
+1. **The contract is now implemented as declared.**
+   - The polarity / bias correction comes right after delay removal.
+   - The final resampling happens next, then **explicit removal of the output's whole-file mean**.
+   - Last, **one final linear gain**: `g = min(DC-free input RMS / output RMS, −1 dBFS / output peak)`.
+   - Both levels are DC-free.
+   - The model class is loaded **from the published `model_causal.py` by file path**. Before, the name resolved to Gen 15's module. The published `enhance.py` (E0) is made to bind that same module, and this is asserted.
+2. **The rule is restored to its full coverage.**
+   - G2 now uses X3 cells per level × setting.
+   - Every export target-only row, **overload included**, must not worsen in waveform error or |AC-gain error|.
+   - Research P1 target-only preservation is added: per setting × ear means, and per item-ear.
+   - G1 now covers A2 on P1 target-only ears.
+   - G3 adds per-ear SI-SDR and STOI_DC for A2 vs A1 on every P1 noisy item and P4 scene.
+   - G4 gates export lag(C) = 0.
+3. **Strict schema.**
+   - Every key field must be present with its registered type: no booleans, and no missing field read as null.
+   - Every metric must be numeric, finite and inside its domain (peaks, RMS, ILD, ITD and |gain| ≥ 0; saturation in [0, 1]; lags are integers).
+   - Unregistered seeds and arms are rejected.
+4. **Complete binding.**
+   - Each seed's fresh material hash must equal the seal.
+   - With `rebuild`, the manifest is rebuilt from the audio and must reproduce the seal.
+   - Release safetensors, `config.json` (`0eb99ef2…`), `enhance.py` and `model_causal.py` are all bound, the last both as the snapshot and as the Hugging Face file (`e09ca1e0…`, verified identical).
+   - The contract table must equal `contract.build_table()`.
+5. **No unlabelled overload.**
+   - Each F1 mixture and its clean target are scaled by one gain to a −6 dBFS mixture peak, so all 64 × 3 F1 item-rates are representable.
+   - Representability is sealed **per item and rate** for F1 and F2: 87 of 144 F2 item-rates exceed full scale, and they are labelled.
+   - New material sha256: `006258a8e7eef74dc83989981fcc24079cb2289ac77d3e7dbbc06a30bbaf692f`.
+
+**Expectation, stated in advance:** G2's no-worsening check on |AC-gain
+error| for overload and capped items may fail. That is the level-vs-headroom
+trade-off, made visible on purpose.
+
+**Tests:** `test_gen36.py`, 5/5 passing. The judge test now covers 30
+attacks, including every one from Astra's review: a missing P1 `snr` key,
+boolean identities, a negative peak or gain, an incomplete per-seed hash,
+config and module rebinding, a whole X3 setting with no improvement, an
+overload item that worsens, and export lag.
+
+The hash table is updated below.
+
 ## Source hashes (sha256)
 
 | File | sha256 |
 |---|---|
-| `research/gen36/enhance_v2.py` | `fdc64219588a034d5d027c855d565a3aeda5b2cc15d193a3fe952e0550b4c8a4` |
-| `research/gen36/contract.py` | `89823ab6d0f0d7f066056ae5ed8cf93d1bc360b0b782093c2ad5391d296935ed` |
-| `research/gen36/manifest.py` | `1726961f31e07ef89c685276029dedfe761c5301dea61d63eaba2de24fca58d5` |
-| `research/gen36/manifest.json` | `727919ce414595cae8a575cf2677af6f469a9d13aa609b97302cbfce00e236d3` |
-| `research/gen36/run_contract.py` | `4d3f6603ef5100aeabdd0700dff869baf0a2b8b956cf914bcc13599abaf7e5a6` |
-| `research/gen36/judge_contract.py` | `77a375748b8d7a4890b062da7c99c22bd59fb9f243074ebc0bd3344581c2a754` |
-| `research/gen36/test_gen36.py` | `0f466a01d10280c3299898cb1f19582bb905b2983a207b27d816c3e1db8e3400` |
+| `research/gen36/enhance_v2.py` | `2045914cbea9590209d2ec7d37452b31758138ec12618e9cd910d220e259ff16` |
+| `research/gen36/contract.py` | `9e11fea5ea2c8a6f36fedf544f4c51820cd3359f2a7fffa6b0beffcd20a3057c` |
+| `research/gen36/manifest.py` | `95514afc1cb7a0c97abc2781355341977bf363516be576c7cf5a748c97d69925` |
+| `research/gen36/manifest.json` | `41dc19934a8ee955b60d596bb793dc65eea94734d9e687143c57345710793550` |
+| `research/gen36/run_contract.py` | `2da1956dd9b118fbc60dda9f8a79abeb6bfd21518fc562e64f4bb03a1b96ef9f` |
+| `research/gen36/judge_contract.py` | `0bc585b541a33da19715c7eda699ae57943486da5686ee15dd6fa78304839ebc` |
+| `research/gen36/test_gen36.py` | `b4561faf3ac839d67ac8888cdc48da8422e8c9e8f7aaa46d8e42787aea059447` |
 | `research/gen36/pipeline.sh` | `ad893db7df797cfdd4d67613c08b4a0cfc1ca007edf7ad665018e854181a9c84` |
 | `research/gen35/repair.py` | `9b822da5635fdec44aa6bfb5622d937623148d52592e45656b7ce32b53c16ebb` |
 | `research/gen35/published/enhance.py` | `59b65cdaead7aca31d54fb73f1b1d2a7fcf6b3c1bb7feb07dcd42588d79611b5` |

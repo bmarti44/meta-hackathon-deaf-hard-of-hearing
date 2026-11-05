@@ -40,8 +40,17 @@ def _setup(seed):
     table = contract.build_table(); enhance_v2.bind_contract(table)
     rel = contract.RELEASE_DIR / RELEASE[seed]
     cand = enhance_v2.load_model(str(rel))
-    spec = importlib.util.spec_from_file_location("pub_enh", R / "gen35" / "published" / "enhance.py")
-    pub = importlib.util.module_from_spec(spec); spec.loader.exec_module(pub)
+    # the published enhance.py imports 'model_causal'; make that name resolve to the PUBLISHED module (by path), not gen15's
+    saved = sys.modules.get("model_causal"); sys.modules["model_causal"] = enhance_v2.PM
+    try:
+        spec = importlib.util.spec_from_file_location("pub_enh", R / "gen35" / "published" / "enhance.py")
+        pub = importlib.util.module_from_spec(spec); spec.loader.exec_module(pub)
+    finally:
+        if saved is None:
+            sys.modules.pop("model_causal", None)
+        else:
+            sys.modules["model_causal"] = saved
+    assert pub.CausalTasNetEnh is enhance_v2.PM.CausalTasNetEnh, "published enhance.py did not bind the published model"
     pmodel = pub.load_model(str(rel))
     pol, bias = cand._contract
     def arms(x, sr):
@@ -88,6 +97,7 @@ def _metrics(ref, d, sr, target_only):
 def _fresh(seed):
     import manifest as M
     arms, _ = _setup(seed); items, mh, _ = M.build(); rows = []
+    seed_hash = mh
     for it in items:
         to = it["panel"] == "F2"
         for sr in RATES:
@@ -102,7 +112,7 @@ def _fresh(seed):
                     if to:
                         rec["representable"] = it["representable"]
                     rows.append(rec)
-    return {"fresh_material_sha256": mh, "rows": rows}
+    return {"fresh_material_by_seed": {str(seed): seed_hash}, "rows": rows}
 
 
 def _regress(seed):
@@ -161,8 +171,12 @@ def _research(seed):
             rec = {"panel": "P1", "seed": seed, "arm": arm, **{k: it[k] for k in ("talker", "setting", "az", "snr")},
                    "ild_target_err_db": float(np.mean(np.abs(ild_per_band(oL[arm][w], oR[arm][w]) - ild_t))),
                    "itd_err_samples": float(abs(itd_samples(oL[arm][w], oR[arm][w]) - itd_t))}
-            if it["snr"] is None:
-                rec["lag_L"] = RP.peak_lag(it["rL"], oL[arm], w); rec["lag_R"] = RP.peak_lag(it["rR"], oR[arm], w)
+            for e, ref, o in (("L", it["rL"], oL[arm]), ("R", it["rR"], oR[arm])):
+                q = _metrics(ref[w], o[w], 16000, it["snr"] is None)
+                rec[f"sisdr_{e}"] = q["sisdr"]; rec[f"stoi_dc_{e}"] = q["stoi_dc"]
+                if it["snr"] is None:
+                    rec[f"alpha_{e}"] = RP.signed_alpha(ref, o, w); rec[f"wave_err_{e}"] = RP.wave_err_db(ref, o, w)
+                    rec[f"lag_{e}"] = RP.peak_lag(ref, o, w)
             rows.append(rec)
     crops = [c for c in build_crops(1) if c["kind"].startswith("babble")]
     for i, c in enumerate(crops):
@@ -171,9 +185,12 @@ def _research(seed):
             oL, oR = A.outputs((cl + nl).astype(np.float32)), A.outputs((cr + nr).astype(np.float32))
             ild_t, itd_t = ild_per_band(cl, cr), itd_samples(cl, cr)
             for arm in ("A1_sign", "A2_repair"):
-                rows.append({"panel": "P4", "seed": seed, "arm": arm, "crop": i, "target_az": taz,
-                             "ild_target_err_db": float(np.mean(np.abs(ild_per_band(oL[arm], oR[arm]) - ild_t))),
-                             "itd_err_samples": float(abs(itd_samples(oL[arm], oR[arm]) - itd_t))})
+                rec = {"panel": "P4", "seed": seed, "arm": arm, "crop": i, "target_az": taz,
+                       "ild_target_err_db": float(np.mean(np.abs(ild_per_band(oL[arm], oR[arm]) - ild_t))),
+                       "itd_err_samples": float(abs(itd_samples(oL[arm], oR[arm]) - itd_t))}
+                for e, ref, o in (("L", cl, oL[arm]), ("R", cr, oR[arm])):
+                    q = _metrics(ref, o, 16000, False); rec[f"sisdr_{e}"] = q["sisdr"]; rec[f"stoi_dc_{e}"] = q["stoi_dc"]
+                rows.append(rec)
     o = A.outputs(np.zeros(2 * 16000, np.float32))
     for arm in ("A1_sign", "A2_repair"):
         rows.append({"panel": "P6", "seed": seed, "arm": arm, "kind": "silence", "talker": None, "setting": None, "az": None,
@@ -192,15 +209,19 @@ def main():
     assert not Path(a.out).exists(), f"REFUSED: {a.out} exists"
     import contract
     table = contract.build_table()                   # refuses unless the release files equal the audited tensors
-    t0 = time.time(); rows = []; mh = None
+    import enhance_v2
+    t0 = time.time(); rows = []; by_seed = {}
     jobs = [(f, s) for f in (_fresh, _regress, _research) for s in (17, 18, 19)]
     with get_context("spawn").Pool(a.workers) as pool:
         res = [pool.apply_async(f, (s,)) for f, s in jobs]
         for r in res:
-            out = r.get(); rows += out["rows"]; mh = out.get("fresh_material_sha256", mh)
+            out = r.get(); rows += out["rows"]; by_seed.update(out.get("fresh_material_by_seed", {}))
             print(f"job done {time.time()-t0:.0f}s rows={len(rows)}", flush=True)
-    doc = {"panel": "gen36_output_contract", "fresh_material_sha256": mh,
-           "release": {RELEASE[s]: contract.RELEASE_SHA[RELEASE[s]] for s in RELEASE},
+    doc = {"panel": "gen36_output_contract", "fresh_material_by_seed": by_seed,
+           "release": {RELEASE[s]: contract.sha(contract.RELEASE_DIR / RELEASE[s]) for s in RELEASE},
+           "release_config_sha256": contract.sha(contract.RELEASE_DIR / "config.json"),
+           "release_enhance_sha256": contract.sha(contract.RELEASE_DIR / "enhance.py"),
+           "model_module_sha256": enhance_v2.model_module_sha(),
            "contract": {h: list(v) for h, v in table.items()}, "rows": rows}
     Path(a.out).write_text(json.dumps(doc))
     print(f"WROTE {a.out} rows={len(rows)} {time.time()-t0:.0f}s")

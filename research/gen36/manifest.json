@@ -1,11 +1,11 @@
 {
- "what": "Gen36 sealed fresh evaluation manifest (LibriSpeech test-other)",
+ "what": "Gen36 sealed fresh evaluation manifest (LibriSpeech test-other), amendment 1",
  "archive": {
   "name": "test-other.tar.gz",
   "md5": "fb5a50374b501bb3bac4815ee91d3135",
   "sha256": "d09c181bba5cf717b3dee7d4d592af11a3ee3a09e08ae025c5506f6ebe961c29"
  },
- "material_sha256": "4271a2d627063a2cb2ddadf9d625a65f26cd10367777a833df0417445715aed0",
+ "material_sha256": "006258a8e7eef74dc83989981fcc24079cb2289ac77d3e7dbbc06a30bbaf692f",
  "targets": [
   "367",
   "533",
@@ -31,327 +31,652 @@
   "6432"
  ],
  "seed": 20261136,
+ "rates": [
+  16000,
+  44100,
+  48000
+ ],
  "items": {
   "F1": [
    {
     "spk": "367",
     "utt": 0,
-    "snr": -5.0
+    "snr": -5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "367",
     "utt": 0,
-    "snr": 0.0
+    "snr": 0.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "367",
     "utt": 0,
-    "snr": 5.0
+    "snr": 5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "367",
     "utt": 0,
-    "snr": 10.0
+    "snr": 10.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "367",
     "utt": 1,
-    "snr": -5.0
+    "snr": -5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "367",
     "utt": 1,
-    "snr": 0.0
+    "snr": 0.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "367",
     "utt": 1,
-    "snr": 5.0
+    "snr": 5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "367",
     "utt": 1,
-    "snr": 10.0
+    "snr": 10.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "533",
     "utt": 0,
-    "snr": -5.0
+    "snr": -5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "533",
     "utt": 0,
-    "snr": 0.0
+    "snr": 0.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "533",
     "utt": 0,
-    "snr": 5.0
+    "snr": 5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "533",
     "utt": 0,
-    "snr": 10.0
+    "snr": 10.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "533",
     "utt": 1,
-    "snr": -5.0
+    "snr": -5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "533",
     "utt": 1,
-    "snr": 0.0
+    "snr": 0.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "533",
     "utt": 1,
-    "snr": 5.0
+    "snr": 5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "533",
     "utt": 1,
-    "snr": 10.0
+    "snr": 10.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "1998",
     "utt": 0,
-    "snr": -5.0
+    "snr": -5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "1998",
     "utt": 0,
-    "snr": 0.0
+    "snr": 0.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "1998",
     "utt": 0,
-    "snr": 5.0
+    "snr": 5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "1998",
     "utt": 0,
-    "snr": 10.0
+    "snr": 10.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "1998",
     "utt": 1,
-    "snr": -5.0
+    "snr": -5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "1998",
     "utt": 1,
-    "snr": 0.0
+    "snr": 0.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "1998",
     "utt": 1,
-    "snr": 5.0
+    "snr": 5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "1998",
     "utt": 1,
-    "snr": 10.0
+    "snr": 10.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "3080",
     "utt": 0,
-    "snr": -5.0
+    "snr": -5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "3080",
     "utt": 0,
-    "snr": 0.0
+    "snr": 0.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "3080",
     "utt": 0,
-    "snr": 5.0
+    "snr": 5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "3080",
     "utt": 0,
-    "snr": 10.0
+    "snr": 10.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "3080",
     "utt": 1,
-    "snr": -5.0
+    "snr": -5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "3080",
     "utt": 1,
-    "snr": 0.0
+    "snr": 0.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "3080",
     "utt": 1,
-    "snr": 5.0
+    "snr": 5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "3080",
     "utt": 1,
-    "snr": 10.0
+    "snr": 10.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "1688",
     "utt": 0,
-    "snr": -5.0
+    "snr": -5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "1688",
     "utt": 0,
-    "snr": 0.0
+    "snr": 0.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "1688",
     "utt": 0,
-    "snr": 5.0
+    "snr": 5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "1688",
     "utt": 0,
-    "snr": 10.0
+    "snr": 10.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "1688",
     "utt": 1,
-    "snr": -5.0
+    "snr": -5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "1688",
     "utt": 1,
-    "snr": 0.0
+    "snr": 0.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "1688",
     "utt": 1,
-    "snr": 5.0
+    "snr": 5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "1688",
     "utt": 1,
-    "snr": 10.0
+    "snr": 10.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2033",
     "utt": 0,
-    "snr": -5.0
+    "snr": -5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2033",
     "utt": 0,
-    "snr": 0.0
+    "snr": 0.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2033",
     "utt": 0,
-    "snr": 5.0
+    "snr": 5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2033",
     "utt": 0,
-    "snr": 10.0
+    "snr": 10.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2033",
     "utt": 1,
-    "snr": -5.0
+    "snr": -5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2033",
     "utt": 1,
-    "snr": 0.0
+    "snr": 0.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2033",
     "utt": 1,
-    "snr": 5.0
+    "snr": 5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2033",
     "utt": 1,
-    "snr": 10.0
+    "snr": 10.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2414",
     "utt": 0,
-    "snr": -5.0
+    "snr": -5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2414",
     "utt": 0,
-    "snr": 0.0
+    "snr": 0.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2414",
     "utt": 0,
-    "snr": 5.0
+    "snr": 5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2414",
     "utt": 0,
-    "snr": 10.0
+    "snr": 10.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2414",
     "utt": 1,
-    "snr": -5.0
+    "snr": -5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2414",
     "utt": 1,
-    "snr": 0.0
+    "snr": 0.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2414",
     "utt": 1,
-    "snr": 5.0
+    "snr": 5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2414",
     "utt": 1,
-    "snr": 10.0
+    "snr": 10.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2609",
     "utt": 0,
-    "snr": -5.0
+    "snr": -5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2609",
     "utt": 0,
-    "snr": 0.0
+    "snr": 0.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2609",
     "utt": 0,
-    "snr": 5.0
+    "snr": 5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2609",
     "utt": 0,
-    "snr": 10.0
+    "snr": 10.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2609",
     "utt": 1,
-    "snr": -5.0
+    "snr": -5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2609",
     "utt": 1,
-    "snr": 0.0
+    "snr": 0.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2609",
     "utt": 1,
-    "snr": 5.0
+    "snr": 5.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2609",
     "utt": 1,
-    "snr": 10.0
+    "snr": 10.0,
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    }
   ],
   "F2": [
@@ -359,289 +684,481 @@
     "spk": "367",
     "utt": 0,
     "level": 0.035,
-    "representable": true
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "367",
     "utt": 0,
     "level": 0.14,
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    },
    {
     "spk": "367",
     "utt": 0,
     "level": "overload",
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    },
    {
     "spk": "367",
     "utt": 1,
     "level": 0.035,
-    "representable": true
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "367",
     "utt": 1,
     "level": 0.14,
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    },
    {
     "spk": "367",
     "utt": 1,
     "level": "overload",
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    },
    {
     "spk": "533",
     "utt": 0,
     "level": 0.035,
-    "representable": true
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "533",
     "utt": 0,
     "level": 0.14,
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    },
    {
     "spk": "533",
     "utt": 0,
     "level": "overload",
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    },
    {
     "spk": "533",
     "utt": 1,
     "level": 0.035,
-    "representable": true
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "533",
     "utt": 1,
     "level": 0.14,
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    },
    {
     "spk": "533",
     "utt": 1,
     "level": "overload",
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    },
    {
     "spk": "1998",
     "utt": 0,
     "level": 0.035,
-    "representable": true
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "1998",
     "utt": 0,
     "level": 0.14,
-    "representable": true
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "1998",
     "utt": 0,
     "level": "overload",
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    },
    {
     "spk": "1998",
     "utt": 1,
     "level": 0.035,
-    "representable": true
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "1998",
     "utt": 1,
     "level": 0.14,
-    "representable": true
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "1998",
     "utt": 1,
     "level": "overload",
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    },
    {
     "spk": "3080",
     "utt": 0,
     "level": 0.035,
-    "representable": true
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "3080",
     "utt": 0,
     "level": 0.14,
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    },
    {
     "spk": "3080",
     "utt": 0,
     "level": "overload",
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    },
    {
     "spk": "3080",
     "utt": 1,
     "level": 0.035,
-    "representable": true
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "3080",
     "utt": 1,
     "level": 0.14,
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    },
    {
     "spk": "3080",
     "utt": 1,
     "level": "overload",
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    },
    {
     "spk": "1688",
     "utt": 0,
     "level": 0.035,
-    "representable": true
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "1688",
     "utt": 0,
     "level": 0.14,
-    "representable": true
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "1688",
     "utt": 0,
     "level": "overload",
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    },
    {
     "spk": "1688",
     "utt": 1,
     "level": 0.035,
-    "representable": true
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "1688",
     "utt": 1,
     "level": 0.14,
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    },
    {
     "spk": "1688",
     "utt": 1,
     "level": "overload",
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    },
    {
     "spk": "2033",
     "utt": 0,
     "level": 0.035,
-    "representable": true
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2033",
     "utt": 0,
     "level": 0.14,
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    },
    {
     "spk": "2033",
     "utt": 0,
     "level": "overload",
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    },
    {
     "spk": "2033",
     "utt": 1,
     "level": 0.035,
-    "representable": true
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2033",
     "utt": 1,
     "level": 0.14,
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    },
    {
     "spk": "2033",
     "utt": 1,
     "level": "overload",
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    },
    {
     "spk": "2414",
     "utt": 0,
     "level": 0.035,
-    "representable": true
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2414",
     "utt": 0,
     "level": 0.14,
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    },
    {
     "spk": "2414",
     "utt": 0,
     "level": "overload",
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    },
    {
     "spk": "2414",
     "utt": 1,
     "level": 0.035,
-    "representable": true
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2414",
     "utt": 1,
     "level": 0.14,
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    },
    {
     "spk": "2414",
     "utt": 1,
     "level": "overload",
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    },
    {
     "spk": "2609",
     "utt": 0,
     "level": 0.035,
-    "representable": true
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2609",
     "utt": 0,
     "level": 0.14,
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    },
    {
     "spk": "2609",
     "utt": 0,
     "level": "overload",
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    },
    {
     "spk": "2609",
     "utt": 1,
     "level": 0.035,
-    "representable": true
+    "representable": {
+     "16000": true,
+     "44100": true,
+     "48000": true
+    }
    },
    {
     "spk": "2609",
     "utt": 1,
     "level": 0.14,
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    },
    {
     "spk": "2609",
     "utt": 1,
     "level": "overload",
-    "representable": false
+    "representable": {
+     "16000": false,
+     "44100": false,
+     "48000": false
+    }
    }
   ]
  }

@@ -22,6 +22,8 @@ RELEASE_SHA = {"model.safetensors": "3780d9f57148fb0fd3c4bc498bacb75377bb9bb83d6
                "seed18.safetensors": "36d56df87a13a7e096e3aebd3e5963a37d26f1de8d6c7534f40a224c352ee5f0",
                "seed19.safetensors": "9cf2c8fa65cc21a3719df50b8fd9e573a0ca2879ee27570dc04080e4d27c4c75"}
 PUBLISHED_ENHANCE_SHA = "59b65cdaead7aca31d54fb73f1b1d2a7fcf6b3c1bb7feb07dcd42588d79611b5"
+RELEASE_CONFIG_SHA = "0eb99ef201967e737da50d782091a0edb44388da897df6b215acbbad6f8596d6"
+PUBLISHED_MODEL_MODULE_SHA = "e09ca1e0e8b761ed7116d5291e08c196e97243f5a111faca0fe68a15a5f8e1da"   # research/gen35/published/model_causal.py (as published)
 
 
 def sha(p):
@@ -46,6 +48,11 @@ def build_table(release_dir=RELEASE_DIR):
         table[h] = (pol[RP.sha(RP.CKPTS[seed])], float(sd["decoder.bias"][0]))
     if sha(Path(release_dir) / "enhance.py") != PUBLISHED_ENHANCE_SHA:
         raise SystemExit("REFUSED: published enhance.py differs from the audited snapshot")
+    if sha(Path(release_dir) / "config.json") != RELEASE_CONFIG_SHA:
+        raise SystemExit("REFUSED: published config.json differs from the registered one")
+    if sha(R / "gen35" / "published" / "model_causal.py") != PUBLISHED_MODEL_MODULE_SHA or \
+            sha(Path(release_dir) / "model_causal.py") != PUBLISHED_MODEL_MODULE_SHA:
+        raise SystemExit("REFUSED: model_causal.py (snapshot or release) differs from the registered published module")
     return table
 
 

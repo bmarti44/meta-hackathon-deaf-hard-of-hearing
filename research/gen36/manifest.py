@@ -6,9 +6,11 @@ Deterministic choice (no listening, no scores):
 - per speaker, the first two utterances (sorted by file name) at least 6 s long; a 5 s crop starting at 0.5 s;
 - targets scaled to RMS 0.1 (training convention); crowd = mean of 8 crowd utterances drawn with
   np.random.default_rng(20261136), each a 5 s crop at a drawn offset, then scaled to the SNR;
-- F1 noisy: 8 targets x 2 utterances x SNR {-5, 0, +5, +10} = 64 items;
+- F1 noisy: 8 targets x 2 utterances x SNR {-5, 0, +5, +10} = 64 items; each mixture and its clean target are scaled by
+  ONE gain so the mixture peaks at 0.5 (-6 dBFS): every F1 input is representable in a file (amendment 1, Astra);
 - F2 target-only: the 16 target crops at input RMS 0.035 and 0.14 (representable) and at peak 1.5 x full scale
   (OVERLOAD stress, labelled; inputs beyond full scale cannot come from a file and are reported, not level-gated).
+Representability (input peak <= 1 after resampling to each registered rate) is sealed per item and rate.
 The material hash covers source-file sha256s, parameters and every rendered array.
 """
 from __future__ import annotations
@@ -22,6 +24,14 @@ SEED = 20261136
 SNRS = (-5.0, 0.0, 5.0, 10.0)
 LEVELS = (0.035, 0.14, "overload")
 FS = 16000
+RATES = (16000, 44100, 48000)
+
+
+def peak_at(x, sr):
+    from math import gcd
+    from scipy.signal import resample_poly
+    y = np.asarray(x, np.float64) if sr == FS else resample_poly(np.asarray(x, np.float64), sr // gcd(FS, sr), FS // gcd(FS, sr))
+    return float(np.max(np.abs(y)))
 
 
 def speakers():
@@ -76,15 +86,17 @@ def build():
             babble /= 8
             for snr in SNRS:
                 noise = babble / (np.sqrt(np.mean(babble ** 2)) + 1e-12) * np.sqrt(np.mean(clean ** 2)) * 10 ** (-snr / 20)
-                it = {"panel": "F1", "spk": spk, "utt": ui, "snr": snr, "clean": clean.astype(np.float32),
-                      "mix": (clean + noise).astype(np.float32)}
+                mix = clean + noise; gg = 0.5 / np.max(np.abs(mix))
+                it = {"panel": "F1", "spk": spk, "utt": ui, "snr": snr, "clean": (gg * clean).astype(np.float32),
+                      "mix": (gg * mix).astype(np.float32)}
+                it["representable"] = {r: bool(peak_at(it["mix"], r) <= 1.0) for r in RATES}
                 h.update(f"F1|{spk}|{ui}|{snr}".encode()); h.update(it["mix"].tobytes()); h.update(it["clean"].tobytes())
                 items.append(it)
             for lv in LEVELS:
                 g = (1.5 / np.max(np.abs(clean))) if lv == "overload" else lv / 0.1
                 x = (g * clean).astype(np.float32)
                 it = {"panel": "F2", "spk": spk, "utt": ui, "level": lv, "clean": x, "mix": x,
-                      "representable": bool(np.max(np.abs(x)) <= 1.0)}
+                      "representable": {r: bool(peak_at(x, r) <= 1.0) for r in RATES}}
                 h.update(f"F2|{spk}|{ui}|{lv}".encode()); h.update(x.tobytes())
                 items.append(it)
     return items, h.hexdigest(), {"targets": targets, "crowd": crowd, "seed": SEED}
@@ -93,4 +105,4 @@ def build():
 if __name__ == "__main__":
     items, mh, meta = build()
     print(json.dumps({"n_items": len(items), "material_sha256": mh, **meta,
-                      "overload_items": sum(1 for i in items if i["panel"] == "F2" and not i["representable"])}, indent=1))
+                      "nonrepresentable_item_rates": sum(1 for i in items for r in RATES if not i["representable"][r])}, indent=1))
