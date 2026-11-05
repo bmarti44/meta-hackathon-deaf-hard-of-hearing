@@ -90,3 +90,12 @@ def test_metrics_include_mixture_distortion_and_waveform_error():
     assert m["wave_err_L"] < -100 and m["ild_target_err_db"] < 1e-9 and m["ild_mixture_dist_db"] < 1e-9
     m2 = P.metrics(r, rr, 0.5 * r, rr, r, rr)                     # gain change: SI-SDR blind, waveform error not
     assert m2["sisdr_L"] > 100 and m2["wave_err_L"] > -10 and m2["ild_target_err_db"] > 5
+
+
+def test_score_window_alignment_for_any_length():
+    from vocoder import N_FFT, HOP, extract_envelopes
+    for n in (P.FS * 7 + 12345, P.FS * 10, 122400, 106400 + P.T0):
+        w = P.score_window(n)
+        L = w.stop - w.start
+        assert w.start == P.T0 and w.stop <= n and n - w.stop < HOP and (L - N_FFT) % HOP == 0
+        extract_envelopes(np.zeros(L))                                # must not raise

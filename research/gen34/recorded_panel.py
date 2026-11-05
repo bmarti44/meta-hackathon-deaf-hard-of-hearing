@@ -111,12 +111,21 @@ METRICS = ("sisdr_L", "sisdr_R", "stoi_L", "stoi_R", "wave_err_L", "wave_err_R",
            "ild_target_err_db", "ild_mixture_dist_db", "itd_err_samples")
 
 
+def score_window(n):
+    """1 s to the end of the file, trimmed to the last full vocoder hop: bench-n6/vocoder._stft needs
+    (length - N_FFT) to be a multiple of HOP (pre-run amendment 2; the shared vocoder is not modified)."""
+    from vocoder import N_FFT, HOP
+    L = n - T0
+    assert L >= N_FFT, f"scoring window too short: {L}"
+    return slice(T0, T0 + N_FFT + ((L - N_FFT) // HOP) * HOP)
+
+
 def metrics(rL, rR, oL, oR, mL, mR):
     """Per-ear SI-SDR/STOI and gain-sensitive waveform error vs each ear's recorded isolated talker; target-ILD error
     (output vs isolated talker) and mixture-ILD distortion (output vs input mixture); ITD error. Window: 1 s to end."""
     from pystoi import stoi
     from spatial import ild_per_band, itd_samples
-    w = slice(T0, None)
+    w = score_window(len(rL))
     out = {}
     for e, r, o in (("L", rL, oL), ("R", rR, oR)):
         out[f"sisdr_{e}"] = _si_sdr_np(r[w], o[w])

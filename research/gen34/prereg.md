@@ -142,20 +142,32 @@ Also:
 
 Tests: `test_gen34.py`, 3/3 passing. The hash table is updated below.
 
+## Pre-run amendment 2 (2026-11-05 ~03:52; the first pipeline run crashed before any model output)
+
+- **The crash.** The first run of `pipeline.sh` (03:48) crashed while scoring the **bypass** system.
+  - `bench-n6/vocoder._stft` raises when `(length − N_FFT)` is not a multiple of `HOP` (512 / 128).
+  - The registered benches always used aligned lengths; BRUDEX files vary.
+  - No model had been run, and no audit file was written.
+- **The fix:** the scoring window is now 1 s to the **last full vocoder hop** before the end of the file (`recorded_panel.score_window`). It drops fewer than 128 samples (8 ms) at the end, and it applies to every metric.
+- **What is not changed:** the shared, registered `vocoder.py` is left untouched.
+- Tested for arbitrary lengths (`test_gen34.py`, 4/4).
+- The hash table below is updated for `recorded_panel.py` and `test_gen34.py`.
+
 ## Source hashes (sha256)
 
 | File | sha256 |
 |---|---|
 | `research/gen34/fetch_brudex.py` | `470a79b497a5f08ea62d1b2339e7fa8da1a18781b96ccc3b99693ca03e9f9f4e` |
-| `research/gen34/recorded_panel.py` | `f07b279a6d48850b78b8bf0a30017c513e67aef8453683de6195926e78556f29` |
+| `research/gen34/recorded_panel.py` | `6aef539828ed399f77933fc61ef6f57c54de43400bfca40a7f5a7b5b012d312d` |
 | `research/gen34/run_audit.py` | `dba6cd66e416d54d46a88c6426e609a2171b2b67723e2d7a7f91f6dbb4f6d231` |
 | `research/gen34/judge_recorded_v1.py` | `bfa9443b09bcf3072d3c55504a49b5319322e9220948da508e144af16c63368e` |
-| `research/gen34/test_gen34.py` | `db87a4fbb03a02ecdfb6bec82e34779557bf639bef201ac3136379cee1c09e9a` |
+| `research/gen34/test_gen34.py` | `edc7d64c5df24ba0a66e9791886f861f0a7c1dbb4942735943832fa01492ba3c` |
 | `research/gen34/pipeline.sh` | `9603e319f284288e75ba9e95dbd07c8392a6e93d651cf67e18c584a11c623b10` |
 | `research/gen34/speaker_audit.json` | `385e466bbe2b806b8ff8135fdf18a3d834583dbe190a698fb72bd3486c90a830` |
 | `research/gen33/linked.py` | `9351c9f5eaf054a4252a639fd869107d27bae9da6dab508e2965c71866ab8acd` |
 | `research/gen24/train13.py` | `5ad336fc891dac7ceff79a63a78393a8d1a5166b88bee92c734f9841aafdce08` |
 | `research/bench-n6/spatial.py` | `1bd0e32b073fdbf228f518269953469e7e0b5c7c0ddef4c980a5af3509a68834` |
+| `research/bench-n6/vocoder.py` | `fc2cbd942dcd096cd5ff2428adbc23adb258810a4e43d9e87dbcb6334dc39fd0` |
 | `research/gen15/model_causal.py` | `c357bc178448631c0349d80876636ae7d1e0b46d90abf057115c44799507a674` |
 | `research/gen19/weights/causal_seed20261117.pt` | `80000b64c413ebb878f08695d8744ead8ecf9b183de57cb21acae6157470f367` |
 | `research/gen32/weights/wiseftpd_seed20261117.pt` | `645a062323718958158f32af4398ce3759aae541168db08a3fe286dba57c90b3` |
