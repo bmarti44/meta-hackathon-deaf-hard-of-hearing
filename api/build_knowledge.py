@@ -83,6 +83,7 @@ FACTS = ("Model: strictly causal Conv-TasNet-style waveform enhancer, 602,510 pa
          "The research loop was run by Claude (Anthropic) with Codex Astra as reviewer; Muse (Meta) powers this site's Ask and Explain features. "
          "Next steps: compressed-spectral then narrower-SNR training changes; a fresh-material confirmation package (12 new speakers); a binaural linked-gain model; "
          "measuring quiet PESQ and streaming RTF. "
+         "THE MODEL IS PUBLIC on Hugging Face: https://huggingface.co/bmarti44/before-the-implant-causal-enhancer (Gen 19 weights, enhance.py, MIT); anyone can try it on their own recordings. "
          "PLAIN-LANGUAGE DECIBELS: every 3 dB of SI-SDR improvement halves the leftover noise+distortion energy relative to the voice. "
          "+3.51 dB cuts it to less than half; +4.65 dB (crowd as loud as voice) to about a third; +1.19 dB at -5 dB (crowd about 3x the voice's energy) only by about a quarter, "
          "leaving the crowd still more than twice the voice; the +1.5 goal would cut it by about 30%. "

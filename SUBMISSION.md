@@ -9,6 +9,13 @@
 It tells Graham's story in his dad's words and walks through the
 research. Muse, Meta's AI model, answers questions about it.
 
+**The model is public:**
+[huggingface.co/bmarti44/before-the-implant-causal-enhancer](https://huggingface.co/bmarti44/before-the-implant-causal-enhancer).
+It ships Gen 19's three seeds as safetensors, model code, a one-command
+`enhance.py` and a plain-language model card. The upload was round-trip
+verified bit-identical to the research checkpoints, and `enhance.py`
+reproduces the bench (crowd +3.44 dB vs the bench's +3.49 on seed 17).
+
 ## How Meta's models are used
 
 The site calls **Muse Spark** (`muse-spark-1.3`) through the Meta
