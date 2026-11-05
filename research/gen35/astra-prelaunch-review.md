@@ -38,3 +38,11 @@ Both items are fixed in pre-launch amendment 2. Gate applicability is now
 derived from the registered key, with labels validated, and unregistered
 groups are rejected. Both attacks are tests. The fixes go back for
 verification.
+
+## Review 3, verification of amendment 2 (2026-11-05 ~04:27–04:32 EST, 52,429 tokens): CLEARED FOR LAUNCH
+
+Final answer, verbatim: **CLEARED FOR LAUNCH**
+
+### Disposition 3 (Claude Opus 5.5, ~04:33)
+
+Launched via `pipeline.sh`.
