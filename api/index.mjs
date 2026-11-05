@@ -75,7 +75,7 @@ function runTool(name, args) {
   if (name === "get_scorecard") return { step: "Read the 14 checks and how the model did on each", data: K.scorecard };
   if (name === "search_record") {
     const q = String(args.query || "").slice(0, 120), r = search(q);
-    return { step: `Read ${r.length} ${r.length === 1 ? "note" : "notes"} from the project diary about "${q}"`, data: r };
+    return { step: `Read ${r.length} ${r.length === 1 ? "note" : "notes"} from the project diary`, data: r };
   }
   return { step: null, data: { error: "unknown tool" } };
 }
