@@ -8,7 +8,7 @@ const GLYPH = { baseline: '●', advance: '▲', null: '×', fail: '×', running
 const WORD = { baseline: 'our best so far', advance: 'kept', null: 'did not help', fail: 'did not help', running: 'testing now', pending: 'up next' };
 
 // ---------- brand / repo (one place: js/config.js) ----------
-document.title = `${C.brand} — causal noise reduction for cochlear implants, tested on a bench first`;
+document.title = `${C.brand}: helping kids with cochlear implants hear one voice in a crowd`;
 $$('[data-brand-name]').forEach(e => e.textContent = C.brand);
 const repoUrl = p => C.repo ? (p ? `${C.repo}/blob/${C.repoBranch}/${p}` : C.repo) : null;
 $$('a[data-repo]').forEach(a => {
@@ -93,7 +93,7 @@ $$('[data-bench="white_estoi"]').forEach(e => e.textContent = fmt(bench.summary_
 (function direction() {
   const host = $('#dir-demo'); if (!host) return;
   const W = 520, H = 360, cx = 260, cy = 190;
-  const noise = [[70, 70], [450, 60], [470, 300], [90, 310], [260, 40], [250, 335]];
+  const noise = [[70, 70], [450, 60], [470, 300], [120, 285], [260, 40], [250, 335]];
   const voice = [60, 190];
   function draw(mode) {
     // perceived position of the voice: separate per-ear processing can blur the ear-to-ear loudness clue (pulls toward centre)
@@ -101,7 +101,7 @@ $$('[data-bench="white_estoi"]').forEach(e => e.textContent = fmt(bench.summary_
     const nAlpha = mode === 'none' ? 0.9 : 0.35, vSize = mode === 'none' ? 14 : 20;
     let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Illustration: a child in the centre of a noisy room, a voice on the left. In 'each ear separately' mode the voice seems to come from nearer the middle; in 'both ears linked' mode it stays on the left.">
       <rect x="20" y="20" width="${W - 40}" height="${H - 40}" fill="none" stroke="var(--rule)"/>
-      <text x="30" y="${H - 28}" class="lbl dim">top-down room · illustration of the idea, not measured data</text>`;
+`;
     noise.forEach(([x, y]) => s += `<circle cx="${x}" cy="${y}" r="10" fill="var(--dim)" opacity="${nAlpha}"/><text x="${x}" y="${y + 22}" text-anchor="middle" class="lbl dim" font-size="10">noise</text>`);
     // child (head with two ears)
     s += `<circle cx="${cx}" cy="${cy}" r="22" fill="var(--bg3)" stroke="var(--bone)" stroke-width="2"/><circle cx="${cx - 24}" cy="${cy}" r="6" fill="var(--bone)"/><circle cx="${cx + 24}" cy="${cy}" r="6" fill="var(--bone)"/><text x="${cx}" y="${cy + 44}" text-anchor="middle" class="lbl">Graham</text>`;
@@ -120,7 +120,6 @@ $$('[data-bench="white_estoi"]').forEach(e => e.textContent = fmt(bench.summary_
 })();
 
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-{ const cl = $('#clarity'), md = $('#model'); if (cl && md) new IntersectionObserver(es => { cl.hidden = !(es[0].isIntersecting || es[0].boundingClientRect.top < 0); }, { threshold: 0 }).observe(md); }
 // implant chapter: show the 3 most important clips by default
 { const tracks = $$('#implant .imp-track'); if (tracks.length > 3) { tracks.slice(3).forEach(t => t.hidden = true); const b = document.createElement('button'); b.type = 'button'; b.className = 'explain-btn imp-more'; b.textContent = `Show all ${tracks.length} clips`; b.addEventListener('click', () => { const open = tracks[3].hidden; tracks.slice(3).forEach(t => t.hidden = !open); b.textContent = open ? 'Show fewer clips' : `Show all ${tracks.length} clips`; }); tracks[0].parentElement.after(b); } }
 
@@ -196,15 +195,21 @@ const PLAIN = { crowd_sisdr: 'Crowd: how clean the voice is', crowd_stoi: 'Crowd
 const ROW_IDS = r => r.id || r.kpi.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
 let level = 'parent';
 const tb = $('#score-table tbody');
-tb.innerHTML = score.rows.map(r => {
+const scoreRow = r => {
   const st = r.status === 'INFO' ? 'pending' : r.status === 'PASS' ? 'advance' : 'fail';
   const word = r.status === 'INFO' ? 'for information' : r.status === 'PASS' ? 'pass' : 'miss';
   return `<tr class="${r.status === 'FAIL' ? 'fail' : r.status === 'INFO' ? 'info' : ''}" data-row="${ROW_IDS(r)}">
-    <td data-l="Check">${esc(PLAIN[r.id] || r.kpi)}${r.status === 'FAIL' ? ' <span class="hot">(the hardest crowd)</span>' : ''}<details class="researchers row"><summary>For researchers</summary><span class="small muted">${esc(r.kpi)}: result ${esc(r.actual)}, required ${esc(r.required)}${r.stretch ? `; stretch ${esc(r.stretch)} ${r.stretch_pass ? 'met' : 'not met'}` : ''}</span></details></td>
+    <td data-l="Check">${esc(PLAIN[r.id] || r.kpi)}${r.status === 'FAIL' ? ' <span class="hot">(the hardest crowd)</span>' : ''}</td>
     <td class="small muted" data-l="Needs">${esc(NEED[r.id] || r.required)}</td>
     <td data-l="Status"><span class="st" data-status="${st}">${GLYPH[st]} ${word}</span></td>
     <td class="ai-only" hidden><button class="explain-btn" type="button" data-explain="${ROW_IDS(r)}" aria-label="Explain ${esc(r.kpi)}">Explain</button></td></tr>`;
-}).join('');
+};
+{
+  const fails = score.rows.filter(r => r.status === 'FAIL'), passes = score.rows.filter(r => r.status !== 'FAIL');
+  tb.innerHTML = fails.map(scoreRow).join('') + `<tr class="fold-row"><td colspan="4"><details class="fold"><summary>The ${passes.filter(r => r.status === 'PASS').length} checks that pass (and one for information)</summary><table class="inner"><tbody>${passes.map(scoreRow).join('')}</tbody></table></details></td></tr>`;
+  const tech = score.rows.map(r => `<li>${esc(r.kpi)}: result ${esc(r.actual)}, required ${esc(r.required)}${r.stretch ? `; stretch ${esc(r.stretch)} ${r.stretch_pass ? 'met' : 'not met'}` : ''}</li>`).join('');
+  $('#score-verdict').insertAdjacentHTML('afterend', `<details class="researchers"><summary>For researchers</summary><ul class="plain small muted">${tech}</ul></details>`);
+}
 $('#score-verdict').textContent = `${score.n_pass} of ${score.n_required} checks pass. Our verdict: not good enough yet, keep working.`;
 $('#level-toggle').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; level = b.dataset.level; $$('button', e.currentTarget).forEach(x => x.setAttribute('aria-pressed', x === b)); });
 

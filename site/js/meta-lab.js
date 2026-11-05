@@ -71,6 +71,21 @@
       `Enhancer: Gen 19 seed 17 (<code class="mono">${esc(m.checkpoint)}</code>). ${m.n_clips_in_study} crowd mixtures (8 to 12 babble draws, test speakers only), whole utterances, one transcription each. ` +
       rows.map(([k, v]) => `${k}: WER ${f(v.unproc_mean_wer)}% unprocessed vs ${f(v.gen19_mean_wer)}% Gen 19, paired Δ ${f(v.delta_gen19_minus_unproc.mean)} pp (95% CI ${f(v.delta_gen19_minus_unproc.ci_lo)} to ${f(v.delta_gen19_minus_unproc.ci_hi)}).`).join(" ") +
       (s.clean ? ` Clean-speech WER ${f(s.clean.mean_wer)}%.` : "") + ` Spark often replies as if no audio was attached, so every clip starts with a short clean check sentence (LibriSpeech ${esc(m.delivery_check_utterance || "")}, a non-test speaker); a reply counts only if Muse writes that sentence back, and only the rest is scored (${s.attempts_total} calls for ${m.n_clips_in_study * 2 + (s.clean?.n || 0)} transcripts, ${s.transcripts_failed} missing). Two earlier runs had broken protocols and are filed, not used; a post-hoc rescore strips check-sentence words that spilled onto the clip line (plan amendment 3). The six recordings shown are, per reader, the first with both transcripts present (chosen on availability, not outcome). Independent review by Muse Wonder (<code class="mono">muse-wonder-1.0</code>): <code class="mono">research/meta/wonder_review.md</code>.</p>`;
-    root.hidden = false; $("ml-fallback").remove(); { const ok = s => s && s.transcript != null && !/^\s*\[unintelligible\]\s*$/i.test(s.transcript); let i = data.clips.findIndex(c => ok(c.unproc) || ok(c.gen19)); if (i < 0) i = 0; show(i); }
+    root.hidden = false; $("ml-fallback").remove(); {
+      const hits = (c, k) => { const t = c[k] && c[k].transcript; if (t == null || /^\s*\[unintelligible\]\s*$/i.test(t)) return -1; return align(c.reference, t).hits; };
+      let best = -1, bi = 0;
+      data.clips.forEach((c, i) => { const gain = hits(c, "gen19") - hits(c, "unproc"); const pref = (c.snr_db === 0 ? 1 : 0); const sc = gain * 10 + pref; if (gain > 0 && sc > best) { best = sc; bi = i; } });
+      show(bi);
+    }
+    // styled play buttons instead of the native players
+    for (const side of ["before", "after"]) {
+      const a = $(`ml-a-${side}`); if (!a) continue; a.removeAttribute("controls"); a.style.display = "none";
+      const b = document.createElement("button"); b.type = "button"; b.className = "ml-play"; b.textContent = side === "before" ? "Listen before cleanup" : "Listen after cleanup"; b.setAttribute("aria-pressed", "false");
+      a.after(b);
+      b.addEventListener("click", () => { document.querySelectorAll("#meta-lab audio").forEach(o => { if (o !== a) o.pause(); }); if (a.paused) { a.play().catch(() => {}); } else { a.pause(); } });
+      a.addEventListener("play", () => { b.textContent = "Pause"; b.setAttribute("aria-pressed", "true"); });
+      const off = () => { b.textContent = side === "before" ? "Listen before cleanup" : "Listen after cleanup"; b.setAttribute("aria-pressed", "false"); };
+      a.addEventListener("pause", off); a.addEventListener("ended", off);
+    }
   }).catch(() => { $("ml-fallback").textContent = "The listening test could not be loaded right now."; });
 })();
