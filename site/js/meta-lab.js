@@ -25,13 +25,14 @@
     return { html: raw.map((w, k) => ok[k] || !h[k] ? esc(w) : `<span class="ml-miss">${esc(w)}</span>`).join(" "), hits, total: n };
   }
 
+  const fix = r => (r.charAt(0).toUpperCase() + r.slice(1)).replace(/\bi'm\b/g, "I'm").replace(/\bi\b/g, "I").replace(/\b(english|french|spanish|german|sumter)\b/gi, w => w[0].toUpperCase() + w.slice(1).toLowerCase());
   const loud = snr => snr < 0 ? "the crowd is louder than the voice" : "the crowd is as loud as the voice";
   let data = null;
 
   function show(i) {
     const c = data.clips[i];
     document.querySelectorAll("#ml-list button").forEach((b, k) => b.setAttribute("aria-pressed", String(k === i)));
-    $("ml-ref").textContent = c.reference.charAt(0).toUpperCase() + c.reference.slice(1).replace(/\bi'm\b/g, "I'm").replace(/\bi\b/g, "I").replace(/\b(english|french|spanish|german)\b/gi, w => w[0].toUpperCase() + w.slice(1).toLowerCase());
+    $("ml-ref").textContent = fix(c.reference);
     for (const [side, key] of [["before", "unproc"], ["after", "gen19"]]) {
       const a = $(`ml-a-${side}`); a.pause(); a.src = c[key].audio;
       const t = c[key].transcript;
@@ -50,7 +51,7 @@
     data = d;
     $("ml-list").innerHTML = d.clips.map((c, i) =>
       `<li><button type="button" aria-pressed="false" data-i="${i}">` +
-      `<span class="ml-what">“${esc(c.reference.split(" ").slice(0, 6).join(" "))}…”</span>` +
+      `<span class="ml-what">“${esc(fix(c.reference.split(" ").slice(0, 6).join(" ")))}…”</span>` +
       `<span class="ml-how">${c.seconds} seconds, ${loud(c.snr_db)}</span></button></li>`).join("");
     $("ml-list").addEventListener("click", e => { const b = e.target.closest("button[data-i]"); if (b) show(+b.dataset.i); });
 
@@ -82,9 +83,9 @@
     root.hidden = false; $("ml-fallback").remove(); {
       const hits = (c, k) => { const t = c[k] && c[k].transcript; if (t == null || /^\s*\[unintelligible\]\s*$/i.test(t)) return -1; return align(c.reference, t).hits; };
       let best = -1, bi = 0;
-      data.clips.forEach((c, i) => { const after = hits(c, "gen19"), before = hits(c, "unproc"), gain = after - before; const sc = gain * 10 + after + (c.snr_db === 0 ? 100 : 0); if (gain > 0 && after > 0 && sc > best) { best = sc; bi = i; } });
-      if (best < 0 && data.clips.length > 4) bi = 4;
-      show(bi);
+      bi = Math.max(0, data.clips.findIndex(c => c.snr_db < 0)); best = 0;
+      { const helped = data.clips.filter(c => hits(c, "gen19") > hits(c, "unproc")).length; const note = document.createElement("p"); note.className = "small muted ml-note"; note.textContent = `Cleanup helped Muse in only ${helped} of these ${data.clips.length} clips.`; const tot = $("ml-total"); if (tot) tot.after(note); }
+            show(bi);
     }
     // styled play buttons instead of the native players
     for (const side of ["before", "after"]) {

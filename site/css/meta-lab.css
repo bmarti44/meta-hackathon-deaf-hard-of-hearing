@@ -22,8 +22,8 @@
 #meta-lab audio{display:none}
 #meta-lab .ml-heard{margin:0 0 12px;font-size:16px;line-height:1.55;color:var(--bone);min-height:4.6em}
 #meta-lab .ml-miss{text-decoration:underline;text-underline-offset:3px}
-#meta-lab .ml-score{margin:0 0 16px;font-family:var(--mono);font-size:13px;color:var(--dim)}
-#meta-lab .ml-score b{font-family:var(--serif);font-weight:600;font-size:28px;color:var(--bone);margin-right:4px}
+#meta-lab .ml-score{margin:0 0 16px;font-family:var(--sans);font-size:16px;color:var(--bone)}
+#meta-lab .ml-score b{font-weight:600;font-size:inherit;color:var(--bone)}
 #meta-lab .ml-key{margin-top:10px}
 
 #meta-lab .ml-total{grid-column:1/-1;border-top:1px solid var(--rule);padding-top:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:8px 48px}

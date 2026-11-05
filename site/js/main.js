@@ -121,7 +121,7 @@ $$('[data-bench="white_estoi"]').forEach(e => e.textContent = fmt(bench.summary_
     if (mode === 'separate') s += `<circle cx="${perceived[0]}" cy="${perceived[1]}" r="14" fill="none" stroke="var(--hot)" stroke-width="2" stroke-dasharray="4 3"/><text x="${perceived[0]}" y="${perceived[1] - 28}" text-anchor="middle" class="lbl" fill="var(--hot)">seems to be here</text>`;
     s += `</svg>`;
     host.innerHTML = s;
-    $('#dir-read').textContent = { none: 'No cleanup: the chatter is as loud as the voice, but the louder-ear clue is intact.', separate: 'Each ear separately: the voice is clearer, but if the two sides turn sound down by different amounts the louder-ear clue blurs, and the voice can seem to come from nearer the middle.', linked: 'Both ears agreeing (our planned next step): one shared decision about how much to turn down, so the voice is clearer and still sounds like it comes from the left.' }[mode]; window.__ears = mode;
+    $('#dir-read').textContent = { none: 'No cleanup: the chatter is as loud as the voice, but the louder-ear clue is intact.', separate: 'Each ear separately: the voice is clearer, but if the two sides turn sound down by different amounts the louder-ear clue blurs, and the voice can seem to come from nearer the middle.', linked: 'Both ears agreeing (tried in version 33): one shared decision about how much to turn down, so the voice is clearer and still sounds like it comes from the left. It did not pass our rules.' }[mode]; window.__ears = mode;
   }
   $$('#dir-modes button').forEach(b => b.addEventListener('click', () => { $$('#dir-modes button').forEach(x => x.setAttribute('aria-pressed', x === b)); draw(b.dataset.mode); }));
   draw('none');
@@ -249,10 +249,24 @@ const G = gens.generations;
 const live = G.find(g => g.status === 'running');
 const chip = $('#live-chip');
 if (live) { chip.classList.remove('ok', 'off'); $('#live-text').textContent = `${live.trains === false ? 'Checking' : 'Training'} ${live.label.toLowerCase()} now${live.short ? ', ' + live.short : ''}`; $('#live-chip').dataset.short = `Training ${live.label.toLowerCase()}`; }
-else { const last = G[G.length - 1]; chip.classList.add('ok'); $('#live-text').textContent = last.status === 'pending' ? `Next: ${last.label.toLowerCase()}${last.short ? ', ' + last.short : ''}` : `${last.label}: ${statusWord(last)}`; }
+else { const last = G[G.length - 1]; chip.classList.add('ok'); $('#live-text').textContent = last.status === 'pending' ? `Next: ${last.label.toLowerCase()}${last.short ? ', ' + last.short : ''}` : `${last.label} ${statusWord(last)}. Nothing is training now.`; }
 setTimeout(fitNav, 0);
 (function tree() {
-  if (innerWidth < 760) { $('#tree').innerHTML = ''; $('#tree-desc').textContent = 'The versions, in order. ' + G.map(g => `${g.label}, ${statusWord(g)}: ${g.change}.`).join(' '); return; }
+  if (innerWidth < 760) {
+    const rowH = 44, W = 320, H = rowH * G.length + 24, xT = 60;
+    let v = `<svg viewBox="0 0 ${W} ${H}" aria-hidden="true">`;
+    v += `<path class="trunk" d="M${xT},12 L${xT},${H - 12}"/>`;
+    G.forEach((g, i) => {
+      const y = 24 + i * rowH, dead = g.status === 'null' || g.status === 'fail', pend = g.status === 'pending' || g.status === 'shelved', run = g.status === 'running';
+      const x = dead || pend || run ? xT + 70 : xT;
+      if (dead) v += `<path class="dead" d="M${xT},${y - rowH / 2} C${xT},${y} ${x - 30},${y} ${x},${y}"/><line class="x" x1="${x - 5}" y1="${y - 5}" x2="${x + 5}" y2="${y + 5}"/><line class="x" x1="${x + 5}" y1="${y - 5}" x2="${x - 5}" y2="${y + 5}"/>`;
+      else if (pend) v += `<path class="pend" d="M${xT},${y - rowH / 2} C${xT},${y} ${x - 30},${y} ${x},${y}"/>`;
+      else if (run) v += `<path class="live" d="M${xT},${y - rowH / 2} C${xT},${y} ${x - 30},${y} ${x},${y}"/>`;
+      v += `<circle class="node ${g.status}" cx="${x}" cy="${y}" r="${g.status === 'baseline' ? 9 : 6}"/>`;
+      v += `<text x="${x + 16}" y="${y + 5}">${esc(g.label).replace("Version ", "v")}</text><text class="dim" x="${x + 70}" y="${y + 5}">${statusWord(g)}</text>`;
+    });
+    $('#tree').innerHTML = v + '</svg>'; $('#tree-desc').textContent = 'The versions, in order. ' + G.map(g => `${g.label}, ${statusWord(g)}: ${g.change}.`).join(' '); return;
+  }
   if (false) { $('#tree').innerHTML = `<ol class="tree-list">${G.map(g => `<li data-status="${g.status}"><b>${esc(g.label)}</b> <span class="st" data-status="${g.status}">${statusWord(g)}</span></li>`).join('')}</ol>`; $('#tree-desc').textContent = 'The versions, in order. ' + G.map(g => `${g.label}, ${statusWord(g)}: ${g.change}.`).join(' '); return; }
   const W = 1000, step = W / (G.length + 1), yT = 140, H = 260;
   let s = `<svg viewBox="0 0 ${W} ${H}">`;
@@ -289,7 +303,7 @@ const cardHtml = g => `<article class="gen" data-status="${g.status}" id="${g.id
   {
     const newest = G[G.length - 1], base = G.find(g => g.status === 'baseline');
     const shown = [base, newest].filter(Boolean), rest = G.filter(g => !shown.includes(g));
-    $('#gen-cards').innerHTML = shown.map(cardHtml).join('') + `<details class="fold earlier"><summary>every other version (${list(nums(rest))})</summary><div class="gen-cards">${rest.map(cardHtml).join('')}</div></details>`;
+    $('#gen-cards').innerHTML = shown.map(cardHtml).join('') + `<details class="fold earlier"><summary>${rest.length} other versions</summary><div class="gen-cards">${rest.map(cardHtml).join('')}</div></details>`;
   }
 }
 

@@ -106,14 +106,14 @@ const mat = new THREE.ShaderMaterial({
       float soft = smoothstep(0.25, 0.0, d);
       vec3 col = mix(uBone, uSignal, vClar * (0.6 + 0.4*vSeed));
       col = mix(col, vEar < 0.0 ? uSignal : uBone, abs(vEar));   // left ear cyan, right ear bone
-      col = mix(col, vec3(0.2, 0.75, 1.0), vLinked);                   // linked: one clearly cyan line
+      col = mix(col, vec3(0.08, 0.42, 0.6), vLinked);                   // linked: one clearly cyan line
       col = mix(col, uHot, vWall);
       col = mix(col, uSignal*0.6, vStill);
       float a = (0.55 + 0.35*vClar) * soft * uAlphaK;
       a *= mix(1.0, 1.1, vStill);
       a *= 0.35 + 1.6*vLit;
       a *= mix(1.0, 1.0, vThin);
-      a *= mix(1.0, 0.9, vLinked);
+      a *= mix(1.0, 0.4, vLinked);
       a *= mix(1.0, 0.35 + 0.65*step(0.985, fract(vSeed*7.0)), vWall);
       a *= clamp(1.7 - vDepth*0.1, 0.3, 1.0);
       gl_FragColor = vec4(col, a);
@@ -141,6 +141,7 @@ const els = () => ({ born: $('born'), tests: $('tests'), music: $('music'), crow
   model: $('model'), implant: $('implant'), dir: document.querySelector('.dir-wrap'), failRow: document.querySelector('#score-table tr.fail'), sliderBox: document.querySelector('.slider-box'), meta: $('meta-lab'), impStage: document.querySelector('#imp-stage') || document.querySelector('#implant .imp-steps'), wall: $('wall'), gens: $('generations'), attempts: $('attempts'), graham: $('graham'), honest: $('honest') });
 let E = els();
 const clamp01 = v => Math.min(1, Math.max(0, v));
+let baseYOff = 0;
 const baseAlpha = U.uAlphaK.value;
 const top = el => el ? el.getBoundingClientRect().top + scrollY : 0;
 const presence = (el, pad = 0.15) => {   // share of the viewport this section fills now (0..1)
@@ -188,7 +189,7 @@ const sliderClarity = v => show(ratioAt(v)) * (0.55 + 0.45 * (v + 5) / 15);   //
 document.addEventListener('input', e => { if (e.target && e.target.id === 'snr') { sliderClar = sliderClarity(+e.target.value); measure(); } });
 addEventListener('load', () => { const sl = $('snr'); if (sl) sliderClar = sliderClarity(+sl.value); measure(); });
 
-function resize() { const w = innerWidth, h = innerHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); U.uXS.value = Math.min(1, Math.max(0.35, camera.aspect * 0.6)); U.uYOff.value = camera.aspect < 0.9 ? -1.2 : 0; U.uStillC.value.set(camera.aspect < 0.9 ? 0 : 3.2, camera.aspect < 0.9 ? 2.2 : 0); }
+function resize() { const w = innerWidth, h = innerHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); U.uXS.value = Math.min(1, Math.max(0.35, camera.aspect * 0.6)); U.uYOff.value = camera.aspect < 0.9 ? -1.2 : 0; baseYOff = U.uYOff.value; U.uStillC.value.set(camera.aspect < 0.9 ? 0 : 3.2, camera.aspect < 0.6 ? 2.2 : camera.aspect < 0.9 ? 3.6 : 0); }
 addEventListener('resize', () => { resize(); measure(); });
 addEventListener('scroll', measure, { passive: true });
 resize(); measure();
@@ -212,7 +213,7 @@ function frame(now) {
   if (E.gens && presence(E.gens) > 0) { gensPhase += 0.05; cl += Math.sin(gensPhase) * 0.3 * presence(E.gens); }  // nulls: a flat wobble
   U.uClarity.value = cl; U.uShake.value = C.shake; U.uWaver.value = C.waver; U.uBeat.value = C.beat;
   U.uBands.value = C.bands; U.uEars.value = C.ears; U.uEarsDrift.value = C.drift; U.uEarsClean.value = C.clean; U.uKick.value = C.kick; U.uPulse.value = C.pulse; U.uKickGain.value = (window.__waveLevel > 0) ? 3.5 : 2.4;
-  U.uAlphaK.value = baseAlpha * 1 * (1 + 0.5 * C.wall) * (isSmall ? 1 + 0.5 * C.thin : 1) * (1 + 0.3 * presence(E.music)) * (isSmall && C.ears > 0.5 ? 1.4 : 1) * ((window.__mlFuzz || 0) > 0 && presence(E.meta) > 0.2 ? 1.8 : 1); U.uWall.value = C.wall; U.uThin.value = C.thin;
+  U.uAlphaK.value = baseAlpha * 1 * (1 + 0.5 * C.wall) * (isSmall ? 1 + 0.5 * C.thin : 1) * (1 + 0.3 * presence(E.music)) * ((window.__mlFuzz || 0) > 0 && presence(E.meta) > 0.2 ? 1.8 : 1); U.uWall.value = C.wall; U.uThin.value = C.thin;
   camera.position.z = 9 - 0.6 * cl - 4.5 * C.wall * C.wall;
   camera.position.x = Math.sin(t * 0.1) * 0.25 + (Math.random() - 0.5) * 0.12 * C.shake;
   camera.position.y = (Math.random() - 0.5) * 0.12 * C.shake;

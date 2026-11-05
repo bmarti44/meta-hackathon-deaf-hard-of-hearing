@@ -59,7 +59,7 @@
 <section id="hero" aria-labelledby="h-hero">
   <div class="wrap">
     <div class="hero-text">
-      <h1 id="h-hero">Before anything reaches Graham's implant, <em>it has to pass our tests.</em></h1>
+      <h1 id="h-hero">Before anything reaches Graham's implants, <em>it has to pass our tests.</em></h1>
       <p class="lede">A small computer program that tries to pull one voice out of a noisy crowd, for people who hear through cochlear implants. We test it only on a computer, against rules we wrote down before each try. It passes 13 of our 14 checks, and this site is mostly about the one check it still fails.</p>
       <p class="scroll-hint" aria-hidden="true"><span class="ln"></span>Keep scrolling for Graham's story</p>
       <p class="wave-state sr-only" id="wave-state" aria-live="polite"></p>
@@ -121,7 +121,7 @@
         <p class="lede">Graham was born with deep hearing loss in both ears. He hears with two cochlear implants. His dad, who built this project, has normal hearing.</p>
         <details class="researchers"><summary>notes for researchers</summary><p class="small muted">Bilateral sensorineural severe-to-profound hearing loss; bilateral Cochlear implant processors.</p></details>
         <p>Crowds are where cochlear-implant users struggle most. A dance class on a lawn, a birthday table, a playground: many voices at once, and the one you need is no louder than the rest. That is the one situation our program still cannot handle well enough, and it is what this research is about.</p>
-        <p>A cochlear implant delivers sound as electrical pulses on a short row of electrodes. In a quiet room, implants work really well. In a room full of other voices, the thing a listener needs most, one voice standing apart from many, is exactly what the signal makes hardest to recover.</p>
+        <p>A cochlear implant delivers sound as electrical pulses on a short row of electrodes. In a quiet room, implants work really well. In a room full of other voices, the one thing a listener needs most, a single voice standing apart from the rest, is the hardest thing to pull back out.</p>
       </div>
     </div>
   </div>
@@ -173,7 +173,7 @@
       <div class="grid g2">
         <div>
           <h3 class="sub first">Why a hearing device cannot wait</h3>
-          <p>Most powerful noise-removal programs work like an editor: they listen to a whole sentence, then clean it up. That works for recordings, but it is no use for hearing live. If Graham's friend says something, he needs to hear it now, not after the sentence ends. Our model cleans the sound while it is still arriving, which is exactly what a hearing device would need.</p>
+          <p>Most powerful noise-removal programs work like an editor: they listen to a whole sentence, then clean it up. That works for recordings, but it is no use for hearing live. If Graham's friend says something, he needs to hear it now, not after the sentence ends. Our program cleans the sound while it is still arriving, the way a hearing device has to.</p>
           <h3 class="sub">Why it is fast</h3>
           <p>Your brain expects what you see and what you hear to line up. If sound arrives late, lips stop matching words and your own voice starts to sound strange. So a hearing device only gets a tiny slice of time to do its work. Our model needs about 6 thousandths of a second (5.88 ms) of sound before it can answer. That is roughly 20 times quicker than a blink.</p>
           <details class="fold fold-phone" open><summary>How it works</summary>
@@ -181,7 +181,7 @@
             <li>It listens in tiny slices, each about 4 thousandths of a second long.</li>
             <li>For every slice it asks one question: how much of this is the voice? Then it keeps the voice and turns the rest down.</li>
             <li>It remembers about the last second of sound, which helps it recognise the voice it is following, but it never peeks ahead.</li>
-            <li>It is small on purpose: about 600,000 numbers. A single phone photo holds millions. Small enough that we can imagine it running on a phone or a hearing processor someday, though we have not timed it on one yet.</li>
+            <li>It is deliberately small: about 600,000 numbers. A single phone photo holds millions. Small enough that we can imagine it running on a phone or a hearing processor someday, though we have not timed it on one yet.</li>
           </ul></details>
           <h3 class="sub">How we know it never cheats</h3>
           <p>After every training run we play it two recordings that start the same and then go different ways. If the model ever peeked ahead, its output for the shared beginning would change. It never has: the outputs match exactly, down to the last digit.</p>
@@ -366,7 +366,7 @@
             <div class="ratio-row"><span class="mono">after</span><i style="--w:11%" class="sig"></i><span>0.34 times</span></div>
           </div>
           <h3 class="sub">Is +1.5 just a made-up number?</h3>
-          <p>Partly, and on purpose. We set it ourselves before running any tests, so we could not move the goalposts after seeing results. It is half of our overall +3 dB goal, and +3 dB is in the range that lab noise-reduction systems have reached in published studies with cochlear-implant listeners (those studies used a different measure, so it's a rough guide). Missing by 0.3 dB is a small gap. It means this model is not yet strong enough in the hardest rooms to earn a listening test.</p>
+          <p>Partly, yes. We set it ourselves before running any tests, so we could not move the goalposts after seeing results. It is half of our overall +3 dB goal, and +3 dB is in the range that lab noise-reduction systems have reached in published studies with cochlear-implant listeners (those studies used a different measure, so it's a rough guide). Missing by 0.3 dB is a small gap. It means this model is not yet strong enough in the hardest rooms to earn a listening test.</p>
           <h3 class="sub">Why did we miss?</h3>
           <p>At −5 dB, the crowd is made of other voices that sound a lot like the one you want. The model has one microphone, cannot hear the future (it has to answer within 6 thousandths of a second), and is tiny on purpose so it could one day run on a hearing device. A version that is allowed to hear the whole recording first, and already knows the clean answer, gets about +12 dB here, so there is room to improve. <span data-gen-wall-sentence>Training longer, two scoring changes, more hard crowds and blending saved versions did not close the gap. Now we are teaching it echoey rooms, then two ears.</span></p>
           <p class="small muted">Drag the slider to see how it does as the crowd gets louder.</p>
@@ -377,7 +377,7 @@
           <div class="slider-box">
             <label for="snr" class="mono small">How loud the crowd is compared with the voice (slide left for harder)</label>
             <input type="range" id="snr" min="-5" max="10" step="1" value="10" aria-describedby="snr-read">
-            <p class="slider-read" id="snr-read" aria-live="polite">With the crowd at <b id="snr-v" class="num">+10 dB</b>, our program makes the voice <b id="snr-g" class="num">—</b> cleaner. The simple filter manages <b id="snr-gate" class="num">—</b>, and the cheating version <b id="snr-or" class="num">—</b>. <span id="snr-verdict">—</span></p>
+            <p class="slider-read" id="snr-read" aria-live="polite">With the crowd at <b id="snr-v" class="num">+10 dB</b>, our program makes the voice <b id="snr-g" class="num">—</b> cleaner. The simple filter manages <b id="snr-gate" class="num">—</b>, and a version allowed to hear the whole recording first <b id="snr-or" class="num">—</b>. <span id="snr-verdict">—</span></p>
           </div>
           <div class="chart" id="snr-chart" aria-describedby="snr-table-cap"></div>
           <div class="legend" id="snr-legend"></div>
@@ -547,7 +547,7 @@
         <p class="kv-line">When the crowd is louder than the voice, the voice comes through <b class="hot">1.19 dB</b> cleaner, short of our goal of 1.5. <button class="explain-btn ai-only" hidden type="button" data-explain="crowd_m5" data-name="Crowd louder than the voice (−5 dB)">Explain</button></p>
         <p class="kv-line">The pattern of pulses an implant would send comes out <b>a little closer</b> to the clean voice. <button class="explain-btn ai-only" hidden type="button" data-explain="crowd_ace" data-name="What the implant's electrodes would receive">Explain</button></p>
         <div class="explain-slot"></div>
-        <p><strong>What it could look like.</strong> A birthday party, a cafeteria, a family dinner: the chatter turned down a little, the voice he is facing coming through clearer, quiet speech untouched. It could one day run on a phone or a clip-on gadget that sends sound to his processors, or inside a future processor. Each of those would need the maker of the implant, audiologists and regulators to agree, and none of it has a date.</p>
+        <p><strong>What it could look like.</strong> At a family dinner, the chatter would be turned down a little, the voice he is facing would come through clearer, and quiet speech would be left alone. It could one day run on a phone or a clip-on gadget that sends sound to his processors, or inside a future processor. Each of those would need the maker of the implant, audiologists and regulators to agree, and none of it has a date.</p>
       </div>
 
       <div class="col rv">
@@ -558,7 +558,7 @@
         <p class="kv-line">The first-ear clue was off by about <b>a quarter of a thousandth of a second</b> after cleanup, versus a third of a thousandth with none, also slightly better. <button class="explain-btn ai-only" hidden type="button" data-explain="itd" data-name="Which-side clue: timing difference">Explain</button></p>
         <p class="kv-line hot">In the hardest room, the louder-ear clue got worse: off by 11.22 dB instead of 10.29.</p>
         <div class="explain-slot"></div>
-        <p class="small muted">Our planned next step is to give the program two ears that agree on one decision about how much to turn the sound down, so the louder-ear clue survives.</p><details class="researchers"><summary>notes for researchers</summary><p class="small muted">Spatial screen: seed 17, four simulated scenes on an assumed head model. Target-ILD error 5.47 vs 5.96 dB unprocessed; ITD error 4.0 vs 5.75 samples; −5 dB scene ILD error 10.29 to 11.22 dB. Registered next step: binaural linked-gain model.</p></details>
+        <p class="small muted">Version 33 tried this without new training and did not pass: it helped the which-side clue in loud crowds but made each ear less clear in quieter ones. Since then we have tested the program on real recordings, and we are now fixing how it writes its sound out.</p><details class="researchers"><summary>notes for researchers</summary><p class="small muted">Spatial screen: seed 17, four simulated scenes on an assumed head model. Target-ILD error 5.47 vs 5.96 dB unprocessed; ITD error 4.0 vs 5.75 samples; −5 dB scene ILD error 10.29 to 11.22 dB. Registered next step: binaural linked-gain model.</p></details>
       </div>
     </div>
 
@@ -569,7 +569,7 @@
         <div class="toggle" id="dir-modes" role="group" aria-label="Processing mode">
           <button type="button" data-mode="none" aria-pressed="true">No cleanup</button>
           <button type="button" data-mode="separate" aria-pressed="false">Each ear separately</button>
-          <button type="button" data-mode="linked" aria-pressed="false">Both ears linked</button>
+          <button type="button" data-mode="linked" aria-pressed="false">Both ears agreeing (tried in version 33)</button>
         </div>
         <p class="dir-read" id="dir-read" aria-live="polite" style="margin-top:14px"></p>
       </div>
@@ -612,7 +612,7 @@
   <details class="fold" id="made"><summary>How this was made, mistakes included</summary>
     
     <ol class="log">
-      <li><div><b>Meta's AI ran most of the experiments, a second AI checked them, a dad directed</b><p>Most of the experiments, from the very first version through version 21, were designed, run and written up by Muse Wonder Full, Meta's AI model, under Graham's dad's direction. That includes building the computer tests, the 14 checks, and training the model on this page. Claude, an AI from Anthropic, took over on the last day to run the final experiments and build this website. Codex Astra, an AI from a different company, checked every result before the next step. And Muse answers your questions right here on this page.</p></div></li>
+      <li><div><b>Most of the experiments were run by Meta's AI, checked by a second AI, with a dad directing</b><p>Most of the experiments, from the very first version through version 21, were designed, run and written up by Muse Wonder Full, Meta's AI model, under Graham's dad's direction. That includes building the computer tests, the 14 checks, and training the model on this page. Claude, an AI from Anthropic, took over on the last day to run the final experiments and build this website. Codex Astra, an AI from a different company, checked every result before the next step. And Muse answers your questions right here on this page.</p></div></li>
       <li><div><b>We made a mistake with version 17: it changed four things at once</b><p>So we cannot say which change helped. Every version since changes one thing.</p></div></li>
       <li><div><b>A quick test run once overwrote a finished version's file</b><p>Now test runs have to save somewhere else, and every saved version is scored so none can be quietly swapped.</p></div></li>
       <li><div><b>A training run was cut off, so we replayed it from the start</b><p>A computer session ended halfway through. We restarted the run and checked it reproduced the original exactly before using it.</p></div></li>
