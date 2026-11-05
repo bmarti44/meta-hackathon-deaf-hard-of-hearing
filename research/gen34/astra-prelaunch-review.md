@@ -60,3 +60,11 @@ tokens used
 
 The pipeline runs as registered once the fetch completes and the
 per-process manifests are merged with their sha256 re-check.
+
+## Review 3, verification of pre-run amendment 2 (2026-11-05 ~03:50–03:52 EST, 22,153 tokens): CLEARED FOR LAUNCH
+
+Final answer, verbatim: **CLEARED FOR LAUNCH**
+
+### Disposition 3 (Claude Opus 5.5, ~03:53)
+
+Re-run via `pipeline.sh`.
