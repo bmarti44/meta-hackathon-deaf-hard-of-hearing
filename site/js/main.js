@@ -1,10 +1,12 @@
 import { api, mdLite } from './api.js';
+const loadWave = () => import('./gl.js').catch(() => {});
+if ('requestIdleCallback' in window) requestIdleCallback(loadWave, { timeout: 1500 }); else setTimeout(loadWave, 300);
 const C = window.SITE_CONFIG;
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const fmt = (v, d = 2, sign = true) => (sign && v > 0 ? '+' : '') + Number(v).toFixed(d);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-const GLYPH = { baseline: '●', advance: '▲', null: '×', fail: '×', running: '◉', pending: '○' };
+const GLYPH = { baseline: '', advance: '', null: '', fail: '', running: '', pending: '' };
 const WORD = { baseline: 'our best so far', advance: 'kept', null: 'did not help', fail: 'did not help', running: 'testing now', pending: 'up next' };
 
 // ---------- brand / repo (one place: js/config.js) ----------
@@ -77,7 +79,7 @@ $$('[data-bench="white_estoi"]').forEach(e => e.textContent = fmt(bench.summary_
   function analyser() {
     if (ac) return;
     try { ac = new (window.AudioContext || window.webkitAudioContext)(); const srcN = ac.createMediaElementSource(v); an = ac.createAnalyser(); an.fftSize = 256; buf = new Uint8Array(an.frequencyBinCount); srcN.connect(an); an.connect(ac.destination); } catch (_) { return; }
-    (function tick() { if (!an) return; an.getByteFrequencyData(buf); let sum = 0; for (let i = 0; i < 24; i++) sum += buf[i]; window.__waveLevel = v.muted || v.paused ? 0 : sum / (24 * 255); requestAnimationFrame(tick); })();
+    let bassPrev = 0; (function tick() { if (!an) return; an.getByteFrequencyData(buf); let sum = 0, bass = 0; for (let i = 0; i < 24; i++) sum += buf[i]; for (let i = 1; i <= 6; i++) bass += buf[i]; bass /= 6 * 255; const rise = Math.max(0, bass - bassPrev); bassPrev = bassPrev * 0.8 + bass * 0.2; const off = v.muted || v.paused; window.__waveLevel = off ? 0 : sum / (24 * 255); window.__kick = off ? 0 : Math.min(1, rise * 6); requestAnimationFrame(tick); })();
   }
   const setPlay = on => { play.textContent = on ? 'Pause' : 'Play'; play.setAttribute('aria-pressed', on); };
   v.addEventListener('play', () => setPlay(true)); v.addEventListener('pause', () => setPlay(false));
@@ -225,11 +227,12 @@ $('#gen-updated').textContent = gens.updated;
   $$('#null-count').forEach(e => e.textContent = WORDS[after19.length] || String(after19.length));
   $$('[data-gen-sentence]').forEach(e => e.textContent = `${after19.length ? WORDS[after19.length][0].toUpperCase() + WORDS[after19.length].slice(1) + ' later version' + (after19.length === 1 ? '' : 's') + ' tried to fix that and did not help' : 'No later version has fixed it yet'}${running.length ? ', and version ' + running.map(num).join(' and ') + ' is being tested right now' : ''}.`);
   $$('[data-gen-nulls-after19]').forEach(e => e.textContent = after19.length ? 'versions ' + list(after19.map(num)) : 'no later version');
+  $$('[data-gen-next-sentence]').forEach(e => { const pend = G.filter(g => g.status === 'pending'); e.textContent = pend.length ? `Version ${pend.map(num).join(' and ')} is drafted but does not count until the version being tested has its result and its review.` : 'A new version does not count until the one before it has its result and its review.'; });
   $$('[data-gen-nulls-all]').forEach(e => e.textContent = 'Versions ' + list(allNull.map(num)) + ' did not help, and they');
 }
 const live = G.find(g => g.status === 'running');
 const chip = $('#live-chip');
-if (live) { chip.classList.remove('ok', 'off'); $('#live-text').textContent = `${live.label} is being tested now${live.eta ? ' · ' + live.eta : ''}`; }
+if (live) { chip.classList.remove('ok', 'off'); $('#live-text').textContent = `Testing ${live.label.toLowerCase()} now`; }
 else { const last = G[G.length - 1]; chip.classList.add('ok'); $('#live-text').textContent = `${last.label}: ${WORD[last.status]}`; }
 (function tree() {
   const W = 1000, step = W / (G.length + 1), yT = 110, H = 200;
@@ -305,9 +308,11 @@ $('#gen-cards').innerHTML = G.filter(g => !FOLD.has(g.id)).map(cardHtml).join(''
 
 // ---------- Muse: health → show AI UI; Ask; Explain; Brief ----------
 { const fab = $('#ask-fab'); if (fab) { let last = scrollY; const near = () => ['ask', 'meta-lab'].some(id => { const e = $('#' + id); if (!e) return false; const r = e.getBoundingClientRect(); return r.top < innerHeight && r.bottom > 0; }); addEventListener('scroll', () => { const up = scrollY < last - 2; last = scrollY; fab.classList.toggle('show', up && !near() && scrollY > innerHeight); }, { passive: true }); } }
+$$('.ai-only').forEach(e => { e.hidden = false; e.classList.add('ai-wait'); });
 const health = await api.health();
+if (!health) $$('.ai-only').forEach(e => { e.hidden = true; e.classList.remove('ai-wait'); }); else $$('.ai-only').forEach(e => e.classList.remove('ai-wait'));
 if (health) {
-  $$('.ai-only').forEach(e => e.hidden = false);
+  $$('.ai-only').forEach(e => { e.hidden = false; e.classList.add('ai-ready'); });
   $('#ask-off').hidden = true;
   const SUGGEST = [
     'Why does it struggle when the crowd is louder than the voice?',
@@ -330,13 +335,13 @@ if (health) {
   const hf = $('#hero-ask'); if (hf) hf.addEventListener('submit', e => { e.preventDefault(); const q = $('#hq').value.trim(); if (!q) return; $('#q').value = q; location.hash = '#ask'; ask(q); });
   async function ask(q) {
     const ans = $('#answer'), th = $('#thinking'), steps = $('#steps'), out = $('#answer-text'), btn = $('#ask-btn');
-    ans.classList.add('on'); th.hidden = false; steps.innerHTML = ''; out.innerHTML = ''; btn.disabled = true;
+    ans.classList.add('on'); th.hidden = false; steps.innerHTML = ''; out.innerHTML = ''; btn.disabled = true; window.__musePulse = 1;
     try {
       const r = await api.ask(q);
       steps.innerHTML = (r.steps || []).map(s => `<li>${esc(s.output || s.input || s.tool || '')}</li>`).join('');
       out.innerHTML = renderAnswer(r.answer) + `<p class="small muted" style="margin:12px 0 0">Answered by Muse (Meta). Based only on the research record.</p>`;
     } catch (err) { out.innerHTML = `<p class="err">${esc(err.message)}</p>`; }
-    finally { th.hidden = true; btn.disabled = false; }
+    finally { th.hidden = true; btn.disabled = false; window.__musePulse = 0; }
   }
   document.addEventListener('click', async e => {
     const b = e.target.closest('[data-explain],[data-brief]'); if (!b) return;
@@ -346,11 +351,12 @@ if (health) {
       if (!slot || !slot.classList.contains('explain-row')) { slot = document.createElement('tr'); slot.className = 'explain-row'; slot.innerHTML = `<td colspan="4"></td>`; b.closest('tr').after(slot); }
       slot = slot.firstElementChild;
     }
-    slot.innerHTML = `<div class="explain-out"><span class="thinking"><i aria-hidden="true"></i>Muse is writing${isBrief ? ' a brief' : ` for ${level === 'parent' ? 'a parent' : 'a researcher'}`}…</span></div>`;
+    window.__musePulse = 1; slot.innerHTML = `<div class="explain-out"><span class="thinking"><i aria-hidden="true"></i>Muse is writing${isBrief ? ' a brief' : ` for ${level === 'parent' ? 'a parent' : 'a researcher'}`}…</span></div>`;
     b.disabled = true;
-    try { const r = isBrief ? await api.brief(id) : await api.explain(id, level); slot.innerHTML = `<div class="explain-out">${renderAnswer(r.text)}<p class="small muted" style="margin:8px 0 0">Muse (Meta) · ${isBrief ? 'a short summary' : 'explained for ' + (level === 'parent' ? 'a parent' : 'a researcher')}</p></div>`; }
+    const ctx = (b.closest('tr') ? b.closest('tr').querySelector('td') : b.closest('.kv-line') || b.closest('.gen')) ; const label = ctx ? (ctx.querySelector('h3 span, b') || ctx).textContent.trim().slice(0, 120) : '';
+    try { const r = isBrief ? await api.brief(id) : await api.explain(id, level, label); slot.innerHTML = `<div class="explain-out">${renderAnswer(r.text)}<p class="small muted" style="margin:8px 0 0">Muse (Meta) · ${isBrief ? 'a short summary' : 'explained for ' + (level === 'parent' ? 'a parent' : 'a researcher')}</p></div>`; }
     catch (err) { slot.innerHTML = `<div class="explain-out err">${esc(err.message)}</div>`; }
-    finally { b.disabled = false; }
+    finally { b.disabled = false; window.__musePulse = 0; }
   });
 } else if (!live) {
   chip.classList.add('off');

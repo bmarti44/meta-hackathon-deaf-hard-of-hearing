@@ -38,7 +38,7 @@ export const api = {
     } catch (_) { return null; }
   },
   ask: q => call('/api/ask', { q }),
-  explain: (row, level) => call('/api/explain', { row, level }),
+  explain: (row, level, context) => call('/api/explain', { row, level, context }),
   brief: gen => call('/api/brief', { gen })
 };
 

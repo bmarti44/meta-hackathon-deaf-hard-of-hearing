@@ -627,3 +627,42 @@ header.bar.compact .live-chip span.t{display:inline;font-size:12px}
 .imp-more{margin:16px 0 0}
 .chart svg.phone .axis text,.chart svg.phone .lbl,.chart svg.phone .req-l{font-size:13px}
 .chart svg.phone .lbl.dim{font-size:12px}
+/* ===== round 7 ===== */
+.live-chip{flex:0 1 auto;min-width:0}
+.live-chip span.t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-block;max-width:220px;vertical-align:middle}
+@media (max-width:640px){header.bar.compact .live-chip span.t{display:none}}
+.answer-text,.explain-out{background:rgba(9,11,16,.88);padding:16px 18px 16px 22px}
+.table-wrap,.ratio,.gen,.chart{background:rgba(9,11,16,.82)}
+.chart{padding:8px}
+.gen{padding:18px 14px 22px}
+@media (max-width:760px){.imp-steps li,.imp-group,.imp-how,.imp-listen-head,.imp-head,.imp-fig figcaption{position:relative}.imp-steps li::before,.imp-group::before,.imp-how::before,.imp-listen-head::before,.imp-head::before,.imp-fig figcaption::before{content:"";position:absolute;inset:-10px -8px;background:rgba(9,11,16,.8);z-index:-1}}
+#graham .dir-wrap::before{content:none}
+#dir-read{position:relative;min-height:5.2em}
+#dir-read::before{content:"";position:absolute;inset:-10px -8px;background:rgba(9,11,16,.8);z-index:-1}
+.ai-only.ai-wait{visibility:hidden}
+.numbered .col::before{content:none}
+.imp-num,.ml-n{display:none}
+.st::before{content:none}
+details.fold.fold-phone>summary{display:none}
+details.fold.fold-phone{border:0;margin:0}
+@media (max-width:760px){details.fold.fold-phone>summary{display:list-item}details.fold.fold-phone:not([open])>*:not(summary){display:none}}
+.muted,.small.muted,.gen .note,.gen dt,.checks .muted,.ratio .mono{color:#c6c0b4}
+.col{position:relative}.col::before{content:"";position:absolute;inset:-8px -10px;background:rgba(9,11,16,.82);z-index:-1}
+.chapter .panel::before,.story-panel::before{background:radial-gradient(70% 70% at 45% 50%,rgba(9,11,16,.92),rgba(9,11,16,.8) 60%,rgba(9,11,16,.3) 100%)}
+#wall .grid.g2>div:first-child>h3::before,#wall .grid.g2>div:first-child>p::before,#wall .grid.g2>div:first-child>ul::before,#wall .grid.g2>div:first-child>details::before{background:rgba(9,11,16,.88)}
+#wall .big{text-shadow:0 0 14px #090b10,0 0 4px #090b10}
+.ladder li,.log li,.tree,.gen-cards details.fold>summary{position:relative}
+.ladder li::before,.log li::before{z-index:0}
+.ladder li>div,.log li>div{position:relative}
+.ladder li>div::before,.log li>div::before{content:"";position:absolute;inset:-6px -8px;background:rgba(9,11,16,.82);z-index:-1}
+.gen-cards{background:rgba(9,11,16,.5)}
+#meta-lab .ml-list button,#meta-lab .ml-what,#meta-lab .ml-how{text-shadow:0 0 6px #090b10,0 0 2px #090b10}
+#meta-lab .ml-list{background:rgba(9,11,16,.82);padding:6px}
+/* real (non-pseudo) backings on text containers, same colour as the page so they read as paper, not boxes */
+.story-panel,.chapter .panel,#wall .grid.g2>div:first-child,.col,.checks li,.figures-line,#short .lede,#generations .lede,#scorecard .lede,.tree-hint,details.researchers>summary,.ladder li>div,.log li>div,.imp-steps li,.imp-group,.imp-how,#dir-read,.gen,.kv-line,.spread-text,.quote,.fold>summary,.files li,.dl-lead{background-color:rgba(9,11,16,.7)}
+.story-panel,.chapter .panel{padding:14px 16px;margin:-14px -16px}
+#wall .grid.g2>div:first-child{padding:12px 14px}
+.col{padding-left:10px;padding-right:10px}
+.hot,.hot-em,#snr-verdict.hot,.kv-line.hot,.st[data-status="fail"],.st[data-status="null"]{color:#ff8a73}
+#wall .big{color:#ff7a60}
+.imp-lab,.imp-now,.imp-num{color:#c6c0b4!important}

@@ -46,7 +46,7 @@ geo.setAttribute('aSeed', new THREE.BufferAttribute(seed, 1));
 
 const U = {
   uTime: { value: 0 }, uClarity: { value: 0.1 }, uShake: { value: 0 }, uWaver: { value: 0 }, uBeat: { value: 0 },
-  uBands: { value: 0 }, uEars: { value: 0 }, uEarsDrift: { value: 0 }, uEarsClean: { value: 1 }, uWall: { value: 0 }, uThin: { value: 0 },
+  uBands: { value: 0 }, uEars: { value: 0 }, uEarsDrift: { value: 0 }, uEarsClean: { value: 1 }, uKick: { value: 0 }, uPulse: { value: 0 }, uWall: { value: 0 }, uThin: { value: 0 },
   uPR: { value: renderer.getPixelRatio() }, uScale: { value: isSmall ? 1.15 : 1.15 }, uXS: { value: 1 }, uYOff: { value: 0 }, uAlphaK: { value: isSmall ? 1.0 : 1.2 },
   uBone: { value: new THREE.Color('#c9c2b2') }, uSignal: { value: new THREE.Color('#5fdcff') }, uHot: { value: new THREE.Color('#ff5c3f') }
 };
@@ -54,7 +54,7 @@ const mat = new THREE.ShaderMaterial({
   uniforms: U, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
   vertexShader: `
     attribute vec3 aVoice; attribute vec3 aWall; attribute float aSeed;
-    uniform float uTime, uClarity, uShake, uWaver, uBeat, uBands, uEars, uEarsDrift, uEarsClean, uWall, uThin, uPR, uScale, uXS, uYOff;
+    uniform float uTime, uClarity, uShake, uWaver, uBeat, uBands, uEars, uEarsDrift, uEarsClean, uWall, uThin, uPR, uScale, uXS, uYOff, uKick, uPulse;
     varying float vClar, vSeed, vDepth, vStill, vWall, vLit, vThin, vEar;
     vec3 hash3(vec3 p){ p = fract(p*0.3183099+vec3(.1,.2,.3)); p *= 17.0; return fract(vec3(p.x*p.y*p.z*(p.x+p.y+p.z)))*2.0-1.0; }
     float ease(float t){ return t*t*(3.0-2.0*t); }
@@ -64,7 +64,7 @@ const mat = new THREE.ShaderMaterial({
       vec3 p = mix(position + fuzz, aVoice, c);
       p.y += c * sin(p.x*2.6 + uTime*1.6 + aSeed*6.28) * 0.08;
       // jackhammer: violent field + shock rings, but a flat silent centre (Graham, asleep)
-      float still = 1.0 - smoothstep(1.2, 3.4, length(position.xy));
+      float still = 1.0 - smoothstep(1.6, 3.0, length(position.xy));
       float ring = sin(length(position.xy)*3.5 - uTime*16.0);
       vec3 quake = hash3(position*9.0 + floor(uTime*28.0)) * vec3(1.4, 1.6, 0.6) * uShake * (1.0-still);
       quake.y += (ring*0.6 + sin(uTime*60.0 + position.x*3.0)*0.15) * uShake * (1.0-still);
@@ -75,6 +75,8 @@ const mat = new THREE.ShaderMaterial({
       p.y += uWaver * (sin(p.x*0.7 + uTime*0.7 + aSeed) * 0.5 + sin(p.x*1.9 - uTime*0.4)*0.2);
       // music: a rhythm runs through it
       p.y += uBeat * sin(p.x*1.4 + uTime*8.0) * 1.3;
+      p.y += uKick * sin(p.x*0.9 + aSeed*3.0) * 1.6 * (1.0 + 0.5*sin(uTime*30.0));   // lands on the beat
+      p.y += uPulse * sin(p.x*2.0 - uTime*5.0) * 0.35;                               // Muse is writing
       // the implant: 22 horizontal bands, about 8 lit at a time
       float band = floor(aSeed*22.0);
       float lit = step(0.63, fract(band*0.618 + floor(uTime*2.5)*0.37));
@@ -106,7 +108,7 @@ const mat = new THREE.ShaderMaterial({
       col = mix(col, uHot, vWall);
       col = mix(col, uSignal*0.6, vStill);
       float a = (0.55 + 0.35*vClar) * soft * uAlphaK;
-      a *= mix(1.0, 0.18, vStill);
+      a *= mix(1.0, 1.1, vStill);
       a *= 0.35 + 1.6*vLit;
       a *= mix(1.0, 0.8, vThin);
       a *= mix(1.0, 0.35 + 0.65*step(0.985, fract(vSeed*7.0)), vWall);
@@ -133,9 +135,10 @@ const modelLevel = () => bench ? show(bench.summary_seed_mean.gen19.crowd.d_sisd
 
 const $ = id => document.getElementById(id);
 const els = () => ({ born: $('born'), tests: $('tests'), music: $('music'), crowd: $('crowd'), dancing: $('dancing'),
-  model: $('model'), implant: $('implant'), dir: document.querySelector('.dir-wrap'), impStage: document.querySelector('#imp-stage') || document.querySelector('#implant .imp-steps'), wall: $('wall'), gens: $('generations'), attempts: $('attempts'), graham: $('graham'), honest: $('honest') });
+  model: $('model'), implant: $('implant'), dir: document.querySelector('.dir-wrap'), sliderBox: document.querySelector('.slider-box'), meta: $('meta-lab'), impStage: document.querySelector('#imp-stage') || document.querySelector('#implant .imp-steps'), wall: $('wall'), gens: $('generations'), attempts: $('attempts'), graham: $('graham'), honest: $('honest') });
 let E = els();
 const clamp01 = v => Math.min(1, Math.max(0, v));
+const baseAlpha = U.uAlphaK.value;
 const top = el => el ? el.getBoundingClientRect().top + scrollY : 0;
 const presence = (el, pad = 0.15) => {   // share of the viewport this section fills now (0..1)
   if (!el) return 0;
@@ -143,8 +146,8 @@ const presence = (el, pad = 0.15) => {   // share of the viewport this section f
   const vis = Math.min(r.bottom, h) - Math.max(r.top, 0);
   return clamp01((vis / Math.min(h, r.height) - pad) / (1 - pad));
 };
-const T = { clarity: 0.1, shake: 0, waver: 0, beat: 0, bands: 0, ears: 0, drift: 0.5, clean: 1, wall: 0, thin: 0 };
-const C = { ...T };
+const T = { clarity: 0.1, shake: 0, waver: 0, beat: 0, bands: 0, ears: 0, drift: 0.5, clean: 1, wall: 0, thin: 0, kick: 0, pulse: 0 };
+const C = { ...T }; window.__waveState = { T, C, U };
 let sliderClar = null, counterDb = 0;
 function measure() {
   E = els();
@@ -171,7 +174,7 @@ function measure() {
   T.bands = presence(E.impStage, 0.05);
   T.ears = presence(E.dir, 0.05);
   T.drift = window.__ears === 'separate' ? 1 : 0;
-  T.wall = pw > 0 && sliderClar != null ? pw * clamp01((0.32 - sliderClar) / 0.1) : 0;   // slams in only toward −5 dB
+  T.wall = pw > 0 && sliderClar != null ? Math.min(pw, presence(E.sliderBox, 0.05)) * clamp01((0.32 - sliderClar) / 0.1) : 0;   // slams in only toward −5 dB, only while the slider is on screen
   T.thin = clamp01((y - (top(E.wall) + (E.wall ? E.wall.offsetHeight : 0))) / h) * (1 - Math.min(1, 3 * Math.max(presence(E.dir, 0.05), presence(E.gens))));
   const afterModel = y + h * 0.5 > top(E.model);
   counterDb = bench && afterModel ? bench.summary_seed_mean.gen19.crowd.d_sisdr * clamp01((cl - 0.15) / Math.max(0.01, ml - 0.15)) : 0;
@@ -195,11 +198,15 @@ function frame(now) {
   T.drift = window.__ears === 'separate' ? 1 : 0;
   const pd = presence(E.dir, 0.05); if (pd > 0.2) T.clarity = window.__ears === 'none' ? 0.3 : 0.85;
   T.clean = window.__ears === 'none' ? 0 : 1;
-  for (const k in T) C[k] += (T[k] - C[k]) * (k === 'shake' ? 0.12 : k === 'beat' ? 0.35 : 0.08);
+  const mf = window.__mlFuzz || 0; if (mf !== 0 && presence(E.meta) > 0.2) T.clarity = mf > 0 ? 0.1 : 0.8;
+  T.kick = Math.max(window.__kick || 0, C.kick * 0.82);          // short decaying pulse on each beat
+  T.pulse = window.__musePulse ? 0.6 + 0.4 * Math.sin(t * 3.0) : 0;
+  for (const k in T) C[k] += (T[k] - C[k]) * (k === 'shake' ? 0.12 : k === 'beat' ? 0.35 : k === 'kick' ? 0.9 : 0.08);
   let cl = C.clarity;
   if (E.gens && presence(E.gens) > 0) { gensPhase += 0.05; cl += Math.sin(gensPhase) * 0.3 * presence(E.gens); }  // nulls: a flat wobble
   U.uClarity.value = cl; U.uShake.value = C.shake; U.uWaver.value = C.waver; U.uBeat.value = C.beat;
-  U.uBands.value = C.bands; U.uEars.value = C.ears; U.uEarsDrift.value = C.drift; U.uEarsClean.value = C.clean; U.uWall.value = C.wall; U.uThin.value = C.thin;
+  U.uBands.value = C.bands; U.uEars.value = C.ears; U.uEarsDrift.value = C.drift; U.uEarsClean.value = C.clean; U.uKick.value = C.kick; U.uPulse.value = C.pulse;
+  U.uAlphaK.value = baseAlpha * (1 + 1.2 * C.ears * C.clean * (1 - C.drift)); U.uWall.value = C.wall; U.uThin.value = C.thin;
   camera.position.z = 9 - 0.6 * cl - 4.5 * C.wall * C.wall;
   camera.position.x = Math.sin(t * 0.1) * 0.25 + (Math.random() - 0.5) * 0.12 * C.shake;
   camera.position.y = (Math.random() - 0.5) * 0.12 * C.shake;

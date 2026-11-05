@@ -91,6 +91,8 @@
       const b = document.createElement("button"); b.type = "button"; b.className = "ml-play"; b.textContent = side === "before" ? "Listen before cleanup" : "Listen after cleanup"; b.setAttribute("aria-pressed", "false");
       a.after(b);
       b.addEventListener("click", () => { document.querySelectorAll("#meta-lab audio").forEach(o => { if (o !== a) o.pause(); }); if (a.paused) { a.play().catch(() => {}); } else { a.pause(); } });
+      a.addEventListener("play", () => { window.__mlFuzz = side === "before" ? 1 : -1; });
+      a.addEventListener("pause", () => { window.__mlFuzz = 0; }); a.addEventListener("ended", () => { window.__mlFuzz = 0; });
       a.addEventListener("play", () => { b.textContent = "Pause"; b.setAttribute("aria-pressed", "true"); });
       const off = () => { b.textContent = side === "before" ? "Listen before cleanup" : "Listen after cleanup"; b.setAttribute("aria-pressed", "false"); };
       a.addEventListener("pause", off); a.addEventListener("ended", off);
