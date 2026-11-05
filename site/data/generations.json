@@ -281,15 +281,41 @@
       "id": "gen30",
       "label": "Version 30",
       "change": "The last try with fewer echoey practice sounds: about one in eighteen noisy practice sounds echo",
+      "status": "fail",
+      "numbers": [
+        {
+          "label": "Crowded speech in echoey rooms it never heard, compared with version 19",
+          "value": "+0.31 dB (14 of 16 voices better)"
+        },
+        {
+          "label": "Speech in a room with no echo",
+          "value": "−0.03 to −0.06 dB worse"
+        },
+        {
+          "label": "Direction cues in the computer test (which side a voice comes from)",
+          "value": "No worse than version 19, for the first time in this line"
+        }
+      ],
+      "note": "The loss in rooms with no echo got smaller again, and the direction cues were no longer hurt. But a small loss is still there, and the help in real recorded rooms almost disappeared, so by our rules it did not pass. That ends the tries with fewer echoey practice sounds.",
+      "link": "research/gen30/results.md"
+    },
+    {
+      "id": "gen31",
+      "label": "Version 31",
+      "change": "A different way to teach rooms: start from version 19, give it a short lesson in echoey rooms, then mix the old and new versions together",
       "status": "running",
       "numbers": [
         {
           "label": "Why",
-          "value": "See if it can still help in echoey rooms without any loss in rooms with no echo"
+          "value": "Keep the help in echoey rooms without any loss in rooms with no echo"
+        },
+        {
+          "label": "How the mix is chosen",
+          "value": "On 16 new voices the program has never heard, picking the strongest mix that is not worse than version 19"
         }
       ],
-      "note": "Training now. If this one does not pass, we stop cutting back the echoey practice sounds and try a different way to teach the program about rooms. We will add the result when it finishes.",
-      "link": "research/gen30/prereg.md"
+      "note": "Training now. We will add the result when it finishes.",
+      "link": "research/gen31/prereg.md"
     }
   ]
 }
