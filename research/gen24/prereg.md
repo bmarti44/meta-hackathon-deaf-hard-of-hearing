@@ -105,6 +105,17 @@ after deployment. Logs are in `aborted_run1/`. It is not judged and no
 checkpoint was kept. The restart uses this registration unchanged, from
 step 0.
 
+**Shared-verifier deviation (code only, filed 20:50).**
+- Commit 61c40ff (Gen 25 registration) modified the shared
+  `gen23/verify_provenance.py`, which changed its hash from Gen 24's
+  registered `1b1bf42…`.
+- Astra caught it in the Gen 25 pre-launch review. The file was restored
+  byte-for-byte from edbf7e8 before Gen 24's run 2 reaches its provenance
+  step, and Gen 25 got its own verifier.
+- This does not touch Gen 24's training or data.
+
+Run 2 relaunched 2026-11-04 20:20:44 under this registration, unchanged.
+
 ## Timing, filing cutoff and pending policy
 
 - **Expected finish:** Gen 23 trained in 65.5 min. Launched ~18:50, Gen 24

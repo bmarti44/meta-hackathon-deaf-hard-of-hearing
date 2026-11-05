@@ -13,6 +13,12 @@ panel with the same eval function and must reproduce the control VAL record
 (the Gen21 R48 step-0 entry) item-for-item, so candidate and control VAL are
 comparable.
 
+Hardened per Astra's pre-launch review (blocking items 1-2):
+- every input's sha256 must match the committed input_manifest.json;
+- the parity guard checks both metrics, finite values, unique item keys and
+  exact panel membership, raising explicit errors;
+- CPU only; refuses to overwrite an existing candidate without --force.
+
 Usage: /tmp/gen9env/bin/python research/gen25/swa.py --seed 17
 """
 import argparse, hashlib, importlib.util, json, sys
@@ -46,8 +52,10 @@ def ckpt(seed, step):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--seed", type=int, default=17)
-    ap.add_argument("--device", default="cpu")
+    ap.add_argument("--force", action="store_true")
     a = ap.parse_args()
+    a.device = "cpu"  # registered: CPU only (Astra non-blocking item 1)
+    manifest = json.loads((HERE / "input_manifest.json").read_text())
     seed = 20261100 + a.seed
     t11 = _load("train11_g25", R / "gen22" / "train11.py")
     panel = t11.build_val_panel()
@@ -58,15 +66,29 @@ def main():
     g19 = CausalTasNetEnh(); g19.load_state_dict(torch.load(ckpt(seed, 24000), map_location="cpu", weights_only=False)["state_dict"])
     _, items19 = t11.eval_val(g19.eval(), panel, a.device)
     key = lambda it: (it["idx"], it["spk"], it["snr"])  # noqa: E731
+    import math
+    for name, items in (("control record", c0["items"]), ("re-evaluation", items19)):
+        ks = [key(i) for i in items]
+        if len(ks) != len(set(ks)):
+            raise SystemExit(f"VAL parity: duplicate item keys in {name}")
+        if not all(math.isfinite(i["d_sisdr"]) and math.isfinite(i["d_stoi"]) for i in items):
+            raise SystemExit(f"VAL parity: non-finite values in {name}")
     want = {key(i): (i["d_sisdr"], i["d_stoi"]) for i in c0["items"]}
     got = {key(i): (i["d_sisdr"], i["d_stoi"]) for i in items19}
+    if set(want) != set(got):
+        raise SystemExit(f"VAL parity: panel membership differs ({len(set(want) ^ set(got))} items)")
     worst = max(abs(want[k][0] - got[k][0]) for k in want)
-    assert set(want) == set(got) and worst < 1e-4, f"VAL parity failed (max |diff| {worst})"
-    print(f"VAL parity with control record: max |d_sisdr diff| {worst:.2e}")
+    worst_stoi = max(abs(want[k][1] - got[k][1]) for k in want)
+    if worst >= 1e-4 or worst_stoi >= 1e-4:
+        raise SystemExit(f"VAL parity failed: max |d_sisdr diff| {worst}, max |d_stoi diff| {worst_stoi}")
+    print(f"VAL parity with control record: max |d_sisdr diff| {worst:.2e}, max |d_stoi diff| {worst_stoi:.2e}")
 
     inputs, sds = [], []
     for st in WINDOW:
         p = ckpt(seed, st)
+        rel = str(p.relative_to(R.parent))
+        if manifest.get(rel) != sha(p):
+            raise SystemExit(f"input {rel} does not match the registered manifest")
         d = torch.load(p, map_location="cpu", weights_only=False)
         assert d.get("steps") == st and d.get("seed") == seed, f"{p}: steps/seed {d.get('steps')}/{d.get('seed')}"
         sds.append(d["state_dict"]); inputs.append({"path": str(p.relative_to(R.parent)), "step": st, "sha256": sha(p)})
@@ -76,6 +98,8 @@ def main():
     for r in suffix_invariance_test(model, seed=1):
         assert r["max_diff_prefix_P"] == 0.0, f"causality violated: {r}"
     out = HERE / "weights" / f"swa9_seed{seed}.pt"; out.parent.mkdir(parents=True, exist_ok=True)
+    if out.exists() and not a.force:
+        raise SystemExit(f"REFUSED: {out} exists (pass --force)")
     base = torch.load(ckpt(seed, 24000), map_location="cpu", weights_only=False)
     meta = {k: v for k, v in base.items() if k != "state_dict"}
     meta.update({"gen": "gen25", "method": "uniform average of Gen19 checkpoints 20000..24000 (9)", "inputs": inputs})
@@ -85,7 +109,7 @@ def main():
     v, items = t11.eval_val(model, panel, a.device)
     log = {"seed": seed, "mode": "swa", "loss": "sisdr", "steps": 24000, "lifetime_steps": 24000,
            "weights": str(out), "weights_sha256": wsha, "window": WINDOW, "inputs": inputs,
-           "val_parity_max_abs_diff": worst,
+           "val_parity_max_abs_diff": worst, "val_parity_max_abs_diff_stoi": worst_stoi,
            "val_log": [{"step": 24000, "lifetime_step": 24000, "val": v, "items": items}]}
     (HERE / "weights" / f"val_log_swa9_seed{seed}.json").write_text(json.dumps(log, indent=1))
     m5 = [i["d_sisdr"] for i in items if i["snr"] == -5.0]; c5 = [i["d_sisdr"] for i in c0["items"] if i["snr"] == -5.0]

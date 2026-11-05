@@ -28,8 +28,6 @@ GENS = {
              bench="bench-n6/benchv2_g22cap30s{s}.json", dev="gen22/dev_audit_s{s}.json", cand="cap30", prereg=None),
     23: dict(log="gen23/weights/train_log_sisdr_cs5_scratch_seed{seed}.json", ckpt="gen23/weights/sisdr_cs5_scratch_seed{seed}.pt",
              bench="bench-n6/benchv2_g23cs5s{s}.json", dev="gen23/dev_audit_s{s}.json", cand="cs5", prereg="gen23/prereg.md"),
-    25: dict(log="gen25/weights/val_log_swa9_seed{seed}.json", ckpt="gen25/weights/swa9_seed{seed}.pt",
-             bench="bench-n6/benchv2_g25swa9s{s}.json", dev="gen25/dev_audit_s{s}.json", cand="swa9", prereg="gen25/prereg.md"),
     24: dict(log="gen24/weights/train_log_sisdr_hard60_scratch_seed{seed}.json", ckpt="gen24/weights/sisdr_hard60_scratch_seed{seed}.pt",
              bench="bench-n6/benchv2_g24hard60s{s}.json", dev="gen24/dev_audit_s{s}.json", cand="hard60", prereg="gen24/prereg.md"),
 }
