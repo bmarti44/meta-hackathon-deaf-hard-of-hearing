@@ -321,15 +321,27 @@
       "id": "gen32",
       "label": "Version 32",
       "change": "The same short lesson in echoey rooms, but this time the program is also told to stay as close as it can to version 19 on speech with no echo",
-      "status": "running",
+      "status": "fail",
       "numbers": [
         {
-          "label": "Why",
-          "value": "Keep the help in echoey rooms without changing what already works"
+          "label": "Crowded speech in echoey rooms it never heard, compared with version 19",
+          "value": "+0.28 dB (14 of 16 voices better; the bar is +0.30)"
+        },
+        {
+          "label": "Real recorded rooms",
+          "value": "Better in all six, for the first time"
+        },
+        {
+          "label": "Speech in a room with no echo",
+          "value": "No worse, except one measure at −0.001 dB"
+        },
+        {
+          "label": "Direction cues in the computer test",
+          "value": "Slightly worse when the crowd is quieter"
         }
       ],
-      "note": "Training now. We will add the result when it finishes.",
-      "link": "research/gen32/prereg.md"
+      "note": "The closest yet. Asking the program to stay close to version 19 worked: speech with no echo stayed as clean, and every real recorded room got a little better. But the help in echoey rooms came out just under our bar, and the direction cues got slightly worse when the crowd was quieter, so by our rules it did not pass.",
+      "link": "research/gen32/results.md"
     }
   ]
 }
