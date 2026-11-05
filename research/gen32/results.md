@@ -1,4 +1,4 @@
-# Gen 32 — room fine-tune with dry-output preservation, blended back: FAIL (closest yet) (T0)
+# Gen 32 — room fine-tune with dry-output preservation, blended back: FAIL (T0)
 
 > Claude Opus 5.5, 2026-11-05 ~02:45.
 > - Registration: [prereg.md](./prereg.md); Astra and Muse cleared it.
@@ -43,18 +43,18 @@ preservation, the whole dry curve moved up.
 | Quiet (S2) | 37.5 dB | 41.0 dB ✓ |
 | SP | pass | ✗ mirrored ILD +0.066 dB (ITD tied 3.0 vs 3.0); better at −5 dB, worse at 0–10 dB (+0.05 to +0.15 dB) |
 
-**Reading** (this seed and these development panels only):
-- **Dry preservation worked.**
-  - On the screen's dry panel, −5 dB SI-SDR is now significantly better than Gen 19, and both STOI means are positive.
-  - The only negative mean is 0 dB SI-SDR, at −0.0012 dB, with an interval spanning zero.
-  - It fails D because D requires every mean ≥ 0, and that requirement is kept.
-- **The room gain shrank below the bar:**
-  - +0.283 against +0.30, though its interval excludes zero and 14/16 voices improve.
-  - Measured-room transfer is the best of the room line: every measured room is positive.
-- **The direction-cue cost at easier SNRs persists:**
-  - small ILD increases at 0–10 dB;
-  - ITD unchanged.
-- No listener benefit is established.
+**Reading** (this seed and these repeatedly consulted development panels only; wording per Astra):
+- **Preservation and selection:**
+  - The preservation term reduced dry drift and allowed a VAL-selected candidate.
+  - Screen preservation failed (D: one mean of −0.0012 dB). The interval crosses zero, which establishes neither harm nor equivalence.
+- **Room gain:** +0.283 dB, below the +0.30 bar.
+  - Its interval excludes zero, but that does not override R1a.
+  - These are the first positive room-level SI-SDR means in all six measured rooms at both SNRs. Aggregate measured-room gains are still smaller than Gen 27–29's.
+- **Target-only output is still below unprocessed:** about −0.72 / −0.65 dB SI-SDR (synthetic / measured), and STOI is also lower.
+- **Direction cues:**
+  - The ILD cost at easier SNRs (0–10 dB) recurs, as in Gen 27–29.
+  - The pattern motivates testing linked two-ear processing. It does not prove that independent per-ear processing causes it.
+- No benefit for CI speech understanding or localisation is established.
 
 **Artifacts committed:**
 - the fine-tune final weights and train log;

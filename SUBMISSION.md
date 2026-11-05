@@ -289,6 +289,19 @@ Disclosures:
     the baseline, and neither room benefit nor benefit for cochlear-implant
     users was established.
 
+- **Gen 32, room fine-tune with dry-output preservation** (update
+  2026-11-05 02:55; [research/gen32/results.md](./research/gen32/results.md)),
+  in Astra's wording:
+  - **Result:** Gen 32's dry-output-preserving room fine-tune selected a
+    0.7 weight blend and improved synthetic-room SI-SDR by 0.283 dB versus
+    Gen 19 in one seed, with positive room-level means in all six measured
+    rooms at both tested SNRs.
+  - **Verdict:** it failed the registered room-gain, dry-preservation and
+    spatial gates. Gen 19 remains the baseline, and no benefit for
+    cochlear-implant users is established.
+  - **Next:** Gen 33 tests linked two-ear processing on Gen 32's frozen
+    weights, aimed at the recurring direction-cue cost.
+
 ## Limits (stated plainly)
 
 Offline bench results cannot establish superiority over the N6's
