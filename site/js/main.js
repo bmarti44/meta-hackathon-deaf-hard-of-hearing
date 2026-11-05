@@ -5,7 +5,7 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const fmt = (v, d = 2, sign = true) => (sign && v > 0 ? '+' : '') + Number(v).toFixed(d);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const GLYPH = { baseline: '●', advance: '▲', null: '×', fail: '×', running: '◉', pending: '○' };
-const WORD = { baseline: 'baseline', advance: 'advanced', null: 'null', fail: 'fail', running: 'running', pending: 'pending' };
+const WORD = { baseline: 'our best so far', advance: 'kept', null: 'did not help', fail: 'did not help', running: 'testing now', pending: 'up next' };
 
 // ---------- brand / repo (one place: js/config.js) ----------
 document.title = `${C.brand} — causal noise reduction for cochlear implants, tested on a bench first`;
@@ -16,6 +16,7 @@ $$('a[data-repo]').forEach(a => {
   if (u) { a.href = u; a.target = '_blank'; a.rel = 'noopener'; } else { a.replaceWith(...a.childNodes); }
 });
 if (!C.repo) $('#repo-link')?.remove();
+$$('a[data-hf]').forEach(a => { if (C.huggingface) { a.href = C.huggingface; a.target = '_blank'; a.rel = 'noopener'; } else a.replaceWith(...a.childNodes); });
 
 // ---------- header / nav ----------
 const bar = $('#bar'), nav = $('#chapnav'), menu = $('#menu-btn');
@@ -60,10 +61,17 @@ $$('[data-bench="white_estoi"]').forEach(e => e.textContent = fmt(bench.summary_
   const src = saver ? 'assets/family/graham-dancing-640.mp4' : 'assets/family/graham-dancing.mp4';  // both versions have sound
   let loaded = false;
   function attach() { if (loaded) return; loaded = true; const s = document.createElement('source'); s.src = src; s.type = 'video/mp4'; v.insertBefore(s, v.firstChild); v.preload = 'metadata'; v.load(); }
+  // deaf visitors SEE the music: an AnalyserNode feeds a level into the WebGL wave (window.__waveLevel)
+  let ac, an, buf;
+  function analyser() {
+    if (ac) return;
+    try { ac = new (window.AudioContext || window.webkitAudioContext)(); const srcN = ac.createMediaElementSource(v); an = ac.createAnalyser(); an.fftSize = 256; buf = new Uint8Array(an.frequencyBinCount); srcN.connect(an); an.connect(ac.destination); } catch (_) { return; }
+    (function tick() { if (!an) return; an.getByteFrequencyData(buf); let sum = 0; for (let i = 0; i < 24; i++) sum += buf[i]; window.__waveLevel = v.muted || v.paused ? 0 : sum / (24 * 255); requestAnimationFrame(tick); })();
+  }
   const setPlay = on => { play.textContent = on ? 'Pause' : 'Play'; play.setAttribute('aria-pressed', on); };
   v.addEventListener('play', () => setPlay(true)); v.addEventListener('pause', () => setPlay(false));
   play.addEventListener('click', () => { attach(); v.paused ? v.play().catch(() => {}) : v.pause(); });
-  snd.addEventListener('click', () => { attach(); v.muted = !v.muted; const on = !v.muted; snd.innerHTML = on ? '<span aria-hidden="true">♪ </span>Sound on: tap to mute' : '<span aria-hidden="true">♪ </span>Turn sound on'; snd.classList.toggle('is-on', on); snd.setAttribute('aria-pressed', on); snd.setAttribute('aria-label', on ? 'Sound is on. Turn sound off' : 'Sound is off. Turn sound on'); if (on && v.paused) v.play().catch(() => {}); });
+  snd.addEventListener('click', () => { attach(); v.muted = !v.muted; const on = !v.muted; snd.textContent = on ? 'Sound on: tap to mute' : 'Turn sound on'; if (on) analyser(); snd.classList.toggle('is-on', on); snd.setAttribute('aria-pressed', on); snd.setAttribute('aria-label', on ? 'Sound is on. Turn sound off' : 'Sound is off. Turn sound on'); if (on && v.paused) v.play().catch(() => {}); });
   // near the viewport: attach the source; in view: autoplay muted (unless reduced motion); out of view: pause
   new IntersectionObserver(es => { if (es[0].isIntersecting) attach(); }, { rootMargin: '600px 0px' }).observe(v);
   new IntersectionObserver(es => { if (es[0].isIntersecting) { if (!rm) { attach(); v.play().catch(() => {}); } } else if (!v.paused) v.pause(); }, { threshold: 0.4 }).observe(v);
@@ -107,32 +115,20 @@ $$('[data-bench="white_estoi"]').forEach(e => e.textContent = fmt(bench.summary_
     if (mode === 'separate') s += `<circle cx="${perceived[0]}" cy="${perceived[1]}" r="14" fill="none" stroke="var(--hot)" stroke-width="2" stroke-dasharray="4 3"/><text x="${perceived[0]}" y="${perceived[1] - 22}" text-anchor="middle" class="lbl" fill="var(--hot)">seems to be here</text>`;
     s += `</svg>`;
     host.innerHTML = s;
-    $('#dir-read').textContent = { none: 'No processing: the chatter is as loud as the voice, but the left-right loudness clue is intact.', separate: 'Each ear separately: the voice is clearer, but if the two sides turn sound down by different amounts the ear-to-ear loudness clue blurs and the voice can seem to come from nearer the middle.', linked: 'Both ears linked (the registered next step): one shared decision about how much to turn down, so the voice is clearer and still sounds like it comes from the left.' }[mode];
+    $('#dir-read').textContent = { none: 'No cleanup: the chatter is as loud as the voice, but the louder-ear clue is intact.', separate: 'Each ear separately: the voice is clearer, but if the two sides turn sound down by different amounts the louder-ear clue blurs, and the voice can seem to come from nearer the middle.', linked: 'Both ears agreeing (our planned next step): one shared decision about how much to turn down, so the voice is clearer and still sounds like it comes from the left.' }[mode]; window.__ears = mode;
   }
   $$('#dir-modes button').forEach(b => b.addEventListener('click', () => { $$('#dir-modes button').forEach(x => x.setAttribute('aria-pressed', x === b)); draw(b.dataset.mode); }));
   draw('none');
 })();
 
-// ---------- electrodes (22 channels, 8 on) ----------
-const el = $('#electrodes');
-for (let i = 0; i < 22; i++) el.appendChild(document.createElement('i'));
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-function electrodeFrame(t) {
-  const bars = el.children, on = new Set();
-  // a smooth, speech-like moving formant pattern: pick 8 largest of a synthetic spectrum
-  const spec = [...Array(22)].map((_, i) => Math.sin(i * 0.9 + t * 1.3) + 0.8 * Math.sin(i * 0.33 - t * 0.7) + 0.5 * Math.sin(i * 2.1 + t * 2.2));
-  [...spec.keys()].sort((a, b) => spec[b] - spec[a]).slice(0, 8).forEach(i => on.add(i));
-  for (let i = 0; i < 22; i++) { bars[i].classList.toggle('on', on.has(i)); if (!on.has(i)) bars[i].style.height = (18 + 30 * (spec[i] + 2.3) / 4.6) + '%'; else bars[i].style.height = ''; }
-}
-electrodeFrame(0);
-if (!reduce) { let eo = new IntersectionObserver(es => { es[0].isIntersecting ? start() : stop(); }); let h; function start() { if (!h) h = setInterval(() => electrodeFrame(performance.now() / 1000), 160); } function stop() { clearInterval(h); h = null; } eo.observe(el); }
 
 // ---------- SNR chart + slider ----------
 const SNRS = bench.snrs, sys = bench.systems;
 const SERIES = [
-  { k: 'gen19', label: 'Gen 19 (3-seed mean)', color: 'var(--signal)', w: 2.5 },
-  { k: 'causal_gate', label: 'classical causal gate', color: 'var(--dim)', w: 2 },
-  { k: 'oracle_noncausal', label: 'non-causal oracle (ceiling)', color: 'var(--bone)', w: 1.5, dash: '5 4' }
+  { k: 'gen19', label: 'Our program (version 19)', color: 'var(--signal)', w: 2.5 },
+  { k: 'causal_gate', label: 'the simple filter that already exists', color: 'var(--dim)', w: 2 },
+  { k: 'oracle_noncausal', label: 'a version that cheats by hearing the future', color: 'var(--bone)', w: 1.5, dash: '5 4' }
 ];
 function lineChart(hostId, { xs, series, xl, yl, req, reqLabel, ymin, ymax, xfmt = String, ytick = 2, ariaLabel }) {
   const W = 560, H = 320, m = { l: 46, r: 20, t: 16, b: 40 };
@@ -159,12 +155,12 @@ function lineChart(hostId, { xs, series, xl, yl, req, reqLabel, ymin, ymax, xfmt
   return { x, y };
 }
 const snrScale = lineChart('snr-chart', {
-  xs: SNRS, xl: 'crowd SNR (dB)', yl: 'ΔSI-SDR vs unprocessed (dB)', ymin: -1, ymax: 13, ytick: 2, req: 1.5, reqLabel: 'required at −5 and 0 dB: +1.5',
-  xfmt: v => (v > 0 ? '+' : '') + v, ariaLabel: 'Line chart of crowd ΔSI-SDR by SNR for Gen 19, the classical gate and the non-causal oracle; table follows',
-  series: SERIES.map(s => ({ ...s, ys: SNRS.map(v => sys[s.k][String(v)]), direct: s.k === 'gen19' ? 'Gen 19' : null }))
+  xs: SNRS, xl: 'how loud the crowd is (dB; lower is harder)', yl: 'how much cleaner (dB)', ymin: -1, ymax: 13, ytick: 2, req: 1.5, reqLabel: 'our goal for the two hardest: +1.5',
+  xfmt: v => (v > 0 ? '+' : '') + v, ariaLabel: 'Line chart: how much cleaner the voice gets at each crowd loudness, for our program, the simple filter, and a cheating version; table follows',
+  series: SERIES.map(s => ({ ...s, ys: SNRS.map(v => sys[s.k][String(v)]), direct: s.k === 'gen19' ? 'our program' : null }))
 });
-$('#snr-legend').innerHTML = SERIES.map(s => `<span><i style="background:${s.color}" class="${s.dash ? 'dash' : ''}"></i>${s.label}</span>`).join('') + `<span><i class="dash" style="color:var(--hot)"></i>requirement</span>`;
-$('#snr-table').innerHTML = `<table><thead><tr><th scope="col">SNR</th>${SERIES.map(s => `<th scope="col" class="num">${s.label}</th>`).join('')}<th scope="col">Gen 19 vs +1.5</th></tr></thead><tbody>${SNRS.map(v => `<tr><td class="num">${v > 0 ? '+' : ''}${v} dB</td>${SERIES.map(s => `<td class="num">${fmt(sys[s.k][String(v)])}</td>`).join('')}<td>${v <= 0 ? (sys.gen19[String(v)] >= 1.5 ? 'PASS' : 'FAIL') : 'not gated'}</td></tr>`).join('')}</tbody></table>`;
+$('#snr-legend').innerHTML = SERIES.map(s => `<span><i style="background:${s.color}" class="${s.dash ? 'dash' : ''}"></i>${s.label}</span>`).join('') + `<span><i class="dash" style="color:var(--hot)"></i>our goal</span>`;
+$('#snr-table').innerHTML = `<table><thead><tr><th scope="col">Crowd loudness</th>${SERIES.map(s => `<th scope="col" class="num">${s.label}</th>`).join('')}<th scope="col">Meets our goal?</th></tr></thead><tbody>${SNRS.map(v => `<tr><td class="num">${v > 0 ? '+' : ''}${v} dB</td>${SERIES.map(s => `<td class="num">${fmt(sys[s.k][String(v)])}</td>`).join('')}<td>${v <= 0 ? (sys.gen19[String(v)] >= 1.5 ? 'yes' : 'no') : 'no goal set here'}</td></tr>`).join('')}</tbody></table>`;
 // slider
 const sl = $('#snr'), interp = (k, v) => { const i = SNRS.findIndex(s => s >= v); if (i <= 0) return sys[k][String(SNRS[Math.max(i, 0)])]; const a = SNRS[i - 1], b = SNRS[i], t = (v - a) / (b - a); return sys[k][String(a)] * (1 - t) + sys[k][String(b)] * t; };
 function slide() {
@@ -172,30 +168,42 @@ function slide() {
   $('#snr-v').textContent = (v > 0 ? '+' : '') + v + ' dB';
   $('#snr-g').textContent = fmt(g) + ' dB'; $('#snr-gate').textContent = fmt(interp('causal_gate', v)) + ' dB'; $('#snr-or').textContent = fmt(interp('oracle_noncausal', v)) + ' dB';
   const vd = $('#snr-verdict');
-  if (v === -5) { vd.textContent = '× FAIL — +1.5 required'; vd.className = 'hot'; }
-  else if (v === 0) { vd.textContent = '✓ PASS — +1.5 required'; vd.className = ''; }
-  else { vd.textContent = 'not a gated row'; vd.className = 'muted'; }
+  if (v === -5) { vd.textContent = 'misses our goal of +1.5'; vd.className = 'hot'; }
+  else if (v === 0) { vd.textContent = 'meets our goal of +1.5'; vd.className = ''; }
+  else { vd.textContent = 'no goal set here'; vd.className = 'muted'; }
   $('#snr-chart-marker').innerHTML = `<line x1="${snrScale.x(v)}" x2="${snrScale.x(v)}" y1="16" y2="280" stroke="${v === -5 ? 'var(--hot)' : 'var(--signal)'}" stroke-width="1.5" opacity=".8"/>`;
-  document.documentElement.style.setProperty('--wall-glow', v === -5 ? '1' : '0');
+  window.__fray = (10 - v) / 15;
 }
 sl.addEventListener('input', slide); slide();
 // auto-walk the slider toward the wall when the section scrolls in (once, unless reduced motion)
-if (!reduce) { let done = false; new IntersectionObserver(es => { if (es[0].isIntersecting && !done) { done = true; let v = 10; const h = setInterval(() => { v--; sl.value = v; slide(); if (v <= -5) clearInterval(h); }, 420); } }, { threshold: 0.5 }).observe($('#wall')); }
+if (!reduce) {
+  let done = false, h = null; const read = $('#snr-read');
+  const stop = () => { if (h) { clearInterval(h); h = null; } read.setAttribute('aria-live', 'polite'); };
+  sl.addEventListener('pointerdown', stop); sl.addEventListener('keydown', stop);
+  new IntersectionObserver(es => { if (es[0].isIntersecting && !done) { done = true; read.setAttribute('aria-live', 'off'); let v = 10; h = setInterval(() => { v--; sl.value = v; slide(); if (v <= -5) { stop(); } }, 420); } }, { threshold: 0.5 }).observe($('#wall'));
+}
+// the slider also drives the shader: the voice line frays toward −5 dB
+sl.addEventListener('input', () => { window.__fray = (10 - +sl.value) / 15; });
 
 // ---------- scorecard ----------
+const PLAIN = { crowd_sisdr: 'Crowd: how clean the voice is', crowd_stoi: 'Crowd: how understandable it is', crowd_ace: 'Crowd: what the electrodes would receive',
+  crowd_m5: 'Crowd louder than the voice (−5 dB)', crowd_0: 'Crowd as loud as the voice (0 dB)', crowd_m5_stoi: 'Never harder to understand in the loudest crowd',
+  crowd_every_seed: 'Helps in all three training runs', crowd_vs_gate: 'Better than the simple filter that already exists', ssn: 'Steady hum (speech-shaped noise)',
+  white: 'A hiss it never trained on (white noise)', quiet_abs: 'Quiet speech left alone: still clean', quiet_stoi: 'Quiet speech left alone: still understandable',
+  ild: 'Which-side clue: loudness difference', itd: 'Which-side clue: timing difference', ild_distortion: 'Which-side clue vs the mixture (for information only)' };
 const ROW_IDS = r => r.id || r.kpi.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
 let level = 'parent';
 const tb = $('#score-table tbody');
 tb.innerHTML = score.rows.map(r => {
   const st = r.status === 'INFO' ? 'pending' : r.status === 'PASS' ? 'advance' : 'fail';
-  const word = r.status === 'INFO' ? 'diagnostic' : r.status;
+  const word = r.status === 'INFO' ? 'for information' : r.status === 'PASS' ? 'pass' : 'miss';
   return `<tr class="${r.status === 'FAIL' ? 'fail' : r.status === 'INFO' ? 'info' : ''}" data-row="${ROW_IDS(r)}">
-    <td>${esc(r.kpi)}${r.status === 'FAIL' ? ' <span class="hot">— the −5 dB wall</span>' : ''}</td>
-    <td class="num">${esc(r.actual)}</td><td class="mono small">${esc(r.required)}${r.stretch ? `<br><span class="muted">stretch ${esc(r.stretch)}: ${r.stretch_pass ? 'met' : 'not met'}</span>` : ''}</td>
-    <td><span class="status" data-status="${st}" data-glyph="${GLYPH[st]}">${word}</span></td>
+    <td data-l="Row">${esc(PLAIN[r.id] || r.kpi)}${r.status === 'FAIL' ? ' <span class="hot">(the hardest crowd)</span>' : ''}<br><span class="tech mono">${esc(r.kpi)}</span></td>
+    <td class="num" data-l="Actual">${esc(r.actual)}</td><td class="mono small" data-l="Required">${esc(r.required)}${r.stretch ? `<br><span class="muted">stretch ${esc(r.stretch)}: ${r.stretch_pass ? 'met' : 'not met'}</span>` : ''}</td>
+    <td data-l="Status"><span class="status" data-status="${st}" data-glyph="${GLYPH[st]}">${word}</span></td>
     <td class="ai-only" hidden><button class="explain-btn" type="button" data-explain="${ROW_IDS(r)}" aria-label="Explain ${esc(r.kpi)}">Explain</button></td></tr>`;
 }).join('');
-$('#score-verdict').textContent = `${score.n_pass} of ${score.n_required} required rows pass. Scorecard verdict: ${score.verdict}. promoted FALSE. Source: ${score.source}.`;
+$('#score-verdict').textContent = `${score.n_pass} of ${score.n_required} checks pass. Our verdict: not good enough yet, keep working.`;
 $('#level-toggle').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; level = b.dataset.level; $$('button', e.currentTarget).forEach(x => x.setAttribute('aria-pressed', x === b)); });
 
 // ---------- generations: tree + cards ----------
@@ -204,7 +212,7 @@ $('#gen-updated').textContent = 'updated ' + gens.updated;
 $('#null-count').textContent = G.filter(g => (g.status === 'null' || g.status === 'fail') && +g.id.replace('gen', '') > 19).length;
 const live = G.find(g => g.status === 'running');
 const chip = $('#live-chip');
-if (live) { chip.classList.remove('ok', 'off'); $('#live-text').textContent = `${live.label} running${live.eta ? ' · ' + live.eta : ''}`; }
+if (live) { chip.classList.remove('ok', 'off'); $('#live-text').textContent = `${live.label} is being tested now${live.eta ? ' · ' + live.eta : ''}`; }
 else { const last = G[G.length - 1]; chip.classList.add('ok'); $('#live-text').textContent = `${last.label}: ${WORD[last.status]}`; }
 (function tree() {
   const W = 1000, step = W / (G.length + 1), yT = 110, H = 200;
@@ -231,49 +239,49 @@ $('#gen-cards').innerHTML = G.map(g => `<article class="gen" data-status="${g.st
   ${g.eta ? `<p class="eta">◉ ${esc(g.eta)}</p>` : ''}
   <dl>${(g.numbers || []).map(n => `<dt>${esc(n.label)}</dt><dd>${esc(n.value)}</dd>`).join('')}</dl>
   ${g.note ? `<p class="note">${esc(g.note)}</p>` : ''}
-  <div class="acts">${g.link ? `<a href="${/^https?:/.test(g.link) ? esc(g.link) : esc(repoUrl(g.link) || '#')}" target="_blank" rel="noopener">filed record ↗</a>` : ''}
+  <div class="acts">${g.link ? `<a href="${/^https?:/.test(g.link) ? esc(g.link) : esc(repoUrl(g.link) || '#')}" target="_blank" rel="noopener">read the full write-up</a>` : ''}
     <button class="explain-btn ai-only" hidden type="button" data-explain="${g.id}">Explain</button>
     <button class="explain-btn ai-only" hidden type="button" data-brief="${g.id}">Brief</button></div>
   <div class="explain-slot"></div></article>`).join('');
 
 // ---------- Gen 21 chart (per-seed −5 dB gains, VAL vs bench, two arms) ----------
 (function g21chart() {
-  const seeds = g21.seeds.map(String), arms = [{ k: 's48', label: 'S48 (48k scratch)', color: 'var(--signal)' }, { k: 'r48', label: 'R48 (parent + 24k)', color: 'var(--bone)' }];
+  const seeds = g21.seeds.map(String), arms = [{ k: 's48', label: 'Way 1: trained from scratch, twice as long', color: 'var(--signal)' }, { k: 'r48', label: 'Way 2: kept training the old version', color: 'var(--bone)' }];
   const W = 560, H = 300, m = { l: 46, r: 16, t: 20, b: 46 }, ymin = -0.6, ymax = 0.6;
   const groups = []; seeds.forEach(sd => ['val', 'bench'].forEach(p => groups.push({ sd, p })));
   const gw = (W - m.l - m.r) / groups.length, bw = gw / 3;
   const y = v => m.t + (1 - (v - ymin) / (ymax - ymin)) * (H - m.t - m.b);
-  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Bar chart of Gen 21 −5 dB gains over the Gen 19 parent, per seed and panel, both arms; table follows"><g class="grid">`;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Bar chart: how much cleaner the hardest crowd got for each training run and test set, for both ways of training longer; table follows"><g class="grid">`;
   for (let v = -0.6; v <= 0.61; v += 0.3) s += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(v)}" y2="${y(v)}"/>`;
   s += `</g><g class="axis"><line x1="${m.l}" x2="${W - m.r}" y1="${y(0)}" y2="${y(0)}" stroke="var(--dim)"/>`;
   for (let v = -0.6; v <= 0.61; v += 0.3) s += `<text x="${m.l - 8}" y="${y(v) + 4}" text-anchor="end">${v.toFixed(1)}</text>`;
-  s += `<text transform="translate(12 ${(m.t + H - m.b) / 2}) rotate(-90)" text-anchor="middle">−5 dB gain vs parent (dB)</text></g>`;
-  s += `<line class="req" x1="${m.l}" x2="${W - m.r}" y1="${y(0.3)}" y2="${y(0.3)}"/><text class="req-l" x="${W - m.r}" y="${y(0.3) - 6}" text-anchor="end">bar: +0.30 on both panels</text>`;
+  s += `<text transform="translate(12 ${(m.t + H - m.b) / 2}) rotate(-90)" text-anchor="middle">how much cleaner, crowd louder than voice (dB)</text></g>`;
+  s += `<line class="req" x1="${m.l}" x2="${W - m.r}" y1="${y(0.3)}" y2="${y(0.3)}"/><text class="req-l" x="${W - m.r}" y="${y(0.3) - 6}" text-anchor="end">needed: +0.30 on both</text>`;
   groups.forEach((g, i) => {
     const x0 = m.l + i * gw + gw * 0.15;
     arms.forEach((a, j) => { const v = g21.per_seed[g.sd][a.k][g.p + '_gain_m5'][0]; const top = Math.min(y(v), y(0)), h = Math.abs(y(v) - y(0)); s += `<rect x="${x0 + j * (bw + 2)}" y="${top}" width="${bw}" height="${Math.max(h, 1)}" fill="${a.color}" rx="2"><title>seed ${g.sd} · ${g.p.toUpperCase()} · ${a.label}: ${fmt(v)} dB</title></rect>`; });
-    s += `<text class="axis" x="${x0 + bw}" y="${H - 28}" text-anchor="middle" style="fill:var(--dim);font-family:var(--mono);font-size:11px">${g.p.toUpperCase()}</text>`;
-    if (g.p === 'val') s += `<text x="${x0 + gw * 0.85}" y="${H - 12}" text-anchor="middle" style="fill:var(--bone);font-family:var(--mono);font-size:11px">seed ${g.sd}</text>`;
+    s += `<text class="axis" x="${x0 + bw}" y="${H - 28}" text-anchor="middle" style="fill:var(--dim);font-family:var(--mono);font-size:11px">${g.p === 'val' ? 'set 1' : 'set 2'}</text>`;
+    if (g.p === 'val') s += `<text x="${x0 + gw * 0.85}" y="${H - 12}" text-anchor="middle" style="fill:var(--bone);font-family:var(--mono);font-size:11px">run ${g.sd}</text>`;
   });
   $('#g21-chart').innerHTML = s + '</svg>';
-  $('#g21-legend').innerHTML = arms.map(a => `<span><i style="background:${a.color}"></i>${a.label}</span>`).join('') + `<span><i class="dash" style="color:var(--hot)"></i>+0.30 qualification bar</span>`;
+  $('#g21-legend').innerHTML = arms.map(a => `<span><i style="background:${a.color}"></i>${a.label}</span>`).join('') + `<span><i class="dash" style="color:var(--hot)"></i>what we needed: +0.30</span>`;
   const mg = g21.arms;
-  $('#g21-table').innerHTML = `<table><thead><tr><th scope="col">Seed</th><th scope="col">Panel</th>${arms.map(a => `<th scope="col" class="num">${a.label}</th>`).join('')}</tr></thead><tbody>${groups.map(g => `<tr><td>${g.sd}</td><td>${g.p.toUpperCase()}</td>${arms.map(a => `<td class="num">${fmt(g21.per_seed[g.sd][a.k][g.p + '_gain_m5'][0])}</td>`).join('')}</tr>`).join('')}<tr><td><b>mean</b></td><td>VAL</td><td class="num"><b>${fmt(mg.s48.mean_gains.val_gain_m5[0])}</b></td><td class="num"><b>${fmt(mg.r48.mean_gains.val_gain_m5[0])}</b></td></tr><tr><td><b>mean</b></td><td>bench</td><td class="num"><b>${fmt(mg.s48.mean_gains.bench_gain_m5[0])}</b></td><td class="num"><b>${fmt(mg.r48.mean_gains.bench_gain_m5[0])}</b></td></tr><tr><td colspan="2">qualifies (≥ +0.30 both)</td><td>${mg.s48.qualifies ? 'yes' : 'no'}</td><td>${mg.r48.qualifies ? 'yes' : 'no'}</td></tr></tbody></table>`;
+  $('#g21-table').innerHTML = `<table><thead><tr><th scope="col">Training run</th><th scope="col">Test set</th>${arms.map(a => `<th scope="col" class="num">${a.label}</th>`).join('')}</tr></thead><tbody>${groups.map(g => `<tr><td>${g.sd}</td><td>${g.p === 'val' ? 'set 1' : 'set 2'}</td>${arms.map(a => `<td class="num">${fmt(g21.per_seed[g.sd][a.k][g.p + '_gain_m5'][0])}</td>`).join('')}</tr>`).join('')}<tr><td><b>average</b></td><td>set 1</td><td class="num"><b>${fmt(mg.s48.mean_gains.val_gain_m5[0])}</b></td><td class="num"><b>${fmt(mg.r48.mean_gains.val_gain_m5[0])}</b></td></tr><tr><td><b>average</b></td><td>set 2</td><td class="num"><b>${fmt(mg.s48.mean_gains.bench_gain_m5[0])}</b></td><td class="num"><b>${fmt(mg.r48.mean_gains.bench_gain_m5[0])}</b></td></tr><tr><td colspan="2">good enough (at least +0.30 on both)?</td><td>${mg.s48.qualifies ? 'yes' : 'no'}</td><td>${mg.r48.qualifies ? 'yes' : 'no'}</td></tr></tbody></table>`;
 })();
 
 // ---------- VAL trajectory chart ----------
 (function valchart() {
-  const names = { gen19: 'Gen 19 (plain SI-SDR)', gen22_cap30: 'Gen 22 (30 dB cap)', gen23: 'Gen 23 (SI-SDR + 5× spectral)' };
+  const names = { gen19: 'Version 19 (our best)', gen22_cap30: 'Version 22 (new scoring)', gen23: 'Version 23 (second scoring)' };
   const cols = { gen19: 'var(--signal)', gen22_cap30: 'var(--bone)', gen23: 'var(--amber)' };
   const keys = Object.keys(traj.series);
   const xs = traj.series.gen19.filter(e => e.step > 0).map(e => e.step);
   lineChart('val-chart', {
-    xs, xl: 'training step', yl: 'VAL −5 dB ΔSI-SDR (dB)', ymin: -0.8, ymax: 1.2, ytick: 0.4, xfmt: v => (v / 1000) + 'k',
-    ariaLabel: 'Line chart of validation −5 dB ΔSI-SDR by training step for Gen 19 and Gen 22 on seed 17; table follows',
+    xs, xl: 'training progress (thousands of steps)', yl: 'how much cleaner, crowd louder than voice (dB)', ymin: -0.8, ymax: 1.2, ytick: 0.4, xfmt: v => (v / 1000) + 'k',
+    ariaLabel: 'Line chart: how much cleaner the hardest crowd got as training went on, for versions 19 and 22; table follows',
     series: keys.map(k => ({ k, label: names[k] || k, color: cols[k] || 'var(--dim)', w: 2, ys: traj.series[k].filter(e => e.step > 0).map(e => e.m5), direct: null }))
   });
-  $('#val-legend').innerHTML = keys.map(k => `<span><i style="background:${cols[k] || 'var(--dim)'}"></i>${names[k] || k}</span>`).join('') + `<span class="muted">step 0 (−23.6 dB) omitted for scale</span>`;
-  $('#val-table').innerHTML = `<table><thead><tr><th scope="col">Step</th>${keys.map(k => `<th scope="col" class="num">${names[k] || k}</th>`).join('')}</tr></thead><tbody>${traj.series.gen19.map((e, i) => `<tr><td class="num">${e.step}</td>${keys.map(k => `<td class="num">${traj.series[k][i] ? fmt(traj.series[k][i].m5) : '—'}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+  $('#val-legend').innerHTML = keys.map(k => `<span><i style="background:${cols[k] || 'var(--dim)'}"></i>${names[k] || k}</span>`).join('') + `<span class="muted">the very start (−23.6 dB) is left off so the rest is readable</span>`;
+  $('#val-table').innerHTML = `<table><thead><tr><th scope="col">Training progress</th>${keys.map(k => `<th scope="col" class="num">${names[k] || k}</th>`).join('')}</tr></thead><tbody>${traj.series.gen19.map((e, i) => `<tr><td class="num">${e.step}</td>${keys.map(k => `<td class="num">${traj.series[k][i] ? fmt(traj.series[k][i].m5) : '—'}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
 })();
 
 // ---------- Muse: health → show AI UI; Ask; Explain; Brief ----------
@@ -283,22 +291,30 @@ if (health) {
   $('#ask-off').hidden = true;
   const SUGGEST = [
     "Why can't the model pass crowd noise at −5 dB?",
-    'What did Gen 22 change and why did it fail?',
+    'What did version 22 change and why did it not help?',
     'Is this better than his Nucleus 6?',
     'What would have to happen before Graham could try this?',
-    'What did Gen 21 show about training longer?',
-    'What does the independent reviewer actually check?'
+    'Did training it longer help?',
+    'Who checks the results, and what do they check?'
   ];
   $('#chips').innerHTML = SUGGEST.map(q => `<button type="button" class="chip" role="listitem">${esc(q)}</button>`).join('');
   $('#chips').addEventListener('click', e => { const b = e.target.closest('.chip'); if (!b) return; $('#q').value = b.textContent; ask(b.textContent); });
   $('#ask-form').addEventListener('submit', e => { e.preventDefault(); const q = $('#q').value.trim(); if (q) ask(q); });
+  // the last "*Still needs to be verified on the Nucleus 6." line becomes a quiet footnote
+  function renderAnswer(t) {
+    const lines = String(t || '').trim().split('\n'); let foot = '';
+    if (lines.length && /^\*\s*still needs/i.test(lines[lines.length - 1].trim())) foot = lines.pop().trim().replace(/^\*\s*/, '');
+    return mdLite(lines.join('\n')) + (foot ? `<p class="footnote">* ${esc(foot)}</p>` : '');
+  }
+  // hero entry + persistent phone entry both route into the Ask section
+  const hf = $('#hero-ask'); if (hf) hf.addEventListener('submit', e => { e.preventDefault(); const q = $('#hq').value.trim(); if (!q) return; $('#q').value = q; location.hash = '#ask'; ask(q); });
   async function ask(q) {
     const ans = $('#answer'), th = $('#thinking'), steps = $('#steps'), out = $('#answer-text'), btn = $('#ask-btn');
     ans.classList.add('on'); th.hidden = false; steps.innerHTML = ''; out.innerHTML = ''; btn.disabled = true;
     try {
       const r = await api.ask(q);
-      steps.innerHTML = (r.steps || []).map(s => `<li><b>${esc(s.tool)}</b><span>${esc(s.input || '')}${s.output ? ` → <span class="muted">${esc(s.output)}</span>` : ''}</span></li>`).join('');
-      out.innerHTML = mdLite(r.answer) + `<p class="small muted" style="margin:12px 0 0">Answered by ${esc(r.model || health.model)}. Based only on the research record.</p>`;
+      steps.innerHTML = (r.steps || []).map(s => `<li>${esc(s.output || s.input || s.tool || '')}</li>`).join('');
+      out.innerHTML = renderAnswer(r.answer) + `<p class="small muted" style="margin:12px 0 0">Answered by ${esc(r.model || health.model)}. Based only on the research record.</p>`;
     } catch (err) { out.innerHTML = `<p class="err">${esc(err.message)}</p>`; }
     finally { th.hidden = true; btn.disabled = false; }
   }
@@ -312,7 +328,7 @@ if (health) {
     }
     slot.innerHTML = `<div class="explain-out"><span class="thinking"><i aria-hidden="true"></i>Muse is writing${isBrief ? ' a brief' : ` for ${level === 'parent' ? 'a parent' : 'a researcher'}`}…</span></div>`;
     b.disabled = true;
-    try { const r = isBrief ? await api.brief(id) : await api.explain(id, level); slot.innerHTML = `<div class="explain-out">${mdLite(r.text)}<p class="small muted" style="margin:8px 0 0">${esc(r.model || health.model)} · ${isBrief ? 'generation brief' : 'for ' + level + 's'} · AI answers can contain mistakes.</p></div>`; }
+    try { const r = isBrief ? await api.brief(id) : await api.explain(id, level); slot.innerHTML = `<div class="explain-out">${renderAnswer(r.text)}<p class="small muted" style="margin:8px 0 0">${esc(r.model || health.model)} · ${isBrief ? 'generation brief' : 'for ' + level + 's'} · AI answers can contain mistakes.</p></div>`; }
     catch (err) { slot.innerHTML = `<div class="explain-out err">${esc(err.message)}</div>`; }
     finally { b.disabled = false; }
   });

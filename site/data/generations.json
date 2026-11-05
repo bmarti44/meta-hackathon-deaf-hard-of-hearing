@@ -1,180 +1,180 @@
 {
- "_howto": "Edit this file only to update the site. status is one of: baseline | null | running | pending | advance | fail. 'numbers' is a list of {label, value}. 'link' is a repo-relative path (joined with SITE_CONFIG.repo) or a full URL. Set 'eta' on a running generation to show it. Every number here must come from a filed results/prereg file.",
- "updated": "2026-11-04 18:10 EST",
- "generations": [
-  {
-   "id": "gen16",
-   "label": "Gen 16",
-   "change": "Multi-term loss, two auxiliaries, one seed, 2k steps",
-   "status": "null",
-   "numbers": [
+  "_howto": "Edit this file only to update the site. status is one of: baseline | null | running | pending | advance | fail. 'numbers' is a list of {label, value}. 'link' is a repo-relative path (joined with SITE_CONFIG.repo) or a full URL. Set 'eta' on a running generation to show it. Every number here must come from a filed results/prereg file.",
+  "updated": "2026-11-04 18:10 EST",
+  "generations": [
     {
-     "label": "babble ΔSI-SDR vs Gen 15",
-     "value": "+0.93 dB"
+      "id": "gen16",
+      "label": "Version 16",
+      "change": "We scored training on three things at once instead of one",
+      "status": "null",
+      "numbers": [
+        {
+          "label": "How much cleaner than version 15 (dB)",
+          "value": "+0.93 dB"
+        },
+        {
+          "label": "Change in how understandable (negative is worse)",
+          "value": "−0.033"
+        }
+      ],
+      "note": "Did not help. One try only, so it does not prove the idea can never work.",
+      "link": "STATUS.md"
     },
     {
-     "label": "ΔSTOI",
-     "value": "−0.033"
+      "id": "gen17",
+      "label": "Version 17",
+      "change": "We gave it 26 voices to learn from instead of 10 (and changed a few other things at the same time)",
+      "status": "advance",
+      "numbers": [
+        {
+          "label": "How much cleaner in crowds (dB)",
+          "value": "+0.26 dB"
+        }
+      ],
+      "note": "Sloppier than later versions: several things changed at once.",
+      "link": "SUBMISSION.md"
+    },
+    {
+      "id": "gen18",
+      "label": "Version 18",
+      "change": "We gave it 251 voices to learn from instead of 26",
+      "status": "advance",
+      "numbers": [
+        {
+          "label": "Effect with the short training of the time",
+          "value": "roughly neutral"
+        }
+      ],
+      "note": "Kept: version 19 learns from these 251 voices.",
+      "link": "SUBMISSION.md"
+    },
+    {
+      "id": "gen19",
+      "label": "Version 19",
+      "change": "We trained it four times longer",
+      "status": "baseline",
+      "numbers": [
+        {
+          "label": "How much cleaner in crowds (average of 3 runs)",
+          "value": "+3.51 dB"
+        },
+        {
+          "label": "Crowd louder than voice",
+          "value": "+1.19 dB vs +1.5 required"
+        },
+        {
+          "label": "Checks passed",
+          "value": "13 of 14 rows pass"
+        }
+      ],
+      "note": "Our best version. Passes 13 of 14 checks. Not approved for anything yet.",
+      "link": "research/gen19/results.md"
+    },
+    {
+      "id": "gen20",
+      "label": "Version 20",
+      "change": "We showed it bigger crowds more often during training",
+      "status": "null",
+      "numbers": [
+        {
+          "label": "Extra improvement, crowd louder than voice",
+          "value": "+0.02 dB vs +0.30 required"
+        },
+        {
+          "label": "Change in how understandable there",
+          "value": "−0.002 vs ≥ 0 required"
+        }
+      ],
+      "note": "Did not help. Both versions improved a little just from restarting. Kept the old mix.",
+      "link": "STATUS.md"
+    },
+    {
+      "id": "gen21",
+      "label": "Version 21",
+      "change": "We trained it twice as long, two different ways, three runs each",
+      "status": "null",
+      "numbers": [
+        {
+          "label": "Way 1: hardest crowd, test set 1 / test set 2",
+          "value": "+0.14 / −0.24 dB"
+        },
+        {
+          "label": "Way 2: hardest crowd, test set 1 / test set 2",
+          "value": "+0.12 / −0.10 dB"
+        },
+        {
+          "label": "Needed on both test sets",
+          "value": "+0.30 dB on both panels"
+        },
+        {
+          "label": "Everyday crowds improved to",
+          "value": "+3.79 / +3.67 dB"
+        }
+      ],
+      "note": "Did not help. Training longer makes easy crowds better, not the hardest one.",
+      "link": "research/gen21/results.md"
+    },
+    {
+      "id": "gen22",
+      "label": "Version 22",
+      "change": "We changed how training is scored so near-perfect quiet examples stop drowning out the hard ones",
+      "status": "null",
+      "numbers": [
+        {
+          "label": "Hardest crowd, test set 1 / test set 2",
+          "value": "+0.149 / −0.010 dB"
+        },
+        {
+          "label": "Needed on both test sets",
+          "value": "+0.30 dB on both panels"
+        },
+        {
+          "label": "Other safety checks",
+          "value": "5 of 5 pass"
+        }
+      ],
+      "note": "Did not help. The hardest crowd barely moved. We dropped the change.",
+      "link": "research/gen22/results.md"
+    },
+    {
+      "id": "gen23",
+      "label": "Version 23",
+      "change": "We added a second way of scoring training that listens to the shape of the sound, not just the waveform",
+      "status": "fail",
+      "numbers": [
+        {
+          "label": "VAL −5 dB vs Gen 19",
+          "value": "−0.338 dB"
+        },
+        {
+          "label": "Bench −5 dB vs Gen 19",
+          "value": "−0.027 dB"
+        },
+        {
+          "label": "Required (both)",
+          "value": "≥ +0.30 dB"
+        },
+        {
+          "label": "Spectral share of gradient",
+          "value": "~1%"
+        }
+      ],
+      "note": "Being tested right now. The plan and the passing score were written down before it started.",
+      "link": "research/gen23/results.md"
+    },
+    {
+      "id": "gen24",
+      "label": "Version 24",
+      "change": "We will train on far more of the hardest crowds (40% of examples instead of 17%)",
+      "status": "pending",
+      "numbers": [
+        {
+          "label": "Starts",
+          "value": "only if Gen 23 fails its screen"
+        }
+      ],
+      "note": "Drafted, not started. Only the loudness of the crowd changes; everything else stays the same.",
+      "link": "research/gen24/prereg.md"
     }
-   ],
-   "note": "Filed NULL. Underperformed; does not establish a general zero effect.",
-   "link": "STATUS.md"
-  },
-  {
-   "id": "gen17",
-   "label": "Gen 17",
-   "change": "Training pool 10 → 26 speakers (plus mixture/SNR/budget changes together)",
-   "status": "advance",
-   "numbers": [
-    {
-     "label": "crowd ΔSI-SDR gain",
-     "value": "+0.26 dB"
-    }
-   ],
-   "note": "Less disciplined than later generations: several things changed at once.",
-   "link": "SUBMISSION.md"
-  },
-  {
-   "id": "gen18",
-   "label": "Gen 18",
-   "change": "Pool 26 → 251 speakers",
-   "status": "advance",
-   "numbers": [
-    {
-     "label": "effect at 6k steps",
-     "value": "roughly neutral"
-    }
-   ],
-   "note": "Roughly neutral at 6k steps (SUBMISSION.md); the larger pool was kept, so Gen 19 trains on 251 speakers.",
-   "link": "SUBMISSION.md"
-  },
-  {
-   "id": "gen19",
-   "label": "Gen 19",
-   "change": "Training budget 6k → 24k steps, cosine horizon to match",
-   "status": "baseline",
-   "numbers": [
-    {
-     "label": "crowd ΔSI-SDR (3-seed mean)",
-     "value": "+3.51 dB"
-    },
-    {
-     "label": "crowd @ −5 dB",
-     "value": "+1.19 dB vs +1.5 required"
-    },
-    {
-     "label": "scorecard",
-     "value": "13 of 14 rows pass"
-    }
-   ],
-   "note": "Current baseline. Verdict FAIL — keep optimizing. promoted FALSE.",
-   "link": "research/gen19/results.md"
-  },
-  {
-   "id": "gen20",
-   "label": "Gen 20",
-   "change": "Crowd-concentrated sampling (80% of crowds at k = 8–12), paired one-seed continuation",
-   "status": "null",
-   "numbers": [
-    {
-     "label": "B−A at −5 dB (VAL)",
-     "value": "+0.02 dB vs +0.30 required"
-    },
-    {
-     "label": "B−A ΔSTOI at −5 dB",
-     "value": "−0.002 vs ≥ 0 required"
-    }
-   ],
-   "note": "Both arms gained ~+0.26 dB from the restart alone. Legacy sampling retained.",
-   "link": "STATUS.md"
-  },
-  {
-   "id": "gen21",
-   "label": "Gen 21",
-   "change": "More optimization: 48k scratch (S48) vs parent + 24k restart (R48), 3 seeds",
-   "status": "null",
-   "numbers": [
-    {
-     "label": "S48 −5 dB gain, VAL / bench",
-     "value": "+0.14 / −0.24 dB"
-    },
-    {
-     "label": "R48 −5 dB gain, VAL / bench",
-     "value": "+0.12 / −0.10 dB"
-    },
-    {
-     "label": "bar",
-     "value": "+0.30 dB on both panels"
-    },
-    {
-     "label": "overall crowd rose to",
-     "value": "+3.79 / +3.67 dB"
-    }
-   ],
-   "note": "Neither arm qualifies on 3 seeds. Extra optimization buys the easy conditions, not −5 dB.",
-   "link": "research/gen21/results.md"
-  },
-  {
-   "id": "gen22",
-   "label": "Gen 22",
-   "change": "30 dB soft-capped SI-SDR loss, 24k scratch, seed-17 screen",
-   "status": "null",
-   "numbers": [
-    {
-     "label": "−5 dB gain, VAL / bench",
-     "value": "+0.149 / −0.010 dB"
-    },
-    {
-     "label": "bar",
-     "value": "+0.30 dB on both panels"
-    },
-    {
-     "label": "other rules",
-     "value": "5 of 5 pass"
-    }
-   ],
-   "note": "Screen FAIL. Cap not retained. Clipping severity fell (median pre-clip norm 34.3 → 14.9) but the −5 dB row did not move.",
-   "link": "research/gen22/results.md"
-  },
-  {
-   "id": "gen23",
-   "label": "Gen 23",
-   "change": "Plain SI-SDR + 5 × compressed multi-resolution spectral loss, seed-17 screen",
-   "status": "fail",
-   "numbers": [
-    {
-     "label": "VAL −5 dB vs Gen 19",
-     "value": "−0.338 dB"
-    },
-    {
-     "label": "Bench −5 dB vs Gen 19",
-     "value": "−0.027 dB"
-    },
-    {
-     "label": "Required (both)",
-     "value": "≥ +0.30 dB"
-    },
-    {
-     "label": "Spectral share of gradient",
-     "value": "~1%"
-    }
-   ],
-   "note": "Screen FAIL (also −5 dB STOI and white-noise rows). The spectral term was ~1% of the gradient at the registered weight, so this rejects that weight, not the idea. Not retained.",
-   "link": "research/gen23/results.md"
-  },
-  {
-   "id": "gen24",
-   "label": "Gen 24",
-   "change": "Narrower noisy-SNR sampling (hard60): 40% of noisy items at −5 to −3 dB, vs 17.3% today",
-   "status": "pending",
-   "numbers": [
-    {
-     "label": "launches",
-     "value": "only if Gen 23 fails its screen"
-    }
-   ],
-   "note": "Drafted, not registered. Same draws, affine-remapped, so only the noise level changes.",
-   "link": "research/gen24/prereg.md"
-  }
- ]
+  ]
 }

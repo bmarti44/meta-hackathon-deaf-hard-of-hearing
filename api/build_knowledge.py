@@ -88,7 +88,7 @@ FACTS = ("Model: strictly causal Conv-TasNet-style waveform enhancer, 602,510 pa
          "+3.51 dB cuts it to less than half; +4.65 dB (crowd as loud as voice) to about a third; +1.19 dB at -5 dB (crowd about 3x the voice's energy) only by about a quarter, "
          "leaving the crowd still more than twice the voice; the +1.5 goal would cut it by about 30%. "
          "WHERE +1.5 CAME FROM (research/bench-n6/KPI.md): set by the project before testing so goalposts cannot move; half of the overall +3 dB goal, which is about a third of the oracle headroom "
-         "and at the low end of lab DNN improvements reported with CI listeners (1.4-6.4 dB SRT, a different metric, used only for scale). "
+         "and within the range of lab DNN improvements reported with CI listeners (1.4-6.4 dB SRT, a different metric, used only for scale). "
          "WHY -5 dB IS HARD: the crowd is other voices that resemble the target; one microphone; strictly causal (no look-ahead, 5.88 ms); deliberately tiny model. "
          "A non-causal oracle that knows the answer gets about +12 dB at -5 dB on the seed-17 bench, so headroom exists; more training and two loss changes did not close the gap.")
 

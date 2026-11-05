@@ -1,0 +1,101 @@
+/* "How an implant hears" section. Scoped under .imp; relies on the tokens in style.css
+   (--bg, --bone, --dim, --faint, --rule, --signal, --hot, --serif, --sans, --mono).
+   Editorial: hairline rules, square edges, no cards, no shadows. */
+.imp{background:var(--bg);border-top:1px solid var(--rule);padding-top:clamp(56px,8vw,120px);padding-bottom:clamp(56px,8vw,120px)}
+.imp-wrap{max-width:var(--maxw);margin:0 auto}
+.imp h2{max-width:13em}
+.imp h3{font-family:var(--serif);font-weight:600}
+.imp-head .lede{max-width:36em;margin-bottom:0}
+
+/* figure: the squeeze */
+.imp-fig{margin:clamp(28px,4vw,56px) 0 0;padding:0}
+.imp-stage{position:relative;height:clamp(270px,34vw,400px);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.imp-stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.imp-lab{position:absolute;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);pointer-events:none;white-space:nowrap;line-height:1}
+.imp-lab b{color:var(--signal);font-weight:500}
+.imp-lab-a{left:0;top:12px}
+.imp-lab-b{left:var(--imp-b,44%);top:12px;transform:translateX(-50%)}
+.imp-lab-c{right:0;top:12px}
+.imp-lab-hi,.imp-lab-lo{left:0;color:var(--faint);letter-spacing:.1em;font-size:10px}
+.imp-lab-hi{top:34px}
+.imp-lab-lo{bottom:10px}
+.imp-fig figcaption{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:8px 32px;padding-top:12px;font-size:14px;line-height:1.5;color:var(--dim)}
+.imp-now{font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--bone)}
+.imp-now b{color:var(--signal);font-weight:500}
+
+/* three steps, separated by hairlines */
+.imp-steps{list-style:none;margin:clamp(40px,5vw,72px) 0 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--rule)}
+.imp-steps li{padding:22px 28px 6px 0}
+.imp-steps li+li{padding-left:28px;border-left:1px solid var(--rule)}
+.imp-steps p{color:var(--dim);margin:0}
+.imp-num{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.16em;color:var(--signal);margin-bottom:12px}
+.imp-steps h3{font-size:clamp(22px,2.1vw,27px);margin-bottom:.45em}
+
+/* listening */
+.imp-listen{margin-top:clamp(48px,6vw,96px)}
+.imp-listen-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:6px 48px;padding-bottom:28px}
+.imp-listen-head h3{font-size:clamp(26px,3.2vw,40px);grid-row:span 2;margin:0}
+.imp-listen-head p{margin:0;color:var(--bone)}
+.imp-listen-head em{font-style:italic;font-family:var(--serif);color:var(--signal)}
+.imp-meta{font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--dim)!important;margin-top:12px!important}
+.imp-group{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:0 48px;border-top:1px solid var(--rule);padding:22px 0 26px}
+.imp-group h4{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--bone);margin:4px 0 14px}
+.imp-db{color:var(--signal);margin-left:.6em;letter-spacing:.06em;text-transform:none}
+.imp-db.hot{color:var(--hot)}
+.imp-transcript{font-family:var(--serif);font-style:italic;font-size:17px;line-height:1.45;color:var(--dim);margin:0;max-width:24em}
+.imp-tlab{display:block;font-family:var(--mono);font-style:normal;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:6px}
+.imp-tracks{list-style:none;margin:0;padding:0}
+.imp-track{border-top:1px solid var(--rule)}
+.imp-track:first-child{border-top:0}
+.imp-play{position:relative;display:grid;grid-template-columns:40px minmax(0,1fr) auto;align-items:baseline;gap:12px;width:100%;background:none;border:0;border-radius:0;padding:14px 0 8px;margin:0;text-align:left;cursor:pointer;font:inherit;color:var(--bone)}
+.imp-play:focus-visible{outline:2px solid var(--amber);outline-offset:2px;border-radius:0}
+.imp-n{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--faint)}
+.imp-title{font-family:var(--sans);font-size:17px;font-weight:500;line-height:1.3}
+.imp-state{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--signal);white-space:nowrap;border-bottom:1px solid currentColor;padding-bottom:1px}
+.imp-play:hover .imp-title{color:var(--signal)}
+.imp-play::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--signal);transform:scaleX(var(--p,0));transform-origin:0 50%;opacity:0}
+.imp-play[aria-pressed="true"]::after{opacity:1}
+.imp-play[aria-pressed="true"] .imp-n,.imp-play[aria-pressed="true"] .imp-title{color:var(--signal)}
+.imp-play[aria-pressed="true"] .imp-state{border-bottom-color:transparent}
+.imp-play[aria-pressed="true"] .imp-state::before{content:"";display:inline-block;width:7px;height:7px;background:var(--signal);margin-right:8px;vertical-align:1px;animation:imp-blink 1s steps(2,jump-none) infinite}
+.imp-play.is-loading .imp-state{color:var(--dim)}
+@keyframes imp-blink{50%{opacity:.15}}
+.imp-cap{margin:0 0 14px 52px;font-size:14px;line-height:1.5;color:var(--dim)}
+.imp-group-wall h4{color:var(--bone)}
+
+/* method */
+.imp-how{margin-top:clamp(40px,5vw,80px);border-top:1px solid var(--rule);padding-top:22px}
+.imp-how h3{font-size:clamp(22px,2.1vw,27px);margin-bottom:16px}
+.imp-how-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 36px}
+.imp-how-cols p{color:var(--dim);font-size:15.5px;margin:0 0 1em}
+.imp-res{margin:6px 0 0;border-top:1px solid var(--rule)}
+.imp-res summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);padding:12px 0}
+.imp-res summary::-webkit-details-marker{display:none}
+.imp-res summary::before{content:"+";display:inline-block;width:1.4em;color:var(--signal)}
+.imp-res[open] summary::before{content:"\2212"}
+.imp-res summary:hover{color:var(--bone)}
+.imp-res summary:focus-visible{outline:2px solid var(--amber);outline-offset:2px;border-radius:0}
+.imp-res p{font-family:var(--mono);font-size:12px;line-height:1.7;color:var(--dim);margin:0 0 14px;max-width:72em}
+.imp-credit{font-family:var(--mono);font-size:11.5px;line-height:1.6;letter-spacing:.02em;color:var(--faint);margin:8px 0 0;border-top:1px solid var(--rule);padding-top:12px}
+.imp-credit .mono{color:var(--dim)}
+
+@media (max-width:900px){
+  .imp-steps,.imp-how-cols{grid-template-columns:1fr}
+  .imp-steps li,.imp-steps li+li{padding:20px 0 18px;border-left:0}
+  .imp-steps li+li{border-top:1px solid var(--rule)}
+  .imp-listen-head,.imp-group,.imp-fig figcaption{grid-template-columns:1fr}
+  .imp-listen-head h3{grid-row:auto;margin-bottom:12px}
+  .imp-group-side{margin-bottom:10px}
+}
+@media (max-width:600px){
+  .imp-stage{height:300px}
+  .imp-lab{font-size:10px;letter-spacing:.1em}
+  .imp-x{display:none}
+  .imp-title{font-size:16px}
+  .imp-play{grid-template-columns:30px minmax(0,1fr) auto;gap:10px}
+  .imp-cap{margin-left:40px}
+  .imp-transcript{font-size:16px}
+}
+@media (prefers-reduced-motion:reduce){
+  .imp-play[aria-pressed="true"] .imp-state::before{animation:none}
+}

@@ -8,7 +8,9 @@ DIST=E34H0K147DZSC0
 if grep -rIlE "(Bearer [A-Za-z0-9._-]{20,}|sk-[A-Za-z0-9]{20,}|META_API_KEY|muse-api-key|api\.meta\.ai)" site >/dev/null 2>&1; then
   echo "Refusing: site bundle references a key or the upstream API: $(grep -rIlE "(Bearer [A-Za-z0-9._-]{20,}|sk-[A-Za-z0-9]{20,}|META_API_KEY|muse-api-key|api\.meta\.ai)" site)"; exit 1
 fi
-if find site -iname "*.wav" -o -iname "*.mp3" -o -iname "*.flac" -o -iname "*.m4a" | grep -q .; then echo "Refusing: audio files in site/"; exit 1; fi
+# audio is allowed ONLY under site/assets/audio/ (LibriSpeech-derived clips made by our tools); never personal recordings
+if find site -path site/assets/audio -prune -o \( -iname "*.wav" -o -iname "*.mp3" -o -iname "*.flac" -o -iname "*.m4a" \) -print | grep -q .; then echo "Refusing: audio files outside site/assets/audio/"; exit 1; fi
+if find site/assets/audio -iname "*.wav" 2>/dev/null | grep -q .; then echo "Refusing: raw wav in site/assets/audio/ (ship mp3/m4a only)"; exit 1; fi
 ./api/build_lambda.sh
 aws lambda update-function-code --function-name beforetheimplant-muse --zip-file fileb://api/lambda.zip --query LastUpdateStatus --output text
 aws lambda wait function-updated --function-name beforetheimplant-muse

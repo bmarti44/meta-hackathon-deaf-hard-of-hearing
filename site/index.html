@@ -15,6 +15,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..900&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/implant.css">
 <!--
   Inspirations / credits (techniques, not code):
   - itsthemedium.com (same author): chapter scroll story, bone-on-near-black, visible agent steps.
@@ -41,14 +42,15 @@
     <nav class="chapters" id="chapnav" aria-label="Chapters">
       <a href="#born">Graham</a>
       <a href="#short">The short version</a>
-      <a href="#wall">The wall</a>
-      <a href="#scorecard">Scorecard</a>
-      <a href="#generations">Generations</a>
-      <a href="#ask">Ask the data</a>
+      <a href="#implant">How an implant hears</a>
+      <a href="#wall">The hardest crowd</a>
+      <a href="#scorecard">The 14 checks</a>
+      <a href="#generations">Versions</a>
+      <a href="#ask">Ask a question</a>
       <a href="#graham">For Graham</a>
       <a href="#honest">Honesty</a>
       <a href="#made">How it was made</a>
-      <a href="#methods">Methods</a>
+      <a href="#methods">How the tests work</a>
     </nav>
   </div>
 </header>
@@ -60,30 +62,36 @@
 <section id="hero" aria-labelledby="h-hero">
   <div class="wrap">
     <div class="hero-text">
-      <p class="eyebrow"><b>A hackathon research record</b> · in-silico (T0) evidence only · no candidate promoted</p>
+      <p class="eyebrow"><b>A research diary</b> · computer tests only · nothing approved for use</p>
       <h1 id="h-hero">Before the implant, <em>there is the bench.</em></h1>
-      <p class="lede">A small, strictly causal neural model that tries to pull one voice out of a crowd for cochlear-implant users. It is judged on a synthetic bench, in pre-registered generations, by rules written down before each run. It passes 13 of 14 rows. This site is about the one it doesn't.</p>
+      <p class="lede">A small computer program that tries to pull one voice out of a noisy crowd, for people who hear through cochlear implants. We test it only on a computer, against rules we wrote down before each try. It passes 13 of our 14 checks. This site is about the one it does not.</p>
+      <p class="wave-key">The fuzzier the line behind this page, the harder it is to hear one voice. Watch it clear up (or not) as you read.</p>
       <div class="ctas">
         <a class="btn" href="#short">The short version</a>
-        <a class="btn ghost" href="#ask">Ask the data</a>
+        <a class="btn ghost" href="#ask">Ask a question</a>
       </div>
+      <form class="hero-ask ai-only" id="hero-ask" hidden>
+        <label for="hq">Ask Muse, Meta's AI model, anything about this record</label>
+        <div class="hero-ask-row"><input id="hq" type="text" placeholder="Why does it struggle when the crowd is louder than the voice?" autocomplete="off" maxlength="400"><button type="submit">Ask</button></div>
+      </form>
       <!-- Film slot: assets/video/before-the-implant.mp4 (+ -poster.jpg, .en.vtt). Hidden until the file exists; see main.js film(). -->
       <figure class="film" id="film" hidden>
         <div class="video-box">
           <video id="film-video" playsinline preload="none" poster="assets/video/before-the-implant-poster.jpg" width="1280" height="720">
             <track kind="captions" src="assets/video/before-the-implant.en.vtt" srclang="en" label="English captions" default>
           </video>
-          <div class="video-ctl">
-            <button type="button" class="vbtn" id="film-play" aria-pressed="false">Play the film</button>
-            <button type="button" class="vbtn" id="film-sound" aria-pressed="false">Sound: off</button>
-            <span class="vnote mono">Captions on.</span>
-          </div>
+        </div>
+        <div class="video-ctl below">
+          <button type="button" class="vbtn" id="film-play" aria-pressed="false">Play the film</button>
+          <button type="button" class="vbtn" id="film-sound" aria-pressed="false">Sound: off</button>
+          <span class="vnote mono">Captions on.</span>
         </div>
         <figcaption class="small muted" style="margin-top:8px">A short film about this project.</figcaption>
       </figure>
     </div>
   </div>
   <p class="scroll-hint" aria-hidden="true"><span class="ln"></span>Scroll · it starts with a jackhammer</p>
+  <p class="clarity" id="clarity" aria-hidden="true"><span class="mono">how much cleaner, in crowds</span><b id="clarity-v">+0.00 dB</b></p>
 </section>
 
 <!-- ===== GRAHAM'S STORY, in his dad's words ===== -->
@@ -101,7 +109,6 @@
 <section class="chapter" id="tests" aria-labelledby="h-tests" data-gl="quake-out">
   <div class="wrap">
     <div class="panel narrow rv story-panel">
-      <p class="eyebrow">Weeks of tests</p>
       <h2 id="h-tests">All we knew for a long time was that something was wrong.</h2>
       <p class="lede story-q">"During his hearing test, I saw that he was getting almost no sound. They ran more blood tests, urine tests, MRIs and echocardiograms over the course of weeks. We had multiple doctor's appointments every week. We haven't gotten any definitive answers, other than that he has bilateral sensorineural hearing loss."</p>
     </div>
@@ -111,7 +118,6 @@
 <section class="chapter" id="music" aria-labelledby="h-music" data-gl="music">
   <div class="wrap">
     <div class="rv story-panel">
-      <p class="eyebrow">What the doctors said</p>
       <h2 id="h-music" class="music-line">"The doctors told us that, one day, he may grow to enjoy music."</h2>
     </div>
   </div>
@@ -131,7 +137,7 @@
       </figure>
       <div class="panel rv">
         <p class="eyebrow">Part 1 · The crowd</p>
-        <h2 id="h-crowd">Music and conversation in a crowd are still the hardest thing.</h2>
+        <h2 id="h-crowd">Music and talking in a crowd are still the hardest thing.</h2>
         <p class="lede">Graham was born with bilateral, sensorineural, severe-to-profound hearing loss. He wears bilateral Cochlear Nucleus 6 processors; that is what he uses, and nothing on this site has ever been used by him. His dad, who built this project, has normal hearing.</p>
         <p>Crowds are where cochlear-implant users struggle most. A dance class on a lawn, a birthday table, a playground: many voices at once, and the one you need is no louder than the rest. That is where the −5 dB wall lives, and it is the only thing this research is about.</p>
         <p>A cochlear implant delivers sound as electrical pulses on a short row of electrodes. In quiet, that works remarkably well. In a room full of other voices, the thing a listener needs most, one voice standing apart from many, is exactly what the signal makes hardest to recover.</p>
@@ -161,11 +167,11 @@
           <video id="dance" muted playsinline loop preload="none" poster="assets/family/graham-dancing-poster.jpg" width="540" height="960" aria-describedby="dance-cap">
             <track kind="captions" src="assets/family/graham-dancing.en.vtt" srclang="en" label="English captions" default>
           </video>
-          <div class="video-ctl">
-            <button type="button" class="vbtn" id="v-play" aria-pressed="false">Play</button>
-            <button type="button" class="vbtn vbtn-sound" id="v-sound" aria-pressed="false" aria-label="Sound is off. Turn sound on"><span aria-hidden="true">♪ </span>Turn sound on</button>
-            <span class="vnote mono" id="v-note">Captions on. Music is playing in this clip.</span>
-          </div>
+        </div>
+        <div class="video-ctl below">
+          <button type="button" class="vbtn" id="v-play" aria-pressed="false">Play</button>
+          <button type="button" class="vbtn vbtn-sound" id="v-sound" aria-pressed="false" aria-label="Sound is off. Turn sound on">Turn sound on</button>
+          <span class="vnote mono" id="v-note">Captions on. Music is playing in this clip. With sound on, the wave behind the page moves to it.</span>
         </div>
         <figcaption id="dance-cap">
           <p class="lede story-q">"Turns out, he does love music. <em class="hot-em">And he's pretty great."</em></p>
@@ -180,54 +186,228 @@
 <section class="chapter" id="model" aria-labelledby="h-model" data-gl="voice2">
   <div class="wrap">
     <div class="panel rv">
-      <p class="eyebrow">Part 2 · The model</p>
-      <h2 id="h-model">A model that can never listen ahead.</h2>
+      <p class="eyebrow">Part 2 · The program</p>
+      <h2 id="h-model">A program that cleans sound as it arrives, without peeking ahead.</h2>
       <div class="grid g2">
         <div>
-          <p class="lede">A hearing device cannot wait for the end of a word to decide what the start of it was. So the model is <em class="hot-em">strictly causal</em>: every output sample depends only on audio that has already arrived.</p>
-          <p>Gen 19, the current baseline, is a causal Conv-TasNet-style enhancer. Exact causality is re-verified on the final weights after every training run: feed it two signals that match for the first <var>P</var> samples and the outputs match for exactly those <var>P</var> samples, to the bit.</p>
+          <h3 class="sub first">Why this matters</h3>
+          <p>Most powerful noise-removal programs work like an editor: they listen to a whole sentence, then clean it up. That is great for recordings and useless for live hearing. If Graham's friend says something, he needs to hear it now, not after the sentence ends. Our model cleans the sound while it is still arriving, which is exactly what a hearing device would need.</p>
+          <h3 class="sub">Why it is fast</h3>
+          <p>Your brain expects what you see and what you hear to line up. If sound arrives late, lips stop matching words and your own voice starts to sound strange. So a hearing device only gets a tiny slice of time to do its work. Our model needs about 6 thousandths of a second (5.88 ms) of sound before it can answer. That is roughly 20 times quicker than a blink.</p>
+          <h3 class="sub">How it works</h3>
+          <ul class="plain">
+            <li>It listens in tiny slices, each about 4 thousandths of a second long.</li>
+            <li>For every slice it asks one question: how much of this is the voice? Then it keeps the voice and turns the rest down.</li>
+            <li>It remembers about the last second of sound, which helps it recognise the voice it is following, but it never peeks ahead.</li>
+            <li>It is small on purpose: about 600,000 numbers. A single phone photo holds millions. Small enough that we can imagine it running on a phone or a hearing processor someday, though we have not timed it on one yet.</li>
+          </ul>
+          <h3 class="sub">How we know it never cheats</h3>
+          <p>After every training run we play it two recordings that start the same and then go different ways. If the model ever peeked ahead, its output for the shared beginning would change. It never does, down to the very last bit.</p>
+          <details class="researchers"><summary>For researchers</summary><p class="small muted">Strictly causal waveform Conv-TasNet-style enhancer, 602,510 parameters, 5.88 ms algorithmic latency (excluding compute), about 1.02 s receptive field; exact causality re-verified on final weights (suffix invariance: outputs identical for the first <var>P</var> samples of two inputs that share them).</p></details>
           <div class="stats" id="model-stats">
-            <div class="stat"><div class="v num" data-model="params">—</div><div class="l">parameters</div></div>
-            <div class="stat"><div class="v num sig" data-model="latency">—</div><div class="l">ms algorithmic latency (excluding compute)</div></div>
-            <div class="stat"><div class="v num" data-model="future">0</div><div class="l">samples of look-ahead</div></div>
-            <div class="stat"><div class="v num" data-model="prefix">—</div><div class="l">max prefix difference in causality test</div></div>
+            <div class="stat"><div class="v num" data-model="params">—</div><div class="l">numbers inside the program</div></div>
+            <div class="stat"><div class="v num sig" data-model="latency">—</div><div class="l">thousandths of a second it needs before answering</div></div>
+            <div class="stat"><div class="v num" data-model="future">0</div><div class="l">peeks into the future</div></div>
+            <div class="stat"><div class="v num" data-model="prefix">—</div><div class="l">difference found in the no-cheating test</div></div>
           </div>
         </div>
         <div>
-          <h3>How 5.88 ms compares</h3>
-          <p class="small muted">The KPI contract allows up to 10 ms of algorithmic latency. At 16 kHz, 5.88 ms is 94 samples.</p>
-          <div class="latency" role="img" aria-label="Algorithmic latency 5.875 ms of a 10 ms allowance">
+          <h3>How quick is 5.88 ms?</h3>
+          <p class="small muted">Our own rule allows up to 10 thousandths of a second. The program uses about 6.</p>
+          <div class="latency" role="img" aria-label="The program needs 5.88 thousandths of a second, out of the 10 it is allowed">
             <div class="bar"><i id="lat-bar" style="width:58.75%"></i></div><span>5.88 / 10 ms</span>
           </div>
-          <h3 style="margin-top:28px">What the implant does next</h3>
-          <p class="small muted">One of the three intelligibility proxies simulates the implant's own strategy: of 22 electrode channels, the 8 with the most energy are selected each frame. The bench scores how well the enhanced signal's electrode pattern matches the clean target's.</p>
-          <div class="electrodes" id="electrodes" role="img" aria-label="Animated illustration: 22 electrode channels, 8 selected per frame"></div>
-          <p class="electrodes-cap">22 channels · 8 selected per frame</p>
+          
         </div>
       </div>
     </div>
   </div>
 </section>
 
+<!-- SLOT:implant -->
+<!-- ===== HOW AN IMPLANT HEARS (partial: site/partials/implant.html; needs css/implant.css + js/implant.js) ===== -->
+<section id="implant" class="imp" aria-labelledby="h-imp">
+  <div class="imp-wrap">
+
+    <header class="imp-head">
+      <p class="eyebrow"><b>Inside the implant</b> · what happens to sound</p>
+      <h2 id="h-imp">How a cochlear implant <em>hears</em>.</h2>
+      <p class="lede">A hearing ear has thousands of tiny hair cells, each one listening for its own little sliver of pitch. A cochlear implant takes the place of all of them with one thin wire. Everything the microphone picks up, a voice, a crowd, a song, has to squeeze through that wire.</p>
+    </header>
+
+    <figure class="imp-fig" aria-labelledby="imp-fig-cap">
+      <div class="imp-stage" id="imp-stage">
+        <canvas id="imp-canvas" aria-hidden="true"></canvas>
+        <span class="imp-lab imp-lab-a" aria-hidden="true">Sound coming in</span>
+        <span class="imp-lab imp-lab-b" aria-hidden="true">22<span class="imp-x"> slices</span></span>
+        <span class="imp-lab imp-lab-c" aria-hidden="true"><b>8</b> play<span class="imp-x"> at once</span></span>
+        <span class="imp-lab imp-lab-hi" aria-hidden="true">high pitch</span>
+        <span class="imp-lab imp-lab-lo" aria-hidden="true">low pitch</span>
+      </div>
+      <figcaption id="imp-fig-cap">
+        <span class="imp-now" id="imp-now">Drawn from the sentence below, moment by moment.</span>
+        <span class="imp-key">On the left is the sentence as it arrives, with every pitch from low at the bottom to high at the top. In the middle, all of it is squeezed into 22 slices. On the right, only the 8 loudest slices light up at each moment, and the other 14 wait their turn.</span>
+      </figcaption>
+    </figure>
+
+    <ol class="imp-steps">
+      <li>
+        <span class="imp-num" aria-hidden="true">01</span>
+        <h3>22 slices of pitch</h3>
+        <p>The implant splits every sound into 22 slices of pitch, like 22 piano keys running from low to high. Each slice has its own tiny contact on the wire inside the ear. Low sounds go deep into the ear's spiral and high sounds stay near the opening, which is the same way a hearing ear sorts sound.</p>
+      </li>
+      <li>
+        <span class="imp-num" aria-hidden="true">02</span>
+        <h3>Only about 8 at once</h3>
+        <p>Many times every second, the implant checks which slices are loudest, and only those get to play. Implants like Graham's commonly play about 8 of the 22 at a time, and an audiologist sets the exact number for each person. Think of a piano where only 8 keys can sound at once: the tune comes through, but a lot of it goes missing.</p>
+      </li>
+      <li>
+        <span class="imp-num" aria-hidden="true">03</span>
+        <h3>What gets lost</h3>
+        <p>Inside each slice, all the fine detail is blended into one thing: how loud that slice is. That detail is what lets you hear a voice rise and fall, the warmth or scratchiness that makes someone sound like themselves, and the notes in a song. The rhythm of talking and the shape of words still come through surprisingly well. In a crowd, other voices compete for the same 8 keys, and the loudest ones are not always the voice you want.</p>
+      </li>
+    </ol>
+
+    <div class="imp-listen" id="imp-listen">
+      <div class="imp-listen-head">
+        <h3 id="h-imp-listen">Listen to what the squeeze does to a voice.</h3>
+        <p>Researchers have a way to give people with typical hearing a rough idea of an implant. They split a recording into the same 22 slices, keep only the 8 loudest at each moment, and rebuild each slice out of soft hissing noise, so the fine detail disappears much as it does in an implant. These clips were made that way. They are about as close as someone with typical hearing can get to what Graham might hear, and they are still only a rough sketch. Every person with an implant hears differently, and a brain that grows up with one learns to make sense of it in ways no recording can show.</p>
+        <p class="imp-meta">Each clip is the same sentence at the same loudness, about 8 seconds long. Only one plays at a time.</p>
+      </div>
+
+      <div class="imp-group" role="group" aria-labelledby="imp-g1">
+        <div class="imp-group-side">
+          <h4 id="imp-g1">In a quiet room</h4>
+          <p class="imp-transcript"><span class="imp-tlab">What she says</span>“We were so deep in the grass that we could see nothing but the blue sky over us and the gold tree in front of us.”</p>
+        </div>
+        <ol class="imp-tracks">
+          <li class="imp-track">
+            <button type="button" class="imp-play" data-src="assets/audio/implant/01-voice.mp3" data-sig="clean" aria-pressed="false" aria-describedby="imp-c1">
+              <span class="imp-n">01</span><span class="imp-title">Her voice, as recorded</span><span class="imp-state" aria-hidden="true">Listen</span>
+            </button>
+            <p class="imp-cap" id="imp-c1">[A woman reads the sentence, close and clear.]</p>
+          </li>
+          <li class="imp-track">
+            <button type="button" class="imp-play" data-src="assets/audio/implant/02-voice-ci.mp3" data-sig="clean" aria-pressed="false" aria-describedby="imp-c2">
+              <span class="imp-n">02</span><span class="imp-title">Her voice, squeezed into 8 of 22 slices</span><span class="imp-state" aria-hidden="true">Listen</span>
+            </button>
+            <p class="imp-cap" id="imp-c2">[The same sentence rebuilt from slices of hissing noise. It sounds whispery and buzzy. The rhythm of the words is there, but the rise and fall of her voice is gone.]</p>
+          </li>
+        </ol>
+      </div>
+
+      <div class="imp-group" role="group" aria-labelledby="imp-g2">
+        <div class="imp-group-side">
+          <h4 id="imp-g2">In a crowd as loud as her <span class="imp-db">0 dB</span></h4>
+          <p class="imp-transcript"><span class="imp-tlab">What she says</span>“We were so deep in the grass that we could see nothing but the blue sky over us and the gold tree in front of us.” Around her, a crowd of other people talk at once.</p>
+        </div>
+        <ol class="imp-tracks">
+          <li class="imp-track">
+            <button type="button" class="imp-play" data-src="assets/audio/implant/03-crowd-0db.mp3" data-sig="mix_0db" aria-pressed="false" aria-describedby="imp-c3">
+              <span class="imp-n">03</span><span class="imp-title">Her voice in a crowd</span><span class="imp-state" aria-hidden="true">Listen</span>
+            </button>
+            <p class="imp-cap" id="imp-c3">[Her voice inside the chatter of a crowd that is just as loud as she is.]</p>
+          </li>
+          <li class="imp-track">
+            <button type="button" class="imp-play" data-src="assets/audio/implant/04-crowd-0db-ci.mp3" data-sig="mix_0db" aria-pressed="false" aria-describedby="imp-c4">
+              <span class="imp-n">04</span><span class="imp-title">The crowd, squeezed into 8 of 22 slices</span><span class="imp-state" aria-hidden="true">Listen</span>
+            </button>
+            <p class="imp-cap" id="imp-c4">[Her voice and the crowd rebuilt from the same slices of hissing noise. This is the hard case, because the crowd takes many of the 8 keys.]</p>
+          </li>
+          <li class="imp-track">
+            <button type="button" class="imp-play" data-src="assets/audio/implant/05-cleaned-0db-ci.mp3" data-sig="enh_0db" aria-pressed="false" aria-describedby="imp-c5">
+              <span class="imp-n">05</span><span class="imp-title">Cleaned up by the computer model first, then squeezed</span><span class="imp-state" aria-hidden="true">Listen</span>
+            </button>
+            <p class="imp-cap" id="imp-c5">[The model in this project takes away much of the crowd before the squeeze. On the score this research uses, this clip came out cleaner.]</p>
+          </li>
+        </ol>
+      </div>
+
+      <div class="imp-group imp-group-wall" role="group" aria-labelledby="imp-g3">
+        <div class="imp-group-side">
+          <h4 id="imp-g3">In a crowd louder than her <span class="imp-db hot">−5 dB</span></h4>
+          <p class="imp-transcript"><span class="imp-tlab">What she says</span>“We were so deep in the grass that we could see nothing but the blue sky over us and the gold tree in front of us.” The same crowd, now louder than she is.</p>
+        </div>
+        <ol class="imp-tracks">
+          <li class="imp-track">
+            <button type="button" class="imp-play" data-src="assets/audio/implant/06-crowd-m5db.mp3" data-sig="mix_m5db" aria-pressed="false" aria-describedby="imp-c6">
+              <span class="imp-n">06</span><span class="imp-title">Her voice in a louder crowd</span><span class="imp-state" aria-hidden="true">Listen</span>
+            </button>
+            <p class="imp-cap" id="imp-c6">[Her voice under the same crowd chatter, which is now louder than she is.]</p>
+          </li>
+          <li class="imp-track">
+            <button type="button" class="imp-play" data-src="assets/audio/implant/07-crowd-m5db-ci.mp3" data-sig="mix_m5db" aria-pressed="false" aria-describedby="imp-c7">
+              <span class="imp-n">07</span><span class="imp-title">The louder crowd, squeezed into 8 of 22 slices</span><span class="imp-state" aria-hidden="true">Listen</span>
+            </button>
+            <p class="imp-cap" id="imp-c7">[Her voice and the louder crowd rebuilt from slices of hissing noise. With the crowd louder than her, it wins even more of the 8 keys.]</p>
+          </li>
+          <li class="imp-track">
+            <button type="button" class="imp-play" data-src="assets/audio/implant/08-cleaned-m5db-ci.mp3" data-sig="enh_m5db" aria-pressed="false" aria-describedby="imp-c8">
+              <span class="imp-n">08</span><span class="imp-title">Cleaned up by the computer model first, then squeezed</span><span class="imp-state" aria-hidden="true">Listen</span>
+            </button>
+            <p class="imp-cap" id="imp-c8">[Here the model barely helps. On this clip it made almost no difference, and that is the wall the rest of this site is about.]</p>
+          </li>
+        </ol>
+      </div>
+
+      <p class="imp-live sr-only" id="imp-live" aria-live="polite"></p>
+    </div>
+
+    <div class="imp-how">
+      <h3>How these clips were made</h3>
+      <div class="imp-how-cols">
+        <p>The voices come from LibriSpeech, a free collection of volunteers reading books aloud. Nothing from Graham or his family is used here. The reader in these clips, and the people in the crowd around her, were never used to teach the model, so it is hearing all of them for the first time. The crowd is ten snippets of other readers talking at once, set to be as loud as her or a little louder.</p>
+        <p>The squeeze into 8 of 22 slices is the same one this research uses to score the model, and the moving picture above is drawn from those same numbers. A real implant is more complicated. Its electric signal spreads a little inside the ear, an audiologist tunes how loud each slice feels, and every ear and every brain is different.</p>
+        <p>The cleaned-up clips show what the implant would be given if this model worked in front of it. They are an experiment on the sound itself, not a promise that Graham, or anyone, would understand more. Only testing with real listeners could show that, and it has not been done yet.</p>
+      </div>
+      <details class="imp-res">
+        <summary>For researchers</summary>
+        <p>Noise vocoder from the bench (<span class="mono">research/bench-n6/vocoder.py</span>): ACE-like N-of-M, 22 bands from 188 Hz to 7.94 kHz (linear to 1312 Hz, then log-spaced; the split is assumed, see <span class="mono">gen13/ace_sim.py</span>), 512-point STFT with an 8 ms hop, the 8 largest band powers kept per frame, band envelopes modulating 4th-order Butterworth band-passed noise. Not modelled: current spread, T/C-level loudness mapping, neural survival, stimulation rate, individual fitting. Mixtures as in <span class="mono">bench_v2.py</span>: target RMS 0.1, a crowd of 10 talker streams drawn from held-out readers 8297, 8842, 6319, 6345, 7850 and 7976, scaled to 0 and −5 dB SNR over the whole clip. Target: dev-clean 1988-147956-0026 (test speaker). Enhancer: Gen 19 causal Conv-TasNet, seed 20261117, output re-aligned with <span class="mono">undelay()</span>. SI-SDR on these clips, mixture to enhanced: at 0 dB, −0.19 to 2.96 dB (+3.15); at −5 dB, −5.16 to −4.90 dB (+0.26). Clips are 16 kHz mono mp3, loudness-matched to −20.5 LUFS, peaks at or below −1.3 dBFS, no clipped samples. The animation uses each signal's 22 band envelopes and a 48-bin log spectrum at 16 ms frames, with the top 8 bands per frame picked in the browser. Generator: <span class="mono">site/tools/make_implant_audio.py</span>.</p>
+      </details>
+      <p class="imp-credit">Voices: LibriSpeech (Panayotov et al. 2015), CC BY 4.0.</p>
+    </div>
+
+  </div>
+</section>
+
+
 <!-- ===== PART 3: THE WALL ===== -->
 <section class="chapter" id="wall" aria-labelledby="h-wall" data-gl="wall">
   <div class="wrap">
     <div class="panel rv">
-      <p class="eyebrow">Part 3 · The wall</p>
+      <p class="eyebrow">Part 3 · The hardest crowd</p>
       <p class="big num" aria-hidden="true">−5 dB <small>is where it stops.</small></p>
-      <h2 id="h-wall" class="sr-only">Minus five decibels is where it stops.</h2>
+      <h2 id="h-wall" class="sr-only">When the crowd is louder than the voice, the program stops helping enough.</h2>
       <div class="grid g2">
         <div>
-          <p class="lede">On crowd noise overall, Gen 19 improves SI-SDR by <b class="num" data-bench="crowd_d">+3.51 dB</b> (three-seed mean) against a +3.0 requirement. At 0 dB SNR, where the crowd is as loud as the voice, it gains <b class="num" data-bench="snr0">+4.65 dB</b>. At −5 dB, where the crowd is louder than the voice, it gains <b class="num hot" data-bench="snr-5">+1.19 dB</b>. The rule says +1.5.</p>
-          <p>Every attempt since has been aimed at that number. None has moved it. Drag the slider to walk the bench.</p>
+          <h3 class="sub">What the numbers mean</h3>
+          <p>Engineers measure how clean a sound is in decibels (dB). It is a squeezed scale: every 3 dB of improvement cuts the leftover noise, compared with the voice, in half.</p>
+          <ul class="plain">
+            <li>In everyday crowd noise, the model cuts the leftover noise to less than half (+3.51 dB).</li>
+            <li>When the crowd is as loud as the voice (0 dB), it cuts it to about a third (+4.65 dB).</li>
+            <li>When the crowd is louder than the voice (−5 dB, about three times the voice's energy), it only cuts it by about a quarter (+1.19 dB). Afterwards the crowd is still more than twice as strong as the voice. Our goal there was +1.5 dB, which would have cut it by about 30%.</li>
+          </ul>
+          <div class="ratio" role="img" aria-label="Crowd energy relative to the voice, before and after cleanup: at minus 5 dB 3.2 times becomes 2.4 times, goal 2.2 times; at 0 dB 1 times becomes 0.34 times.">
+            <div class="ratio-row"><span class="mono">−5 dB</span><i style="--w:100%"></i><span>3.2× crowd</span></div>
+            <div class="ratio-row"><span class="mono">after</span><i style="--w:75%" class="sig"></i><span>2.4×</span></div>
+            <div class="ratio-row"><span class="mono">goal</span><i style="--w:69%" class="goal"></i><span>2.2×</span></div>
+            <div class="ratio-row gap"><span class="mono">0 dB</span><i style="--w:31%"></i><span>1×</span></div>
+            <div class="ratio-row"><span class="mono">after</span><i style="--w:11%" class="sig"></i><span>0.34×</span></div>
+          </div>
+          <h3 class="sub">Is +1.5 just a made-up number?</h3>
+          <p>Partly, and on purpose. We set it ourselves before running any tests, so we could not move the goalposts after seeing results. It is half of our overall +3 dB goal, and +3 dB is in the range that lab noise-reduction systems have reached in published studies with cochlear-implant listeners (those studies used a different measure, so it's a rough guide). Missing by 0.3 dB is not a disaster. It means this model is not yet strong enough in the hardest rooms to earn a listening test.</p>
+          <h3 class="sub">Why did we miss?</h3>
+          <p>At −5 dB, the crowd is made of other voices that sound a lot like the one you want. The model has one microphone, cannot hear the future (it has to answer within 6 thousandths of a second), and is tiny on purpose so it could one day run on a hearing device. A "cheating" version that hears the future and already knows the answer gets about +12 dB here, so there is room to improve. More training and two different scoring changes did not close the gap. Next, we train on far more hard examples, and after that we give the model two ears so it can use direction as a clue.</p>
+          <details class="researchers"><summary>For researchers</summary><p class="small muted">Metric: ΔSI-SDR vs unprocessed, three-seed mean, bench v2 crowd condition, n = 6 crops per cell. Rule: crowd ΔSI-SDR ≥ +1.5 dB at both −5 dB and 0 dB. Gen 19: +1.19 dB at −5 dB (FAIL), +4.65 dB at 0 dB (PASS); overall crowd +3.51 dB; non-causal oracle +11.94 dB at −5 dB.</p></details>
+          <p class="small muted">Drag the slider to walk the bench.</p>
           <div class="slider-box">
-            <label for="snr" class="mono small">Signal-to-noise ratio of the crowd mixture</label>
+            <label for="snr" class="mono small">How loud the crowd is compared with the voice (slide left for harder)</label>
             <input type="range" id="snr" min="-5" max="10" step="1" value="10" aria-describedby="snr-read">
             <div class="slider-read" id="snr-read" aria-live="polite">
-              <div><span class="muted">SNR</span><b id="snr-v" class="num">+10 dB</b></div>
-              <div><span class="muted">Gen 19 ΔSI-SDR</span><b id="snr-g" class="num">—</b></div>
-              <div><span class="muted">classical causal gate</span><b id="snr-gate" class="num">—</b></div>
-              <div><span class="muted">non-causal oracle</span><b id="snr-or" class="num">—</b></div>
+              <div><span class="muted">crowd loudness</span><b id="snr-v" class="num">+10 dB</b></div>
+              <div><span class="muted">our program: how much cleaner</span><b id="snr-g" class="num">—</b></div>
+              <div><span class="muted">the simple filter</span><b id="snr-gate" class="num">—</b></div>
+              <div><span class="muted">the cheating version</span><b id="snr-or" class="num">—</b></div>
               <div><span class="muted">verdict</span><b id="snr-verdict">—</b></div>
             </div>
           </div>
@@ -235,7 +415,7 @@
         <div>
           <div class="chart" id="snr-chart" aria-describedby="snr-table-cap"></div>
           <div class="legend" id="snr-legend"></div>
-          <details><summary id="snr-table-cap">Table: crowd ΔSI-SDR by SNR (three-seed mean, dB vs unprocessed)</summary><div class="table-wrap" id="snr-table"></div></details>
+          <details><summary id="snr-table-cap">Table: how much cleaner the voice gets at each crowd loudness (dB)</summary><div class="table-wrap" id="snr-table"></div></details>
         </div>
       </div>
     </div>
@@ -245,19 +425,18 @@
 <!-- ===== SHORT VERSION ===== -->
 <section id="short" class="solid-bg" aria-labelledby="h-short">
   <div class="wrap">
-    <p class="eyebrow">The short version</p>
-    <h2 id="h-short">Thirteen rows pass. One does not. Nothing is promoted.</h2>
-    <div class="grid g3">
-      <div class="card rv"><h3>The question</h3><p>Can a tiny, strictly causal neural model reduce crowd noise for cochlear-implant users enough to earn a listening test, judged on a synthetic bench under rules fixed in advance?</p></div>
-      <div class="card rv"><h3>What we found</h3><p>Gen 19 passes 13 of 14 implemented scorecard rows, including +3.51 dB crowd ΔSI-SDR. It fails crowd noise at −5 dB: +1.19 dB against a +1.5 requirement. Four further generations tried to fix that row. Three are filed as nulls; one is running.</p></div>
-      <div class="card rv warn"><h3>What it does not mean</h3><p>Nothing here was tested against the Nucleus 6's own processing, on any implant, or with any listener. Vocoder audio is not what a CI user hears. This is in-silico evidence, verdict <b>FAIL — keep optimizing</b>, <b>promoted FALSE</b>.</p></div>
+    <h2 id="h-short">The short version</h2>
+    <div class="cols3 numbered">
+      <div class="col rv"><h3>The question</h3><p>Can a tiny program that never peeks ahead clean up crowd noise for cochlear-implant users well enough to earn a real listening test? We judge it on computer tests, with the passing scores fixed before we start.</p></div>
+      <div class="col rv"><h3>What we found</h3><p>Our best version so far, number 19, passes 13 of 14 checks. In everyday crowd noise it cuts the leftover noise to less than half. In the hardest crowds, where the crowd is louder than the voice, it falls just short of the score we set. Four later versions tried to fix that. Three did not help, and one is being tested right now.</p></div>
+      <div class="col rv"><h3>What it does not mean</h3><p>We have not compared it with the Nucleus 6 processors Graham already wears, tested it on any implant, or played it to any listener. Everything here is from computer tests. Our own verdict is: not good enough yet, keep working. No version has been approved for anything.</p><details class="researchers"><summary>For researchers</summary><p class="small muted">T0 in-silico evidence only. Scorecard verdict FAIL (keep optimizing); promoted FALSE. Vocoder audio is not what a CI user hears; N6 processing was never tested.</p></details></div>
     </div>
-    <div class="stats">
-      <div class="stat"><div class="v num">13<span class="muted">/14</span></div><div class="l">scorecard rows pass (Gen 19, 3 seeds)</div></div>
-      <div class="stat"><div class="v num sig">+3.51</div><div class="l">dB crowd ΔSI-SDR vs unprocessed</div></div>
-      <div class="stat"><div class="v num hot">+1.19</div><div class="l">dB at −5 dB; +1.5 required</div></div>
-      <div class="stat"><div class="v num" id="null-count">—</div><div class="l">generations filed as nulls since Gen 19</div></div>
-      <div class="stat"><div class="v num">0</div><div class="l">candidates promoted</div></div>
+    <div class="stats figures">
+      <div class="stat"><div class="v num">13<span class="muted">/14</span></div><div class="l">of our 14 checks passed</div></div>
+      <div class="stat"><div class="v num sig">+3.51</div><div class="l">dB cleaner in everyday crowds</div></div>
+      <div class="stat"><div class="v num hot">+1.19</div><div class="l">dB cleaner when the crowd is louder than the voice; we wanted +1.5</div></div>
+      <div class="stat"><div class="v num" id="null-count">—</div><div class="l">later versions that did not help</div></div>
+      <div class="stat"><div class="v num">0</div><div class="l">versions approved for use</div></div>
     </div>
   </div>
 </section>
@@ -265,11 +444,22 @@
 <!-- ===== SCORECARD ===== -->
 <section id="scorecard" class="solid-bg" aria-labelledby="h-score">
   <div class="wrap">
-    <p class="eyebrow">The scorecard</p>
-    <h2 id="h-score">Fourteen rows, written before the result.</h2>
-    <p class="lede">The scorecard is computed by <code class="mono">kpi_scorecard.py</code> from the committed bench JSONs of three seeds plus a hash-matched spatial run. It reports INCOMPLETE unless it has all of them. Gen 19 is the first generation with a complete verdict. The failing row is highlighted and marked FAIL in text.</p>
+    <h2 id="h-score">Why 14 checks?</h2>
+    <p class="lede">Each check answers a question a parent or an audiologist would ask about a noise-reduction program.</p>
+    <ul class="plain checks">
+      <li>Does it help in a noisy crowd? <span class="muted">(3 checks: how clean the voice is, an estimate of how understandable it is, and what the implant's electrodes would actually receive)</span></li>
+      <li>Does it still help in the hardest crowds, when the crowd is as loud as the voice or louder? <span class="muted">(2 checks)</span></li>
+      <li>Does it ever make speech harder to understand there? <span class="muted">(1 check)</span></li>
+      <li>Does it work every time we train it, not just once? <span class="muted">(1 check: we train it three separate times from scratch, so one lucky run cannot fool us)</span></li>
+      <li>Is it better than the simple noise filter that already exists? <span class="muted">(1 check)</span></li>
+      <li>Does it cope with other kinds of noise, like a steady hum or a hiss it has never heard before? <span class="muted">(2 checks)</span></li>
+      <li>Does it leave speech alone when it is already quiet? <span class="muted">(2 checks)</span></li>
+      <li>Does it keep the clues that tell you which side a voice is coming from? <span class="muted">(2 checks)</span></li>
+    </ul>
+    <p>That is 14. We wrote them all down, with the score each one has to reach, before running the tests. That way we could not choose the flattering numbers afterwards. The model passes 13. The one it misses is the hardest crowd, where the crowd is louder than the voice.</p>
+    <details class="researchers"><summary>For researchers</summary><p class="small muted">The scorecard is computed by <code class="mono">kpi_scorecard.py</code> from the committed bench results of three seeds plus a spatial run whose checkpoint hash matches. It reports INCOMPLETE unless all are present; Gen 19 is the first generation with a complete verdict. Technical row names are shown under each plain-language row.</p></details>
     <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin:18px 0">
-      <span class="small muted ai-only" hidden>Explain any row with Meta's Muse model, as</span>
+      <span class="small muted ai-only" hidden>Have Muse, Meta's AI model, explain any check to you as</span>
       <div class="toggle ai-only" hidden role="group" aria-label="Explanation level" id="level-toggle">
         <button type="button" aria-pressed="true" data-level="parent">a parent</button>
         <button type="button" aria-pressed="false" data-level="researcher">a researcher</button>
@@ -289,9 +479,9 @@
 <!-- ===== GENERATIONS ===== -->
 <section id="generations" class="solid-bg" aria-labelledby="h-gen">
   <div class="wrap">
-    <p class="eyebrow">The generations · <span id="gen-updated" class="mono"></span></p>
-    <h2 id="h-gen">An evolutionary loop where the dead branches are kept.</h2>
-    <p class="lede">Each generation changes one thing, is pre-registered, trains on fixed budgets, and is judged on its final checkpoint only, on three seeds, by a script. An independent AI reviewer (Codex Astra) audits each result before the next generation trains. Branches that fail stay on the tree.</p>
+    <p class="small muted mono" style="margin:0 0 10px">updated <span id="gen-updated"></span></p>
+    <h2 id="h-gen">How we improve it, one change at a time</h2>
+    <p class="lede">Each new version changes exactly one thing. We write down what we expect before we train it, train it three separate times, and let a script, not a person, decide whether it passed. A second AI from a different company checks the result before we move on. The versions that failed stay on the tree, so you can see them.</p><details class="researchers"><summary>For researchers</summary><p class="small muted">Pre-registered generations with one change each, fixed budgets, final-checkpoint-only judgment, 3-seed seed-mean KPIs, independent Codex Astra (xhigh) review between generations. Failures are filed as "null for this policy".</p></details>
     <div class="tree" id="tree" role="img" aria-describedby="tree-desc"></div>
     <p id="tree-desc" class="sr-only"></p>
     <p class="tree-hint" aria-hidden="true">← scroll the tree sideways →</p>
@@ -302,23 +492,22 @@
 <!-- ===== BREAKING THE WALL ===== -->
 <section id="attempts" class="solid-bg" aria-labelledby="h-att">
   <div class="wrap">
-    <p class="eyebrow">Trying to break the wall</p>
-    <h2 id="h-att">The −5 dB row has not moved.</h2>
+    <h2 id="h-att">Three tries at the hardest crowd, none of them worked</h2>
     <div class="grid g2">
       <div class="rv">
-        <h3>Gen 21: more optimization is not the answer</h3>
-        <p>Two policies, 48k steps from scratch (S48) and the Gen 19 parent plus a 24k restart (R48), on three seeds. Qualification required a +0.30 dB seed-mean gain at −5 dB on both the validation panel and the bench. Overall crowd gains rose to +3.79 and +3.67 dB. The −5 dB row did not qualify on either panel for either arm; bench gains were negative.</p>
+        <h3>Version 21: training longer did not help</h3>
+        <p>We tried two ways of training for twice as long, each three separate times. To count as a real improvement, the hardest crowd had to get at least 0.3 dB cleaner on both of our two test sets. Everyday crowds did get better. The hardest crowd did not, and on one test set it got slightly worse.</p><details class="researchers"><summary>For researchers</summary><p class="small muted">S48 (48k scratch) vs R48 (Gen 19 parent + 24k restart), 3 seeds. Bar: seed-mean −5 dB ΔSI-SDR gain ≥ +0.30 dB on both VAL and bench. Overall crowd +3.79 / +3.67 dB; −5 dB gains S48 VAL +0.14 / bench −0.24, R48 +0.12 / −0.10. Neither qualifies.</p></details>
         <div class="chart" id="g21-chart"></div>
         <div class="legend" id="g21-legend"></div>
-        <details><summary>Table: Gen 21 −5 dB gains over same-seed Gen 19 parent (dB)</summary><div class="table-wrap" id="g21-table"></div></details>
+        <details><summary>Table: how much cleaner the hardest crowd got, per training run (dB)</summary><div class="table-wrap" id="g21-table"></div></details>
       </div>
       <div class="rv">
-        <h3>Gen 22: a capped loss tracks the baseline exactly</h3>
-        <p>A 30 dB soft cap on the SI-SDR loss was meant to stop quiet examples from dominating gradients. On the validation panel the −5 dB trajectory shadows Gen 19 at every 2k-step checkpoint. Final gains: +0.149 dB on VAL, −0.010 dB on the bench, against +0.30 on both. The cap is not retained.</p>
+        <h3>Version 22: a gentler way of scoring the training did not help either</h3>
+        <p>During training, examples that are already nearly perfect were shouting louder than the hard ones. We changed the scoring so they could not. The line below shows how the hardest crowd improved as training went on: the new version shadows the old one almost exactly. In the end it was 0.15 dB better on one test set and no better on the other, against the 0.3 we required. We dropped the change.</p><details class="researchers"><summary>For researchers</summary><p class="small muted">30 dB soft-capped SI-SDR loss, 24k scratch, seed 17 vs same-seed Gen 19. VAL −5 dB trajectory tracks Gen 19 at every 2k checkpoint. Final: +0.149 dB VAL, −0.010 dB bench vs +0.30 bar on both. Cap not retained.</p></details>
         <div class="chart" id="val-chart"></div>
         <div class="legend" id="val-legend"></div>
-        <details><summary>Table: VAL −5 dB ΔSI-SDR by training step, seed 17 (dB)</summary><div class="table-wrap" id="val-table"></div></details>
-        <p class="small muted" style="margin-top:12px">When Gen 23 completes, its trajectory can be added to <code class="mono">data/val_traj.json</code> and will be drawn here.</p>
+        <details><summary>Table: how much cleaner the hardest crowd got as training went on (dB)</summary><div class="table-wrap" id="val-table"></div></details>
+        <p class="small muted" style="margin-top:12px">When version 23 finishes, its line will be added here.</p>
       </div>
     </div>
   </div>
@@ -327,67 +516,73 @@
 <!-- ===== ASK ===== -->
 <section id="ask" class="solid-bg" aria-labelledby="h-ask">
   <div class="wrap narrow">
-    <p class="eyebrow">Ask the data · powered by <b>Muse</b>, Meta's AI model</p>
-    <h2 id="h-ask">Ask the research record a question in your own words.</h2>
-    <p class="lede">Muse works as a research assistant over the full record: pre-registrations, results, scorecard rows, reviewer notes. It decides what to look up, runs those lookups, and you can see each step it took. It is bound by the same rules as this page: in-silico evidence only, no claims about any listener.</p>
+    <p class="eyebrow">Ask the diary · answered by <b>Muse</b>, Meta's AI model</p>
+    <h2 id="h-ask">Ask anything about this project, in your own words</h2>
+    <p class="lede">Muse, an AI model from Meta, has read everything we wrote down: the plans, the results, the checks and the reviews. It decides what to look up, looks it up, and shows you each step. It follows the same rules as this page: computer tests only, and no promises about any listener.</p>
     <div class="ai-only" id="ask-ui" hidden>
       <form class="ask-form" id="ask-form">
         <label for="q" class="sr-only">Your question</label>
-        <input id="q" type="text" placeholder="e.g. Why can't the model pass crowd noise at −5 dB?" autocomplete="off" maxlength="400">
+        <input id="q" type="text" placeholder="e.g. Why does it struggle when the crowd is louder than the voice?" autocomplete="off" maxlength="400">
         <button class="btn" type="submit" id="ask-btn">Ask</button>
       </form>
       <div class="chips" id="chips" role="list"></div>
-      <p class="small muted" style="margin-top:12px">AI answers can contain mistakes. Repeat questions are cached. Nothing you type is stored with your identity.</p>
+      <p class="small muted" style="margin-top:12px">AI answers can contain mistakes. Nothing you type is stored with your name.</p>
       <div class="answer" id="answer" aria-live="polite">
         <div class="thinking" id="thinking" hidden><i aria-hidden="true"></i><span>Muse is reading the record…</span></div>
         <ol class="steps" id="steps"></ol>
         <div class="answer-text" id="answer-text"></div>
       </div>
     </div>
-    <p class="ai-off" id="ask-off">The Ask and Explain features need the site's Muse endpoint, which is not reachable right now. Everything else on this page is static and does not depend on it.</p>
+    <p class="ai-off" id="ask-off">Asking questions needs our Muse server, which is not reachable right now. Everything else on this page still works.</p>
   </div>
 </section>
+
+<!-- SLOT:meta-lab -->
 
 <!-- ===== WHAT THIS COULD MEAN FOR GRAHAM ===== -->
 <section id="graham" class="solid-bg" aria-labelledby="h-graham">
   <div class="wrap">
-    <p class="eyebrow">What this could mean for Graham · <b>if it passes the next gates</b></p>
-    <h2 id="h-graham">Could, not does.</h2>
-    <p class="lede">Nothing on this page has been tested with Graham's implants, or with any listener. His Nucleus 6 is what he uses, and its own processing has never been compared. What follows is what the bench says the model does in simulation, and what it could look like if every gate below were passed.</p>
+    <h2 id="h-graham">What could this mean for Graham?</h2>
+    <p class="lede">Nothing on this page has been tried with Graham's implants, or with any listener. His Nucleus 6 processors are what he uses, and we have never compared our program with them. What follows is what the computer tests say, and what it could look like if every step below were passed.</p>
 
-    <div class="grid g2" style="margin-top:40px">
-      <div class="card rv">
-        <h3>1 · Hearing better in noise</h3>
-        <p>A tiny program would sit between the microphone and the implant processor. Every 5.88 ms of sound, it guesses which part is the voice and turns the rest down, using only sound that has already happened. It has 602,510 parameters, small enough to imagine on a phone or a processor; its streaming speed on a CPU is not yet measured.</p>
-        <p><strong>What the bench shows (simulated, Gen 19, 3 seeds).</strong> In crowd noise it improves a speech-clarity score by +3.51 dB overall and by +4.65 dB when the crowd is as loud as the voice (0 dB). In simulated electrode patterns of an 8-of-22 ACE-style processor, correlation with clean speech improved by +0.072. Quiet speech is left alone (quiet SI-SDR 36 dB). In the hardest case, crowd louder than the voice at −5 dB, it helps only +1.19 dB, short of the +1.5 target. That is the wall.</p>
+    <div class="cols2">
+      <div class="col rv">
+        <h3>1 · Hearing a voice in a noisy room</h3>
+        <p>A tiny program would sit between the microphone and the implant. Every 6 thousandths of a second, it guesses which part of the sound is the voice and turns the rest down, using only sound that has already happened. It is small enough to imagine on a phone or inside a processor someday, though we have not timed it on one yet.</p>
+        <p><strong>What the computer tests say.</strong> In everyday crowd noise it cuts the leftover noise to less than half. When the crowd is as loud as the voice, to about a third. The pulses an implant would send also look more like the clean voice. Speech that is already quiet is left alone. In the hardest case, when the crowd is louder than the voice, it only cuts the noise by about a quarter, short of our goal. That is the wall.</p><details class="researchers"><summary>For researchers</summary><p class="small muted">Gen 19, 3-seed mean: crowd ΔSI-SDR +3.51 dB; +4.65 dB at 0 dB; ΔACE electrodogram correlation +0.072; quiet SI-SDR 36 dB; −5 dB +1.19 dB vs +1.5 required.</p></details>
         <div class="kv">
-          <span>crowd ΔSI-SDR at −5 dB</span><span class="v hot">+1.19 dB</span><button class="explain-btn ai-only" hidden type="button" data-explain="crowd_m5">Explain</button>
-          <span>crowd ΔACE electrode correlation</span><span class="v">+0.072</span><button class="explain-btn ai-only" hidden type="button" data-explain="crowd_ace">Explain</button>
+          <span>How much cleaner, crowd louder than voice</span>
+<span class="v hot">+1.19 dB</span><button class="explain-btn ai-only" hidden type="button" data-explain="crowd_m5">Explain</button>
+          <span>How much more the implant pulses match the clean voice</span>
+<span class="v">+0.072</span><button class="explain-btn ai-only" hidden type="button" data-explain="crowd_ace">Explain</button>
         </div>
         <div class="explain-slot"></div>
-        <p><strong>What it could look like.</strong> A birthday party, a cafeteria, a family dinner: the chatter turned down a little, the voice he is facing coming through clearer, quiet speech untouched. Possible paths, stated as possibilities only: processing in a phone or clip-on accessory that streams to his processors, or inside a future processor. Each would need the manufacturer, audiologists and regulators. No timelines.</p>
+        <p><strong>What it could look like.</strong> A birthday party, a cafeteria, a family dinner: the chatter turned down a little, the voice he is facing coming through clearer, quiet speech untouched. It could one day run on a phone or a clip-on gadget that sends sound to his processors, or inside a future processor. Each of those would need the maker of the implant, audiologists and regulators to agree. We have no dates.</p>
       </div>
 
-      <div class="card rv">
-        <h3>2 · Knowing where a voice comes from</h3>
-        <p>With two implants, each side processes sound mostly on its own. Brains find direction partly from small differences between the ears: which ear is louder (ILD) and which hears it first (ITD). CI users rely mostly on the loudness difference. If each side's noise reduction turns sound down by different amounts, it can blur that clue, so a voice on his left might seem to come from the middle.</p>
-        <p><strong>What the bench shows (seed 17, four simulated scenes, assumed head model).</strong></p>
+      <div class="col rv">
+        <h3>2 · Knowing which side a voice comes from</h3>
+        <p>With two implants, each side cleans up sound mostly on its own. Your brain works out where a sound comes from partly from tiny differences between your ears: which ear hears it louder, and which hears it first. People with implants rely mostly on the louder-ear clue. If each side turns sound down by a different amount, that clue blurs, and a voice on his left might seem to come from the middle.</p>
+        <p><strong>What the computer tests say</strong> (one training run, four pretend rooms).</p>
         <div class="kv">
-          <span>target-ILD error (lower is better)</span><span class="v">5.47 vs 5.96 dB unprocessed</span><button class="explain-btn ai-only" hidden type="button" data-explain="ild">Explain</button>
-          <span>ITD error (lower is better)</span><span class="v">4.0 vs 5.75 samples</span><button class="explain-btn ai-only" hidden type="button" data-explain="itd">Explain</button>
-          <span>ILD error in the −5 dB scene</span><span class="v worse">10.29 → 11.22 dB, worse</span><span></span>
+          <span>Louder-ear clue: how far off it is (lower is better)</span>
+<span class="v">5.47 dB, versus 5.96 with no cleanup</span><button class="explain-btn ai-only" hidden type="button" data-explain="ild">Explain</button>
+          <span>First-ear clue: how far off it is (lower is better)</span>
+<span class="v">4.0 samples, versus 5.75 with no cleanup</span><button class="explain-btn ai-only" hidden type="button" data-explain="itd">Explain</button>
+          <span>Louder-ear clue in the hardest room</span>
+<span class="v worse">got worse: 10.29 to 11.22 dB</span><span class="kv-empty"></span>
         </div>
         <div class="explain-slot"></div>
-        <p class="small muted">Nothing here shows a directional-hearing benefit. The registered next step is a <strong>binaural linked-gain model</strong>: both sides share one decision about how much to turn down, so the left-right loudness clue survives noise reduction.</p>
+        <p class="small muted">None of this shows that he would hear direction better. Our planned next step is to give the program two ears that agree on one decision about how much to turn the sound down, so the louder-ear clue survives.</p><details class="researchers"><summary>For researchers</summary><p class="small muted">Spatial screen: seed 17, four simulated scenes on an assumed head model. Target-ILD error 5.47 vs 5.96 dB unprocessed; ITD error 4.0 vs 5.75 samples; −5 dB scene ILD error 10.29 → 11.22 dB. Registered next step: binaural linked-gain model.</p></details>
       </div>
     </div>
 
     <div class="dir-wrap" style="margin-top:32px">
       <div class="rv">
-        <h3>What linked ears could look like</h3>
-        <p class="small muted">An illustration of the idea, not measured data. His teacher calls from his left in a noisy classroom.</p>
+        <h3>What two ears that agree could look like</h3>
+        <p class="small muted">A drawing of the idea, not a measurement. His teacher calls from his left in a noisy classroom.</p>
         <div class="toggle" id="dir-modes" role="group" aria-label="Processing mode">
-          <button type="button" data-mode="none" aria-pressed="true">No processing</button>
+          <button type="button" data-mode="none" aria-pressed="true">No cleanup</button>
           <button type="button" data-mode="separate" aria-pressed="false">Each ear separately</button>
           <button type="button" data-mode="linked" aria-pressed="false">Both ears linked</button>
         </div>
@@ -399,10 +594,10 @@
     <div class="rv" style="margin-top:48px;max-width:760px">
       <h3>Before any of this could reach Graham</h3>
       <ol class="ladder">
-        <li class="here"><div><b>Pass all 14 bench KPIs on 3 seeds</b><p>Gen 19 passes 13. The −5 dB crowd row is the one left, and Gens 20–22 did not move it.</p><span class="pct">13 of 14 · verdict FAIL — keep optimizing · promoted FALSE</span></div></li>
-        <li><div><b>Fresh-material confirmation</b><p>12 new speakers and genuinely distinct-voice crowds the model has never seen. Not yet built.</p></div></li>
-        <li><div><b>A staged listening test</b><p>Only with audiologist oversight, Graham's assent and MAP-safe levels. Not attempted.</p></div></li>
-        <li><div><b>Comparison against what he already has</b><p>His Nucleus 6's own processing has never been compared. Until it is, nothing here can be called better than what he uses today.</p></div></li>
+        <li class="here"><div><b>Pass all 14 computer checks, three training runs in a row</b><p>Version 19 passes 13. The hardest crowd is the one left, and versions 20 to 22 did not move it.</p><span class="pct">13 of 14 so far</span></div></li>
+        <li><div><b>Pass again on brand-new voices</b><p>Twelve new speakers and crowds made of voices the program has never heard. Not built yet.</p></div></li>
+        <li><div><b>A careful listening test</b><p>Only with an audiologist in charge, Graham's own agreement, and sound levels his implants are set up for. Not attempted.</p></div></li>
+        <li><div><b>Compare it with what he already has</b><p>We have never compared it with the noise cleanup built into his Nucleus 6. Until we do, nothing here can be called better than what he uses today.</p></div></li>
       </ol>
     </div>
   </div>
@@ -411,16 +606,15 @@
 <!-- ===== HONESTY ===== -->
 <section id="honest" class="solid-bg" aria-labelledby="h-hon">
   <div class="wrap">
-    <p class="eyebrow">How we keep ourselves honest</p>
-    <h2 id="h-hon">The rules were written before the runs.</h2>
-    <div class="grid g3">
-      <div class="card rv"><h3>Pre-registration</h3><p>Each generation files one change, its budget, its panels and its pass rules before training. Gen 24 is drafted but unregistered until the Gen 23 verdict and its review are both filed.</p></div>
-      <div class="card rv"><h3>Three seeds, seed-mean</h3><p>KPIs are judged on the mean of three seeds with distinct checkpoint hashes. A single-seed screen can only advance a generation to replication, never qualify it.</p></div>
-      <div class="card rv"><h3>Final checkpoint only</h3><p>Interim checkpoints are benched and reported, but the verdict uses the final one. No picking the best step after the fact.</p></div>
-      <div class="card rv"><h3>Bit-identical replay</h3><p>When a Gen 21 run was killed at 12.5k steps by a session ending, it was relaunched with the same seed and its losses and validation items matched the original bit for bit before the result counted.</p></div>
-      <div class="card rv"><h3>Independent review, quoted</h3><p>Codex Astra, a different model family, recomputes rows from raw data between generations. Reviews are filed verbatim with a disposition, including the ones that required fixes before launch.</p>
+    <h2 id="h-hon">How we keep ourselves honest</h2>
+    <div class="cols3 numbered">
+      <div class="col rv"><h3>We write the plan down first</h3><p>Before we train a new version we write down the one thing we are changing, how long we will train it, and the score it has to reach. Version 24 is drafted but does not count until version 23 has its result and its review.</p></div>
+      <div class="col rv"><h3>We train it three times</h3><p>Every version is trained three separate times from scratch and judged on the average, so one lucky run cannot fool us. A single good run only earns the right to be repeated.</p></div>
+      <div class="col rv"><h3>We judge the finished version only</h3><p>We save and report the program at several points during training, but the verdict always uses the final one. No picking the best moment after the fact.</p></div>
+      <div class="col rv"><h3>We replay interrupted runs exactly</h3><p>One training run was cut off halfway when a computer session ended. We restarted it from the beginning and checked that it reproduced the original, number for number, before its result counted.</p></div>
+      <div class="col rv"><h3>Someone else checks the sums</h3><p>A second AI, Codex Astra, made by a different company, recomputes every result from the raw data between versions. Its reviews are published word for word, including the ones that made us fix things before launch.</p>
         <blockquote class="quote">"Nothing here implies a directional-hearing benefit."<cite>SUBMISSION.md, disclosures, after the Astra review of Gen 19</cite></blockquote></div>
-      <div class="card rv"><h3>Nulls are filed</h3><p>Gen 16, 20, 21 and 22 are on the tree with their numbers. "Null for this policy" is the registered label; none of them establishes a zero effect, and the record says so.</p></div>
+      <div class="col rv"><h3>Failures stay on the record</h3><p>Versions 16, 20, 21 and 22 did not help, and they are on the tree with their numbers. Not helping once does not prove an idea can never work, and the record says so.</p></div>
     </div>
   </div>
 </section>
@@ -428,46 +622,48 @@
 <!-- ===== LIMITS ===== -->
 <section id="limits" class="solid-bg" aria-labelledby="h-lim">
   <div class="wrap narrow">
-    <p class="eyebrow">Limits and disclosures</p>
-    <h2 id="h-lim">Stated plainly.</h2>
+    <h2 id="h-lim">What this does not show</h2>
     <ul class="plain">
-      <li><strong>The Cochlear Nucleus 6's own processing was not tested.</strong> Offline bench results cannot establish superiority over it, and nothing here compares against it.</li>
-      <li><strong>No listener benefit is claimed</strong> for anyone. Vocoder listening by a normal-hearing adult cannot predict an individual CI user's benefit; vocoder audio is not what a CI user hears.</li>
-      <li><strong>No candidate has earned a listening test.</strong> That gate requires all required KPIs plus confirmation on fresh material (new speakers, genuinely distinct-voice crowds). Implant-involved testing would additionally need assent, audiologist oversight and MAP-safe levels. None was attempted.</li>
-      <li><strong>Quiet PESQ and CPU streaming real-time factor</strong> are required by the KPI contract but remain unestablished.</li>
-      <li><strong>White-noise vocoded ESTOI decreases</strong> in all three Gen 19 seeds (mean <span class="num" data-bench="white_estoi">−0.059</span>), even though the registered white-noise SI-SDR row passes.</li>
-      <li><strong>Direction-cue rows are one seed on four simulated scenes.</strong> In the −5 dB scene, target-ILD error worsens (10.29 → 11.22 dB). Nothing here implies a directional-hearing benefit.</li>
-      <li><strong>Earlier generations were less disciplined.</strong> Gen 17 changed the speaker pool, mixtures, SNR weighting and budget together.</li>
+      <li><strong>We never tested the Nucleus 6's own noise cleanup.</strong> Nothing here says our program is better than what Graham's processors already do.</li>
+      <li><strong>We are not promising it helps anyone hear better.</strong> Everything is from computer tests. Even a hearing person listening to a simulation cannot tell you what an implant user would hear.</li>
+      <li><strong>No version has earned a real listening test yet.</strong> That needs all 14 checks passed, a repeat on brand-new voices, and then an audiologist in charge.</li>
+      <li><strong>Two of our own checks are still blank:</strong> how natural quiet speech sounds, and whether the program runs fast enough on an ordinary processor.</li>
+      <li><strong>On hissing noise it had never heard, one score got slightly worse</strong> in all three training runs, even though the main hiss check passed.</li>
+      <li><strong>The which-side checks come from one training run in four pretend rooms,</strong> and in the hardest room the louder-ear clue got worse. Nothing here shows better direction hearing.</li>
+      <li><strong>Our earlier versions were sloppier.</strong> Version 17 changed several things at once, so we cannot say which one helped.</li>
     </ul>
+    <details class="researchers"><summary>For researchers</summary><p class="small muted">Quiet PESQ and CPU streaming RTF unestablished. White-noise vocoded ESTOI decreases in all three Gen 19 seeds (mean <span class="num" data-bench="white_estoi">−0.059</span>) although the white SI-SDR row passes. Direction-cue rows: one seed, four simulated scenes; −5 dB scene target-ILD error 10.29 → 11.22 dB. Gen 17 changed pool, mixtures, SNR weighting and budget together.</p></details>
   </div>
 </section>
 
 <!-- ===== HOW THIS WAS MADE ===== -->
 <section id="made" class="solid-bg" aria-labelledby="h-made">
   <div class="wrap narrow">
-    <p class="eyebrow">How this was made</p>
-    <h2 id="h-made">A changelog, mistakes included.</h2>
+    <h2 id="h-made">How this was made, mistakes included</h2>
     <ol class="log">
-      <li><div><div class="ey">The loop</div><b>An evolutionary research loop, run by Claude, reviewed by Astra</b><p>The experiments were designed, trained and filed by Claude (Anthropic) working under the author's direction, with Codex Astra (a different model family) as the independent reviewer between generations. Meta's models did not do the research.</p></div></li>
-      <li><div><div class="ey">Mistake</div><b>Gen 17 changed four things at once</b><p>Speaker pool, mixtures, SNR weighting and budget moved together, so its +0.26 dB gain cannot be attributed. Later generations change one thing each.</p></div></li>
-      <li><div><div class="ey">Mistake</div><b>A 10-step smoke run once overwrote Gen 16's final weights filename</b><p>Now guarded: smoke runs must write to a distinct output path. Interim checkpoints are all benched so nothing can be cherry-picked.</p></div></li>
-      <li><div><div class="ey">Correction</div><b>Gen 21's seed-19 run was killed mid-training and replayed</b><p>A session ended at 12.5k steps. The run was relaunched with the same seed and verified bit-identical (losses and validation items) before it counted.</p></div></li>
-      <li><div><div class="ey">Correction</div><b>A per-speaker caveat was corrected after review</b><p>Astra found that Gen 21's S48 validation gain was 87% from one of two target speakers. The results file was corrected and the caveat kept.</p></div></li>
-      <li><div><div class="ey">Determinism</div><b>Gen 23's spectral loss runs on CPU on purpose</b><p>MPS STFT gradients were not bit-deterministic across identical calls, so the spectral term is computed on CPU and its gradients cross back to the model on MPS.</p></div></li>
-      <li><div><div class="ey">This site</div><b>Numbers come from one script</b><p><code class="mono">site/tools/extract.py</code> runs the project's own <code class="mono">kpi_scorecard.py</code> and reads the committed bench, training-log and judge JSONs into <code class="mono">site/data/</code>. The generation cards are driven by <code class="mono">data/generations.json</code> so results landing tonight can be published by editing one file.</p></div></li>
-      <li><div><div class="ey">This site</div><b>Muse, Meta's AI model, powers Ask and Explain</b><p>Questions go to a small server endpoint that lets Muse (muse-spark-1.3, via Meta's API) look things up in the research record and show its steps. It answers; it did not run the experiments. If the endpoint is unreachable, those features hide themselves.</p></div></li>
-      <li><div><div class="ey">This site</div><b>Animation</b><p>The jackhammer's reverberation field with its still centre, the crowd resolving into one voice, and the wall it hits, are one GPU particle system (three.js r170, vendored) morphing between three target shapes as you scroll. It caps pixel ratio, pauses when off-screen, and renders a single static frame when your system prefers reduced motion. Techniques after Codrops' scroll-driven shader articles and this author's earlier site, itsthemedium.com.</p></div></li>
+      <li><div><div class="ey">Who did what</div><b>An AI ran the experiments, a second AI checked them, a dad directed</b><p>The experiments were designed, run and written up by Claude, an AI from Anthropic, under Graham's dad's direction. Codex Astra, an AI from a different company, checked every result before the next step. Meta's AI did not do the research; it answers your questions on this page.</p></div></li>
+      <li><div><div class="ey">Mistake</div><b>Version 17 changed four things at once</b><p>So we cannot say which change helped. Every version since changes one thing.</p></div></li>
+      <li><div><div class="ey">Mistake</div><b>A quick test run once overwrote a finished version's file</b><p>Now test runs have to save somewhere else, and every saved version is scored so none can be quietly swapped.</p></div></li>
+      <li><div><div class="ey">Correction</div><b>A training run was cut off and replayed</b><p>A computer session ended halfway through. We restarted the run and checked it reproduced the original exactly before using it.</p></div></li>
+      <li><div><div class="ey">Correction</div><b>The checker caught a flattering summary</b><p>Most of one version's improvement came from one of the two test voices. We corrected the write-up and kept the warning in.</p></div></li>
+      <li><div><div class="ey">Care</div><b>Part of version 23 runs on a slower chip on purpose</b><p>The faster chip gave slightly different answers each time, which would make the result impossible to reproduce. The slower chip gives the same answer every time.</p></div></li>
+      <li><div><div class="ey">Try it</div><b>The model is free to download</b><p>Try the model yourself: it is free to download on <a data-hf>Hugging Face</a>. It is a research model from computer tests, not a hearing product.</p></div></li>
+      <li><div><div class="ey">This site</div><b>Every number comes from one script</b><p>A script reads the saved results and produces the files behind this page, so nothing is typed in by hand. The version cards are read from one small file that is updated as results land.</p></div></li>
+      <li><div><div class="ey">This site</div><b>Muse, Meta's AI model, powers Ask and Explain</b><p>Your question goes to a small server that lets Muse look through everything we wrote down and show its steps. If that server is unreachable, those features hide themselves.</p></div></li>
+      <li><div><div class="ey">This site</div><b>The wave behind the page</b><p>The jackhammer, the crowd of voices becoming one voice, and the wall it hits are all the same cloud of dots, reshaped as you scroll. It switches off when you cannot see it and holds still if your device asks for less motion.</p></div></li>
     </ol>
+    <details class="researchers"><summary>For researchers</summary><p class="small muted">Research loop: Claude (Anthropic) under human direction; independent reviewer Codex Astra (xhigh). Gen 23 spectral loss on CPU because MPS STFT gradients were not bit-deterministic. Site data: <code class="mono">site/tools/extract.py</code> runs <code class="mono">kpi_scorecard.py</code> and reads bench, training-log and judge JSONs into <code class="mono">site/data/</code>; cards from <code class="mono">data/generations.json</code>. Muse: muse-spark-1.3 via Meta's API. WebGL: three.js r170, vendored; GPU particle morph; DPR capped; paused off-screen; static under reduced motion. Techniques after Codrops scroll-driven shader articles and itsthemedium.com.</p></details>
   </div>
 </section>
 
 <!-- ===== METHODS ===== -->
 <section id="methods" class="solid-bg" aria-labelledby="h-meth">
   <div class="wrap narrow">
-    <p class="eyebrow">Methods &amp; data</p>
-    <h2 id="h-meth">In simple terms.</h2>
-    <p>The bench mixes clean read speech (LibriSpeech, speaker-disjoint train and test sets) with noise: a <strong>crowd</strong> of 8 to 12 talkers drawn from six held-out interferer identities, a single competing talker, speech-shaped noise, held-out white noise, and quiet. Each mixture is scored before and after the model under three intelligibility proxies: waveform STOI, vocoded ESTOI and a simulated 8-of-22 ACE electrodogram correlation, plus SI-SDR. A spatial screen checks that direction cues (ILD, ITD) are not damaged on simulated scenes.</p>
-    <details><summary>Technical details</summary>
+    <h2 id="h-meth">How the tests work</h2>
+    <p class="lede">We take clean recordings of people reading aloud and mix in noise: a crowd of 8 to 12 other talkers, one other talker, a steady hum, a hiss, or nothing at all. We score each mix before and after the program cleans it, using scores that stand in for how clear and understandable the voice is, and one that pretends to be an implant. A separate test checks that the which-side clues survive.</p>
+    <details class="researchers"><summary>For researchers: methods, sources and downloads</summary>
+    <p class="small muted">The bench mixes clean read speech (LibriSpeech, speaker-disjoint train and test sets) with noise: a crowd of 8 to 12 talkers drawn from six held-out interferer identities, a single competing talker, speech-shaped noise, held-out white noise, and quiet. Each mixture is scored before and after the model under three intelligibility proxies: waveform STOI, vocoded ESTOI and a simulated 8-of-22 ACE electrodogram correlation, plus SI-SDR. A spatial screen checks that direction cues (ILD, ITD) are not damaged on simulated scenes.</p>
+    <h3>Technical details</h3>
       <ul class="plain small">
         <li>Model: causal Conv-TasNet-style enhancer, <span data-model="params">602,510</span> parameters, past context <span data-model="past">1.02</span> s, no look-ahead; 16 kHz.</li>
         <li>Training (Gen 19): 24k steps, batch 8 × 2 s, 10% quiet examples, Adam, cosine 1e-3 → 1e-4, 3 seeds (20261117/18/19), 251-speaker train-clean-100 pool.</li>
@@ -476,14 +672,14 @@
         <li>Screens (Gen 21–24): candidate minus same-seed Gen 19 at −5 dB must be ≥ +0.30 dB on both the fixed VAL panel and the bench, with 0 dB, quiet and other-row safeguards.</li>
         <li>Tests: 17 bench/spatial tests, 42 trainer/judge tests across Gen 20–24.</li>
       </ul>
-    </details>
-    <details><summary>Limitations of the bench itself</summary>
+    
+    <h3>Limitations of the bench itself</h3>
       <ul class="plain small">
         <li>Synthetic mixtures of read speech; six interferer identities in the crowd pool.</li>
         <li>Spatial scenes use an assumed head model; one seed.</li>
         <li>The vocoder listening-pack builder does not yet enforce the current scorecard, checkpoint identity or fresh-material clearance.</li>
       </ul>
-    </details>
+    
     <h3 style="margin-top:40px">Sources</h3>
     <ul class="plain small" id="sources">
       <li><a data-repo="SUBMISSION.md">SUBMISSION.md</a>, the judges' summary, treated as canonical wording here.</li>
@@ -504,13 +700,17 @@
     </ul>
     <p class="small muted" style="margin-top:18px">No audio is published. The repository's example and listening-pack folders are not part of this site.</p>
   </div>
+
+    </details>
+  </div>
 </section>
 </main>
 
+<a class="ask-fab ai-only" id="ask-fab" href="#ask" hidden>Ask Muse</a>
 <footer>
   <div class="wrap">
     <nav aria-label="Footer">
-      <a href="#short">The short version</a><a href="#wall">The wall</a><a href="#scorecard">Scorecard</a><a href="#generations">Generations</a><a href="#ask">Ask the data</a><a href="#honest">Honesty</a><a href="#limits">Limits</a><a href="#made">How it was made</a><a href="#methods">Methods</a><a data-repo="" id="repo-link">Repository</a>
+      <a href="#short">The short version</a><a href="#wall">The hardest crowd</a><a href="#scorecard">The 14 checks</a><a href="#generations">Versions</a><a href="#ask">Ask a question</a><a href="#honest">Honesty</a><a href="#limits">What it does not show</a><a href="#made">How it was made</a><a href="#methods">How the tests work</a><a data-repo="" id="repo-link">Repository</a><a data-hf id="hf-link">Try the model on Hugging Face</a>
     </nav>
     <p class="disc"><strong data-brand-name>Before the Implant</strong> is a public record of computer-only experiments. Graham's Nucleus 6 processors were never compared against it, and nothing here has been tried with any listener yet. Vocoder audio isn't what a cochlear-implant user hears.</p>
     <p class="disc small">Research loop run by Claude (Anthropic) under human direction, reviewed by Codex Astra. Ask and Explain are powered by Muse, Meta's AI model, via Meta's API. AI answers can contain mistakes. Fonts: Fraunces, Archivo, IBM Plex Mono. three.js r170, MIT.</p>
@@ -521,5 +721,6 @@
 <script type="module" src="js/api.js"></script>
 <script type="module" src="js/main.js"></script>
 <script type="module" src="js/gl.js"></script>
+<script src="js/implant.js" defer></script>
 </body>
 </html>
