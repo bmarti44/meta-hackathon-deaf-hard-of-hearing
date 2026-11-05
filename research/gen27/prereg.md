@@ -572,3 +572,21 @@ research/gen24/test_train13.py` → **68 passed** (2 min 36 s, CPU).
   panel, spatial bench, judge_v2 bench and replication; the target-only
   gate; the real self-test and its guards.
 - test_train13: 4.
+
+
+## S9. MPS timing result and run pipeline (2026-11-04 ~22:12 EST, before training)
+
+Registered S5 procedure, run after Gen 24 released the GPU (a site-review
+browser was also running):
+
+- aug50 **0.2613 s/step**; dry **0.1935 s/step**; ratio 1.350.
+- Projections: 84.8 min × 1.350 = **114.5 min**; 24,000 × 0.2613 s =
+  **104.5 min**.
+- Both are extrapolations, not bounds.
+- Training goes to the 24k final whatever the duration. No interim
+  checkpoint is ever substituted.
+
+Pipeline: `research/gen27/pipeline.sh`, sha256 `52fd6029537539738ce3f6ed270e906bfc068c7dfb34ea8d2a62d653e2dfeca1`. It runs train →
+reverberant panel → dry panel → bench v2 → spatial (candidate; control =
+the registered self-test file) → `judge_v3`, each step gated on its exit
+status. PIPELINE DONE means "evaluated", not "advanced".
