@@ -195,6 +195,18 @@ Disclosures:
     general spectral-loss null.
   - **Reviews:** Codex Astra and Muse (Meta) both reviewed the verdict
     independently; both reviews are filed verbatim in research/gen23/.
+- **Gen 25** ([research/gen25/results.md](./research/gen25/results.md)),
+  checkpoint averaging with no training.
+  - **Result:** the pre-registered single-seed uniform average of nine
+    late Gen 19 checkpoints failed advancement. −5 dB gains versus
+    same-seed Gen 19 were +0.1706 dB on VAL and +0.0296 dB on the bench,
+    below the required +0.30 dB on both, and bench STOI declined by
+    0.000970.
+  - **Other checks:** provenance and all remaining screen criteria
+    passed, including a dev improvement of +0.100 dB with 7/8 targets
+    improving.
+  - **Outcome:** the averaged model was not retained, and Gen 19 remains
+    the baseline. Reviewed by Codex Astra and Muse.
 - **Gen 24** (narrower noisy-SNR sampling: 40% of noisy training
   examples at −5 to −3 dB instead of 17%, same random draws) is next
   ([research/gen24/prereg.md](./research/gen24/prereg.md)).
