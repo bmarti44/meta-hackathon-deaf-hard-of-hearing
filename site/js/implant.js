@@ -137,7 +137,7 @@
   function tick(ts) {
     raf = 0;
     if (focus < 1) focus = Math.min(1, (ts - focusT0) / 1800);
-    const t = (active && !audio.paused) ? audio.currentTime : ((ts - t0) / 1000) % (dur() + 0.9);
+    const t = (active && !audio.paused) ? audio.currentTime : stillT() + ((ts - t0) / 1000) % Math.max(0.5, dur() - stillT());
     draw(t);
     if (active && !audio.paused && audio.duration) active.style.setProperty('--p', (audio.currentTime / audio.duration).toFixed(4));
     if (visible) raf = requestAnimationFrame(tick);

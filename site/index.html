@@ -69,7 +69,7 @@
         <a class="btn ghost" href="#ask">Ask a question</a>
       </div>
       <form class="hero-ask ai-only" id="hero-ask" hidden>
-        <label for="hq">Ask Muse, Meta's AI model, anything about this record</label>
+        <label for="hq">Ask Muse anything about this record</label>
         <div class="hero-ask-row"><input id="hq" type="text" placeholder="Ask anything about this project" autocomplete="off" maxlength="400"><button type="submit">Ask</button></div>
       </form>
     </div>
@@ -191,7 +191,7 @@
           <h3>How quick is that?</h3>
           <p class="small muted">Our own rule allows up to 10 thousandths of a second. The program uses about 6.</p>
           <div class="latency" role="img" aria-label="The program needs 5.88 thousandths of a second, out of the 10 it is allowed">
-            <div class="bar"><i id="lat-bar" style="width:58.75%"></i></div><span>5.88 of the 10 thousandths of a second allowed</span>
+            <div class="bar"><i id="lat-bar" style="width:58.75%"></i></div><span>about 6 thousandths of a second, under the 10 allowed</span>
           </div>
           
         </div>
@@ -347,7 +347,7 @@
 <section class="chapter" id="wall" aria-labelledby="h-wall" data-gl="wall">
   <div class="wrap">
     <div class="panel rv">
-      <p class="big num bone" aria-hidden="true">−5 dB<small>when the crowd is louder than the voice, the program stops helping enough.</small></p>
+      <p class="big num bone" aria-hidden="true"><small>At</small> −5 dB, <small>when the crowd is louder than the voice, the program stops helping enough.</small></p>
       <h2 id="h-wall" class="sr-only">When the crowd is louder than the voice, the program stops helping enough.</h2>
       <div class="grid g2">
         <div>
@@ -368,7 +368,7 @@
           <h3 class="sub">Is +1.5 just a made-up number?</h3>
           <p>Partly, and on purpose. We set it ourselves before running any tests, so we could not move the goalposts after seeing results. It is half of our overall +3 dB goal, and +3 dB is in the range that lab noise-reduction systems have reached in published studies with cochlear-implant listeners (those studies used a different measure, so it's a rough guide). Missing by 0.3 dB is a small gap. It means this model is not yet strong enough in the hardest rooms to earn a listening test.</p>
           <h3 class="sub">Why did we miss?</h3>
-          <p>At −5 dB, the crowd is made of other voices that sound a lot like the one you want. The model has one microphone, cannot hear the future (it has to answer within 6 thousandths of a second), and is tiny on purpose so it could one day run on a hearing device. A "cheating" version that hears the future and already knows the answer gets about +12 dB here, so there is room to improve. <span data-gen-wall-sentence>Training longer, two scoring changes, more hard crowds and blending saved versions did not close the gap. Now we are teaching it echoey rooms, then two ears.</span></p>
+          <p>At −5 dB, the crowd is made of other voices that sound a lot like the one you want. The model has one microphone, cannot hear the future (it has to answer within 6 thousandths of a second), and is tiny on purpose so it could one day run on a hearing device. A version that is allowed to hear the whole recording first, and already knows the clean answer, gets about +12 dB here, so there is room to improve. <span data-gen-wall-sentence>Training longer, two scoring changes, more hard crowds and blending saved versions did not close the gap. Now we are teaching it echoey rooms, then two ears.</span></p>
           <p class="small muted">Drag the slider to see how it does as the crowd gets louder.</p>
           <details class="researchers"><summary>notes for researchers</summary><p class="small muted">Metric: ΔSI-SDR vs unprocessed, three-seed mean, bench v2 crowd condition, n = 6 crops per cell. Rule: crowd ΔSI-SDR ≥ +1.5 dB at both −5 dB and 0 dB. Gen 19: +1.19 dB at −5 dB (FAIL), +4.65 dB at 0 dB (PASS); overall crowd +3.51 dB; non-causal oracle +11.94 dB at −5 dB.</p></details>
           
@@ -419,7 +419,7 @@
     <p>Together those make the 14 checks. We wrote them all down, with the score each one has to reach, before running the tests. That way we could not choose the flattering numbers afterwards. The model passes 13. The one it misses is the hardest crowd, where the crowd is louder than the voice.</p>
     <details class="researchers"><summary>notes for researchers</summary><p class="small muted">The scorecard is computed by <code class="mono">kpi_scorecard.py</code> from the committed bench results of three seeds plus a spatial run whose checkpoint hash matches. It reports INCOMPLETE unless all are present; Gen 19 is the first generation with a complete verdict. Technical row names are shown under each plain-language row.</p></details>
     <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin:18px 0">
-      <span class="small muted ai-only" hidden>Have Muse, Meta's AI model, explain any check to you as</span>
+      <span class="small muted ai-only" hidden>Have Muse explain any check to you as</span>
       <div class="toggle ai-only" hidden role="group" aria-label="Explanation level" id="level-toggle">
         <button type="button" aria-pressed="true" data-level="parent">a parent</button>
         <button type="button" aria-pressed="false" data-level="researcher">a researcher</button>
@@ -579,7 +579,7 @@
     <div class="rv" style="margin-top:48px;max-width:760px">
       <h3>Before any of this could reach Graham</h3>
       <ol class="ladder">
-        <li class="here"><div><b>Pass all 14 computer checks, three training runs in a row. This is where we are now.</b><p>Version 19 passes 13. The hardest crowd is the one left, and <span data-gen-nulls-after19>the later versions</span> did not move it.</p></div></li>
+        <li class="here"><div><b>Pass all 14 computer checks, three training runs in a row. This is where we are now.</b><p>Version 19 passes 13. The hardest crowd is the one left. <span data-gen-nulls-after19>No later version has moved it yet.</span></p></div></li>
         <li><div><b>Pass again on brand-new voices</b><p>Twelve new speakers and crowds made of voices the program has never heard. Not built yet.</p></div></li>
         <li><div><b>A careful listening test</b><p>Only with an audiologist in charge, Graham's own agreement, and sound levels his implants are set up for. Not attempted.</p></div></li>
         <li><div><b>Compare it with what he already has</b><p>We have never compared it with the noise cleanup built into his Nucleus 6. Until we do, nothing here can be called better than what he uses today.</p></div></li>
@@ -598,7 +598,7 @@
       <div class="col rv"><h3>We judge the finished version only</h3><p>We save and report the program at several points during training, but the verdict always uses the final one. We never go back and pick a better-looking moment from the middle of training.</p></div>
       <div class="col rv"><h3>We replay interrupted runs exactly</h3><p>One training run was cut off halfway when a computer session ended. We restarted it from the beginning and checked that it reproduced the original, number for number, before its result counted.</p></div>
       <div class="col rv"><h3>Someone else checks the sums</h3><p>A second AI, Codex Astra, an AI model from OpenAI, recomputes every result from the raw data between versions. Its reviews are published word for word, including the ones that made us fix things before launch.</p></div>
-      <div class="col rv"><h3>Failures stay on the record</h3><p><span data-gen-nulls-all>The versions that did not help</span> are on the tree with their numbers. An idea that did not help once might still work another way, so we say that too.</p></div>
+      <div class="col rv"><h3>Failures stay on the record</h3><p><span data-gen-nulls-all>The versions that did not pass are on the tree with their numbers.</span> An idea that did not help once might still work another way, so we say that too.</p></div>
     </div></details>
   <details class="fold" id="limits"><summary>What this does not show</summary>
     
@@ -620,10 +620,10 @@
       <li><div><b>We ran part of version 23 on a slower chip on purpose</b><p>The faster chip gave slightly different answers each time, which would make the result impossible to reproduce. The slower chip gives the same answer every time.</p></div></li>
       <li><div><b>The model is free to download</b><p>Try the model yourself: it is free to download on <a data-hf>Hugging Face</a>.</p></div></li>
       <li><div><b>Every number on this site comes from one script</b><p>A script reads the saved results and produces the files behind this page, so nothing is typed in by hand. The version cards are read from one small file that is updated as results land.</p></div></li>
-      <li><div><b>Muse, Meta's AI model, answers the questions on this site</b><p>Your question goes to a small server that lets Muse look through everything we wrote down and show its steps. If that server is unreachable, those features hide themselves.</p></div></li>
+      <li><div><b>Muse answers the questions on this site</b><p>Your question goes to a small server that lets Muse look through everything we wrote down and show its steps. If that server is unreachable, those features hide themselves.</p></div></li>
       <li><div><b>The wave behind the page is one cloud of dots</b><p>The jackhammer, the crowd of voices becoming one voice, and the wall it hits are all the same cloud of dots, reshaped as you scroll. It switches off when you cannot see it and holds still if your device asks for less motion.</p></div></li>
     </ol>
-    <details class="researchers"><summary>notes for researchers</summary><p class="small muted">Muse Wonder Full (Meta) ran Gen 0 to 21. Claude Opus 5.5 (Anthropic) ran Gen 21 seed 19 and its verdict, and Gen 22 onward, including the room experiments Gen 27 to 32, and built this site. Codex Astra (OpenAI) and Muse Spark (Meta) reviewed each result. Site data: <code class="mono">site/tools/extract.py</code> runs <code class="mono">kpi_scorecard.py</code> and reads bench, training-log and judge JSONs into <code class="mono">site/data/</code>; cards from <code class="mono">data/generations.json</code>. Muse: muse-spark-1.3 via Meta's API. WebGL: three.js r170, vendored; GPU particle morph; DPR capped; paused off-screen; static under reduced motion.</p></details>
+    <details class="researchers"><summary>notes for researchers</summary><p class="small muted">Muse Wonder Full (Meta) ran Gen 0 to 21. Claude Opus 5.5 (Anthropic) ran Gen 21 seed 19 and its verdict, and Gen 22 onward, including the room experiments Gen 27 to 33, and built this site. Codex Astra (OpenAI) and Muse Spark (Meta) reviewed each result. Site data: <code class="mono">site/tools/extract.py</code> runs <code class="mono">kpi_scorecard.py</code> and reads bench, training-log and judge JSONs into <code class="mono">site/data/</code>; cards from <code class="mono">data/generations.json</code>. Muse: muse-spark-1.3 via Meta's API. WebGL: three.js r170, vendored; GPU particle morph; DPR capped; paused off-screen; static under reduced motion.</p></details>
   </details>
   </div>
 </section>
@@ -649,7 +649,7 @@
         <li>Scorecard: 14 required rows plus one diagnostic; verdicts PASS / FAIL / INCOMPLETE from <code class="mono">kpi_scorecard.py</code>; +3.0 dB crowd requirement is about a third of the oracle headroom.</li>
         <li>Screens (Gen 21 onward, including the room experiments Gen 27–33): candidate minus same-seed Gen 19 at −5 dB must be ≥ +0.30 dB on both the fixed VAL panel and the bench, with 0 dB, quiet and other-row safeguards.</li>
         <li>Tests: bench/spatial tests plus trainer/judge tests for every registered generation (Gen 20 onward); each generation folder carries its own prereg.md and results.md.</li>
-        <li>Gen 34 (in progress) is a frozen real-recording audit: BRUDEX, recorded hearing-aid-microphone speech in a real lab, evaluation only, no training.</li>
+        <li>Gen 34 (done, VALID ASSET; see research/gen34/results.md) was a frozen real-recording audit: BRUDEX, recorded hearing-aid-microphone speech in a real lab, evaluation only, no training. Gen 35 (in progress) is a frozen output-path repair audit: output polarity and DC offset.</li>
       </ul>
     
     <h3>Limitations of the bench itself</h3>
@@ -663,7 +663,7 @@
     <ul class="plain small" id="sources">
       <li><a data-repo="SUBMISSION.md">SUBMISSION.md</a>, the judges' summary, treated as canonical wording here.</li>
       <li><a data-repo="STATUS.md">STATUS.md</a>, the running log, newest first.</li>
-      <li><a data-repo="research/gen19/results.md">Gen 19 results</a>, <a data-repo="research/gen21/results.md">Gen 21 results</a>, <a data-repo="research/gen22/results.md">Gen 22 results</a>, <a data-repo="research/gen23/results.md">Gen 23 results</a>, <a data-repo="research/gen24/results.md">Gen 24 results</a>, <a data-repo="research/gen25/results.md">Gen 25 results</a>, <a data-repo="research/gen26/results.md">Gen 26 results</a>, <a data-repo="research/gen27/results.md">Gen 27 results</a>, <a data-repo="research/gen28/results.md">Gen 28 results</a>, <a data-repo="research/gen29/results.md">Gen 29 results</a>, <a data-repo="research/gen30/results.md">Gen 30 results</a>, <a data-repo="research/gen31/results.md">Gen 31 results</a>, <a data-repo="research/gen32/results.md">Gen 32 results</a>, <a data-repo="research/gen33/results.md">Gen 33 results</a>, <a data-repo="research/gen34/prereg.md">Gen 34 audit plan</a>. Every generation folder also holds its prereg.md.</li>
+      <li><a data-repo="research/gen19/results.md">Gen 19 results</a>, <a data-repo="research/gen21/results.md">Gen 21 results</a>, <a data-repo="research/gen22/results.md">Gen 22 results</a>, <a data-repo="research/gen23/results.md">Gen 23 results</a>, <a data-repo="research/gen24/results.md">Gen 24 results</a>, <a data-repo="research/gen25/results.md">Gen 25 results</a>, <a data-repo="research/gen26/results.md">Gen 26 results</a>, <a data-repo="research/gen27/results.md">Gen 27 results</a>, <a data-repo="research/gen28/results.md">Gen 28 results</a>, <a data-repo="research/gen29/results.md">Gen 29 results</a>, <a data-repo="research/gen30/results.md">Gen 30 results</a>, <a data-repo="research/gen31/results.md">Gen 31 results</a>, <a data-repo="research/gen32/results.md">Gen 32 results</a>, <a data-repo="research/gen33/results.md">Gen 33 results</a>, <a data-repo="research/gen34/results.md">Gen 34 audit results</a>, <a data-repo="research/gen35/prereg.md">Gen 35 audit plan</a>. Every generation folder also holds its prereg.md.</li>
       <li><a data-repo="research/bench-n6/KPI.md">KPI contract</a> and <a data-repo="research/bench-n6/kpi_scorecard.py">scorecard script</a>.</li>
     </ul>
     <h3 style="margin-top:32px">Downloads</h3>
